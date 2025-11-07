@@ -1,0 +1,17 @@
+EJECUCION: vie. 24/10/2025 13:12:57,63 
+=========================================== 
+PHP Warning:  Module "ftp" is already loaded in Unknown on line 0
+
+Warning: Module "ftp" is already loaded in Unknown on line 0
+Unknown command: actualizar-tasa
+Caused by: Exception 'yii\base\InvalidRouteException' with message 'Unable to resolve the request "actualizar-tasa".'
+
+in C:\xampp\htdocs\planealo.sytes.net\vendor\yiisoft\yii2\base\Module.php:561
+
+Stack trace:
+#0 C:\xampp\htdocs\planealo.sytes.net\vendor\yiisoft\yii2\console\Application.php(180): yii\base\Module->runAction('actualizar-tasa', Array)
+#1 C:\xampp\htdocs\planealo.sytes.net\vendor\yiisoft\yii2\console\Application.php(147): yii\console\Application->runAction('actualizar-tasa', Array)
+#2 C:\xampp\htdocs\planealo.sytes.net\vendor\yiisoft\yii2\base\Application.php(384): yii\console\Application->handleRequest(Object(yii\console\Request))
+#3 C:\xampp\htdocs\planealo.sytes.net\yii(20): yii\base\Application->run()
+#4 {main}
+ 

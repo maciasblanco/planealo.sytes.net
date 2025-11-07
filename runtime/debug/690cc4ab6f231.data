@@ -1,0 +1,812 @@
+a:14:{s:6:"config";s:2021:"a:5:{s:10:"phpVersion";s:5:"8.2.0";s:10:"yiiVersion";s:6:"2.0.53";s:11:"application";a:8:{s:3:"yii";s:6:"2.0.53";s:4:"name";s:45:"Escuela Polideportiva y Cultural San Agustín";s:7:"version";s:3:"1.0";s:8:"language";s:2:"es";s:14:"sourceLanguage";s:5:"en-US";s:7:"charset";s:5:"UTF-8";s:3:"env";s:3:"dev";s:5:"debug";b:1;}s:3:"php";a:5:{s:7:"version";s:5:"8.2.0";s:6:"xdebug";b:0;s:3:"apc";b:0;s:8:"memcache";b:0;s:9:"memcached";b:0;}s:10:"extensions";a:7:{s:18:"yiisoft/yii2-faker";a:3:{s:4:"name";s:18:"yiisoft/yii2-faker";s:7:"version";s:7:"2.0.5.0";s:5:"alias";a:1:{s:10:"@yii/faker";s:64:"C:\xampp\htdocs\planealo.sytes.net\vendor/yiisoft/yii2-faker/src";}}s:26:"yiisoft/yii2-symfonymailer";a:3:{s:4:"name";s:26:"yiisoft/yii2-symfonymailer";s:7:"version";s:7:"2.0.4.0";s:5:"alias";a:1:{s:18:"@yii/symfonymailer";s:72:"C:\xampp\htdocs\planealo.sytes.net\vendor/yiisoft/yii2-symfonymailer/src";}}s:23:"yiisoft/yii2-httpclient";a:3:{s:4:"name";s:23:"yiisoft/yii2-httpclient";s:7:"version";s:8:"2.0.16.0";s:5:"alias";a:1:{s:15:"@yii/httpclient";s:69:"C:\xampp\htdocs\planealo.sytes.net\vendor/yiisoft/yii2-httpclient/src";}}s:18:"mdmsoft/yii2-admin";a:3:{s:4:"name";s:18:"mdmsoft/yii2-admin";s:7:"version";s:8:"2.12.0.0";s:5:"alias";a:1:{s:10:"@mdm/admin";s:60:"C:\xampp\htdocs\planealo.sytes.net\vendor/mdmsoft/yii2-admin";}}s:23:"yiisoft/yii2-bootstrap5";a:4:{s:4:"name";s:23:"yiisoft/yii2-bootstrap5";s:7:"version";s:8:"2.0.50.0";s:5:"alias";a:1:{s:15:"@yii/bootstrap5";s:69:"C:\xampp\htdocs\planealo.sytes.net\vendor/yiisoft/yii2-bootstrap5/src";}s:9:"bootstrap";s:40:"yii\bootstrap5\i18n\TranslationBootstrap";}s:18:"yiisoft/yii2-debug";a:3:{s:4:"name";s:18:"yiisoft/yii2-debug";s:7:"version";s:8:"2.1.27.0";s:5:"alias";a:1:{s:10:"@yii/debug";s:64:"C:\xampp\htdocs\planealo.sytes.net\vendor/yiisoft/yii2-debug/src";}}s:16:"yiisoft/yii2-gii";a:3:{s:4:"name";s:16:"yiisoft/yii2-gii";s:7:"version";s:7:"2.2.7.0";s:5:"alias";a:1:{s:8:"@yii/gii";s:62:"C:\xampp\htdocs\planealo.sytes.net\vendor/yiisoft/yii2-gii/src";}}}}";s:3:"log";s:27457:"a:1:{s:8:"messages";a:39:{i:0;a:6:{i:0;s:68:"Bootstrap with yii\bootstrap5\i18n\TranslationBootstrap::bootstrap()";i:1;i:8;i:2;s:31:"yii\base\Application::bootstrap";i:3;d:1762444458.781147;i:4;a:0:{}i:5;i:2778656;}i:1;a:6:{i:0;s:33:"Bootstrap with yii\log\Dispatcher";i:1;i:8;i:2;s:31:"yii\base\Application::bootstrap";i:3;d:1762444458.784141;i:4;a:0:{}i:5;i:2889304;}i:2;a:6:{i:0;s:21:"Loading module: debug";i:1;i:8;i:2;s:26:"yii\base\Module::getModule";i:3;d:1762444458.78416;i:4;a:0:{}i:5;i:2889944;}i:3;a:6:{i:0;s:15:"Session started";i:1;i:4;i:2;s:21:"yii\web\Session::open";i:3;d:1762444458.900287;i:4;a:0:{}i:5;i:3894712;}i:4;a:6:{i:0;s:70:"Opening DB connection: pgsql:host=localhost;dbname=escuelas_deportivas";i:1;i:4;i:2;s:23:"yii\db\Connection::open";i:3;d:1762444459.184816;i:4;a:1:{i:0;a:5:{s:4:"file";s:50:"C:\xampp\htdocs\planealo.sytes.net\models\User.php";s:4:"line";i:91;s:8:"function";s:7:"findOne";s:5:"class";s:23:"yii\db\BaseActiveRecord";s:4:"type";s:2:"::";}}i:5;i:5220688;}i:7;a:6:{i:0;s:2813:"SELECT
+    d.nspname AS table_schema,
+    c.relname AS table_name,
+    a.attname AS column_name,
+    COALESCE(td.typname, tb.typname, t.typname) AS data_type,
+    COALESCE(td.typtype, tb.typtype, t.typtype) AS type_type,
+    (SELECT nspname FROM pg_namespace WHERE oid = COALESCE(td.typnamespace, tb.typnamespace, t.typnamespace)) AS type_scheme,
+    a.attlen AS character_maximum_length,
+    pg_catalog.col_description(c.oid, a.attnum) AS column_comment,
+    a.atttypmod AS modifier,
+    a.attnotnull = false AS is_nullable,
+    CAST(pg_get_expr(ad.adbin, ad.adrelid) AS varchar) AS column_default,
+    coalesce(pg_get_expr(ad.adbin, ad.adrelid) ~ 'nextval',false) OR attidentity != '' AS is_autoinc,
+    pg_get_serial_sequence(quote_ident(d.nspname) || '.' || quote_ident(c.relname), a.attname) AS sequence_name,
+    CASE WHEN COALESCE(td.typtype, tb.typtype, t.typtype) = 'e'::char
+        THEN array_to_string((SELECT array_agg(enumlabel) FROM pg_enum WHERE enumtypid = COALESCE(td.oid, tb.oid, a.atttypid))::varchar[], ',')
+        ELSE NULL
+    END AS enum_values,
+    CASE atttypid
+         WHEN 21 /*int2*/ THEN 16
+         WHEN 23 /*int4*/ THEN 32
+         WHEN 20 /*int8*/ THEN 64
+         WHEN 1700 /*numeric*/ THEN
+              CASE WHEN atttypmod = -1
+               THEN null
+               ELSE ((atttypmod - 4) >> 16) & 65535
+               END
+         WHEN 700 /*float4*/ THEN 24 /*FLT_MANT_DIG*/
+         WHEN 701 /*float8*/ THEN 53 /*DBL_MANT_DIG*/
+         ELSE null
+      END   AS numeric_precision,
+      CASE
+        WHEN atttypid IN (21, 23, 20) THEN 0
+        WHEN atttypid IN (1700) THEN
+        CASE
+            WHEN atttypmod = -1 THEN null
+            ELSE (atttypmod - 4) & 65535
+        END
+           ELSE null
+      END AS numeric_scale,
+    CAST(
+             information_schema._pg_char_max_length(information_schema._pg_truetypid(a, t), information_schema._pg_truetypmod(a, t))
+             AS numeric
+    ) AS size,
+    a.attnum = any (ct.conkey) as is_pkey,
+    COALESCE(NULLIF(a.attndims, 0), NULLIF(t.typndims, 0), (t.typcategory='A')::int) AS dimension
+FROM
+    pg_class c
+    LEFT JOIN pg_attribute a ON a.attrelid = c.oid
+    LEFT JOIN pg_attrdef ad ON a.attrelid = ad.adrelid AND a.attnum = ad.adnum
+    LEFT JOIN pg_type t ON a.atttypid = t.oid
+    LEFT JOIN pg_type tb ON (a.attndims > 0 OR t.typcategory='A') AND t.typelem > 0 AND t.typelem = tb.oid OR t.typbasetype > 0 AND t.typbasetype = tb.oid
+    LEFT JOIN pg_type td ON t.typndims > 0 AND t.typbasetype > 0 AND tb.typelem = td.oid
+    LEFT JOIN pg_namespace d ON d.oid = c.relnamespace
+    LEFT JOIN pg_constraint ct ON ct.conrelid = c.oid AND ct.contype = 'p'
+WHERE
+    a.attnum > 0 AND t.typname != '' AND NOT a.attisdropped
+    AND c.relname = 'user'
+    AND d.nspname = 'seguridad'
+ORDER BY
+    a.attnum;";i:1;i:4;i:2;s:21:"yii\db\Command::query";i:3;d:1762444459.320026;i:4;a:1:{i:0;a:5:{s:4:"file";s:50:"C:\xampp\htdocs\planealo.sytes.net\models\User.php";s:4:"line";i:91;s:8:"function";s:7:"findOne";s:5:"class";s:23:"yii\db\BaseActiveRecord";s:4:"type";s:2:"::";}}i:5;i:5356920;}i:10;a:6:{i:0;s:875:"select
+    ct.conname as constraint_name,
+    a.attname as column_name,
+    fc.relname as foreign_table_name,
+    fns.nspname as foreign_table_schema,
+    fa.attname as foreign_column_name
+from
+    (SELECT ct.conname, ct.conrelid, ct.confrelid, ct.conkey, ct.contype, ct.confkey, generate_subscripts(ct.conkey, 1) AS s
+       FROM pg_constraint ct
+    ) AS ct
+    inner join pg_class c on c.oid=ct.conrelid
+    inner join pg_namespace ns on c.relnamespace=ns.oid
+    inner join pg_attribute a on a.attrelid=ct.conrelid and a.attnum = ct.conkey[ct.s]
+    left join pg_class fc on fc.oid=ct.confrelid
+    left join pg_namespace fns on fc.relnamespace=fns.oid
+    left join pg_attribute fa on fa.attrelid=ct.confrelid and fa.attnum = ct.confkey[ct.s]
+where
+    ct.contype='f'
+    and c.relname='user'
+    and ns.nspname='seguridad'
+order by
+    fns.nspname, fc.relname, a.attnum";i:1;i:4;i:2;s:21:"yii\db\Command::query";i:3;d:1762444459.352279;i:4;a:1:{i:0;a:5:{s:4:"file";s:50:"C:\xampp\htdocs\planealo.sytes.net\models\User.php";s:4:"line";i:91;s:8:"function";s:7:"findOne";s:5:"class";s:23:"yii\db\BaseActiveRecord";s:4:"type";s:2:"::";}}i:5;i:5399672;}i:13;a:6:{i:0;s:65:"SELECT * FROM "seguridad"."user" WHERE ("id"=1) AND ("status"=10)";i:1;i:4;i:2;s:21:"yii\db\Command::query";i:3;d:1762444459.371968;i:4;a:1:{i:0;a:5:{s:4:"file";s:50:"C:\xampp\htdocs\planealo.sytes.net\models\User.php";s:4:"line";i:91;s:8:"function";s:7:"findOne";s:5:"class";s:23:"yii\db\BaseActiveRecord";s:4:"type";s:2:"::";}}i:5;i:5758496;}i:16;a:6:{i:0;s:44:"Bootstrap with yii\debug\Module::bootstrap()";i:1;i:8;i:2;s:31:"yii\base\Application::bootstrap";i:3;d:1762444459.454461;i:4;a:0:{}i:5;i:6274856;}i:17;a:6:{i:0;s:19:"Loading module: gii";i:1;i:8;i:2;s:26:"yii\base\Module::getModule";i:3;d:1762444459.471925;i:4;a:0:{}i:5;i:6643400;}i:18;a:6:{i:0;s:42:"Bootstrap with yii\gii\Module::bootstrap()";i:1;i:8;i:2;s:31:"yii\base\Application::bootstrap";i:3;d:1762444459.472554;i:4;a:0:{}i:5;i:6667816;}i:55;a:6:{i:0;s:22:"Route requested: 'ged'";i:1;i:8;i:2;s:34:"yii\web\Application::handleRequest";i:3;d:1762444459.513479;i:4;a:0:{}i:5;i:6792424;}i:56;a:6:{i:0;s:19:"Loading module: ged";i:1;i:8;i:2;s:26:"yii\base\Module::getModule";i:3;d:1762444459.513498;i:4;a:0:{}i:5;i:6793816;}i:57;a:6:{i:0;s:31:"Route to run: ged/default/index";i:1;i:8;i:2;s:30:"yii\base\Controller::runAction";i:3;d:1762444459.568847;i:4;a:0:{}i:5;i:6933432;}i:58;a:6:{i:0;s:76:"Running action: app\modules\ged\controllers\DefaultController::actionIndex()";i:1;i:8;i:2;s:36:"yii\base\InlineAction::runWithParams";i:3;d:1762444459.672072;i:4;a:0:{}i:5;i:7151008;}i:59;a:6:{i:0;s:75:"SELECT * FROM "atletas"."escuela" WHERE "eliminado"=FALSE ORDER BY "nombre"";i:1;i:4;i:2;s:21:"yii\db\Command::query";i:3;d:1762444459.812218;i:4;a:1:{i:0;a:5:{s:4:"file";s:80:"C:\xampp\htdocs\planealo.sytes.net\modules\ged\controllers\DefaultController.php";s:4:"line";i:44;s:8:"function";s:3:"all";s:5:"class";s:18:"yii\db\ActiveQuery";s:4:"type";s:2:"->";}}i:5;i:7218744;}i:62;a:6:{i:0;s:2814:"SELECT
+    d.nspname AS table_schema,
+    c.relname AS table_name,
+    a.attname AS column_name,
+    COALESCE(td.typname, tb.typname, t.typname) AS data_type,
+    COALESCE(td.typtype, tb.typtype, t.typtype) AS type_type,
+    (SELECT nspname FROM pg_namespace WHERE oid = COALESCE(td.typnamespace, tb.typnamespace, t.typnamespace)) AS type_scheme,
+    a.attlen AS character_maximum_length,
+    pg_catalog.col_description(c.oid, a.attnum) AS column_comment,
+    a.atttypmod AS modifier,
+    a.attnotnull = false AS is_nullable,
+    CAST(pg_get_expr(ad.adbin, ad.adrelid) AS varchar) AS column_default,
+    coalesce(pg_get_expr(ad.adbin, ad.adrelid) ~ 'nextval',false) OR attidentity != '' AS is_autoinc,
+    pg_get_serial_sequence(quote_ident(d.nspname) || '.' || quote_ident(c.relname), a.attname) AS sequence_name,
+    CASE WHEN COALESCE(td.typtype, tb.typtype, t.typtype) = 'e'::char
+        THEN array_to_string((SELECT array_agg(enumlabel) FROM pg_enum WHERE enumtypid = COALESCE(td.oid, tb.oid, a.atttypid))::varchar[], ',')
+        ELSE NULL
+    END AS enum_values,
+    CASE atttypid
+         WHEN 21 /*int2*/ THEN 16
+         WHEN 23 /*int4*/ THEN 32
+         WHEN 20 /*int8*/ THEN 64
+         WHEN 1700 /*numeric*/ THEN
+              CASE WHEN atttypmod = -1
+               THEN null
+               ELSE ((atttypmod - 4) >> 16) & 65535
+               END
+         WHEN 700 /*float4*/ THEN 24 /*FLT_MANT_DIG*/
+         WHEN 701 /*float8*/ THEN 53 /*DBL_MANT_DIG*/
+         ELSE null
+      END   AS numeric_precision,
+      CASE
+        WHEN atttypid IN (21, 23, 20) THEN 0
+        WHEN atttypid IN (1700) THEN
+        CASE
+            WHEN atttypmod = -1 THEN null
+            ELSE (atttypmod - 4) & 65535
+        END
+           ELSE null
+      END AS numeric_scale,
+    CAST(
+             information_schema._pg_char_max_length(information_schema._pg_truetypid(a, t), information_schema._pg_truetypmod(a, t))
+             AS numeric
+    ) AS size,
+    a.attnum = any (ct.conkey) as is_pkey,
+    COALESCE(NULLIF(a.attndims, 0), NULLIF(t.typndims, 0), (t.typcategory='A')::int) AS dimension
+FROM
+    pg_class c
+    LEFT JOIN pg_attribute a ON a.attrelid = c.oid
+    LEFT JOIN pg_attrdef ad ON a.attrelid = ad.adrelid AND a.attnum = ad.adnum
+    LEFT JOIN pg_type t ON a.atttypid = t.oid
+    LEFT JOIN pg_type tb ON (a.attndims > 0 OR t.typcategory='A') AND t.typelem > 0 AND t.typelem = tb.oid OR t.typbasetype > 0 AND t.typbasetype = tb.oid
+    LEFT JOIN pg_type td ON t.typndims > 0 AND t.typbasetype > 0 AND tb.typelem = td.oid
+    LEFT JOIN pg_namespace d ON d.oid = c.relnamespace
+    LEFT JOIN pg_constraint ct ON ct.conrelid = c.oid AND ct.contype = 'p'
+WHERE
+    a.attnum > 0 AND t.typname != '' AND NOT a.attisdropped
+    AND c.relname = 'escuela'
+    AND d.nspname = 'atletas'
+ORDER BY
+    a.attnum;";i:1;i:4;i:2;s:21:"yii\db\Command::query";i:3;d:1762444459.816208;i:4;a:1:{i:0;a:5:{s:4:"file";s:80:"C:\xampp\htdocs\planealo.sytes.net\modules\ged\controllers\DefaultController.php";s:4:"line";i:44;s:8:"function";s:3:"all";s:5:"class";s:18:"yii\db\ActiveQuery";s:4:"type";s:2:"->";}}i:5;i:7250560;}i:65;a:6:{i:0;s:876:"select
+    ct.conname as constraint_name,
+    a.attname as column_name,
+    fc.relname as foreign_table_name,
+    fns.nspname as foreign_table_schema,
+    fa.attname as foreign_column_name
+from
+    (SELECT ct.conname, ct.conrelid, ct.confrelid, ct.conkey, ct.contype, ct.confkey, generate_subscripts(ct.conkey, 1) AS s
+       FROM pg_constraint ct
+    ) AS ct
+    inner join pg_class c on c.oid=ct.conrelid
+    inner join pg_namespace ns on c.relnamespace=ns.oid
+    inner join pg_attribute a on a.attrelid=ct.conrelid and a.attnum = ct.conkey[ct.s]
+    left join pg_class fc on fc.oid=ct.confrelid
+    left join pg_namespace fns on fc.relnamespace=fns.oid
+    left join pg_attribute fa on fa.attrelid=ct.confrelid and fa.attnum = ct.confkey[ct.s]
+where
+    ct.contype='f'
+    and c.relname='escuela'
+    and ns.nspname='atletas'
+order by
+    fns.nspname, fc.relname, a.attnum";i:1;i:4;i:2;s:21:"yii\db\Command::query";i:3;d:1762444459.824502;i:4;a:1:{i:0;a:5:{s:4:"file";s:80:"C:\xampp\htdocs\planealo.sytes.net\modules\ged\controllers\DefaultController.php";s:4:"line";i:44;s:8:"function";s:3:"all";s:5:"class";s:18:"yii\db\ActiveQuery";s:4:"type";s:2:"->";}}i:5;i:7268248;}i:68;a:6:{i:0;s:72:"SELECT * FROM "atletas"."escuela" WHERE ("id"=2) AND ("eliminado"=FALSE)";i:1;i:4;i:2;s:21:"yii\db\Command::query";i:3;d:1762444459.830091;i:4;a:2:{i:0;a:5:{s:4:"file";s:80:"C:\xampp\htdocs\planealo.sytes.net\modules\ged\controllers\DefaultController.php";s:4:"line";i:183;s:8:"function";s:3:"one";s:5:"class";s:18:"yii\db\ActiveQuery";s:4:"type";s:2:"->";}i:1;a:5:{s:4:"file";s:80:"C:\xampp\htdocs\planealo.sytes.net\modules\ged\controllers\DefaultController.php";s:4:"line";i:73;s:8:"function";s:14:"validarEscuela";s:5:"class";s:45:"app\modules\ged\controllers\DefaultController";s:4:"type";s:2:"->";}}i:5;i:7276856;}i:71;a:6:{i:0;s:91:"Rendering view file: C:\xampp\htdocs\planealo.sytes.net\modules\ged\views\default\index.php";i:1;i:8;i:2;s:25:"yii\base\View::renderFile";i:3;d:1762444459.834858;i:4;a:1:{i:0;a:5:{s:4:"file";s:80:"C:\xampp\htdocs\planealo.sytes.net\modules\ged\controllers\DefaultController.php";s:4:"line";i:96;s:8:"function";s:6:"render";s:5:"class";s:19:"yii\base\Controller";s:4:"type";s:2:"->";}}i:5;i:7415664;}i:72;a:6:{i:0;s:64:"SELECT COUNT(*) FROM "atletas"."escuela" WHERE "eliminado"=FALSE";i:1;i:4;i:2;s:21:"yii\db\Command::query";i:3;d:1762444459.83538;i:4;a:2:{i:0;a:5:{s:4:"file";s:70:"C:\xampp\htdocs\planealo.sytes.net\modules\ged\views\default\index.php";s:4:"line";i:11;s:8:"function";s:5:"count";s:5:"class";s:12:"yii\db\Query";s:4:"type";s:2:"->";}i:1;a:5:{s:4:"file";s:80:"C:\xampp\htdocs\planealo.sytes.net\modules\ged\controllers\DefaultController.php";s:4:"line";i:96;s:8:"function";s:6:"render";s:5:"class";s:19:"yii\base\Controller";s:4:"type";s:2:"->";}}i:5;i:7487680;}i:75;a:6:{i:0;s:78:"Rendering view file: C:\xampp\htdocs\planealo.sytes.net\views\layouts\main.php";i:1;i:8;i:2;s:25:"yii\base\View::renderFile";i:3;d:1762444459.942109;i:4;a:1:{i:0;a:5:{s:4:"file";s:80:"C:\xampp\htdocs\planealo.sytes.net\modules\ged\controllers\DefaultController.php";s:4:"line";i:96;s:8:"function";s:6:"render";s:5:"class";s:19:"yii\base\Controller";s:4:"type";s:2:"->";}}i:5;i:7871304;}i:76;a:6:{i:0;s:119:"SELECT "id", "name", "route", "parent", "order", "data" FROM "seguridad"."menu" WHERE "parent" IS NULL ORDER BY "order"";i:1;i:4;i:2;s:21:"yii\db\Command::query";i:3;d:1762444459.954383;i:4;a:3:{i:0;a:5:{s:4:"file";s:60:"C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php";s:4:"line";i:57;s:8:"function";s:3:"all";s:5:"class";s:12:"yii\db\Query";s:4:"type";s:2:"->";}i:1;a:5:{s:4:"file";s:60:"C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php";s:4:"line";i:18;s:8:"function";s:12:"getMenuItems";s:5:"class";s:25:"app\components\MenuWidget";s:4:"type";s:2:"->";}i:2;a:5:{s:4:"file";s:57:"C:\xampp\htdocs\planealo.sytes.net\views\layouts\main.php";s:4:"line";i:83;s:8:"function";s:6:"widget";s:5:"class";s:15:"yii\base\Widget";s:4:"type";s:2:"::";}}i:5;i:8301000;}i:79;a:6:{i:0;s:115:"SELECT "id", "name", "route", "parent", "order", "data" FROM "seguridad"."menu" WHERE "parent"=162 ORDER BY "order"";i:1;i:4;i:2;s:21:"yii\db\Command::query";i:3;d:1762444459.95592;i:4;a:3:{i:0;a:5:{s:4:"file";s:60:"C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php";s:4:"line";i:57;s:8:"function";s:3:"all";s:5:"class";s:12:"yii\db\Query";s:4:"type";s:2:"->";}i:1;a:5:{s:4:"file";s:60:"C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php";s:4:"line";i:70;s:8:"function";s:12:"getMenuItems";s:5:"class";s:25:"app\components\MenuWidget";s:4:"type";s:2:"->";}i:2;a:5:{s:4:"file";s:60:"C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php";s:4:"line";i:18;s:8:"function";s:12:"getMenuItems";s:5:"class";s:25:"app\components\MenuWidget";s:4:"type";s:2:"->";}}i:5;i:8311248;}i:82;a:6:{i:0;s:114:"SELECT "id", "name", "route", "parent", "order", "data" FROM "seguridad"."menu" WHERE "parent"=63 ORDER BY "order"";i:1;i:4;i:2;s:21:"yii\db\Command::query";i:3;d:1762444459.956631;i:4;a:3:{i:0;a:5:{s:4:"file";s:60:"C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php";s:4:"line";i:57;s:8:"function";s:3:"all";s:5:"class";s:12:"yii\db\Query";s:4:"type";s:2:"->";}i:1;a:5:{s:4:"file";s:60:"C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php";s:4:"line";i:70;s:8:"function";s:12:"getMenuItems";s:5:"class";s:25:"app\components\MenuWidget";s:4:"type";s:2:"->";}i:2;a:5:{s:4:"file";s:60:"C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php";s:4:"line";i:70;s:8:"function";s:12:"getMenuItems";s:5:"class";s:25:"app\components\MenuWidget";s:4:"type";s:2:"->";}}i:5;i:8323400;}i:85;a:6:{i:0;s:115:"SELECT "id", "name", "route", "parent", "order", "data" FROM "seguridad"."menu" WHERE "parent"=113 ORDER BY "order"";i:1;i:4;i:2;s:21:"yii\db\Command::query";i:3;d:1762444459.957256;i:4;a:3:{i:0;a:5:{s:4:"file";s:60:"C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php";s:4:"line";i:57;s:8:"function";s:3:"all";s:5:"class";s:12:"yii\db\Query";s:4:"type";s:2:"->";}i:1;a:5:{s:4:"file";s:60:"C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php";s:4:"line";i:70;s:8:"function";s:12:"getMenuItems";s:5:"class";s:25:"app\components\MenuWidget";s:4:"type";s:2:"->";}i:2;a:5:{s:4:"file";s:60:"C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php";s:4:"line";i:70;s:8:"function";s:12:"getMenuItems";s:5:"class";s:25:"app\components\MenuWidget";s:4:"type";s:2:"->";}}i:5;i:8329048;}i:88;a:6:{i:0;s:114:"SELECT "id", "name", "route", "parent", "order", "data" FROM "seguridad"."menu" WHERE "parent"=35 ORDER BY "order"";i:1;i:4;i:2;s:21:"yii\db\Command::query";i:3;d:1762444459.957828;i:4;a:3:{i:0;a:5:{s:4:"file";s:60:"C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php";s:4:"line";i:57;s:8:"function";s:3:"all";s:5:"class";s:12:"yii\db\Query";s:4:"type";s:2:"->";}i:1;a:5:{s:4:"file";s:60:"C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php";s:4:"line";i:70;s:8:"function";s:12:"getMenuItems";s:5:"class";s:25:"app\components\MenuWidget";s:4:"type";s:2:"->";}i:2;a:5:{s:4:"file";s:60:"C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php";s:4:"line";i:70;s:8:"function";s:12:"getMenuItems";s:5:"class";s:25:"app\components\MenuWidget";s:4:"type";s:2:"->";}}i:5;i:8334480;}i:91;a:6:{i:0;s:114:"SELECT "id", "name", "route", "parent", "order", "data" FROM "seguridad"."menu" WHERE "parent"=33 ORDER BY "order"";i:1;i:4;i:2;s:21:"yii\db\Command::query";i:3;d:1762444459.958386;i:4;a:3:{i:0;a:5:{s:4:"file";s:60:"C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php";s:4:"line";i:57;s:8:"function";s:3:"all";s:5:"class";s:12:"yii\db\Query";s:4:"type";s:2:"->";}i:1;a:5:{s:4:"file";s:60:"C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php";s:4:"line";i:70;s:8:"function";s:12:"getMenuItems";s:5:"class";s:25:"app\components\MenuWidget";s:4:"type";s:2:"->";}i:2;a:5:{s:4:"file";s:60:"C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php";s:4:"line";i:70;s:8:"function";s:12:"getMenuItems";s:5:"class";s:25:"app\components\MenuWidget";s:4:"type";s:2:"->";}}i:5;i:8339912;}i:94;a:6:{i:0;s:114:"SELECT "id", "name", "route", "parent", "order", "data" FROM "seguridad"."menu" WHERE "parent"=36 ORDER BY "order"";i:1;i:4;i:2;s:21:"yii\db\Command::query";i:3;d:1762444459.958957;i:4;a:3:{i:0;a:5:{s:4:"file";s:60:"C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php";s:4:"line";i:57;s:8:"function";s:3:"all";s:5:"class";s:12:"yii\db\Query";s:4:"type";s:2:"->";}i:1;a:5:{s:4:"file";s:60:"C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php";s:4:"line";i:70;s:8:"function";s:12:"getMenuItems";s:5:"class";s:25:"app\components\MenuWidget";s:4:"type";s:2:"->";}i:2;a:5:{s:4:"file";s:60:"C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php";s:4:"line";i:70;s:8:"function";s:12:"getMenuItems";s:5:"class";s:25:"app\components\MenuWidget";s:4:"type";s:2:"->";}}i:5;i:8345344;}i:97;a:6:{i:0;s:114:"SELECT "id", "name", "route", "parent", "order", "data" FROM "seguridad"."menu" WHERE "parent"=37 ORDER BY "order"";i:1;i:4;i:2;s:21:"yii\db\Command::query";i:3;d:1762444459.959542;i:4;a:3:{i:0;a:5:{s:4:"file";s:60:"C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php";s:4:"line";i:57;s:8:"function";s:3:"all";s:5:"class";s:12:"yii\db\Query";s:4:"type";s:2:"->";}i:1;a:5:{s:4:"file";s:60:"C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php";s:4:"line";i:70;s:8:"function";s:12:"getMenuItems";s:5:"class";s:25:"app\components\MenuWidget";s:4:"type";s:2:"->";}i:2;a:5:{s:4:"file";s:60:"C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php";s:4:"line";i:70;s:8:"function";s:12:"getMenuItems";s:5:"class";s:25:"app\components\MenuWidget";s:4:"type";s:2:"->";}}i:5;i:8350776;}i:100;a:6:{i:0;s:114:"SELECT "id", "name", "route", "parent", "order", "data" FROM "seguridad"."menu" WHERE "parent"=34 ORDER BY "order"";i:1;i:4;i:2;s:21:"yii\db\Command::query";i:3;d:1762444459.960537;i:4;a:3:{i:0;a:5:{s:4:"file";s:60:"C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php";s:4:"line";i:57;s:8:"function";s:3:"all";s:5:"class";s:12:"yii\db\Query";s:4:"type";s:2:"->";}i:1;a:5:{s:4:"file";s:60:"C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php";s:4:"line";i:70;s:8:"function";s:12:"getMenuItems";s:5:"class";s:25:"app\components\MenuWidget";s:4:"type";s:2:"->";}i:2;a:5:{s:4:"file";s:60:"C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php";s:4:"line";i:70;s:8:"function";s:12:"getMenuItems";s:5:"class";s:25:"app\components\MenuWidget";s:4:"type";s:2:"->";}}i:5;i:8356208;}i:103;a:6:{i:0;s:114:"SELECT "id", "name", "route", "parent", "order", "data" FROM "seguridad"."menu" WHERE "parent"=38 ORDER BY "order"";i:1;i:4;i:2;s:21:"yii\db\Command::query";i:3;d:1762444459.961418;i:4;a:3:{i:0;a:5:{s:4:"file";s:60:"C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php";s:4:"line";i:57;s:8:"function";s:3:"all";s:5:"class";s:12:"yii\db\Query";s:4:"type";s:2:"->";}i:1;a:5:{s:4:"file";s:60:"C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php";s:4:"line";i:70;s:8:"function";s:12:"getMenuItems";s:5:"class";s:25:"app\components\MenuWidget";s:4:"type";s:2:"->";}i:2;a:5:{s:4:"file";s:60:"C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php";s:4:"line";i:70;s:8:"function";s:12:"getMenuItems";s:5:"class";s:25:"app\components\MenuWidget";s:4:"type";s:2:"->";}}i:5;i:8361640;}i:106;a:6:{i:0;s:115:"SELECT "id", "name", "route", "parent", "order", "data" FROM "seguridad"."menu" WHERE "parent"=163 ORDER BY "order"";i:1;i:4;i:2;s:21:"yii\db\Command::query";i:3;d:1762444459.96236;i:4;a:3:{i:0;a:5:{s:4:"file";s:60:"C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php";s:4:"line";i:57;s:8:"function";s:3:"all";s:5:"class";s:12:"yii\db\Query";s:4:"type";s:2:"->";}i:1;a:5:{s:4:"file";s:60:"C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php";s:4:"line";i:70;s:8:"function";s:12:"getMenuItems";s:5:"class";s:25:"app\components\MenuWidget";s:4:"type";s:2:"->";}i:2;a:5:{s:4:"file";s:60:"C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php";s:4:"line";i:18;s:8:"function";s:12:"getMenuItems";s:5:"class";s:25:"app\components\MenuWidget";s:4:"type";s:2:"->";}}i:5;i:8361040;}i:109;a:6:{i:0;s:115:"SELECT "id", "name", "route", "parent", "order", "data" FROM "seguridad"."menu" WHERE "parent"=164 ORDER BY "order"";i:1;i:4;i:2;s:21:"yii\db\Command::query";i:3;d:1762444459.963263;i:4;a:3:{i:0;a:5:{s:4:"file";s:60:"C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php";s:4:"line";i:57;s:8:"function";s:3:"all";s:5:"class";s:12:"yii\db\Query";s:4:"type";s:2:"->";}i:1;a:5:{s:4:"file";s:60:"C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php";s:4:"line";i:70;s:8:"function";s:12:"getMenuItems";s:5:"class";s:25:"app\components\MenuWidget";s:4:"type";s:2:"->";}i:2;a:5:{s:4:"file";s:60:"C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php";s:4:"line";i:70;s:8:"function";s:12:"getMenuItems";s:5:"class";s:25:"app\components\MenuWidget";s:4:"type";s:2:"->";}}i:5;i:8369656;}i:112;a:6:{i:0;s:115:"SELECT "id", "name", "route", "parent", "order", "data" FROM "seguridad"."menu" WHERE "parent"=166 ORDER BY "order"";i:1;i:4;i:2;s:21:"yii\db\Command::query";i:3;d:1762444459.963912;i:4;a:3:{i:0;a:5:{s:4:"file";s:60:"C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php";s:4:"line";i:57;s:8:"function";s:3:"all";s:5:"class";s:12:"yii\db\Query";s:4:"type";s:2:"->";}i:1;a:5:{s:4:"file";s:60:"C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php";s:4:"line";i:70;s:8:"function";s:12:"getMenuItems";s:5:"class";s:25:"app\components\MenuWidget";s:4:"type";s:2:"->";}i:2;a:5:{s:4:"file";s:60:"C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php";s:4:"line";i:70;s:8:"function";s:12:"getMenuItems";s:5:"class";s:25:"app\components\MenuWidget";s:4:"type";s:2:"->";}}i:5;i:8378144;}i:115;a:6:{i:0;s:115:"SELECT "id", "name", "route", "parent", "order", "data" FROM "seguridad"."menu" WHERE "parent"=167 ORDER BY "order"";i:1;i:4;i:2;s:21:"yii\db\Command::query";i:3;d:1762444459.964473;i:4;a:3:{i:0;a:5:{s:4:"file";s:60:"C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php";s:4:"line";i:57;s:8:"function";s:3:"all";s:5:"class";s:12:"yii\db\Query";s:4:"type";s:2:"->";}i:1;a:5:{s:4:"file";s:60:"C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php";s:4:"line";i:70;s:8:"function";s:12:"getMenuItems";s:5:"class";s:25:"app\components\MenuWidget";s:4:"type";s:2:"->";}i:2;a:5:{s:4:"file";s:60:"C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php";s:4:"line";i:70;s:8:"function";s:12:"getMenuItems";s:5:"class";s:25:"app\components\MenuWidget";s:4:"type";s:2:"->";}}i:5;i:8380840;}i:118;a:6:{i:0;s:115:"SELECT "id", "name", "route", "parent", "order", "data" FROM "seguridad"."menu" WHERE "parent"=169 ORDER BY "order"";i:1;i:4;i:2;s:21:"yii\db\Command::query";i:3;d:1762444459.965058;i:4;a:3:{i:0;a:5:{s:4:"file";s:60:"C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php";s:4:"line";i:57;s:8:"function";s:3:"all";s:5:"class";s:12:"yii\db\Query";s:4:"type";s:2:"->";}i:1;a:5:{s:4:"file";s:60:"C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php";s:4:"line";i:70;s:8:"function";s:12:"getMenuItems";s:5:"class";s:25:"app\components\MenuWidget";s:4:"type";s:2:"->";}i:2;a:5:{s:4:"file";s:60:"C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php";s:4:"line";i:70;s:8:"function";s:12:"getMenuItems";s:5:"class";s:25:"app\components\MenuWidget";s:4:"type";s:2:"->";}}i:5;i:8389808;}i:121;a:6:{i:0;s:115:"SELECT "id", "name", "route", "parent", "order", "data" FROM "seguridad"."menu" WHERE "parent"=168 ORDER BY "order"";i:1;i:4;i:2;s:21:"yii\db\Command::query";i:3;d:1762444459.965727;i:4;a:3:{i:0;a:5:{s:4:"file";s:60:"C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php";s:4:"line";i:57;s:8:"function";s:3:"all";s:5:"class";s:12:"yii\db\Query";s:4:"type";s:2:"->";}i:1;a:5:{s:4:"file";s:60:"C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php";s:4:"line";i:70;s:8:"function";s:12:"getMenuItems";s:5:"class";s:25:"app\components\MenuWidget";s:4:"type";s:2:"->";}i:2;a:5:{s:4:"file";s:60:"C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php";s:4:"line";i:70;s:8:"function";s:12:"getMenuItems";s:5:"class";s:25:"app\components\MenuWidget";s:4:"type";s:2:"->";}}i:5;i:8395456;}i:124;a:6:{i:0;s:115:"SELECT "id", "name", "route", "parent", "order", "data" FROM "seguridad"."menu" WHERE "parent"=172 ORDER BY "order"";i:1;i:4;i:2;s:21:"yii\db\Command::query";i:3;d:1762444459.966261;i:4;a:3:{i:0;a:5:{s:4:"file";s:60:"C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php";s:4:"line";i:57;s:8:"function";s:3:"all";s:5:"class";s:12:"yii\db\Query";s:4:"type";s:2:"->";}i:1;a:5:{s:4:"file";s:60:"C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php";s:4:"line";i:70;s:8:"function";s:12:"getMenuItems";s:5:"class";s:25:"app\components\MenuWidget";s:4:"type";s:2:"->";}i:2;a:5:{s:4:"file";s:60:"C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php";s:4:"line";i:18;s:8:"function";s:12:"getMenuItems";s:5:"class";s:25:"app\components\MenuWidget";s:4:"type";s:2:"->";}}i:5;i:8394232;}}}";s:9:"profiling";s:49928:"a:3:{s:6:"memory";i:8610240;s:4:"time";d:1.3885657787322998;s:8:"messages";a:52:{i:5;a:6:{i:0;s:70:"Opening DB connection: pgsql:host=localhost;dbname=escuelas_deportivas";i:1;i:80;i:2;s:23:"yii\db\Connection::open";i:3;d:1762444459.184854;i:4;a:1:{i:0;a:5:{s:4:"file";s:50:"C:\xampp\htdocs\planealo.sytes.net\models\User.php";s:4:"line";i:91;s:8:"function";s:7:"findOne";s:5:"class";s:23:"yii\db\BaseActiveRecord";s:4:"type";s:2:"::";}}i:5;i:5221496;}i:6;a:6:{i:0;s:70:"Opening DB connection: pgsql:host=localhost;dbname=escuelas_deportivas";i:1;i:96;i:2;s:23:"yii\db\Connection::open";i:3;d:1762444459.265009;i:4;a:1:{i:0;a:5:{s:4:"file";s:50:"C:\xampp\htdocs\planealo.sytes.net\models\User.php";s:4:"line";i:91;s:8:"function";s:7:"findOne";s:5:"class";s:23:"yii\db\BaseActiveRecord";s:4:"type";s:2:"::";}}i:5;i:5223168;}i:8;a:6:{i:0;s:2813:"SELECT
+    d.nspname AS table_schema,
+    c.relname AS table_name,
+    a.attname AS column_name,
+    COALESCE(td.typname, tb.typname, t.typname) AS data_type,
+    COALESCE(td.typtype, tb.typtype, t.typtype) AS type_type,
+    (SELECT nspname FROM pg_namespace WHERE oid = COALESCE(td.typnamespace, tb.typnamespace, t.typnamespace)) AS type_scheme,
+    a.attlen AS character_maximum_length,
+    pg_catalog.col_description(c.oid, a.attnum) AS column_comment,
+    a.atttypmod AS modifier,
+    a.attnotnull = false AS is_nullable,
+    CAST(pg_get_expr(ad.adbin, ad.adrelid) AS varchar) AS column_default,
+    coalesce(pg_get_expr(ad.adbin, ad.adrelid) ~ 'nextval',false) OR attidentity != '' AS is_autoinc,
+    pg_get_serial_sequence(quote_ident(d.nspname) || '.' || quote_ident(c.relname), a.attname) AS sequence_name,
+    CASE WHEN COALESCE(td.typtype, tb.typtype, t.typtype) = 'e'::char
+        THEN array_to_string((SELECT array_agg(enumlabel) FROM pg_enum WHERE enumtypid = COALESCE(td.oid, tb.oid, a.atttypid))::varchar[], ',')
+        ELSE NULL
+    END AS enum_values,
+    CASE atttypid
+         WHEN 21 /*int2*/ THEN 16
+         WHEN 23 /*int4*/ THEN 32
+         WHEN 20 /*int8*/ THEN 64
+         WHEN 1700 /*numeric*/ THEN
+              CASE WHEN atttypmod = -1
+               THEN null
+               ELSE ((atttypmod - 4) >> 16) & 65535
+               END
+         WHEN 700 /*float4*/ THEN 24 /*FLT_MANT_DIG*/
+         WHEN 701 /*float8*/ THEN 53 /*DBL_MANT_DIG*/
+         ELSE null
+      END   AS numeric_precision,
+      CASE
+        WHEN atttypid IN (21, 23, 20) THEN 0
+        WHEN atttypid IN (1700) THEN
+        CASE
+            WHEN atttypmod = -1 THEN null
+            ELSE (atttypmod - 4) & 65535
+        END
+           ELSE null
+      END AS numeric_scale,
+    CAST(
+             information_schema._pg_char_max_length(information_schema._pg_truetypid(a, t), information_schema._pg_truetypmod(a, t))
+             AS numeric
+    ) AS size,
+    a.attnum = any (ct.conkey) as is_pkey,
+    COALESCE(NULLIF(a.attndims, 0), NULLIF(t.typndims, 0), (t.typcategory='A')::int) AS dimension
+FROM
+    pg_class c
+    LEFT JOIN pg_attribute a ON a.attrelid = c.oid
+    LEFT JOIN pg_attrdef ad ON a.attrelid = ad.adrelid AND a.attnum = ad.adnum
+    LEFT JOIN pg_type t ON a.atttypid = t.oid
+    LEFT JOIN pg_type tb ON (a.attndims > 0 OR t.typcategory='A') AND t.typelem > 0 AND t.typelem = tb.oid OR t.typbasetype > 0 AND t.typbasetype = tb.oid
+    LEFT JOIN pg_type td ON t.typndims > 0 AND t.typbasetype > 0 AND tb.typelem = td.oid
+    LEFT JOIN pg_namespace d ON d.oid = c.relnamespace
+    LEFT JOIN pg_constraint ct ON ct.conrelid = c.oid AND ct.contype = 'p'
+WHERE
+    a.attnum > 0 AND t.typname != '' AND NOT a.attisdropped
+    AND c.relname = 'user'
+    AND d.nspname = 'seguridad'
+ORDER BY
+    a.attnum;";i:1;i:80;i:2;s:21:"yii\db\Command::query";i:3;d:1762444459.320117;i:4;a:1:{i:0;a:5:{s:4:"file";s:50:"C:\xampp\htdocs\planealo.sytes.net\models\User.php";s:4:"line";i:91;s:8:"function";s:7:"findOne";s:5:"class";s:23:"yii\db\BaseActiveRecord";s:4:"type";s:2:"::";}}i:5;i:5358176;}i:9;a:6:{i:0;s:2813:"SELECT
+    d.nspname AS table_schema,
+    c.relname AS table_name,
+    a.attname AS column_name,
+    COALESCE(td.typname, tb.typname, t.typname) AS data_type,
+    COALESCE(td.typtype, tb.typtype, t.typtype) AS type_type,
+    (SELECT nspname FROM pg_namespace WHERE oid = COALESCE(td.typnamespace, tb.typnamespace, t.typnamespace)) AS type_scheme,
+    a.attlen AS character_maximum_length,
+    pg_catalog.col_description(c.oid, a.attnum) AS column_comment,
+    a.atttypmod AS modifier,
+    a.attnotnull = false AS is_nullable,
+    CAST(pg_get_expr(ad.adbin, ad.adrelid) AS varchar) AS column_default,
+    coalesce(pg_get_expr(ad.adbin, ad.adrelid) ~ 'nextval',false) OR attidentity != '' AS is_autoinc,
+    pg_get_serial_sequence(quote_ident(d.nspname) || '.' || quote_ident(c.relname), a.attname) AS sequence_name,
+    CASE WHEN COALESCE(td.typtype, tb.typtype, t.typtype) = 'e'::char
+        THEN array_to_string((SELECT array_agg(enumlabel) FROM pg_enum WHERE enumtypid = COALESCE(td.oid, tb.oid, a.atttypid))::varchar[], ',')
+        ELSE NULL
+    END AS enum_values,
+    CASE atttypid
+         WHEN 21 /*int2*/ THEN 16
+         WHEN 23 /*int4*/ THEN 32
+         WHEN 20 /*int8*/ THEN 64
+         WHEN 1700 /*numeric*/ THEN
+              CASE WHEN atttypmod = -1
+               THEN null
+               ELSE ((atttypmod - 4) >> 16) & 65535
+               END
+         WHEN 700 /*float4*/ THEN 24 /*FLT_MANT_DIG*/
+         WHEN 701 /*float8*/ THEN 53 /*DBL_MANT_DIG*/
+         ELSE null
+      END   AS numeric_precision,
+      CASE
+        WHEN atttypid IN (21, 23, 20) THEN 0
+        WHEN atttypid IN (1700) THEN
+        CASE
+            WHEN atttypmod = -1 THEN null
+            ELSE (atttypmod - 4) & 65535
+        END
+           ELSE null
+      END AS numeric_scale,
+    CAST(
+             information_schema._pg_char_max_length(information_schema._pg_truetypid(a, t), information_schema._pg_truetypmod(a, t))
+             AS numeric
+    ) AS size,
+    a.attnum = any (ct.conkey) as is_pkey,
+    COALESCE(NULLIF(a.attndims, 0), NULLIF(t.typndims, 0), (t.typcategory='A')::int) AS dimension
+FROM
+    pg_class c
+    LEFT JOIN pg_attribute a ON a.attrelid = c.oid
+    LEFT JOIN pg_attrdef ad ON a.attrelid = ad.adrelid AND a.attnum = ad.adnum
+    LEFT JOIN pg_type t ON a.atttypid = t.oid
+    LEFT JOIN pg_type tb ON (a.attndims > 0 OR t.typcategory='A') AND t.typelem > 0 AND t.typelem = tb.oid OR t.typbasetype > 0 AND t.typbasetype = tb.oid
+    LEFT JOIN pg_type td ON t.typndims > 0 AND t.typbasetype > 0 AND tb.typelem = td.oid
+    LEFT JOIN pg_namespace d ON d.oid = c.relnamespace
+    LEFT JOIN pg_constraint ct ON ct.conrelid = c.oid AND ct.contype = 'p'
+WHERE
+    a.attnum > 0 AND t.typname != '' AND NOT a.attisdropped
+    AND c.relname = 'user'
+    AND d.nspname = 'seguridad'
+ORDER BY
+    a.attnum;";i:1;i:96;i:2;s:21:"yii\db\Command::query";i:3;d:1762444459.336121;i:4;a:1:{i:0;a:5:{s:4:"file";s:50:"C:\xampp\htdocs\planealo.sytes.net\models\User.php";s:4:"line";i:91;s:8:"function";s:7:"findOne";s:5:"class";s:23:"yii\db\BaseActiveRecord";s:4:"type";s:2:"::";}}i:5;i:5384048;}i:11;a:6:{i:0;s:875:"select
+    ct.conname as constraint_name,
+    a.attname as column_name,
+    fc.relname as foreign_table_name,
+    fns.nspname as foreign_table_schema,
+    fa.attname as foreign_column_name
+from
+    (SELECT ct.conname, ct.conrelid, ct.confrelid, ct.conkey, ct.contype, ct.confkey, generate_subscripts(ct.conkey, 1) AS s
+       FROM pg_constraint ct
+    ) AS ct
+    inner join pg_class c on c.oid=ct.conrelid
+    inner join pg_namespace ns on c.relnamespace=ns.oid
+    inner join pg_attribute a on a.attrelid=ct.conrelid and a.attnum = ct.conkey[ct.s]
+    left join pg_class fc on fc.oid=ct.confrelid
+    left join pg_namespace fns on fc.relnamespace=fns.oid
+    left join pg_attribute fa on fa.attrelid=ct.confrelid and fa.attnum = ct.confkey[ct.s]
+where
+    ct.contype='f'
+    and c.relname='user'
+    and ns.nspname='seguridad'
+order by
+    fns.nspname, fc.relname, a.attnum";i:1;i:80;i:2;s:21:"yii\db\Command::query";i:3;d:1762444459.352348;i:4;a:1:{i:0;a:5:{s:4:"file";s:50:"C:\xampp\htdocs\planealo.sytes.net\models\User.php";s:4:"line";i:91;s:8:"function";s:7:"findOne";s:5:"class";s:23:"yii\db\BaseActiveRecord";s:4:"type";s:2:"::";}}i:5;i:5400840;}i:12;a:6:{i:0;s:875:"select
+    ct.conname as constraint_name,
+    a.attname as column_name,
+    fc.relname as foreign_table_name,
+    fns.nspname as foreign_table_schema,
+    fa.attname as foreign_column_name
+from
+    (SELECT ct.conname, ct.conrelid, ct.confrelid, ct.conkey, ct.contype, ct.confkey, generate_subscripts(ct.conkey, 1) AS s
+       FROM pg_constraint ct
+    ) AS ct
+    inner join pg_class c on c.oid=ct.conrelid
+    inner join pg_namespace ns on c.relnamespace=ns.oid
+    inner join pg_attribute a on a.attrelid=ct.conrelid and a.attnum = ct.conkey[ct.s]
+    left join pg_class fc on fc.oid=ct.confrelid
+    left join pg_namespace fns on fc.relnamespace=fns.oid
+    left join pg_attribute fa on fa.attrelid=ct.confrelid and fa.attnum = ct.confkey[ct.s]
+where
+    ct.contype='f'
+    and c.relname='user'
+    and ns.nspname='seguridad'
+order by
+    fns.nspname, fc.relname, a.attnum";i:1;i:96;i:2;s:21:"yii\db\Command::query";i:3;d:1762444459.356415;i:4;a:1:{i:0;a:5:{s:4:"file";s:50:"C:\xampp\htdocs\planealo.sytes.net\models\User.php";s:4:"line";i:91;s:8:"function";s:7:"findOne";s:5:"class";s:23:"yii\db\BaseActiveRecord";s:4:"type";s:2:"::";}}i:5;i:5402080;}i:14;a:6:{i:0;s:65:"SELECT * FROM "seguridad"."user" WHERE ("id"=1) AND ("status"=10)";i:1;i:80;i:2;s:21:"yii\db\Command::query";i:3;d:1762444459.37202;i:4;a:1:{i:0;a:5:{s:4:"file";s:50:"C:\xampp\htdocs\planealo.sytes.net\models\User.php";s:4:"line";i:91;s:8:"function";s:7:"findOne";s:5:"class";s:23:"yii\db\BaseActiveRecord";s:4:"type";s:2:"::";}}i:5;i:5760072;}i:15;a:6:{i:0;s:65:"SELECT * FROM "seguridad"."user" WHERE ("id"=1) AND ("status"=10)";i:1;i:96;i:2;s:21:"yii\db\Command::query";i:3;d:1762444459.373069;i:4;a:1:{i:0;a:5:{s:4:"file";s:50:"C:\xampp\htdocs\planealo.sytes.net\models\User.php";s:4:"line";i:91;s:8:"function";s:7:"findOne";s:5:"class";s:23:"yii\db\BaseActiveRecord";s:4:"type";s:2:"::";}}i:5;i:5763088;}i:60;a:6:{i:0;s:75:"SELECT * FROM "atletas"."escuela" WHERE "eliminado"=FALSE ORDER BY "nombre"";i:1;i:80;i:2;s:21:"yii\db\Command::query";i:3;d:1762444459.812282;i:4;a:1:{i:0;a:5:{s:4:"file";s:80:"C:\xampp\htdocs\planealo.sytes.net\modules\ged\controllers\DefaultController.php";s:4:"line";i:44;s:8:"function";s:3:"all";s:5:"class";s:18:"yii\db\ActiveQuery";s:4:"type";s:2:"->";}}i:5;i:7221000;}i:61;a:6:{i:0;s:75:"SELECT * FROM "atletas"."escuela" WHERE "eliminado"=FALSE ORDER BY "nombre"";i:1;i:96;i:2;s:21:"yii\db\Command::query";i:3;d:1762444459.815033;i:4;a:1:{i:0;a:5:{s:4:"file";s:80:"C:\xampp\htdocs\planealo.sytes.net\modules\ged\controllers\DefaultController.php";s:4:"line";i:44;s:8:"function";s:3:"all";s:5:"class";s:18:"yii\db\ActiveQuery";s:4:"type";s:2:"->";}}i:5;i:7227408;}i:63;a:6:{i:0;s:2814:"SELECT
+    d.nspname AS table_schema,
+    c.relname AS table_name,
+    a.attname AS column_name,
+    COALESCE(td.typname, tb.typname, t.typname) AS data_type,
+    COALESCE(td.typtype, tb.typtype, t.typtype) AS type_type,
+    (SELECT nspname FROM pg_namespace WHERE oid = COALESCE(td.typnamespace, tb.typnamespace, t.typnamespace)) AS type_scheme,
+    a.attlen AS character_maximum_length,
+    pg_catalog.col_description(c.oid, a.attnum) AS column_comment,
+    a.atttypmod AS modifier,
+    a.attnotnull = false AS is_nullable,
+    CAST(pg_get_expr(ad.adbin, ad.adrelid) AS varchar) AS column_default,
+    coalesce(pg_get_expr(ad.adbin, ad.adrelid) ~ 'nextval',false) OR attidentity != '' AS is_autoinc,
+    pg_get_serial_sequence(quote_ident(d.nspname) || '.' || quote_ident(c.relname), a.attname) AS sequence_name,
+    CASE WHEN COALESCE(td.typtype, tb.typtype, t.typtype) = 'e'::char
+        THEN array_to_string((SELECT array_agg(enumlabel) FROM pg_enum WHERE enumtypid = COALESCE(td.oid, tb.oid, a.atttypid))::varchar[], ',')
+        ELSE NULL
+    END AS enum_values,
+    CASE atttypid
+         WHEN 21 /*int2*/ THEN 16
+         WHEN 23 /*int4*/ THEN 32
+         WHEN 20 /*int8*/ THEN 64
+         WHEN 1700 /*numeric*/ THEN
+              CASE WHEN atttypmod = -1
+               THEN null
+               ELSE ((atttypmod - 4) >> 16) & 65535
+               END
+         WHEN 700 /*float4*/ THEN 24 /*FLT_MANT_DIG*/
+         WHEN 701 /*float8*/ THEN 53 /*DBL_MANT_DIG*/
+         ELSE null
+      END   AS numeric_precision,
+      CASE
+        WHEN atttypid IN (21, 23, 20) THEN 0
+        WHEN atttypid IN (1700) THEN
+        CASE
+            WHEN atttypmod = -1 THEN null
+            ELSE (atttypmod - 4) & 65535
+        END
+           ELSE null
+      END AS numeric_scale,
+    CAST(
+             information_schema._pg_char_max_length(information_schema._pg_truetypid(a, t), information_schema._pg_truetypmod(a, t))
+             AS numeric
+    ) AS size,
+    a.attnum = any (ct.conkey) as is_pkey,
+    COALESCE(NULLIF(a.attndims, 0), NULLIF(t.typndims, 0), (t.typcategory='A')::int) AS dimension
+FROM
+    pg_class c
+    LEFT JOIN pg_attribute a ON a.attrelid = c.oid
+    LEFT JOIN pg_attrdef ad ON a.attrelid = ad.adrelid AND a.attnum = ad.adnum
+    LEFT JOIN pg_type t ON a.atttypid = t.oid
+    LEFT JOIN pg_type tb ON (a.attndims > 0 OR t.typcategory='A') AND t.typelem > 0 AND t.typelem = tb.oid OR t.typbasetype > 0 AND t.typbasetype = tb.oid
+    LEFT JOIN pg_type td ON t.typndims > 0 AND t.typbasetype > 0 AND tb.typelem = td.oid
+    LEFT JOIN pg_namespace d ON d.oid = c.relnamespace
+    LEFT JOIN pg_constraint ct ON ct.conrelid = c.oid AND ct.contype = 'p'
+WHERE
+    a.attnum > 0 AND t.typname != '' AND NOT a.attisdropped
+    AND c.relname = 'escuela'
+    AND d.nspname = 'atletas'
+ORDER BY
+    a.attnum;";i:1;i:80;i:2;s:21:"yii\db\Command::query";i:3;d:1762444459.816253;i:4;a:1:{i:0;a:5:{s:4:"file";s:80:"C:\xampp\htdocs\planealo.sytes.net\modules\ged\controllers\DefaultController.php";s:4:"line";i:44;s:8:"function";s:3:"all";s:5:"class";s:18:"yii\db\ActiveQuery";s:4:"type";s:2:"->";}}i:5;i:7251728;}i:64;a:6:{i:0;s:2814:"SELECT
+    d.nspname AS table_schema,
+    c.relname AS table_name,
+    a.attname AS column_name,
+    COALESCE(td.typname, tb.typname, t.typname) AS data_type,
+    COALESCE(td.typtype, tb.typtype, t.typtype) AS type_type,
+    (SELECT nspname FROM pg_namespace WHERE oid = COALESCE(td.typnamespace, tb.typnamespace, t.typnamespace)) AS type_scheme,
+    a.attlen AS character_maximum_length,
+    pg_catalog.col_description(c.oid, a.attnum) AS column_comment,
+    a.atttypmod AS modifier,
+    a.attnotnull = false AS is_nullable,
+    CAST(pg_get_expr(ad.adbin, ad.adrelid) AS varchar) AS column_default,
+    coalesce(pg_get_expr(ad.adbin, ad.adrelid) ~ 'nextval',false) OR attidentity != '' AS is_autoinc,
+    pg_get_serial_sequence(quote_ident(d.nspname) || '.' || quote_ident(c.relname), a.attname) AS sequence_name,
+    CASE WHEN COALESCE(td.typtype, tb.typtype, t.typtype) = 'e'::char
+        THEN array_to_string((SELECT array_agg(enumlabel) FROM pg_enum WHERE enumtypid = COALESCE(td.oid, tb.oid, a.atttypid))::varchar[], ',')
+        ELSE NULL
+    END AS enum_values,
+    CASE atttypid
+         WHEN 21 /*int2*/ THEN 16
+         WHEN 23 /*int4*/ THEN 32
+         WHEN 20 /*int8*/ THEN 64
+         WHEN 1700 /*numeric*/ THEN
+              CASE WHEN atttypmod = -1
+               THEN null
+               ELSE ((atttypmod - 4) >> 16) & 65535
+               END
+         WHEN 700 /*float4*/ THEN 24 /*FLT_MANT_DIG*/
+         WHEN 701 /*float8*/ THEN 53 /*DBL_MANT_DIG*/
+         ELSE null
+      END   AS numeric_precision,
+      CASE
+        WHEN atttypid IN (21, 23, 20) THEN 0
+        WHEN atttypid IN (1700) THEN
+        CASE
+            WHEN atttypmod = -1 THEN null
+            ELSE (atttypmod - 4) & 65535
+        END
+           ELSE null
+      END AS numeric_scale,
+    CAST(
+             information_schema._pg_char_max_length(information_schema._pg_truetypid(a, t), information_schema._pg_truetypmod(a, t))
+             AS numeric
+    ) AS size,
+    a.attnum = any (ct.conkey) as is_pkey,
+    COALESCE(NULLIF(a.attndims, 0), NULLIF(t.typndims, 0), (t.typcategory='A')::int) AS dimension
+FROM
+    pg_class c
+    LEFT JOIN pg_attribute a ON a.attrelid = c.oid
+    LEFT JOIN pg_attrdef ad ON a.attrelid = ad.adrelid AND a.attnum = ad.adnum
+    LEFT JOIN pg_type t ON a.atttypid = t.oid
+    LEFT JOIN pg_type tb ON (a.attndims > 0 OR t.typcategory='A') AND t.typelem > 0 AND t.typelem = tb.oid OR t.typbasetype > 0 AND t.typbasetype = tb.oid
+    LEFT JOIN pg_type td ON t.typndims > 0 AND t.typbasetype > 0 AND tb.typelem = td.oid
+    LEFT JOIN pg_namespace d ON d.oid = c.relnamespace
+    LEFT JOIN pg_constraint ct ON ct.conrelid = c.oid AND ct.contype = 'p'
+WHERE
+    a.attnum > 0 AND t.typname != '' AND NOT a.attisdropped
+    AND c.relname = 'escuela'
+    AND d.nspname = 'atletas'
+ORDER BY
+    a.attnum;";i:1;i:96;i:2;s:21:"yii\db\Command::query";i:3;d:1762444459.823936;i:4;a:1:{i:0;a:5:{s:4:"file";s:80:"C:\xampp\htdocs\planealo.sytes.net\modules\ged\controllers\DefaultController.php";s:4:"line";i:44;s:8:"function";s:3:"all";s:5:"class";s:18:"yii\db\ActiveQuery";s:4:"type";s:2:"->";}}i:5;i:7292576;}i:66;a:6:{i:0;s:876:"select
+    ct.conname as constraint_name,
+    a.attname as column_name,
+    fc.relname as foreign_table_name,
+    fns.nspname as foreign_table_schema,
+    fa.attname as foreign_column_name
+from
+    (SELECT ct.conname, ct.conrelid, ct.confrelid, ct.conkey, ct.contype, ct.confkey, generate_subscripts(ct.conkey, 1) AS s
+       FROM pg_constraint ct
+    ) AS ct
+    inner join pg_class c on c.oid=ct.conrelid
+    inner join pg_namespace ns on c.relnamespace=ns.oid
+    inner join pg_attribute a on a.attrelid=ct.conrelid and a.attnum = ct.conkey[ct.s]
+    left join pg_class fc on fc.oid=ct.confrelid
+    left join pg_namespace fns on fc.relnamespace=fns.oid
+    left join pg_attribute fa on fa.attrelid=ct.confrelid and fa.attnum = ct.confkey[ct.s]
+where
+    ct.contype='f'
+    and c.relname='escuela'
+    and ns.nspname='atletas'
+order by
+    fns.nspname, fc.relname, a.attnum";i:1;i:80;i:2;s:21:"yii\db\Command::query";i:3;d:1762444459.824534;i:4;a:1:{i:0;a:5:{s:4:"file";s:80:"C:\xampp\htdocs\planealo.sytes.net\modules\ged\controllers\DefaultController.php";s:4:"line";i:44;s:8:"function";s:3:"all";s:5:"class";s:18:"yii\db\ActiveQuery";s:4:"type";s:2:"->";}}i:5;i:7269416;}i:67;a:6:{i:0;s:876:"select
+    ct.conname as constraint_name,
+    a.attname as column_name,
+    fc.relname as foreign_table_name,
+    fns.nspname as foreign_table_schema,
+    fa.attname as foreign_column_name
+from
+    (SELECT ct.conname, ct.conrelid, ct.confrelid, ct.conkey, ct.contype, ct.confkey, generate_subscripts(ct.conkey, 1) AS s
+       FROM pg_constraint ct
+    ) AS ct
+    inner join pg_class c on c.oid=ct.conrelid
+    inner join pg_namespace ns on c.relnamespace=ns.oid
+    inner join pg_attribute a on a.attrelid=ct.conrelid and a.attnum = ct.conkey[ct.s]
+    left join pg_class fc on fc.oid=ct.confrelid
+    left join pg_namespace fns on fc.relnamespace=fns.oid
+    left join pg_attribute fa on fa.attrelid=ct.confrelid and fa.attnum = ct.confkey[ct.s]
+where
+    ct.contype='f'
+    and c.relname='escuela'
+    and ns.nspname='atletas'
+order by
+    fns.nspname, fc.relname, a.attnum";i:1;i:96;i:2;s:21:"yii\db\Command::query";i:3;d:1762444459.829531;i:4;a:1:{i:0;a:5:{s:4:"file";s:80:"C:\xampp\htdocs\planealo.sytes.net\modules\ged\controllers\DefaultController.php";s:4:"line";i:44;s:8:"function";s:3:"all";s:5:"class";s:18:"yii\db\ActiveQuery";s:4:"type";s:2:"->";}}i:5;i:7270656;}i:69;a:6:{i:0;s:72:"SELECT * FROM "atletas"."escuela" WHERE ("id"=2) AND ("eliminado"=FALSE)";i:1;i:80;i:2;s:21:"yii\db\Command::query";i:3;d:1762444459.830125;i:4;a:2:{i:0;a:5:{s:4:"file";s:80:"C:\xampp\htdocs\planealo.sytes.net\modules\ged\controllers\DefaultController.php";s:4:"line";i:183;s:8:"function";s:3:"one";s:5:"class";s:18:"yii\db\ActiveQuery";s:4:"type";s:2:"->";}i:1;a:5:{s:4:"file";s:80:"C:\xampp\htdocs\planealo.sytes.net\modules\ged\controllers\DefaultController.php";s:4:"line";i:73;s:8:"function";s:14:"validarEscuela";s:5:"class";s:45:"app\modules\ged\controllers\DefaultController";s:4:"type";s:2:"->";}}i:5;i:7279448;}i:70;a:6:{i:0;s:72:"SELECT * FROM "atletas"."escuela" WHERE ("id"=2) AND ("eliminado"=FALSE)";i:1;i:96;i:2;s:21:"yii\db\Command::query";i:3;d:1762444459.830669;i:4;a:2:{i:0;a:5:{s:4:"file";s:80:"C:\xampp\htdocs\planealo.sytes.net\modules\ged\controllers\DefaultController.php";s:4:"line";i:183;s:8:"function";s:3:"one";s:5:"class";s:18:"yii\db\ActiveQuery";s:4:"type";s:2:"->";}i:1;a:5:{s:4:"file";s:80:"C:\xampp\htdocs\planealo.sytes.net\modules\ged\controllers\DefaultController.php";s:4:"line";i:73;s:8:"function";s:14:"validarEscuela";s:5:"class";s:45:"app\modules\ged\controllers\DefaultController";s:4:"type";s:2:"->";}}i:5;i:7284208;}i:73;a:6:{i:0;s:64:"SELECT COUNT(*) FROM "atletas"."escuela" WHERE "eliminado"=FALSE";i:1;i:80;i:2;s:21:"yii\db\Command::query";i:3;d:1762444459.835415;i:4;a:2:{i:0;a:5:{s:4:"file";s:70:"C:\xampp\htdocs\planealo.sytes.net\modules\ged\views\default\index.php";s:4:"line";i:11;s:8:"function";s:5:"count";s:5:"class";s:12:"yii\db\Query";s:4:"type";s:2:"->";}i:1;a:5:{s:4:"file";s:80:"C:\xampp\htdocs\planealo.sytes.net\modules\ged\controllers\DefaultController.php";s:4:"line";i:96;s:8:"function";s:6:"render";s:5:"class";s:19:"yii\base\Controller";s:4:"type";s:2:"->";}}i:5;i:7490296;}i:74;a:6:{i:0;s:64:"SELECT COUNT(*) FROM "atletas"."escuela" WHERE "eliminado"=FALSE";i:1;i:96;i:2;s:21:"yii\db\Command::query";i:3;d:1762444459.836089;i:4;a:2:{i:0;a:5:{s:4:"file";s:70:"C:\xampp\htdocs\planealo.sytes.net\modules\ged\views\default\index.php";s:4:"line";i:11;s:8:"function";s:5:"count";s:5:"class";s:12:"yii\db\Query";s:4:"type";s:2:"->";}i:1;a:5:{s:4:"file";s:80:"C:\xampp\htdocs\planealo.sytes.net\modules\ged\controllers\DefaultController.php";s:4:"line";i:96;s:8:"function";s:6:"render";s:5:"class";s:19:"yii\base\Controller";s:4:"type";s:2:"->";}}i:5;i:7491584;}i:77;a:6:{i:0;s:119:"SELECT "id", "name", "route", "parent", "order", "data" FROM "seguridad"."menu" WHERE "parent" IS NULL ORDER BY "order"";i:1;i:80;i:2;s:21:"yii\db\Command::query";i:3;d:1762444459.954422;i:4;a:3:{i:0;a:5:{s:4:"file";s:60:"C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php";s:4:"line";i:57;s:8:"function";s:3:"all";s:5:"class";s:12:"yii\db\Query";s:4:"type";s:2:"->";}i:1;a:5:{s:4:"file";s:60:"C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php";s:4:"line";i:18;s:8:"function";s:12:"getMenuItems";s:5:"class";s:25:"app\components\MenuWidget";s:4:"type";s:2:"->";}i:2;a:5:{s:4:"file";s:57:"C:\xampp\htdocs\planealo.sytes.net\views\layouts\main.php";s:4:"line";i:83;s:8:"function";s:6:"widget";s:5:"class";s:15:"yii\base\Widget";s:4:"type";s:2:"::";}}i:5;i:8302920;}i:78;a:6:{i:0;s:119:"SELECT "id", "name", "route", "parent", "order", "data" FROM "seguridad"."menu" WHERE "parent" IS NULL ORDER BY "order"";i:1;i:96;i:2;s:21:"yii\db\Command::query";i:3;d:1762444459.955619;i:4;a:3:{i:0;a:5:{s:4:"file";s:60:"C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php";s:4:"line";i:57;s:8:"function";s:3:"all";s:5:"class";s:12:"yii\db\Query";s:4:"type";s:2:"->";}i:1;a:5:{s:4:"file";s:60:"C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php";s:4:"line";i:18;s:8:"function";s:12:"getMenuItems";s:5:"class";s:25:"app\components\MenuWidget";s:4:"type";s:2:"->";}i:2;a:5:{s:4:"file";s:57:"C:\xampp\htdocs\planealo.sytes.net\views\layouts\main.php";s:4:"line";i:83;s:8:"function";s:6:"widget";s:5:"class";s:15:"yii\base\Widget";s:4:"type";s:2:"::";}}i:5;i:8306368;}i:80;a:6:{i:0;s:115:"SELECT "id", "name", "route", "parent", "order", "data" FROM "seguridad"."menu" WHERE "parent"=162 ORDER BY "order"";i:1;i:80;i:2;s:21:"yii\db\Command::query";i:3;d:1762444459.95595;i:4;a:3:{i:0;a:5:{s:4:"file";s:60:"C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php";s:4:"line";i:57;s:8:"function";s:3:"all";s:5:"class";s:12:"yii\db\Query";s:4:"type";s:2:"->";}i:1;a:5:{s:4:"file";s:60:"C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php";s:4:"line";i:70;s:8:"function";s:12:"getMenuItems";s:5:"class";s:25:"app\components\MenuWidget";s:4:"type";s:2:"->";}i:2;a:5:{s:4:"file";s:60:"C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php";s:4:"line";i:18;s:8:"function";s:12:"getMenuItems";s:5:"class";s:25:"app\components\MenuWidget";s:4:"type";s:2:"->";}}i:5;i:8314304;}i:81;a:6:{i:0;s:115:"SELECT "id", "name", "route", "parent", "order", "data" FROM "seguridad"."menu" WHERE "parent"=162 ORDER BY "order"";i:1;i:96;i:2;s:21:"yii\db\Command::query";i:3;d:1762444459.956396;i:4;a:3:{i:0;a:5:{s:4:"file";s:60:"C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php";s:4:"line";i:57;s:8:"function";s:3:"all";s:5:"class";s:12:"yii\db\Query";s:4:"type";s:2:"->";}i:1;a:5:{s:4:"file";s:60:"C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php";s:4:"line";i:70;s:8:"function";s:12:"getMenuItems";s:5:"class";s:25:"app\components\MenuWidget";s:4:"type";s:2:"->";}i:2;a:5:{s:4:"file";s:60:"C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php";s:4:"line";i:18;s:8:"function";s:12:"getMenuItems";s:5:"class";s:25:"app\components\MenuWidget";s:4:"type";s:2:"->";}}i:5;i:8320672;}i:83;a:6:{i:0;s:114:"SELECT "id", "name", "route", "parent", "order", "data" FROM "seguridad"."menu" WHERE "parent"=63 ORDER BY "order"";i:1;i:80;i:2;s:21:"yii\db\Command::query";i:3;d:1762444459.956661;i:4;a:3:{i:0;a:5:{s:4:"file";s:60:"C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php";s:4:"line";i:57;s:8:"function";s:3:"all";s:5:"class";s:12:"yii\db\Query";s:4:"type";s:2:"->";}i:1;a:5:{s:4:"file";s:60:"C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php";s:4:"line";i:70;s:8:"function";s:12:"getMenuItems";s:5:"class";s:25:"app\components\MenuWidget";s:4:"type";s:2:"->";}i:2;a:5:{s:4:"file";s:60:"C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php";s:4:"line";i:70;s:8:"function";s:12:"getMenuItems";s:5:"class";s:25:"app\components\MenuWidget";s:4:"type";s:2:"->";}}i:5;i:8326456;}i:84;a:6:{i:0;s:114:"SELECT "id", "name", "route", "parent", "order", "data" FROM "seguridad"."menu" WHERE "parent"=63 ORDER BY "order"";i:1;i:96;i:2;s:21:"yii\db\Command::query";i:3;d:1762444459.957035;i:4;a:3:{i:0;a:5:{s:4:"file";s:60:"C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php";s:4:"line";i:57;s:8:"function";s:3:"all";s:5:"class";s:12:"yii\db\Query";s:4:"type";s:2:"->";}i:1;a:5:{s:4:"file";s:60:"C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php";s:4:"line";i:70;s:8:"function";s:12:"getMenuItems";s:5:"class";s:25:"app\components\MenuWidget";s:4:"type";s:2:"->";}i:2;a:5:{s:4:"file";s:60:"C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php";s:4:"line";i:70;s:8:"function";s:12:"getMenuItems";s:5:"class";s:25:"app\components\MenuWidget";s:4:"type";s:2:"->";}}i:5;i:8328520;}i:86;a:6:{i:0;s:115:"SELECT "id", "name", "route", "parent", "order", "data" FROM "seguridad"."menu" WHERE "parent"=113 ORDER BY "order"";i:1;i:80;i:2;s:21:"yii\db\Command::query";i:3;d:1762444459.957279;i:4;a:3:{i:0;a:5:{s:4:"file";s:60:"C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php";s:4:"line";i:57;s:8:"function";s:3:"all";s:5:"class";s:12:"yii\db\Query";s:4:"type";s:2:"->";}i:1;a:5:{s:4:"file";s:60:"C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php";s:4:"line";i:70;s:8:"function";s:12:"getMenuItems";s:5:"class";s:25:"app\components\MenuWidget";s:4:"type";s:2:"->";}i:2;a:5:{s:4:"file";s:60:"C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php";s:4:"line";i:70;s:8:"function";s:12:"getMenuItems";s:5:"class";s:25:"app\components\MenuWidget";s:4:"type";s:2:"->";}}i:5;i:8332104;}i:87;a:6:{i:0;s:115:"SELECT "id", "name", "route", "parent", "order", "data" FROM "seguridad"."menu" WHERE "parent"=113 ORDER BY "order"";i:1;i:96;i:2;s:21:"yii\db\Command::query";i:3;d:1762444459.957639;i:4;a:3:{i:0;a:5:{s:4:"file";s:60:"C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php";s:4:"line";i:57;s:8:"function";s:3:"all";s:5:"class";s:12:"yii\db\Query";s:4:"type";s:2:"->";}i:1;a:5:{s:4:"file";s:60:"C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php";s:4:"line";i:70;s:8:"function";s:12:"getMenuItems";s:5:"class";s:25:"app\components\MenuWidget";s:4:"type";s:2:"->";}i:2;a:5:{s:4:"file";s:60:"C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php";s:4:"line";i:70;s:8:"function";s:12:"getMenuItems";s:5:"class";s:25:"app\components\MenuWidget";s:4:"type";s:2:"->";}}i:5;i:8334168;}i:89;a:6:{i:0;s:114:"SELECT "id", "name", "route", "parent", "order", "data" FROM "seguridad"."menu" WHERE "parent"=35 ORDER BY "order"";i:1;i:80;i:2;s:21:"yii\db\Command::query";i:3;d:1762444459.957853;i:4;a:3:{i:0;a:5:{s:4:"file";s:60:"C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php";s:4:"line";i:57;s:8:"function";s:3:"all";s:5:"class";s:12:"yii\db\Query";s:4:"type";s:2:"->";}i:1;a:5:{s:4:"file";s:60:"C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php";s:4:"line";i:70;s:8:"function";s:12:"getMenuItems";s:5:"class";s:25:"app\components\MenuWidget";s:4:"type";s:2:"->";}i:2;a:5:{s:4:"file";s:60:"C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php";s:4:"line";i:70;s:8:"function";s:12:"getMenuItems";s:5:"class";s:25:"app\components\MenuWidget";s:4:"type";s:2:"->";}}i:5;i:8337536;}i:90;a:6:{i:0;s:114:"SELECT "id", "name", "route", "parent", "order", "data" FROM "seguridad"."menu" WHERE "parent"=35 ORDER BY "order"";i:1;i:96;i:2;s:21:"yii\db\Command::query";i:3;d:1762444459.958193;i:4;a:3:{i:0;a:5:{s:4:"file";s:60:"C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php";s:4:"line";i:57;s:8:"function";s:3:"all";s:5:"class";s:12:"yii\db\Query";s:4:"type";s:2:"->";}i:1;a:5:{s:4:"file";s:60:"C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php";s:4:"line";i:70;s:8:"function";s:12:"getMenuItems";s:5:"class";s:25:"app\components\MenuWidget";s:4:"type";s:2:"->";}i:2;a:5:{s:4:"file";s:60:"C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php";s:4:"line";i:70;s:8:"function";s:12:"getMenuItems";s:5:"class";s:25:"app\components\MenuWidget";s:4:"type";s:2:"->";}}i:5;i:8339600;}i:92;a:6:{i:0;s:114:"SELECT "id", "name", "route", "parent", "order", "data" FROM "seguridad"."menu" WHERE "parent"=33 ORDER BY "order"";i:1;i:80;i:2;s:21:"yii\db\Command::query";i:3;d:1762444459.958407;i:4;a:3:{i:0;a:5:{s:4:"file";s:60:"C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php";s:4:"line";i:57;s:8:"function";s:3:"all";s:5:"class";s:12:"yii\db\Query";s:4:"type";s:2:"->";}i:1;a:5:{s:4:"file";s:60:"C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php";s:4:"line";i:70;s:8:"function";s:12:"getMenuItems";s:5:"class";s:25:"app\components\MenuWidget";s:4:"type";s:2:"->";}i:2;a:5:{s:4:"file";s:60:"C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php";s:4:"line";i:70;s:8:"function";s:12:"getMenuItems";s:5:"class";s:25:"app\components\MenuWidget";s:4:"type";s:2:"->";}}i:5;i:8342968;}i:93;a:6:{i:0;s:114:"SELECT "id", "name", "route", "parent", "order", "data" FROM "seguridad"."menu" WHERE "parent"=33 ORDER BY "order"";i:1;i:96;i:2;s:21:"yii\db\Command::query";i:3;d:1762444459.95877;i:4;a:3:{i:0;a:5:{s:4:"file";s:60:"C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php";s:4:"line";i:57;s:8:"function";s:3:"all";s:5:"class";s:12:"yii\db\Query";s:4:"type";s:2:"->";}i:1;a:5:{s:4:"file";s:60:"C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php";s:4:"line";i:70;s:8:"function";s:12:"getMenuItems";s:5:"class";s:25:"app\components\MenuWidget";s:4:"type";s:2:"->";}i:2;a:5:{s:4:"file";s:60:"C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php";s:4:"line";i:70;s:8:"function";s:12:"getMenuItems";s:5:"class";s:25:"app\components\MenuWidget";s:4:"type";s:2:"->";}}i:5;i:8345032;}i:95;a:6:{i:0;s:114:"SELECT "id", "name", "route", "parent", "order", "data" FROM "seguridad"."menu" WHERE "parent"=36 ORDER BY "order"";i:1;i:80;i:2;s:21:"yii\db\Command::query";i:3;d:1762444459.958995;i:4;a:3:{i:0;a:5:{s:4:"file";s:60:"C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php";s:4:"line";i:57;s:8:"function";s:3:"all";s:5:"class";s:12:"yii\db\Query";s:4:"type";s:2:"->";}i:1;a:5:{s:4:"file";s:60:"C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php";s:4:"line";i:70;s:8:"function";s:12:"getMenuItems";s:5:"class";s:25:"app\components\MenuWidget";s:4:"type";s:2:"->";}i:2;a:5:{s:4:"file";s:60:"C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php";s:4:"line";i:70;s:8:"function";s:12:"getMenuItems";s:5:"class";s:25:"app\components\MenuWidget";s:4:"type";s:2:"->";}}i:5;i:8348400;}i:96;a:6:{i:0;s:114:"SELECT "id", "name", "route", "parent", "order", "data" FROM "seguridad"."menu" WHERE "parent"=36 ORDER BY "order"";i:1;i:96;i:2;s:21:"yii\db\Command::query";i:3;d:1762444459.959325;i:4;a:3:{i:0;a:5:{s:4:"file";s:60:"C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php";s:4:"line";i:57;s:8:"function";s:3:"all";s:5:"class";s:12:"yii\db\Query";s:4:"type";s:2:"->";}i:1;a:5:{s:4:"file";s:60:"C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php";s:4:"line";i:70;s:8:"function";s:12:"getMenuItems";s:5:"class";s:25:"app\components\MenuWidget";s:4:"type";s:2:"->";}i:2;a:5:{s:4:"file";s:60:"C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php";s:4:"line";i:70;s:8:"function";s:12:"getMenuItems";s:5:"class";s:25:"app\components\MenuWidget";s:4:"type";s:2:"->";}}i:5;i:8350464;}i:98;a:6:{i:0;s:114:"SELECT "id", "name", "route", "parent", "order", "data" FROM "seguridad"."menu" WHERE "parent"=37 ORDER BY "order"";i:1;i:80;i:2;s:21:"yii\db\Command::query";i:3;d:1762444459.959617;i:4;a:3:{i:0;a:5:{s:4:"file";s:60:"C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php";s:4:"line";i:57;s:8:"function";s:3:"all";s:5:"class";s:12:"yii\db\Query";s:4:"type";s:2:"->";}i:1;a:5:{s:4:"file";s:60:"C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php";s:4:"line";i:70;s:8:"function";s:12:"getMenuItems";s:5:"class";s:25:"app\components\MenuWidget";s:4:"type";s:2:"->";}i:2;a:5:{s:4:"file";s:60:"C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php";s:4:"line";i:70;s:8:"function";s:12:"getMenuItems";s:5:"class";s:25:"app\components\MenuWidget";s:4:"type";s:2:"->";}}i:5;i:8353832;}i:99;a:6:{i:0;s:114:"SELECT "id", "name", "route", "parent", "order", "data" FROM "seguridad"."menu" WHERE "parent"=37 ORDER BY "order"";i:1;i:96;i:2;s:21:"yii\db\Command::query";i:3;d:1762444459.960239;i:4;a:3:{i:0;a:5:{s:4:"file";s:60:"C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php";s:4:"line";i:57;s:8:"function";s:3:"all";s:5:"class";s:12:"yii\db\Query";s:4:"type";s:2:"->";}i:1;a:5:{s:4:"file";s:60:"C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php";s:4:"line";i:70;s:8:"function";s:12:"getMenuItems";s:5:"class";s:25:"app\components\MenuWidget";s:4:"type";s:2:"->";}i:2;a:5:{s:4:"file";s:60:"C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php";s:4:"line";i:70;s:8:"function";s:12:"getMenuItems";s:5:"class";s:25:"app\components\MenuWidget";s:4:"type";s:2:"->";}}i:5;i:8355896;}i:101;a:6:{i:0;s:114:"SELECT "id", "name", "route", "parent", "order", "data" FROM "seguridad"."menu" WHERE "parent"=34 ORDER BY "order"";i:1;i:80;i:2;s:21:"yii\db\Command::query";i:3;d:1762444459.960569;i:4;a:3:{i:0;a:5:{s:4:"file";s:60:"C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php";s:4:"line";i:57;s:8:"function";s:3:"all";s:5:"class";s:12:"yii\db\Query";s:4:"type";s:2:"->";}i:1;a:5:{s:4:"file";s:60:"C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php";s:4:"line";i:70;s:8:"function";s:12:"getMenuItems";s:5:"class";s:25:"app\components\MenuWidget";s:4:"type";s:2:"->";}i:2;a:5:{s:4:"file";s:60:"C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php";s:4:"line";i:70;s:8:"function";s:12:"getMenuItems";s:5:"class";s:25:"app\components\MenuWidget";s:4:"type";s:2:"->";}}i:5;i:8359264;}i:102;a:6:{i:0;s:114:"SELECT "id", "name", "route", "parent", "order", "data" FROM "seguridad"."menu" WHERE "parent"=34 ORDER BY "order"";i:1;i:96;i:2;s:21:"yii\db\Command::query";i:3;d:1762444459.961092;i:4;a:3:{i:0;a:5:{s:4:"file";s:60:"C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php";s:4:"line";i:57;s:8:"function";s:3:"all";s:5:"class";s:12:"yii\db\Query";s:4:"type";s:2:"->";}i:1;a:5:{s:4:"file";s:60:"C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php";s:4:"line";i:70;s:8:"function";s:12:"getMenuItems";s:5:"class";s:25:"app\components\MenuWidget";s:4:"type";s:2:"->";}i:2;a:5:{s:4:"file";s:60:"C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php";s:4:"line";i:70;s:8:"function";s:12:"getMenuItems";s:5:"class";s:25:"app\components\MenuWidget";s:4:"type";s:2:"->";}}i:5;i:8361328;}i:104;a:6:{i:0;s:114:"SELECT "id", "name", "route", "parent", "order", "data" FROM "seguridad"."menu" WHERE "parent"=38 ORDER BY "order"";i:1;i:80;i:2;s:21:"yii\db\Command::query";i:3;d:1762444459.961472;i:4;a:3:{i:0;a:5:{s:4:"file";s:60:"C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php";s:4:"line";i:57;s:8:"function";s:3:"all";s:5:"class";s:12:"yii\db\Query";s:4:"type";s:2:"->";}i:1;a:5:{s:4:"file";s:60:"C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php";s:4:"line";i:70;s:8:"function";s:12:"getMenuItems";s:5:"class";s:25:"app\components\MenuWidget";s:4:"type";s:2:"->";}i:2;a:5:{s:4:"file";s:60:"C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php";s:4:"line";i:70;s:8:"function";s:12:"getMenuItems";s:5:"class";s:25:"app\components\MenuWidget";s:4:"type";s:2:"->";}}i:5;i:8364696;}i:105;a:6:{i:0;s:114:"SELECT "id", "name", "route", "parent", "order", "data" FROM "seguridad"."menu" WHERE "parent"=38 ORDER BY "order"";i:1;i:96;i:2;s:21:"yii\db\Command::query";i:3;d:1762444459.962079;i:4;a:3:{i:0;a:5:{s:4:"file";s:60:"C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php";s:4:"line";i:57;s:8:"function";s:3:"all";s:5:"class";s:12:"yii\db\Query";s:4:"type";s:2:"->";}i:1;a:5:{s:4:"file";s:60:"C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php";s:4:"line";i:70;s:8:"function";s:12:"getMenuItems";s:5:"class";s:25:"app\components\MenuWidget";s:4:"type";s:2:"->";}i:2;a:5:{s:4:"file";s:60:"C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php";s:4:"line";i:70;s:8:"function";s:12:"getMenuItems";s:5:"class";s:25:"app\components\MenuWidget";s:4:"type";s:2:"->";}}i:5;i:8366760;}i:107;a:6:{i:0;s:115:"SELECT "id", "name", "route", "parent", "order", "data" FROM "seguridad"."menu" WHERE "parent"=163 ORDER BY "order"";i:1;i:80;i:2;s:21:"yii\db\Command::query";i:3;d:1762444459.962412;i:4;a:3:{i:0;a:5:{s:4:"file";s:60:"C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php";s:4:"line";i:57;s:8:"function";s:3:"all";s:5:"class";s:12:"yii\db\Query";s:4:"type";s:2:"->";}i:1;a:5:{s:4:"file";s:60:"C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php";s:4:"line";i:70;s:8:"function";s:12:"getMenuItems";s:5:"class";s:25:"app\components\MenuWidget";s:4:"type";s:2:"->";}i:2;a:5:{s:4:"file";s:60:"C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php";s:4:"line";i:18;s:8:"function";s:12:"getMenuItems";s:5:"class";s:25:"app\components\MenuWidget";s:4:"type";s:2:"->";}}i:5;i:8364096;}i:108;a:6:{i:0;s:115:"SELECT "id", "name", "route", "parent", "order", "data" FROM "seguridad"."menu" WHERE "parent"=163 ORDER BY "order"";i:1;i:96;i:2;s:21:"yii\db\Command::query";i:3;d:1762444459.963007;i:4;a:3:{i:0;a:5:{s:4:"file";s:60:"C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php";s:4:"line";i:57;s:8:"function";s:3:"all";s:5:"class";s:12:"yii\db\Query";s:4:"type";s:2:"->";}i:1;a:5:{s:4:"file";s:60:"C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php";s:4:"line";i:70;s:8:"function";s:12:"getMenuItems";s:5:"class";s:25:"app\components\MenuWidget";s:4:"type";s:2:"->";}i:2;a:5:{s:4:"file";s:60:"C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php";s:4:"line";i:18;s:8:"function";s:12:"getMenuItems";s:5:"class";s:25:"app\components\MenuWidget";s:4:"type";s:2:"->";}}i:5;i:8367144;}i:110;a:6:{i:0;s:115:"SELECT "id", "name", "route", "parent", "order", "data" FROM "seguridad"."menu" WHERE "parent"=164 ORDER BY "order"";i:1;i:80;i:2;s:21:"yii\db\Command::query";i:3;d:1762444459.963328;i:4;a:3:{i:0;a:5:{s:4:"file";s:60:"C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php";s:4:"line";i:57;s:8:"function";s:3:"all";s:5:"class";s:12:"yii\db\Query";s:4:"type";s:2:"->";}i:1;a:5:{s:4:"file";s:60:"C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php";s:4:"line";i:70;s:8:"function";s:12:"getMenuItems";s:5:"class";s:25:"app\components\MenuWidget";s:4:"type";s:2:"->";}i:2;a:5:{s:4:"file";s:60:"C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php";s:4:"line";i:70;s:8:"function";s:12:"getMenuItems";s:5:"class";s:25:"app\components\MenuWidget";s:4:"type";s:2:"->";}}i:5;i:8372712;}i:111;a:6:{i:0;s:115:"SELECT "id", "name", "route", "parent", "order", "data" FROM "seguridad"."menu" WHERE "parent"=164 ORDER BY "order"";i:1;i:96;i:2;s:21:"yii\db\Command::query";i:3;d:1762444459.963697;i:4;a:3:{i:0;a:5:{s:4:"file";s:60:"C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php";s:4:"line";i:57;s:8:"function";s:3:"all";s:5:"class";s:12:"yii\db\Query";s:4:"type";s:2:"->";}i:1;a:5:{s:4:"file";s:60:"C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php";s:4:"line";i:70;s:8:"function";s:12:"getMenuItems";s:5:"class";s:25:"app\components\MenuWidget";s:4:"type";s:2:"->";}i:2;a:5:{s:4:"file";s:60:"C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php";s:4:"line";i:70;s:8:"function";s:12:"getMenuItems";s:5:"class";s:25:"app\components\MenuWidget";s:4:"type";s:2:"->";}}i:5;i:8375416;}i:113;a:6:{i:0;s:115:"SELECT "id", "name", "route", "parent", "order", "data" FROM "seguridad"."menu" WHERE "parent"=166 ORDER BY "order"";i:1;i:80;i:2;s:21:"yii\db\Command::query";i:3;d:1762444459.963933;i:4;a:3:{i:0;a:5:{s:4:"file";s:60:"C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php";s:4:"line";i:57;s:8:"function";s:3:"all";s:5:"class";s:12:"yii\db\Query";s:4:"type";s:2:"->";}i:1;a:5:{s:4:"file";s:60:"C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php";s:4:"line";i:70;s:8:"function";s:12:"getMenuItems";s:5:"class";s:25:"app\components\MenuWidget";s:4:"type";s:2:"->";}i:2;a:5:{s:4:"file";s:60:"C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php";s:4:"line";i:70;s:8:"function";s:12:"getMenuItems";s:5:"class";s:25:"app\components\MenuWidget";s:4:"type";s:2:"->";}}i:5;i:8381200;}i:114;a:6:{i:0;s:115:"SELECT "id", "name", "route", "parent", "order", "data" FROM "seguridad"."menu" WHERE "parent"=166 ORDER BY "order"";i:1;i:96;i:2;s:21:"yii\db\Command::query";i:3;d:1762444459.964264;i:4;a:3:{i:0;a:5:{s:4:"file";s:60:"C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php";s:4:"line";i:57;s:8:"function";s:3:"all";s:5:"class";s:12:"yii\db\Query";s:4:"type";s:2:"->";}i:1;a:5:{s:4:"file";s:60:"C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php";s:4:"line";i:70;s:8:"function";s:12:"getMenuItems";s:5:"class";s:25:"app\components\MenuWidget";s:4:"type";s:2:"->";}i:2;a:5:{s:4:"file";s:60:"C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php";s:4:"line";i:70;s:8:"function";s:12:"getMenuItems";s:5:"class";s:25:"app\components\MenuWidget";s:4:"type";s:2:"->";}}i:5;i:8383264;}i:116;a:6:{i:0;s:115:"SELECT "id", "name", "route", "parent", "order", "data" FROM "seguridad"."menu" WHERE "parent"=167 ORDER BY "order"";i:1;i:80;i:2;s:21:"yii\db\Command::query";i:3;d:1762444459.964493;i:4;a:3:{i:0;a:5:{s:4:"file";s:60:"C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php";s:4:"line";i:57;s:8:"function";s:3:"all";s:5:"class";s:12:"yii\db\Query";s:4:"type";s:2:"->";}i:1;a:5:{s:4:"file";s:60:"C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php";s:4:"line";i:70;s:8:"function";s:12:"getMenuItems";s:5:"class";s:25:"app\components\MenuWidget";s:4:"type";s:2:"->";}i:2;a:5:{s:4:"file";s:60:"C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php";s:4:"line";i:70;s:8:"function";s:12:"getMenuItems";s:5:"class";s:25:"app\components\MenuWidget";s:4:"type";s:2:"->";}}i:5;i:8383896;}i:117;a:6:{i:0;s:115:"SELECT "id", "name", "route", "parent", "order", "data" FROM "seguridad"."menu" WHERE "parent"=167 ORDER BY "order"";i:1;i:96;i:2;s:21:"yii\db\Command::query";i:3;d:1762444459.964844;i:4;a:3:{i:0;a:5:{s:4:"file";s:60:"C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php";s:4:"line";i:57;s:8:"function";s:3:"all";s:5:"class";s:12:"yii\db\Query";s:4:"type";s:2:"->";}i:1;a:5:{s:4:"file";s:60:"C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php";s:4:"line";i:70;s:8:"function";s:12:"getMenuItems";s:5:"class";s:25:"app\components\MenuWidget";s:4:"type";s:2:"->";}i:2;a:5:{s:4:"file";s:60:"C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php";s:4:"line";i:70;s:8:"function";s:12:"getMenuItems";s:5:"class";s:25:"app\components\MenuWidget";s:4:"type";s:2:"->";}}i:5;i:8387080;}i:119;a:6:{i:0;s:115:"SELECT "id", "name", "route", "parent", "order", "data" FROM "seguridad"."menu" WHERE "parent"=169 ORDER BY "order"";i:1;i:80;i:2;s:21:"yii\db\Command::query";i:3;d:1762444459.965166;i:4;a:3:{i:0;a:5:{s:4:"file";s:60:"C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php";s:4:"line";i:57;s:8:"function";s:3:"all";s:5:"class";s:12:"yii\db\Query";s:4:"type";s:2:"->";}i:1;a:5:{s:4:"file";s:60:"C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php";s:4:"line";i:70;s:8:"function";s:12:"getMenuItems";s:5:"class";s:25:"app\components\MenuWidget";s:4:"type";s:2:"->";}i:2;a:5:{s:4:"file";s:60:"C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php";s:4:"line";i:70;s:8:"function";s:12:"getMenuItems";s:5:"class";s:25:"app\components\MenuWidget";s:4:"type";s:2:"->";}}i:5;i:8392864;}i:120;a:6:{i:0;s:115:"SELECT "id", "name", "route", "parent", "order", "data" FROM "seguridad"."menu" WHERE "parent"=169 ORDER BY "order"";i:1;i:96;i:2;s:21:"yii\db\Command::query";i:3;d:1762444459.965538;i:4;a:3:{i:0;a:5:{s:4:"file";s:60:"C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php";s:4:"line";i:57;s:8:"function";s:3:"all";s:5:"class";s:12:"yii\db\Query";s:4:"type";s:2:"->";}i:1;a:5:{s:4:"file";s:60:"C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php";s:4:"line";i:70;s:8:"function";s:12:"getMenuItems";s:5:"class";s:25:"app\components\MenuWidget";s:4:"type";s:2:"->";}i:2;a:5:{s:4:"file";s:60:"C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php";s:4:"line";i:70;s:8:"function";s:12:"getMenuItems";s:5:"class";s:25:"app\components\MenuWidget";s:4:"type";s:2:"->";}}i:5;i:8394928;}i:122;a:6:{i:0;s:115:"SELECT "id", "name", "route", "parent", "order", "data" FROM "seguridad"."menu" WHERE "parent"=168 ORDER BY "order"";i:1;i:80;i:2;s:21:"yii\db\Command::query";i:3;d:1762444459.965748;i:4;a:3:{i:0;a:5:{s:4:"file";s:60:"C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php";s:4:"line";i:57;s:8:"function";s:3:"all";s:5:"class";s:12:"yii\db\Query";s:4:"type";s:2:"->";}i:1;a:5:{s:4:"file";s:60:"C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php";s:4:"line";i:70;s:8:"function";s:12:"getMenuItems";s:5:"class";s:25:"app\components\MenuWidget";s:4:"type";s:2:"->";}i:2;a:5:{s:4:"file";s:60:"C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php";s:4:"line";i:70;s:8:"function";s:12:"getMenuItems";s:5:"class";s:25:"app\components\MenuWidget";s:4:"type";s:2:"->";}}i:5;i:8398512;}i:123;a:6:{i:0;s:115:"SELECT "id", "name", "route", "parent", "order", "data" FROM "seguridad"."menu" WHERE "parent"=168 ORDER BY "order"";i:1;i:96;i:2;s:21:"yii\db\Command::query";i:3;d:1762444459.966075;i:4;a:3:{i:0;a:5:{s:4:"file";s:60:"C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php";s:4:"line";i:57;s:8:"function";s:3:"all";s:5:"class";s:12:"yii\db\Query";s:4:"type";s:2:"->";}i:1;a:5:{s:4:"file";s:60:"C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php";s:4:"line";i:70;s:8:"function";s:12:"getMenuItems";s:5:"class";s:25:"app\components\MenuWidget";s:4:"type";s:2:"->";}i:2;a:5:{s:4:"file";s:60:"C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php";s:4:"line";i:70;s:8:"function";s:12:"getMenuItems";s:5:"class";s:25:"app\components\MenuWidget";s:4:"type";s:2:"->";}}i:5;i:8400576;}i:125;a:6:{i:0;s:115:"SELECT "id", "name", "route", "parent", "order", "data" FROM "seguridad"."menu" WHERE "parent"=172 ORDER BY "order"";i:1;i:80;i:2;s:21:"yii\db\Command::query";i:3;d:1762444459.966281;i:4;a:3:{i:0;a:5:{s:4:"file";s:60:"C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php";s:4:"line";i:57;s:8:"function";s:3:"all";s:5:"class";s:12:"yii\db\Query";s:4:"type";s:2:"->";}i:1;a:5:{s:4:"file";s:60:"C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php";s:4:"line";i:70;s:8:"function";s:12:"getMenuItems";s:5:"class";s:25:"app\components\MenuWidget";s:4:"type";s:2:"->";}i:2;a:5:{s:4:"file";s:60:"C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php";s:4:"line";i:18;s:8:"function";s:12:"getMenuItems";s:5:"class";s:25:"app\components\MenuWidget";s:4:"type";s:2:"->";}}i:5;i:8397288;}i:126;a:6:{i:0;s:115:"SELECT "id", "name", "route", "parent", "order", "data" FROM "seguridad"."menu" WHERE "parent"=172 ORDER BY "order"";i:1;i:96;i:2;s:21:"yii\db\Command::query";i:3;d:1762444459.966607;i:4;a:3:{i:0;a:5:{s:4:"file";s:60:"C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php";s:4:"line";i:57;s:8:"function";s:3:"all";s:5:"class";s:12:"yii\db\Query";s:4:"type";s:2:"->";}i:1;a:5:{s:4:"file";s:60:"C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php";s:4:"line";i:70;s:8:"function";s:12:"getMenuItems";s:5:"class";s:25:"app\components\MenuWidget";s:4:"type";s:2:"->";}i:2;a:5:{s:4:"file";s:60:"C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php";s:4:"line";i:18;s:8:"function";s:12:"getMenuItems";s:5:"class";s:25:"app\components\MenuWidget";s:4:"type";s:2:"->";}}i:5;i:8399352;}}}";s:2:"db";s:49131:"a:1:{s:8:"messages";a:50:{i:8;a:6:{i:0;s:2813:"SELECT
+    d.nspname AS table_schema,
+    c.relname AS table_name,
+    a.attname AS column_name,
+    COALESCE(td.typname, tb.typname, t.typname) AS data_type,
+    COALESCE(td.typtype, tb.typtype, t.typtype) AS type_type,
+    (SELECT nspname FROM pg_namespace WHERE oid = COALESCE(td.typnamespace, tb.typnamespace, t.typnamespace)) AS type_scheme,
+    a.attlen AS character_maximum_length,
+    pg_catalog.col_description(c.oid, a.attnum) AS column_comment,
+    a.atttypmod AS modifier,
+    a.attnotnull = false AS is_nullable,
+    CAST(pg_get_expr(ad.adbin, ad.adrelid) AS varchar) AS column_default,
+    coalesce(pg_get_expr(ad.adbin, ad.adrelid) ~ 'nextval',false) OR attidentity != '' AS is_autoinc,
+    pg_get_serial_sequence(quote_ident(d.nspname) || '.' || quote_ident(c.relname), a.attname) AS sequence_name,
+    CASE WHEN COALESCE(td.typtype, tb.typtype, t.typtype) = 'e'::char
+        THEN array_to_string((SELECT array_agg(enumlabel) FROM pg_enum WHERE enumtypid = COALESCE(td.oid, tb.oid, a.atttypid))::varchar[], ',')
+        ELSE NULL
+    END AS enum_values,
+    CASE atttypid
+         WHEN 21 /*int2*/ THEN 16
+         WHEN 23 /*int4*/ THEN 32
+         WHEN 20 /*int8*/ THEN 64
+         WHEN 1700 /*numeric*/ THEN
+              CASE WHEN atttypmod = -1
+               THEN null
+               ELSE ((atttypmod - 4) >> 16) & 65535
+               END
+         WHEN 700 /*float4*/ THEN 24 /*FLT_MANT_DIG*/
+         WHEN 701 /*float8*/ THEN 53 /*DBL_MANT_DIG*/
+         ELSE null
+      END   AS numeric_precision,
+      CASE
+        WHEN atttypid IN (21, 23, 20) THEN 0
+        WHEN atttypid IN (1700) THEN
+        CASE
+            WHEN atttypmod = -1 THEN null
+            ELSE (atttypmod - 4) & 65535
+        END
+           ELSE null
+      END AS numeric_scale,
+    CAST(
+             information_schema._pg_char_max_length(information_schema._pg_truetypid(a, t), information_schema._pg_truetypmod(a, t))
+             AS numeric
+    ) AS size,
+    a.attnum = any (ct.conkey) as is_pkey,
+    COALESCE(NULLIF(a.attndims, 0), NULLIF(t.typndims, 0), (t.typcategory='A')::int) AS dimension
+FROM
+    pg_class c
+    LEFT JOIN pg_attribute a ON a.attrelid = c.oid
+    LEFT JOIN pg_attrdef ad ON a.attrelid = ad.adrelid AND a.attnum = ad.adnum
+    LEFT JOIN pg_type t ON a.atttypid = t.oid
+    LEFT JOIN pg_type tb ON (a.attndims > 0 OR t.typcategory='A') AND t.typelem > 0 AND t.typelem = tb.oid OR t.typbasetype > 0 AND t.typbasetype = tb.oid
+    LEFT JOIN pg_type td ON t.typndims > 0 AND t.typbasetype > 0 AND tb.typelem = td.oid
+    LEFT JOIN pg_namespace d ON d.oid = c.relnamespace
+    LEFT JOIN pg_constraint ct ON ct.conrelid = c.oid AND ct.contype = 'p'
+WHERE
+    a.attnum > 0 AND t.typname != '' AND NOT a.attisdropped
+    AND c.relname = 'user'
+    AND d.nspname = 'seguridad'
+ORDER BY
+    a.attnum;";i:1;i:80;i:2;s:21:"yii\db\Command::query";i:3;d:1762444459.320117;i:4;a:1:{i:0;a:5:{s:4:"file";s:50:"C:\xampp\htdocs\planealo.sytes.net\models\User.php";s:4:"line";i:91;s:8:"function";s:7:"findOne";s:5:"class";s:23:"yii\db\BaseActiveRecord";s:4:"type";s:2:"::";}}i:5;i:5358176;}i:9;a:6:{i:0;s:2813:"SELECT
+    d.nspname AS table_schema,
+    c.relname AS table_name,
+    a.attname AS column_name,
+    COALESCE(td.typname, tb.typname, t.typname) AS data_type,
+    COALESCE(td.typtype, tb.typtype, t.typtype) AS type_type,
+    (SELECT nspname FROM pg_namespace WHERE oid = COALESCE(td.typnamespace, tb.typnamespace, t.typnamespace)) AS type_scheme,
+    a.attlen AS character_maximum_length,
+    pg_catalog.col_description(c.oid, a.attnum) AS column_comment,
+    a.atttypmod AS modifier,
+    a.attnotnull = false AS is_nullable,
+    CAST(pg_get_expr(ad.adbin, ad.adrelid) AS varchar) AS column_default,
+    coalesce(pg_get_expr(ad.adbin, ad.adrelid) ~ 'nextval',false) OR attidentity != '' AS is_autoinc,
+    pg_get_serial_sequence(quote_ident(d.nspname) || '.' || quote_ident(c.relname), a.attname) AS sequence_name,
+    CASE WHEN COALESCE(td.typtype, tb.typtype, t.typtype) = 'e'::char
+        THEN array_to_string((SELECT array_agg(enumlabel) FROM pg_enum WHERE enumtypid = COALESCE(td.oid, tb.oid, a.atttypid))::varchar[], ',')
+        ELSE NULL
+    END AS enum_values,
+    CASE atttypid
+         WHEN 21 /*int2*/ THEN 16
+         WHEN 23 /*int4*/ THEN 32
+         WHEN 20 /*int8*/ THEN 64
+         WHEN 1700 /*numeric*/ THEN
+              CASE WHEN atttypmod = -1
+               THEN null
+               ELSE ((atttypmod - 4) >> 16) & 65535
+               END
+         WHEN 700 /*float4*/ THEN 24 /*FLT_MANT_DIG*/
+         WHEN 701 /*float8*/ THEN 53 /*DBL_MANT_DIG*/
+         ELSE null
+      END   AS numeric_precision,
+      CASE
+        WHEN atttypid IN (21, 23, 20) THEN 0
+        WHEN atttypid IN (1700) THEN
+        CASE
+            WHEN atttypmod = -1 THEN null
+            ELSE (atttypmod - 4) & 65535
+        END
+           ELSE null
+      END AS numeric_scale,
+    CAST(
+             information_schema._pg_char_max_length(information_schema._pg_truetypid(a, t), information_schema._pg_truetypmod(a, t))
+             AS numeric
+    ) AS size,
+    a.attnum = any (ct.conkey) as is_pkey,
+    COALESCE(NULLIF(a.attndims, 0), NULLIF(t.typndims, 0), (t.typcategory='A')::int) AS dimension
+FROM
+    pg_class c
+    LEFT JOIN pg_attribute a ON a.attrelid = c.oid
+    LEFT JOIN pg_attrdef ad ON a.attrelid = ad.adrelid AND a.attnum = ad.adnum
+    LEFT JOIN pg_type t ON a.atttypid = t.oid
+    LEFT JOIN pg_type tb ON (a.attndims > 0 OR t.typcategory='A') AND t.typelem > 0 AND t.typelem = tb.oid OR t.typbasetype > 0 AND t.typbasetype = tb.oid
+    LEFT JOIN pg_type td ON t.typndims > 0 AND t.typbasetype > 0 AND tb.typelem = td.oid
+    LEFT JOIN pg_namespace d ON d.oid = c.relnamespace
+    LEFT JOIN pg_constraint ct ON ct.conrelid = c.oid AND ct.contype = 'p'
+WHERE
+    a.attnum > 0 AND t.typname != '' AND NOT a.attisdropped
+    AND c.relname = 'user'
+    AND d.nspname = 'seguridad'
+ORDER BY
+    a.attnum;";i:1;i:96;i:2;s:21:"yii\db\Command::query";i:3;d:1762444459.336121;i:4;a:1:{i:0;a:5:{s:4:"file";s:50:"C:\xampp\htdocs\planealo.sytes.net\models\User.php";s:4:"line";i:91;s:8:"function";s:7:"findOne";s:5:"class";s:23:"yii\db\BaseActiveRecord";s:4:"type";s:2:"::";}}i:5;i:5384048;}i:11;a:6:{i:0;s:875:"select
+    ct.conname as constraint_name,
+    a.attname as column_name,
+    fc.relname as foreign_table_name,
+    fns.nspname as foreign_table_schema,
+    fa.attname as foreign_column_name
+from
+    (SELECT ct.conname, ct.conrelid, ct.confrelid, ct.conkey, ct.contype, ct.confkey, generate_subscripts(ct.conkey, 1) AS s
+       FROM pg_constraint ct
+    ) AS ct
+    inner join pg_class c on c.oid=ct.conrelid
+    inner join pg_namespace ns on c.relnamespace=ns.oid
+    inner join pg_attribute a on a.attrelid=ct.conrelid and a.attnum = ct.conkey[ct.s]
+    left join pg_class fc on fc.oid=ct.confrelid
+    left join pg_namespace fns on fc.relnamespace=fns.oid
+    left join pg_attribute fa on fa.attrelid=ct.confrelid and fa.attnum = ct.confkey[ct.s]
+where
+    ct.contype='f'
+    and c.relname='user'
+    and ns.nspname='seguridad'
+order by
+    fns.nspname, fc.relname, a.attnum";i:1;i:80;i:2;s:21:"yii\db\Command::query";i:3;d:1762444459.352348;i:4;a:1:{i:0;a:5:{s:4:"file";s:50:"C:\xampp\htdocs\planealo.sytes.net\models\User.php";s:4:"line";i:91;s:8:"function";s:7:"findOne";s:5:"class";s:23:"yii\db\BaseActiveRecord";s:4:"type";s:2:"::";}}i:5;i:5400840;}i:12;a:6:{i:0;s:875:"select
+    ct.conname as constraint_name,
+    a.attname as column_name,
+    fc.relname as foreign_table_name,
+    fns.nspname as foreign_table_schema,
+    fa.attname as foreign_column_name
+from
+    (SELECT ct.conname, ct.conrelid, ct.confrelid, ct.conkey, ct.contype, ct.confkey, generate_subscripts(ct.conkey, 1) AS s
+       FROM pg_constraint ct
+    ) AS ct
+    inner join pg_class c on c.oid=ct.conrelid
+    inner join pg_namespace ns on c.relnamespace=ns.oid
+    inner join pg_attribute a on a.attrelid=ct.conrelid and a.attnum = ct.conkey[ct.s]
+    left join pg_class fc on fc.oid=ct.confrelid
+    left join pg_namespace fns on fc.relnamespace=fns.oid
+    left join pg_attribute fa on fa.attrelid=ct.confrelid and fa.attnum = ct.confkey[ct.s]
+where
+    ct.contype='f'
+    and c.relname='user'
+    and ns.nspname='seguridad'
+order by
+    fns.nspname, fc.relname, a.attnum";i:1;i:96;i:2;s:21:"yii\db\Command::query";i:3;d:1762444459.356415;i:4;a:1:{i:0;a:5:{s:4:"file";s:50:"C:\xampp\htdocs\planealo.sytes.net\models\User.php";s:4:"line";i:91;s:8:"function";s:7:"findOne";s:5:"class";s:23:"yii\db\BaseActiveRecord";s:4:"type";s:2:"::";}}i:5;i:5402080;}i:14;a:6:{i:0;s:65:"SELECT * FROM "seguridad"."user" WHERE ("id"=1) AND ("status"=10)";i:1;i:80;i:2;s:21:"yii\db\Command::query";i:3;d:1762444459.37202;i:4;a:1:{i:0;a:5:{s:4:"file";s:50:"C:\xampp\htdocs\planealo.sytes.net\models\User.php";s:4:"line";i:91;s:8:"function";s:7:"findOne";s:5:"class";s:23:"yii\db\BaseActiveRecord";s:4:"type";s:2:"::";}}i:5;i:5760072;}i:15;a:6:{i:0;s:65:"SELECT * FROM "seguridad"."user" WHERE ("id"=1) AND ("status"=10)";i:1;i:96;i:2;s:21:"yii\db\Command::query";i:3;d:1762444459.373069;i:4;a:1:{i:0;a:5:{s:4:"file";s:50:"C:\xampp\htdocs\planealo.sytes.net\models\User.php";s:4:"line";i:91;s:8:"function";s:7:"findOne";s:5:"class";s:23:"yii\db\BaseActiveRecord";s:4:"type";s:2:"::";}}i:5;i:5763088;}i:60;a:6:{i:0;s:75:"SELECT * FROM "atletas"."escuela" WHERE "eliminado"=FALSE ORDER BY "nombre"";i:1;i:80;i:2;s:21:"yii\db\Command::query";i:3;d:1762444459.812282;i:4;a:1:{i:0;a:5:{s:4:"file";s:80:"C:\xampp\htdocs\planealo.sytes.net\modules\ged\controllers\DefaultController.php";s:4:"line";i:44;s:8:"function";s:3:"all";s:5:"class";s:18:"yii\db\ActiveQuery";s:4:"type";s:2:"->";}}i:5;i:7221000;}i:61;a:6:{i:0;s:75:"SELECT * FROM "atletas"."escuela" WHERE "eliminado"=FALSE ORDER BY "nombre"";i:1;i:96;i:2;s:21:"yii\db\Command::query";i:3;d:1762444459.815033;i:4;a:1:{i:0;a:5:{s:4:"file";s:80:"C:\xampp\htdocs\planealo.sytes.net\modules\ged\controllers\DefaultController.php";s:4:"line";i:44;s:8:"function";s:3:"all";s:5:"class";s:18:"yii\db\ActiveQuery";s:4:"type";s:2:"->";}}i:5;i:7227408;}i:63;a:6:{i:0;s:2814:"SELECT
+    d.nspname AS table_schema,
+    c.relname AS table_name,
+    a.attname AS column_name,
+    COALESCE(td.typname, tb.typname, t.typname) AS data_type,
+    COALESCE(td.typtype, tb.typtype, t.typtype) AS type_type,
+    (SELECT nspname FROM pg_namespace WHERE oid = COALESCE(td.typnamespace, tb.typnamespace, t.typnamespace)) AS type_scheme,
+    a.attlen AS character_maximum_length,
+    pg_catalog.col_description(c.oid, a.attnum) AS column_comment,
+    a.atttypmod AS modifier,
+    a.attnotnull = false AS is_nullable,
+    CAST(pg_get_expr(ad.adbin, ad.adrelid) AS varchar) AS column_default,
+    coalesce(pg_get_expr(ad.adbin, ad.adrelid) ~ 'nextval',false) OR attidentity != '' AS is_autoinc,
+    pg_get_serial_sequence(quote_ident(d.nspname) || '.' || quote_ident(c.relname), a.attname) AS sequence_name,
+    CASE WHEN COALESCE(td.typtype, tb.typtype, t.typtype) = 'e'::char
+        THEN array_to_string((SELECT array_agg(enumlabel) FROM pg_enum WHERE enumtypid = COALESCE(td.oid, tb.oid, a.atttypid))::varchar[], ',')
+        ELSE NULL
+    END AS enum_values,
+    CASE atttypid
+         WHEN 21 /*int2*/ THEN 16
+         WHEN 23 /*int4*/ THEN 32
+         WHEN 20 /*int8*/ THEN 64
+         WHEN 1700 /*numeric*/ THEN
+              CASE WHEN atttypmod = -1
+               THEN null
+               ELSE ((atttypmod - 4) >> 16) & 65535
+               END
+         WHEN 700 /*float4*/ THEN 24 /*FLT_MANT_DIG*/
+         WHEN 701 /*float8*/ THEN 53 /*DBL_MANT_DIG*/
+         ELSE null
+      END   AS numeric_precision,
+      CASE
+        WHEN atttypid IN (21, 23, 20) THEN 0
+        WHEN atttypid IN (1700) THEN
+        CASE
+            WHEN atttypmod = -1 THEN null
+            ELSE (atttypmod - 4) & 65535
+        END
+           ELSE null
+      END AS numeric_scale,
+    CAST(
+             information_schema._pg_char_max_length(information_schema._pg_truetypid(a, t), information_schema._pg_truetypmod(a, t))
+             AS numeric
+    ) AS size,
+    a.attnum = any (ct.conkey) as is_pkey,
+    COALESCE(NULLIF(a.attndims, 0), NULLIF(t.typndims, 0), (t.typcategory='A')::int) AS dimension
+FROM
+    pg_class c
+    LEFT JOIN pg_attribute a ON a.attrelid = c.oid
+    LEFT JOIN pg_attrdef ad ON a.attrelid = ad.adrelid AND a.attnum = ad.adnum
+    LEFT JOIN pg_type t ON a.atttypid = t.oid
+    LEFT JOIN pg_type tb ON (a.attndims > 0 OR t.typcategory='A') AND t.typelem > 0 AND t.typelem = tb.oid OR t.typbasetype > 0 AND t.typbasetype = tb.oid
+    LEFT JOIN pg_type td ON t.typndims > 0 AND t.typbasetype > 0 AND tb.typelem = td.oid
+    LEFT JOIN pg_namespace d ON d.oid = c.relnamespace
+    LEFT JOIN pg_constraint ct ON ct.conrelid = c.oid AND ct.contype = 'p'
+WHERE
+    a.attnum > 0 AND t.typname != '' AND NOT a.attisdropped
+    AND c.relname = 'escuela'
+    AND d.nspname = 'atletas'
+ORDER BY
+    a.attnum;";i:1;i:80;i:2;s:21:"yii\db\Command::query";i:3;d:1762444459.816253;i:4;a:1:{i:0;a:5:{s:4:"file";s:80:"C:\xampp\htdocs\planealo.sytes.net\modules\ged\controllers\DefaultController.php";s:4:"line";i:44;s:8:"function";s:3:"all";s:5:"class";s:18:"yii\db\ActiveQuery";s:4:"type";s:2:"->";}}i:5;i:7251728;}i:64;a:6:{i:0;s:2814:"SELECT
+    d.nspname AS table_schema,
+    c.relname AS table_name,
+    a.attname AS column_name,
+    COALESCE(td.typname, tb.typname, t.typname) AS data_type,
+    COALESCE(td.typtype, tb.typtype, t.typtype) AS type_type,
+    (SELECT nspname FROM pg_namespace WHERE oid = COALESCE(td.typnamespace, tb.typnamespace, t.typnamespace)) AS type_scheme,
+    a.attlen AS character_maximum_length,
+    pg_catalog.col_description(c.oid, a.attnum) AS column_comment,
+    a.atttypmod AS modifier,
+    a.attnotnull = false AS is_nullable,
+    CAST(pg_get_expr(ad.adbin, ad.adrelid) AS varchar) AS column_default,
+    coalesce(pg_get_expr(ad.adbin, ad.adrelid) ~ 'nextval',false) OR attidentity != '' AS is_autoinc,
+    pg_get_serial_sequence(quote_ident(d.nspname) || '.' || quote_ident(c.relname), a.attname) AS sequence_name,
+    CASE WHEN COALESCE(td.typtype, tb.typtype, t.typtype) = 'e'::char
+        THEN array_to_string((SELECT array_agg(enumlabel) FROM pg_enum WHERE enumtypid = COALESCE(td.oid, tb.oid, a.atttypid))::varchar[], ',')
+        ELSE NULL
+    END AS enum_values,
+    CASE atttypid
+         WHEN 21 /*int2*/ THEN 16
+         WHEN 23 /*int4*/ THEN 32
+         WHEN 20 /*int8*/ THEN 64
+         WHEN 1700 /*numeric*/ THEN
+              CASE WHEN atttypmod = -1
+               THEN null
+               ELSE ((atttypmod - 4) >> 16) & 65535
+               END
+         WHEN 700 /*float4*/ THEN 24 /*FLT_MANT_DIG*/
+         WHEN 701 /*float8*/ THEN 53 /*DBL_MANT_DIG*/
+         ELSE null
+      END   AS numeric_precision,
+      CASE
+        WHEN atttypid IN (21, 23, 20) THEN 0
+        WHEN atttypid IN (1700) THEN
+        CASE
+            WHEN atttypmod = -1 THEN null
+            ELSE (atttypmod - 4) & 65535
+        END
+           ELSE null
+      END AS numeric_scale,
+    CAST(
+             information_schema._pg_char_max_length(information_schema._pg_truetypid(a, t), information_schema._pg_truetypmod(a, t))
+             AS numeric
+    ) AS size,
+    a.attnum = any (ct.conkey) as is_pkey,
+    COALESCE(NULLIF(a.attndims, 0), NULLIF(t.typndims, 0), (t.typcategory='A')::int) AS dimension
+FROM
+    pg_class c
+    LEFT JOIN pg_attribute a ON a.attrelid = c.oid
+    LEFT JOIN pg_attrdef ad ON a.attrelid = ad.adrelid AND a.attnum = ad.adnum
+    LEFT JOIN pg_type t ON a.atttypid = t.oid
+    LEFT JOIN pg_type tb ON (a.attndims > 0 OR t.typcategory='A') AND t.typelem > 0 AND t.typelem = tb.oid OR t.typbasetype > 0 AND t.typbasetype = tb.oid
+    LEFT JOIN pg_type td ON t.typndims > 0 AND t.typbasetype > 0 AND tb.typelem = td.oid
+    LEFT JOIN pg_namespace d ON d.oid = c.relnamespace
+    LEFT JOIN pg_constraint ct ON ct.conrelid = c.oid AND ct.contype = 'p'
+WHERE
+    a.attnum > 0 AND t.typname != '' AND NOT a.attisdropped
+    AND c.relname = 'escuela'
+    AND d.nspname = 'atletas'
+ORDER BY
+    a.attnum;";i:1;i:96;i:2;s:21:"yii\db\Command::query";i:3;d:1762444459.823936;i:4;a:1:{i:0;a:5:{s:4:"file";s:80:"C:\xampp\htdocs\planealo.sytes.net\modules\ged\controllers\DefaultController.php";s:4:"line";i:44;s:8:"function";s:3:"all";s:5:"class";s:18:"yii\db\ActiveQuery";s:4:"type";s:2:"->";}}i:5;i:7292576;}i:66;a:6:{i:0;s:876:"select
+    ct.conname as constraint_name,
+    a.attname as column_name,
+    fc.relname as foreign_table_name,
+    fns.nspname as foreign_table_schema,
+    fa.attname as foreign_column_name
+from
+    (SELECT ct.conname, ct.conrelid, ct.confrelid, ct.conkey, ct.contype, ct.confkey, generate_subscripts(ct.conkey, 1) AS s
+       FROM pg_constraint ct
+    ) AS ct
+    inner join pg_class c on c.oid=ct.conrelid
+    inner join pg_namespace ns on c.relnamespace=ns.oid
+    inner join pg_attribute a on a.attrelid=ct.conrelid and a.attnum = ct.conkey[ct.s]
+    left join pg_class fc on fc.oid=ct.confrelid
+    left join pg_namespace fns on fc.relnamespace=fns.oid
+    left join pg_attribute fa on fa.attrelid=ct.confrelid and fa.attnum = ct.confkey[ct.s]
+where
+    ct.contype='f'
+    and c.relname='escuela'
+    and ns.nspname='atletas'
+order by
+    fns.nspname, fc.relname, a.attnum";i:1;i:80;i:2;s:21:"yii\db\Command::query";i:3;d:1762444459.824534;i:4;a:1:{i:0;a:5:{s:4:"file";s:80:"C:\xampp\htdocs\planealo.sytes.net\modules\ged\controllers\DefaultController.php";s:4:"line";i:44;s:8:"function";s:3:"all";s:5:"class";s:18:"yii\db\ActiveQuery";s:4:"type";s:2:"->";}}i:5;i:7269416;}i:67;a:6:{i:0;s:876:"select
+    ct.conname as constraint_name,
+    a.attname as column_name,
+    fc.relname as foreign_table_name,
+    fns.nspname as foreign_table_schema,
+    fa.attname as foreign_column_name
+from
+    (SELECT ct.conname, ct.conrelid, ct.confrelid, ct.conkey, ct.contype, ct.confkey, generate_subscripts(ct.conkey, 1) AS s
+       FROM pg_constraint ct
+    ) AS ct
+    inner join pg_class c on c.oid=ct.conrelid
+    inner join pg_namespace ns on c.relnamespace=ns.oid
+    inner join pg_attribute a on a.attrelid=ct.conrelid and a.attnum = ct.conkey[ct.s]
+    left join pg_class fc on fc.oid=ct.confrelid
+    left join pg_namespace fns on fc.relnamespace=fns.oid
+    left join pg_attribute fa on fa.attrelid=ct.confrelid and fa.attnum = ct.confkey[ct.s]
+where
+    ct.contype='f'
+    and c.relname='escuela'
+    and ns.nspname='atletas'
+order by
+    fns.nspname, fc.relname, a.attnum";i:1;i:96;i:2;s:21:"yii\db\Command::query";i:3;d:1762444459.829531;i:4;a:1:{i:0;a:5:{s:4:"file";s:80:"C:\xampp\htdocs\planealo.sytes.net\modules\ged\controllers\DefaultController.php";s:4:"line";i:44;s:8:"function";s:3:"all";s:5:"class";s:18:"yii\db\ActiveQuery";s:4:"type";s:2:"->";}}i:5;i:7270656;}i:69;a:6:{i:0;s:72:"SELECT * FROM "atletas"."escuela" WHERE ("id"=2) AND ("eliminado"=FALSE)";i:1;i:80;i:2;s:21:"yii\db\Command::query";i:3;d:1762444459.830125;i:4;a:2:{i:0;a:5:{s:4:"file";s:80:"C:\xampp\htdocs\planealo.sytes.net\modules\ged\controllers\DefaultController.php";s:4:"line";i:183;s:8:"function";s:3:"one";s:5:"class";s:18:"yii\db\ActiveQuery";s:4:"type";s:2:"->";}i:1;a:5:{s:4:"file";s:80:"C:\xampp\htdocs\planealo.sytes.net\modules\ged\controllers\DefaultController.php";s:4:"line";i:73;s:8:"function";s:14:"validarEscuela";s:5:"class";s:45:"app\modules\ged\controllers\DefaultController";s:4:"type";s:2:"->";}}i:5;i:7279448;}i:70;a:6:{i:0;s:72:"SELECT * FROM "atletas"."escuela" WHERE ("id"=2) AND ("eliminado"=FALSE)";i:1;i:96;i:2;s:21:"yii\db\Command::query";i:3;d:1762444459.830669;i:4;a:2:{i:0;a:5:{s:4:"file";s:80:"C:\xampp\htdocs\planealo.sytes.net\modules\ged\controllers\DefaultController.php";s:4:"line";i:183;s:8:"function";s:3:"one";s:5:"class";s:18:"yii\db\ActiveQuery";s:4:"type";s:2:"->";}i:1;a:5:{s:4:"file";s:80:"C:\xampp\htdocs\planealo.sytes.net\modules\ged\controllers\DefaultController.php";s:4:"line";i:73;s:8:"function";s:14:"validarEscuela";s:5:"class";s:45:"app\modules\ged\controllers\DefaultController";s:4:"type";s:2:"->";}}i:5;i:7284208;}i:73;a:6:{i:0;s:64:"SELECT COUNT(*) FROM "atletas"."escuela" WHERE "eliminado"=FALSE";i:1;i:80;i:2;s:21:"yii\db\Command::query";i:3;d:1762444459.835415;i:4;a:2:{i:0;a:5:{s:4:"file";s:70:"C:\xampp\htdocs\planealo.sytes.net\modules\ged\views\default\index.php";s:4:"line";i:11;s:8:"function";s:5:"count";s:5:"class";s:12:"yii\db\Query";s:4:"type";s:2:"->";}i:1;a:5:{s:4:"file";s:80:"C:\xampp\htdocs\planealo.sytes.net\modules\ged\controllers\DefaultController.php";s:4:"line";i:96;s:8:"function";s:6:"render";s:5:"class";s:19:"yii\base\Controller";s:4:"type";s:2:"->";}}i:5;i:7490296;}i:74;a:6:{i:0;s:64:"SELECT COUNT(*) FROM "atletas"."escuela" WHERE "eliminado"=FALSE";i:1;i:96;i:2;s:21:"yii\db\Command::query";i:3;d:1762444459.836089;i:4;a:2:{i:0;a:5:{s:4:"file";s:70:"C:\xampp\htdocs\planealo.sytes.net\modules\ged\views\default\index.php";s:4:"line";i:11;s:8:"function";s:5:"count";s:5:"class";s:12:"yii\db\Query";s:4:"type";s:2:"->";}i:1;a:5:{s:4:"file";s:80:"C:\xampp\htdocs\planealo.sytes.net\modules\ged\controllers\DefaultController.php";s:4:"line";i:96;s:8:"function";s:6:"render";s:5:"class";s:19:"yii\base\Controller";s:4:"type";s:2:"->";}}i:5;i:7491584;}i:77;a:6:{i:0;s:119:"SELECT "id", "name", "route", "parent", "order", "data" FROM "seguridad"."menu" WHERE "parent" IS NULL ORDER BY "order"";i:1;i:80;i:2;s:21:"yii\db\Command::query";i:3;d:1762444459.954422;i:4;a:3:{i:0;a:5:{s:4:"file";s:60:"C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php";s:4:"line";i:57;s:8:"function";s:3:"all";s:5:"class";s:12:"yii\db\Query";s:4:"type";s:2:"->";}i:1;a:5:{s:4:"file";s:60:"C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php";s:4:"line";i:18;s:8:"function";s:12:"getMenuItems";s:5:"class";s:25:"app\components\MenuWidget";s:4:"type";s:2:"->";}i:2;a:5:{s:4:"file";s:57:"C:\xampp\htdocs\planealo.sytes.net\views\layouts\main.php";s:4:"line";i:83;s:8:"function";s:6:"widget";s:5:"class";s:15:"yii\base\Widget";s:4:"type";s:2:"::";}}i:5;i:8302920;}i:78;a:6:{i:0;s:119:"SELECT "id", "name", "route", "parent", "order", "data" FROM "seguridad"."menu" WHERE "parent" IS NULL ORDER BY "order"";i:1;i:96;i:2;s:21:"yii\db\Command::query";i:3;d:1762444459.955619;i:4;a:3:{i:0;a:5:{s:4:"file";s:60:"C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php";s:4:"line";i:57;s:8:"function";s:3:"all";s:5:"class";s:12:"yii\db\Query";s:4:"type";s:2:"->";}i:1;a:5:{s:4:"file";s:60:"C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php";s:4:"line";i:18;s:8:"function";s:12:"getMenuItems";s:5:"class";s:25:"app\components\MenuWidget";s:4:"type";s:2:"->";}i:2;a:5:{s:4:"file";s:57:"C:\xampp\htdocs\planealo.sytes.net\views\layouts\main.php";s:4:"line";i:83;s:8:"function";s:6:"widget";s:5:"class";s:15:"yii\base\Widget";s:4:"type";s:2:"::";}}i:5;i:8306368;}i:80;a:6:{i:0;s:115:"SELECT "id", "name", "route", "parent", "order", "data" FROM "seguridad"."menu" WHERE "parent"=162 ORDER BY "order"";i:1;i:80;i:2;s:21:"yii\db\Command::query";i:3;d:1762444459.95595;i:4;a:3:{i:0;a:5:{s:4:"file";s:60:"C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php";s:4:"line";i:57;s:8:"function";s:3:"all";s:5:"class";s:12:"yii\db\Query";s:4:"type";s:2:"->";}i:1;a:5:{s:4:"file";s:60:"C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php";s:4:"line";i:70;s:8:"function";s:12:"getMenuItems";s:5:"class";s:25:"app\components\MenuWidget";s:4:"type";s:2:"->";}i:2;a:5:{s:4:"file";s:60:"C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php";s:4:"line";i:18;s:8:"function";s:12:"getMenuItems";s:5:"class";s:25:"app\components\MenuWidget";s:4:"type";s:2:"->";}}i:5;i:8314304;}i:81;a:6:{i:0;s:115:"SELECT "id", "name", "route", "parent", "order", "data" FROM "seguridad"."menu" WHERE "parent"=162 ORDER BY "order"";i:1;i:96;i:2;s:21:"yii\db\Command::query";i:3;d:1762444459.956396;i:4;a:3:{i:0;a:5:{s:4:"file";s:60:"C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php";s:4:"line";i:57;s:8:"function";s:3:"all";s:5:"class";s:12:"yii\db\Query";s:4:"type";s:2:"->";}i:1;a:5:{s:4:"file";s:60:"C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php";s:4:"line";i:70;s:8:"function";s:12:"getMenuItems";s:5:"class";s:25:"app\components\MenuWidget";s:4:"type";s:2:"->";}i:2;a:5:{s:4:"file";s:60:"C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php";s:4:"line";i:18;s:8:"function";s:12:"getMenuItems";s:5:"class";s:25:"app\components\MenuWidget";s:4:"type";s:2:"->";}}i:5;i:8320672;}i:83;a:6:{i:0;s:114:"SELECT "id", "name", "route", "parent", "order", "data" FROM "seguridad"."menu" WHERE "parent"=63 ORDER BY "order"";i:1;i:80;i:2;s:21:"yii\db\Command::query";i:3;d:1762444459.956661;i:4;a:3:{i:0;a:5:{s:4:"file";s:60:"C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php";s:4:"line";i:57;s:8:"function";s:3:"all";s:5:"class";s:12:"yii\db\Query";s:4:"type";s:2:"->";}i:1;a:5:{s:4:"file";s:60:"C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php";s:4:"line";i:70;s:8:"function";s:12:"getMenuItems";s:5:"class";s:25:"app\components\MenuWidget";s:4:"type";s:2:"->";}i:2;a:5:{s:4:"file";s:60:"C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php";s:4:"line";i:70;s:8:"function";s:12:"getMenuItems";s:5:"class";s:25:"app\components\MenuWidget";s:4:"type";s:2:"->";}}i:5;i:8326456;}i:84;a:6:{i:0;s:114:"SELECT "id", "name", "route", "parent", "order", "data" FROM "seguridad"."menu" WHERE "parent"=63 ORDER BY "order"";i:1;i:96;i:2;s:21:"yii\db\Command::query";i:3;d:1762444459.957035;i:4;a:3:{i:0;a:5:{s:4:"file";s:60:"C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php";s:4:"line";i:57;s:8:"function";s:3:"all";s:5:"class";s:12:"yii\db\Query";s:4:"type";s:2:"->";}i:1;a:5:{s:4:"file";s:60:"C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php";s:4:"line";i:70;s:8:"function";s:12:"getMenuItems";s:5:"class";s:25:"app\components\MenuWidget";s:4:"type";s:2:"->";}i:2;a:5:{s:4:"file";s:60:"C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php";s:4:"line";i:70;s:8:"function";s:12:"getMenuItems";s:5:"class";s:25:"app\components\MenuWidget";s:4:"type";s:2:"->";}}i:5;i:8328520;}i:86;a:6:{i:0;s:115:"SELECT "id", "name", "route", "parent", "order", "data" FROM "seguridad"."menu" WHERE "parent"=113 ORDER BY "order"";i:1;i:80;i:2;s:21:"yii\db\Command::query";i:3;d:1762444459.957279;i:4;a:3:{i:0;a:5:{s:4:"file";s:60:"C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php";s:4:"line";i:57;s:8:"function";s:3:"all";s:5:"class";s:12:"yii\db\Query";s:4:"type";s:2:"->";}i:1;a:5:{s:4:"file";s:60:"C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php";s:4:"line";i:70;s:8:"function";s:12:"getMenuItems";s:5:"class";s:25:"app\components\MenuWidget";s:4:"type";s:2:"->";}i:2;a:5:{s:4:"file";s:60:"C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php";s:4:"line";i:70;s:8:"function";s:12:"getMenuItems";s:5:"class";s:25:"app\components\MenuWidget";s:4:"type";s:2:"->";}}i:5;i:8332104;}i:87;a:6:{i:0;s:115:"SELECT "id", "name", "route", "parent", "order", "data" FROM "seguridad"."menu" WHERE "parent"=113 ORDER BY "order"";i:1;i:96;i:2;s:21:"yii\db\Command::query";i:3;d:1762444459.957639;i:4;a:3:{i:0;a:5:{s:4:"file";s:60:"C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php";s:4:"line";i:57;s:8:"function";s:3:"all";s:5:"class";s:12:"yii\db\Query";s:4:"type";s:2:"->";}i:1;a:5:{s:4:"file";s:60:"C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php";s:4:"line";i:70;s:8:"function";s:12:"getMenuItems";s:5:"class";s:25:"app\components\MenuWidget";s:4:"type";s:2:"->";}i:2;a:5:{s:4:"file";s:60:"C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php";s:4:"line";i:70;s:8:"function";s:12:"getMenuItems";s:5:"class";s:25:"app\components\MenuWidget";s:4:"type";s:2:"->";}}i:5;i:8334168;}i:89;a:6:{i:0;s:114:"SELECT "id", "name", "route", "parent", "order", "data" FROM "seguridad"."menu" WHERE "parent"=35 ORDER BY "order"";i:1;i:80;i:2;s:21:"yii\db\Command::query";i:3;d:1762444459.957853;i:4;a:3:{i:0;a:5:{s:4:"file";s:60:"C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php";s:4:"line";i:57;s:8:"function";s:3:"all";s:5:"class";s:12:"yii\db\Query";s:4:"type";s:2:"->";}i:1;a:5:{s:4:"file";s:60:"C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php";s:4:"line";i:70;s:8:"function";s:12:"getMenuItems";s:5:"class";s:25:"app\components\MenuWidget";s:4:"type";s:2:"->";}i:2;a:5:{s:4:"file";s:60:"C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php";s:4:"line";i:70;s:8:"function";s:12:"getMenuItems";s:5:"class";s:25:"app\components\MenuWidget";s:4:"type";s:2:"->";}}i:5;i:8337536;}i:90;a:6:{i:0;s:114:"SELECT "id", "name", "route", "parent", "order", "data" FROM "seguridad"."menu" WHERE "parent"=35 ORDER BY "order"";i:1;i:96;i:2;s:21:"yii\db\Command::query";i:3;d:1762444459.958193;i:4;a:3:{i:0;a:5:{s:4:"file";s:60:"C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php";s:4:"line";i:57;s:8:"function";s:3:"all";s:5:"class";s:12:"yii\db\Query";s:4:"type";s:2:"->";}i:1;a:5:{s:4:"file";s:60:"C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php";s:4:"line";i:70;s:8:"function";s:12:"getMenuItems";s:5:"class";s:25:"app\components\MenuWidget";s:4:"type";s:2:"->";}i:2;a:5:{s:4:"file";s:60:"C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php";s:4:"line";i:70;s:8:"function";s:12:"getMenuItems";s:5:"class";s:25:"app\components\MenuWidget";s:4:"type";s:2:"->";}}i:5;i:8339600;}i:92;a:6:{i:0;s:114:"SELECT "id", "name", "route", "parent", "order", "data" FROM "seguridad"."menu" WHERE "parent"=33 ORDER BY "order"";i:1;i:80;i:2;s:21:"yii\db\Command::query";i:3;d:1762444459.958407;i:4;a:3:{i:0;a:5:{s:4:"file";s:60:"C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php";s:4:"line";i:57;s:8:"function";s:3:"all";s:5:"class";s:12:"yii\db\Query";s:4:"type";s:2:"->";}i:1;a:5:{s:4:"file";s:60:"C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php";s:4:"line";i:70;s:8:"function";s:12:"getMenuItems";s:5:"class";s:25:"app\components\MenuWidget";s:4:"type";s:2:"->";}i:2;a:5:{s:4:"file";s:60:"C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php";s:4:"line";i:70;s:8:"function";s:12:"getMenuItems";s:5:"class";s:25:"app\components\MenuWidget";s:4:"type";s:2:"->";}}i:5;i:8342968;}i:93;a:6:{i:0;s:114:"SELECT "id", "name", "route", "parent", "order", "data" FROM "seguridad"."menu" WHERE "parent"=33 ORDER BY "order"";i:1;i:96;i:2;s:21:"yii\db\Command::query";i:3;d:1762444459.95877;i:4;a:3:{i:0;a:5:{s:4:"file";s:60:"C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php";s:4:"line";i:57;s:8:"function";s:3:"all";s:5:"class";s:12:"yii\db\Query";s:4:"type";s:2:"->";}i:1;a:5:{s:4:"file";s:60:"C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php";s:4:"line";i:70;s:8:"function";s:12:"getMenuItems";s:5:"class";s:25:"app\components\MenuWidget";s:4:"type";s:2:"->";}i:2;a:5:{s:4:"file";s:60:"C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php";s:4:"line";i:70;s:8:"function";s:12:"getMenuItems";s:5:"class";s:25:"app\components\MenuWidget";s:4:"type";s:2:"->";}}i:5;i:8345032;}i:95;a:6:{i:0;s:114:"SELECT "id", "name", "route", "parent", "order", "data" FROM "seguridad"."menu" WHERE "parent"=36 ORDER BY "order"";i:1;i:80;i:2;s:21:"yii\db\Command::query";i:3;d:1762444459.958995;i:4;a:3:{i:0;a:5:{s:4:"file";s:60:"C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php";s:4:"line";i:57;s:8:"function";s:3:"all";s:5:"class";s:12:"yii\db\Query";s:4:"type";s:2:"->";}i:1;a:5:{s:4:"file";s:60:"C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php";s:4:"line";i:70;s:8:"function";s:12:"getMenuItems";s:5:"class";s:25:"app\components\MenuWidget";s:4:"type";s:2:"->";}i:2;a:5:{s:4:"file";s:60:"C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php";s:4:"line";i:70;s:8:"function";s:12:"getMenuItems";s:5:"class";s:25:"app\components\MenuWidget";s:4:"type";s:2:"->";}}i:5;i:8348400;}i:96;a:6:{i:0;s:114:"SELECT "id", "name", "route", "parent", "order", "data" FROM "seguridad"."menu" WHERE "parent"=36 ORDER BY "order"";i:1;i:96;i:2;s:21:"yii\db\Command::query";i:3;d:1762444459.959325;i:4;a:3:{i:0;a:5:{s:4:"file";s:60:"C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php";s:4:"line";i:57;s:8:"function";s:3:"all";s:5:"class";s:12:"yii\db\Query";s:4:"type";s:2:"->";}i:1;a:5:{s:4:"file";s:60:"C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php";s:4:"line";i:70;s:8:"function";s:12:"getMenuItems";s:5:"class";s:25:"app\components\MenuWidget";s:4:"type";s:2:"->";}i:2;a:5:{s:4:"file";s:60:"C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php";s:4:"line";i:70;s:8:"function";s:12:"getMenuItems";s:5:"class";s:25:"app\components\MenuWidget";s:4:"type";s:2:"->";}}i:5;i:8350464;}i:98;a:6:{i:0;s:114:"SELECT "id", "name", "route", "parent", "order", "data" FROM "seguridad"."menu" WHERE "parent"=37 ORDER BY "order"";i:1;i:80;i:2;s:21:"yii\db\Command::query";i:3;d:1762444459.959617;i:4;a:3:{i:0;a:5:{s:4:"file";s:60:"C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php";s:4:"line";i:57;s:8:"function";s:3:"all";s:5:"class";s:12:"yii\db\Query";s:4:"type";s:2:"->";}i:1;a:5:{s:4:"file";s:60:"C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php";s:4:"line";i:70;s:8:"function";s:12:"getMenuItems";s:5:"class";s:25:"app\components\MenuWidget";s:4:"type";s:2:"->";}i:2;a:5:{s:4:"file";s:60:"C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php";s:4:"line";i:70;s:8:"function";s:12:"getMenuItems";s:5:"class";s:25:"app\components\MenuWidget";s:4:"type";s:2:"->";}}i:5;i:8353832;}i:99;a:6:{i:0;s:114:"SELECT "id", "name", "route", "parent", "order", "data" FROM "seguridad"."menu" WHERE "parent"=37 ORDER BY "order"";i:1;i:96;i:2;s:21:"yii\db\Command::query";i:3;d:1762444459.960239;i:4;a:3:{i:0;a:5:{s:4:"file";s:60:"C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php";s:4:"line";i:57;s:8:"function";s:3:"all";s:5:"class";s:12:"yii\db\Query";s:4:"type";s:2:"->";}i:1;a:5:{s:4:"file";s:60:"C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php";s:4:"line";i:70;s:8:"function";s:12:"getMenuItems";s:5:"class";s:25:"app\components\MenuWidget";s:4:"type";s:2:"->";}i:2;a:5:{s:4:"file";s:60:"C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php";s:4:"line";i:70;s:8:"function";s:12:"getMenuItems";s:5:"class";s:25:"app\components\MenuWidget";s:4:"type";s:2:"->";}}i:5;i:8355896;}i:101;a:6:{i:0;s:114:"SELECT "id", "name", "route", "parent", "order", "data" FROM "seguridad"."menu" WHERE "parent"=34 ORDER BY "order"";i:1;i:80;i:2;s:21:"yii\db\Command::query";i:3;d:1762444459.960569;i:4;a:3:{i:0;a:5:{s:4:"file";s:60:"C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php";s:4:"line";i:57;s:8:"function";s:3:"all";s:5:"class";s:12:"yii\db\Query";s:4:"type";s:2:"->";}i:1;a:5:{s:4:"file";s:60:"C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php";s:4:"line";i:70;s:8:"function";s:12:"getMenuItems";s:5:"class";s:25:"app\components\MenuWidget";s:4:"type";s:2:"->";}i:2;a:5:{s:4:"file";s:60:"C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php";s:4:"line";i:70;s:8:"function";s:12:"getMenuItems";s:5:"class";s:25:"app\components\MenuWidget";s:4:"type";s:2:"->";}}i:5;i:8359264;}i:102;a:6:{i:0;s:114:"SELECT "id", "name", "route", "parent", "order", "data" FROM "seguridad"."menu" WHERE "parent"=34 ORDER BY "order"";i:1;i:96;i:2;s:21:"yii\db\Command::query";i:3;d:1762444459.961092;i:4;a:3:{i:0;a:5:{s:4:"file";s:60:"C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php";s:4:"line";i:57;s:8:"function";s:3:"all";s:5:"class";s:12:"yii\db\Query";s:4:"type";s:2:"->";}i:1;a:5:{s:4:"file";s:60:"C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php";s:4:"line";i:70;s:8:"function";s:12:"getMenuItems";s:5:"class";s:25:"app\components\MenuWidget";s:4:"type";s:2:"->";}i:2;a:5:{s:4:"file";s:60:"C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php";s:4:"line";i:70;s:8:"function";s:12:"getMenuItems";s:5:"class";s:25:"app\components\MenuWidget";s:4:"type";s:2:"->";}}i:5;i:8361328;}i:104;a:6:{i:0;s:114:"SELECT "id", "name", "route", "parent", "order", "data" FROM "seguridad"."menu" WHERE "parent"=38 ORDER BY "order"";i:1;i:80;i:2;s:21:"yii\db\Command::query";i:3;d:1762444459.961472;i:4;a:3:{i:0;a:5:{s:4:"file";s:60:"C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php";s:4:"line";i:57;s:8:"function";s:3:"all";s:5:"class";s:12:"yii\db\Query";s:4:"type";s:2:"->";}i:1;a:5:{s:4:"file";s:60:"C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php";s:4:"line";i:70;s:8:"function";s:12:"getMenuItems";s:5:"class";s:25:"app\components\MenuWidget";s:4:"type";s:2:"->";}i:2;a:5:{s:4:"file";s:60:"C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php";s:4:"line";i:70;s:8:"function";s:12:"getMenuItems";s:5:"class";s:25:"app\components\MenuWidget";s:4:"type";s:2:"->";}}i:5;i:8364696;}i:105;a:6:{i:0;s:114:"SELECT "id", "name", "route", "parent", "order", "data" FROM "seguridad"."menu" WHERE "parent"=38 ORDER BY "order"";i:1;i:96;i:2;s:21:"yii\db\Command::query";i:3;d:1762444459.962079;i:4;a:3:{i:0;a:5:{s:4:"file";s:60:"C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php";s:4:"line";i:57;s:8:"function";s:3:"all";s:5:"class";s:12:"yii\db\Query";s:4:"type";s:2:"->";}i:1;a:5:{s:4:"file";s:60:"C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php";s:4:"line";i:70;s:8:"function";s:12:"getMenuItems";s:5:"class";s:25:"app\components\MenuWidget";s:4:"type";s:2:"->";}i:2;a:5:{s:4:"file";s:60:"C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php";s:4:"line";i:70;s:8:"function";s:12:"getMenuItems";s:5:"class";s:25:"app\components\MenuWidget";s:4:"type";s:2:"->";}}i:5;i:8366760;}i:107;a:6:{i:0;s:115:"SELECT "id", "name", "route", "parent", "order", "data" FROM "seguridad"."menu" WHERE "parent"=163 ORDER BY "order"";i:1;i:80;i:2;s:21:"yii\db\Command::query";i:3;d:1762444459.962412;i:4;a:3:{i:0;a:5:{s:4:"file";s:60:"C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php";s:4:"line";i:57;s:8:"function";s:3:"all";s:5:"class";s:12:"yii\db\Query";s:4:"type";s:2:"->";}i:1;a:5:{s:4:"file";s:60:"C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php";s:4:"line";i:70;s:8:"function";s:12:"getMenuItems";s:5:"class";s:25:"app\components\MenuWidget";s:4:"type";s:2:"->";}i:2;a:5:{s:4:"file";s:60:"C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php";s:4:"line";i:18;s:8:"function";s:12:"getMenuItems";s:5:"class";s:25:"app\components\MenuWidget";s:4:"type";s:2:"->";}}i:5;i:8364096;}i:108;a:6:{i:0;s:115:"SELECT "id", "name", "route", "parent", "order", "data" FROM "seguridad"."menu" WHERE "parent"=163 ORDER BY "order"";i:1;i:96;i:2;s:21:"yii\db\Command::query";i:3;d:1762444459.963007;i:4;a:3:{i:0;a:5:{s:4:"file";s:60:"C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php";s:4:"line";i:57;s:8:"function";s:3:"all";s:5:"class";s:12:"yii\db\Query";s:4:"type";s:2:"->";}i:1;a:5:{s:4:"file";s:60:"C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php";s:4:"line";i:70;s:8:"function";s:12:"getMenuItems";s:5:"class";s:25:"app\components\MenuWidget";s:4:"type";s:2:"->";}i:2;a:5:{s:4:"file";s:60:"C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php";s:4:"line";i:18;s:8:"function";s:12:"getMenuItems";s:5:"class";s:25:"app\components\MenuWidget";s:4:"type";s:2:"->";}}i:5;i:8367144;}i:110;a:6:{i:0;s:115:"SELECT "id", "name", "route", "parent", "order", "data" FROM "seguridad"."menu" WHERE "parent"=164 ORDER BY "order"";i:1;i:80;i:2;s:21:"yii\db\Command::query";i:3;d:1762444459.963328;i:4;a:3:{i:0;a:5:{s:4:"file";s:60:"C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php";s:4:"line";i:57;s:8:"function";s:3:"all";s:5:"class";s:12:"yii\db\Query";s:4:"type";s:2:"->";}i:1;a:5:{s:4:"file";s:60:"C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php";s:4:"line";i:70;s:8:"function";s:12:"getMenuItems";s:5:"class";s:25:"app\components\MenuWidget";s:4:"type";s:2:"->";}i:2;a:5:{s:4:"file";s:60:"C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php";s:4:"line";i:70;s:8:"function";s:12:"getMenuItems";s:5:"class";s:25:"app\components\MenuWidget";s:4:"type";s:2:"->";}}i:5;i:8372712;}i:111;a:6:{i:0;s:115:"SELECT "id", "name", "route", "parent", "order", "data" FROM "seguridad"."menu" WHERE "parent"=164 ORDER BY "order"";i:1;i:96;i:2;s:21:"yii\db\Command::query";i:3;d:1762444459.963697;i:4;a:3:{i:0;a:5:{s:4:"file";s:60:"C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php";s:4:"line";i:57;s:8:"function";s:3:"all";s:5:"class";s:12:"yii\db\Query";s:4:"type";s:2:"->";}i:1;a:5:{s:4:"file";s:60:"C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php";s:4:"line";i:70;s:8:"function";s:12:"getMenuItems";s:5:"class";s:25:"app\components\MenuWidget";s:4:"type";s:2:"->";}i:2;a:5:{s:4:"file";s:60:"C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php";s:4:"line";i:70;s:8:"function";s:12:"getMenuItems";s:5:"class";s:25:"app\components\MenuWidget";s:4:"type";s:2:"->";}}i:5;i:8375416;}i:113;a:6:{i:0;s:115:"SELECT "id", "name", "route", "parent", "order", "data" FROM "seguridad"."menu" WHERE "parent"=166 ORDER BY "order"";i:1;i:80;i:2;s:21:"yii\db\Command::query";i:3;d:1762444459.963933;i:4;a:3:{i:0;a:5:{s:4:"file";s:60:"C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php";s:4:"line";i:57;s:8:"function";s:3:"all";s:5:"class";s:12:"yii\db\Query";s:4:"type";s:2:"->";}i:1;a:5:{s:4:"file";s:60:"C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php";s:4:"line";i:70;s:8:"function";s:12:"getMenuItems";s:5:"class";s:25:"app\components\MenuWidget";s:4:"type";s:2:"->";}i:2;a:5:{s:4:"file";s:60:"C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php";s:4:"line";i:70;s:8:"function";s:12:"getMenuItems";s:5:"class";s:25:"app\components\MenuWidget";s:4:"type";s:2:"->";}}i:5;i:8381200;}i:114;a:6:{i:0;s:115:"SELECT "id", "name", "route", "parent", "order", "data" FROM "seguridad"."menu" WHERE "parent"=166 ORDER BY "order"";i:1;i:96;i:2;s:21:"yii\db\Command::query";i:3;d:1762444459.964264;i:4;a:3:{i:0;a:5:{s:4:"file";s:60:"C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php";s:4:"line";i:57;s:8:"function";s:3:"all";s:5:"class";s:12:"yii\db\Query";s:4:"type";s:2:"->";}i:1;a:5:{s:4:"file";s:60:"C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php";s:4:"line";i:70;s:8:"function";s:12:"getMenuItems";s:5:"class";s:25:"app\components\MenuWidget";s:4:"type";s:2:"->";}i:2;a:5:{s:4:"file";s:60:"C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php";s:4:"line";i:70;s:8:"function";s:12:"getMenuItems";s:5:"class";s:25:"app\components\MenuWidget";s:4:"type";s:2:"->";}}i:5;i:8383264;}i:116;a:6:{i:0;s:115:"SELECT "id", "name", "route", "parent", "order", "data" FROM "seguridad"."menu" WHERE "parent"=167 ORDER BY "order"";i:1;i:80;i:2;s:21:"yii\db\Command::query";i:3;d:1762444459.964493;i:4;a:3:{i:0;a:5:{s:4:"file";s:60:"C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php";s:4:"line";i:57;s:8:"function";s:3:"all";s:5:"class";s:12:"yii\db\Query";s:4:"type";s:2:"->";}i:1;a:5:{s:4:"file";s:60:"C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php";s:4:"line";i:70;s:8:"function";s:12:"getMenuItems";s:5:"class";s:25:"app\components\MenuWidget";s:4:"type";s:2:"->";}i:2;a:5:{s:4:"file";s:60:"C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php";s:4:"line";i:70;s:8:"function";s:12:"getMenuItems";s:5:"class";s:25:"app\components\MenuWidget";s:4:"type";s:2:"->";}}i:5;i:8383896;}i:117;a:6:{i:0;s:115:"SELECT "id", "name", "route", "parent", "order", "data" FROM "seguridad"."menu" WHERE "parent"=167 ORDER BY "order"";i:1;i:96;i:2;s:21:"yii\db\Command::query";i:3;d:1762444459.964844;i:4;a:3:{i:0;a:5:{s:4:"file";s:60:"C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php";s:4:"line";i:57;s:8:"function";s:3:"all";s:5:"class";s:12:"yii\db\Query";s:4:"type";s:2:"->";}i:1;a:5:{s:4:"file";s:60:"C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php";s:4:"line";i:70;s:8:"function";s:12:"getMenuItems";s:5:"class";s:25:"app\components\MenuWidget";s:4:"type";s:2:"->";}i:2;a:5:{s:4:"file";s:60:"C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php";s:4:"line";i:70;s:8:"function";s:12:"getMenuItems";s:5:"class";s:25:"app\components\MenuWidget";s:4:"type";s:2:"->";}}i:5;i:8387080;}i:119;a:6:{i:0;s:115:"SELECT "id", "name", "route", "parent", "order", "data" FROM "seguridad"."menu" WHERE "parent"=169 ORDER BY "order"";i:1;i:80;i:2;s:21:"yii\db\Command::query";i:3;d:1762444459.965166;i:4;a:3:{i:0;a:5:{s:4:"file";s:60:"C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php";s:4:"line";i:57;s:8:"function";s:3:"all";s:5:"class";s:12:"yii\db\Query";s:4:"type";s:2:"->";}i:1;a:5:{s:4:"file";s:60:"C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php";s:4:"line";i:70;s:8:"function";s:12:"getMenuItems";s:5:"class";s:25:"app\components\MenuWidget";s:4:"type";s:2:"->";}i:2;a:5:{s:4:"file";s:60:"C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php";s:4:"line";i:70;s:8:"function";s:12:"getMenuItems";s:5:"class";s:25:"app\components\MenuWidget";s:4:"type";s:2:"->";}}i:5;i:8392864;}i:120;a:6:{i:0;s:115:"SELECT "id", "name", "route", "parent", "order", "data" FROM "seguridad"."menu" WHERE "parent"=169 ORDER BY "order"";i:1;i:96;i:2;s:21:"yii\db\Command::query";i:3;d:1762444459.965538;i:4;a:3:{i:0;a:5:{s:4:"file";s:60:"C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php";s:4:"line";i:57;s:8:"function";s:3:"all";s:5:"class";s:12:"yii\db\Query";s:4:"type";s:2:"->";}i:1;a:5:{s:4:"file";s:60:"C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php";s:4:"line";i:70;s:8:"function";s:12:"getMenuItems";s:5:"class";s:25:"app\components\MenuWidget";s:4:"type";s:2:"->";}i:2;a:5:{s:4:"file";s:60:"C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php";s:4:"line";i:70;s:8:"function";s:12:"getMenuItems";s:5:"class";s:25:"app\components\MenuWidget";s:4:"type";s:2:"->";}}i:5;i:8394928;}i:122;a:6:{i:0;s:115:"SELECT "id", "name", "route", "parent", "order", "data" FROM "seguridad"."menu" WHERE "parent"=168 ORDER BY "order"";i:1;i:80;i:2;s:21:"yii\db\Command::query";i:3;d:1762444459.965748;i:4;a:3:{i:0;a:5:{s:4:"file";s:60:"C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php";s:4:"line";i:57;s:8:"function";s:3:"all";s:5:"class";s:12:"yii\db\Query";s:4:"type";s:2:"->";}i:1;a:5:{s:4:"file";s:60:"C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php";s:4:"line";i:70;s:8:"function";s:12:"getMenuItems";s:5:"class";s:25:"app\components\MenuWidget";s:4:"type";s:2:"->";}i:2;a:5:{s:4:"file";s:60:"C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php";s:4:"line";i:70;s:8:"function";s:12:"getMenuItems";s:5:"class";s:25:"app\components\MenuWidget";s:4:"type";s:2:"->";}}i:5;i:8398512;}i:123;a:6:{i:0;s:115:"SELECT "id", "name", "route", "parent", "order", "data" FROM "seguridad"."menu" WHERE "parent"=168 ORDER BY "order"";i:1;i:96;i:2;s:21:"yii\db\Command::query";i:3;d:1762444459.966075;i:4;a:3:{i:0;a:5:{s:4:"file";s:60:"C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php";s:4:"line";i:57;s:8:"function";s:3:"all";s:5:"class";s:12:"yii\db\Query";s:4:"type";s:2:"->";}i:1;a:5:{s:4:"file";s:60:"C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php";s:4:"line";i:70;s:8:"function";s:12:"getMenuItems";s:5:"class";s:25:"app\components\MenuWidget";s:4:"type";s:2:"->";}i:2;a:5:{s:4:"file";s:60:"C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php";s:4:"line";i:70;s:8:"function";s:12:"getMenuItems";s:5:"class";s:25:"app\components\MenuWidget";s:4:"type";s:2:"->";}}i:5;i:8400576;}i:125;a:6:{i:0;s:115:"SELECT "id", "name", "route", "parent", "order", "data" FROM "seguridad"."menu" WHERE "parent"=172 ORDER BY "order"";i:1;i:80;i:2;s:21:"yii\db\Command::query";i:3;d:1762444459.966281;i:4;a:3:{i:0;a:5:{s:4:"file";s:60:"C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php";s:4:"line";i:57;s:8:"function";s:3:"all";s:5:"class";s:12:"yii\db\Query";s:4:"type";s:2:"->";}i:1;a:5:{s:4:"file";s:60:"C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php";s:4:"line";i:70;s:8:"function";s:12:"getMenuItems";s:5:"class";s:25:"app\components\MenuWidget";s:4:"type";s:2:"->";}i:2;a:5:{s:4:"file";s:60:"C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php";s:4:"line";i:18;s:8:"function";s:12:"getMenuItems";s:5:"class";s:25:"app\components\MenuWidget";s:4:"type";s:2:"->";}}i:5;i:8397288;}i:126;a:6:{i:0;s:115:"SELECT "id", "name", "route", "parent", "order", "data" FROM "seguridad"."menu" WHERE "parent"=172 ORDER BY "order"";i:1;i:96;i:2;s:21:"yii\db\Command::query";i:3;d:1762444459.966607;i:4;a:3:{i:0;a:5:{s:4:"file";s:60:"C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php";s:4:"line";i:57;s:8:"function";s:3:"all";s:5:"class";s:12:"yii\db\Query";s:4:"type";s:2:"->";}i:1;a:5:{s:4:"file";s:60:"C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php";s:4:"line";i:70;s:8:"function";s:12:"getMenuItems";s:5:"class";s:25:"app\components\MenuWidget";s:4:"type";s:2:"->";}i:2;a:5:{s:4:"file";s:60:"C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php";s:4:"line";i:18;s:8:"function";s:12:"getMenuItems";s:5:"class";s:25:"app\components\MenuWidget";s:4:"type";s:2:"->";}}i:5;i:8399352;}}}";s:5:"event";s:7886:"a:45:{i:0;a:5:{s:4:"time";d:1762444459.139963;s:4:"name";s:4:"init";s:5:"class";s:14:"yii\base\Event";s:8:"isStatic";s:1:"0";s:11:"senderClass";s:18:"yii\db\ActiveQuery";}i:1;a:5:{s:4:"time";d:1762444459.264997;s:4:"name";s:9:"afterOpen";s:5:"class";s:14:"yii\base\Event";s:8:"isStatic";s:1:"0";s:11:"senderClass";s:17:"yii\db\Connection";}i:2;a:5:{s:4:"time";d:1762444459.373988;s:4:"name";s:4:"init";s:5:"class";s:14:"yii\base\Event";s:8:"isStatic";s:1:"0";s:11:"senderClass";s:15:"app\models\User";}i:3;a:5:{s:4:"time";d:1762444459.37404;s:4:"name";s:9:"afterFind";s:5:"class";s:14:"yii\base\Event";s:8:"isStatic";s:1:"0";s:11:"senderClass";s:15:"app\models\User";}i:4;a:5:{s:4:"time";d:1762444459.450818;s:4:"name";s:4:"init";s:5:"class";s:14:"yii\base\Event";s:8:"isStatic";s:1:"0";s:11:"senderClass";s:15:"app\models\User";}i:5;a:5:{s:4:"time";d:1762444459.472921;s:4:"name";s:13:"beforeRequest";s:5:"class";s:14:"yii\base\Event";s:8:"isStatic";s:1:"0";s:11:"senderClass";s:19:"yii\web\Application";}i:6;a:5:{s:4:"time";d:1762444459.569314;s:4:"name";s:12:"beforeAction";s:5:"class";s:20:"yii\base\ActionEvent";s:8:"isStatic";s:1:"0";s:11:"senderClass";s:19:"yii\web\Application";}i:7;a:5:{s:4:"time";d:1762444459.569339;s:4:"name";s:12:"beforeAction";s:5:"class";s:20:"yii\base\ActionEvent";s:8:"isStatic";s:1:"0";s:11:"senderClass";s:19:"app\modules\ged\ged";}i:8;a:5:{s:4:"time";d:1762444459.672001;s:4:"name";s:12:"beforeAction";s:5:"class";s:20:"yii\base\ActionEvent";s:8:"isStatic";s:1:"0";s:11:"senderClass";s:45:"app\modules\ged\controllers\DefaultController";}i:9;a:5:{s:4:"time";d:1762444459.812021;s:4:"name";s:4:"init";s:5:"class";s:14:"yii\base\Event";s:8:"isStatic";s:1:"0";s:11:"senderClass";s:18:"yii\db\ActiveQuery";}i:10;a:5:{s:4:"time";d:1762444459.816039;s:4:"name";s:4:"init";s:5:"class";s:14:"yii\base\Event";s:8:"isStatic";s:1:"0";s:11:"senderClass";s:18:"app\models\Escuela";}i:11;a:5:{s:4:"time";d:1762444459.82992;s:4:"name";s:4:"init";s:5:"class";s:14:"yii\base\Event";s:8:"isStatic";s:1:"0";s:11:"senderClass";s:18:"app\models\Escuela";}i:12;a:5:{s:4:"time";d:1762444459.829957;s:4:"name";s:9:"afterFind";s:5:"class";s:14:"yii\base\Event";s:8:"isStatic";s:1:"0";s:11:"senderClass";s:18:"app\models\Escuela";}i:13;a:5:{s:4:"time";d:1762444459.829965;s:4:"name";s:9:"afterFind";s:5:"class";s:14:"yii\base\Event";s:8:"isStatic";s:1:"0";s:11:"senderClass";s:18:"app\models\Escuela";}i:14;a:5:{s:4:"time";d:1762444459.829997;s:4:"name";s:4:"init";s:5:"class";s:14:"yii\base\Event";s:8:"isStatic";s:1:"0";s:11:"senderClass";s:18:"yii\db\ActiveQuery";}i:15;a:5:{s:4:"time";d:1762444459.830859;s:4:"name";s:4:"init";s:5:"class";s:14:"yii\base\Event";s:8:"isStatic";s:1:"0";s:11:"senderClass";s:18:"app\models\Escuela";}i:16;a:5:{s:4:"time";d:1762444459.8309;s:4:"name";s:9:"afterFind";s:5:"class";s:14:"yii\base\Event";s:8:"isStatic";s:1:"0";s:11:"senderClass";s:18:"app\models\Escuela";}i:17;a:5:{s:4:"time";d:1762444459.834847;s:4:"name";s:12:"beforeRender";s:5:"class";s:18:"yii\base\ViewEvent";s:8:"isStatic";s:1:"0";s:11:"senderClass";s:12:"yii\web\View";}i:18;a:5:{s:4:"time";d:1762444459.835278;s:4:"name";s:4:"init";s:5:"class";s:14:"yii\base\Event";s:8:"isStatic";s:1:"0";s:11:"senderClass";s:18:"yii\db\ActiveQuery";}i:19;a:5:{s:4:"time";d:1762444459.941692;s:4:"name";s:11:"afterRender";s:5:"class";s:18:"yii\base\ViewEvent";s:8:"isStatic";s:1:"0";s:11:"senderClass";s:12:"yii\web\View";}i:20;a:5:{s:4:"time";d:1762444459.942103;s:4:"name";s:12:"beforeRender";s:5:"class";s:18:"yii\base\ViewEvent";s:8:"isStatic";s:1:"0";s:11:"senderClass";s:12:"yii\web\View";}i:21;a:5:{s:4:"time";d:1762444459.948975;s:4:"name";s:9:"beginPage";s:5:"class";s:14:"yii\base\Event";s:8:"isStatic";s:1:"0";s:11:"senderClass";s:12:"yii\web\View";}i:22;a:5:{s:4:"time";d:1762444459.949882;s:4:"name";s:9:"beginBody";s:5:"class";s:14:"yii\base\Event";s:8:"isStatic";s:1:"0";s:11:"senderClass";s:12:"yii\web\View";}i:23;a:5:{s:4:"time";d:1762444459.951612;s:4:"name";s:4:"init";s:5:"class";s:14:"yii\base\Event";s:8:"isStatic";s:1:"0";s:11:"senderClass";s:21:"yii\bootstrap5\NavBar";}i:24;a:5:{s:4:"time";d:1762444459.9535;s:4:"name";s:18:"missingTranslation";s:5:"class";s:32:"yii\i18n\MissingTranslationEvent";s:8:"isStatic";s:1:"0";s:11:"senderClass";s:29:"yii\i18n\GettextMessageSource";}i:25;a:5:{s:4:"time";d:1762444459.954049;s:4:"name";s:4:"init";s:5:"class";s:14:"yii\base\Event";s:8:"isStatic";s:1:"0";s:11:"senderClass";s:25:"app\components\MenuWidget";}i:26;a:5:{s:4:"time";d:1762444459.954267;s:4:"name";s:9:"beforeRun";s:5:"class";s:20:"yii\base\WidgetEvent";s:8:"isStatic";s:1:"0";s:11:"senderClass";s:25:"app\components\MenuWidget";}i:27;a:5:{s:4:"time";d:1762444459.967337;s:4:"name";s:8:"afterRun";s:5:"class";s:20:"yii\base\WidgetEvent";s:8:"isStatic";s:1:"0";s:11:"senderClass";s:25:"app\components\MenuWidget";}i:28;a:5:{s:4:"time";d:1762444459.967501;s:4:"name";s:9:"beforeRun";s:5:"class";s:20:"yii\base\WidgetEvent";s:8:"isStatic";s:1:"0";s:11:"senderClass";s:21:"yii\bootstrap5\NavBar";}i:29;a:5:{s:4:"time";d:1762444459.967521;s:4:"name";s:8:"afterRun";s:5:"class";s:20:"yii\base\WidgetEvent";s:8:"isStatic";s:1:"0";s:11:"senderClass";s:21:"yii\bootstrap5\NavBar";}i:30;a:5:{s:4:"time";d:1762444459.96814;s:4:"name";s:4:"init";s:5:"class";s:14:"yii\base\Event";s:8:"isStatic";s:1:"0";s:11:"senderClass";s:17:"app\widgets\Alert";}i:31;a:5:{s:4:"time";d:1762444459.968154;s:4:"name";s:9:"beforeRun";s:5:"class";s:20:"yii\base\WidgetEvent";s:8:"isStatic";s:1:"0";s:11:"senderClass";s:17:"app\widgets\Alert";}i:32;a:5:{s:4:"time";d:1762444459.96818;s:4:"name";s:8:"afterRun";s:5:"class";s:20:"yii\base\WidgetEvent";s:8:"isStatic";s:1:"0";s:11:"senderClass";s:17:"app\widgets\Alert";}i:33;a:5:{s:4:"time";d:1762444459.968265;s:4:"name";s:18:"missingTranslation";s:5:"class";s:32:"yii\i18n\MissingTranslationEvent";s:8:"isStatic";s:1:"0";s:11:"senderClass";s:25:"yii\i18n\PhpMessageSource";}i:34;a:5:{s:4:"time";d:1762444459.968283;s:4:"name";s:18:"missingTranslation";s:5:"class";s:32:"yii\i18n\MissingTranslationEvent";s:8:"isStatic";s:1:"0";s:11:"senderClass";s:25:"yii\i18n\PhpMessageSource";}i:35;a:5:{s:4:"time";d:1762444459.96927;s:4:"name";s:7:"endBody";s:5:"class";s:14:"yii\base\Event";s:8:"isStatic";s:1:"0";s:11:"senderClass";s:12:"yii\web\View";}i:36;a:5:{s:4:"time";d:1762444459.969439;s:4:"name";s:7:"endPage";s:5:"class";s:14:"yii\base\Event";s:8:"isStatic";s:1:"0";s:11:"senderClass";s:12:"yii\web\View";}i:37;a:5:{s:4:"time";d:1762444459.969729;s:4:"name";s:11:"afterRender";s:5:"class";s:18:"yii\base\ViewEvent";s:8:"isStatic";s:1:"0";s:11:"senderClass";s:12:"yii\web\View";}i:38;a:5:{s:4:"time";d:1762444459.969756;s:4:"name";s:11:"afterAction";s:5:"class";s:20:"yii\base\ActionEvent";s:8:"isStatic";s:1:"0";s:11:"senderClass";s:45:"app\modules\ged\controllers\DefaultController";}i:39;a:5:{s:4:"time";d:1762444459.969767;s:4:"name";s:11:"afterAction";s:5:"class";s:20:"yii\base\ActionEvent";s:8:"isStatic";s:1:"0";s:11:"senderClass";s:19:"app\modules\ged\ged";}i:40;a:5:{s:4:"time";d:1762444459.969775;s:4:"name";s:11:"afterAction";s:5:"class";s:20:"yii\base\ActionEvent";s:8:"isStatic";s:1:"0";s:11:"senderClass";s:19:"yii\web\Application";}i:41;a:5:{s:4:"time";d:1762444459.969786;s:4:"name";s:12:"afterRequest";s:5:"class";s:14:"yii\base\Event";s:8:"isStatic";s:1:"0";s:11:"senderClass";s:19:"yii\web\Application";}i:42;a:5:{s:4:"time";d:1762444459.969795;s:4:"name";s:10:"beforeSend";s:5:"class";s:14:"yii\base\Event";s:8:"isStatic";s:1:"0";s:11:"senderClass";s:16:"yii\web\Response";}i:43;a:5:{s:4:"time";d:1762444459.970293;s:4:"name";s:12:"afterPrepare";s:5:"class";s:14:"yii\base\Event";s:8:"isStatic";s:1:"0";s:11:"senderClass";s:16:"yii\web\Response";}i:44;a:5:{s:4:"time";d:1762444459.970556;s:4:"name";s:9:"afterSend";s:5:"class";s:14:"yii\base\Event";s:8:"isStatic";s:1:"0";s:11:"senderClass";s:16:"yii\web\Response";}}";s:4:"mail";s:6:"a:0:{}";s:8:"timeline";s:91:"a:3:{s:5:"start";d:1762444458.583439;s:3:"end";d:1762444459.972744;s:6:"memory";i:8610240;}";s:4:"dump";s:6:"a:0:{}";s:6:"router";s:7076:"a:3:{s:8:"messages";a:36:{i:19;a:6:{i:0;a:3:{s:4:"rule";s:3:"gii";s:5:"match";b:0;s:6:"parent";N;}i:1;i:8;i:2;s:32:"yii\web\UrlManager::parseRequest";i:3;d:1762444459.489259;i:4;a:0:{}i:5;i:6771552;}i:20;a:6:{i:0;a:3:{s:4:"rule";s:12:"gii/<id:\w+>";s:5:"match";b:0;s:6:"parent";N;}i:1;i:8;i:2;s:32:"yii\web\UrlManager::parseRequest";i:3;d:1762444459.489279;i:4;a:0:{}i:5;i:6772144;}i:21;a:6:{i:0;a:3:{s:4:"rule";s:41:"gii/<controller:[\w\-]+>/<action:[\w\-]+>";s:5:"match";b:0;s:6:"parent";N;}i:1;i:8;i:2;s:32:"yii\web\UrlManager::parseRequest";i:3;d:1762444459.489289;i:4;a:0:{}i:5;i:6772736;}i:22;a:6:{i:0;a:3:{s:4:"rule";s:5:"debug";s:5:"match";b:0;s:6:"parent";N;}i:1;i:8;i:2;s:32:"yii\web\UrlManager::parseRequest";i:3;d:1762444459.489297;i:4;a:0:{}i:5;i:6773328;}i:23;a:6:{i:0;a:3:{s:4:"rule";s:43:"debug/<controller:[\w\-]+>/<action:[\w\-]+>";s:5:"match";b:0;s:6:"parent";N;}i:1;i:8;i:2;s:32:"yii\web\UrlManager::parseRequest";i:3;d:1762444459.489307;i:4;a:0:{}i:5;i:6773920;}i:24;a:6:{i:0;a:3:{s:4:"rule";s:10:"tasa-dolar";s:5:"match";b:0;s:6:"parent";N;}i:1;i:8;i:2;s:32:"yii\web\UrlManager::parseRequest";i:3;d:1762444459.489314;i:4;a:0:{}i:5;i:6774512;}i:25;a:6:{i:0;a:3:{s:4:"rule";s:21:"tasa-dolar/actualizar";s:5:"match";b:0;s:6:"parent";N;}i:1;i:8;i:2;s:32:"yii\web\UrlManager::parseRequest";i:3;d:1762444459.48932;i:4;a:0:{}i:5;i:6775104;}i:26;a:6:{i:0;a:3:{s:4:"rule";s:10:" mi-perfil";s:5:"match";b:0;s:6:"parent";N;}i:1;i:8;i:2;s:32:"yii\web\UrlManager::parseRequest";i:3;d:1762444459.489327;i:4;a:0:{}i:5;i:6775696;}i:27;a:6:{i:0;a:3:{s:4:"rule";s:10:"mis-deudas";s:5:"match";b:0;s:6:"parent";N;}i:1;i:8;i:2;s:32:"yii\web\UrlManager::parseRequest";i:3;d:1762444459.489334;i:4;a:0:{}i:5;i:6776288;}i:28;a:6:{i:0;a:3:{s:4:"rule";s:17:"mis-representados";s:5:"match";b:0;s:6:"parent";N;}i:1;i:8;i:2;s:32:"yii\web\UrlManager::parseRequest";i:3;d:1762444459.48934;i:4;a:0:{}i:5;i:6776880;}i:29;a:6:{i:0;a:3:{s:4:"rule";s:18:"mi-perfil/<id:\d+>";s:5:"match";b:0;s:6:"parent";N;}i:1;i:8;i:2;s:32:"yii\web\UrlManager::parseRequest";i:3;d:1762444459.48935;i:4;a:0:{}i:5;i:6777472;}i:30;a:6:{i:0;a:3:{s:4:"rule";s:19:"mis-deudas/<id:\d+>";s:5:"match";b:0;s:6:"parent";N;}i:1;i:8;i:2;s:32:"yii\web\UrlManager::parseRequest";i:3;d:1762444459.489357;i:4;a:0:{}i:5;i:6778064;}i:31;a:6:{i:0;a:3:{s:4:"rule";s:1:"/";s:5:"match";b:0;s:6:"parent";N;}i:1;i:8;i:2;s:32:"yii\web\UrlManager::parseRequest";i:3;d:1762444459.489364;i:4;a:0:{}i:5;i:6778656;}i:32;a:6:{i:0;a:3:{s:4:"rule";s:5:"login";s:5:"match";b:0;s:6:"parent";N;}i:1;i:8;i:2;s:32:"yii\web\UrlManager::parseRequest";i:3;d:1762444459.48937;i:4;a:0:{}i:5;i:6779248;}i:33;a:6:{i:0;a:3:{s:4:"rule";s:16:"atleta/dashboard";s:5:"match";b:0;s:6:"parent";N;}i:1;i:8;i:2;s:32:"yii\web\UrlManager::parseRequest";i:3;d:1762444459.489377;i:4;a:0:{}i:5;i:6780480;}i:34;a:6:{i:0;a:3:{s:4:"rule";s:17:"atleta/asistencia";s:5:"match";b:0;s:6:"parent";N;}i:1;i:8;i:2;s:32:"yii\web\UrlManager::parseRequest";i:3;d:1762444459.489386;i:4;a:0:{}i:5;i:6781072;}i:35;a:6:{i:0;a:3:{s:4:"rule";s:12:"atleta/pagos";s:5:"match";b:0;s:6:"parent";N;}i:1;i:8;i:2;s:32:"yii\web\UrlManager::parseRequest";i:3;d:1762444459.489434;i:4;a:0:{}i:5;i:6781664;}i:36;a:6:{i:0;a:3:{s:4:"rule";s:23:"representante/dashboard";s:5:"match";b:0;s:6:"parent";N;}i:1;i:8;i:2;s:32:"yii\web\UrlManager::parseRequest";i:3;d:1762444459.489443;i:4;a:0:{}i:5;i:6782256;}i:37;a:6:{i:0;a:3:{s:4:"rule";s:25:"representante/mis-atletas";s:5:"match";b:0;s:6:"parent";N;}i:1;i:8;i:2;s:32:"yii\web\UrlManager::parseRequest";i:3;d:1762444459.48945;i:4;a:0:{}i:5;i:6782848;}i:38;a:6:{i:0;a:3:{s:4:"rule";s:26:"representante/estado-pagos";s:5:"match";b:0;s:6:"parent";N;}i:1;i:8;i:2;s:32:"yii\web\UrlManager::parseRequest";i:3;d:1762444459.489457;i:4;a:0:{}i:5;i:6783440;}i:39;a:6:{i:0;a:3:{s:4:"rule";s:38:"<controller:\w+>/<action:\w+>/<id:\d+>";s:5:"match";b:0;s:6:"parent";N;}i:1;i:8;i:2;s:32:"yii\web\UrlManager::parseRequest";i:3;d:1762444459.496363;i:4;a:0:{}i:5;i:6784032;}i:40;a:6:{i:0;a:3:{s:4:"rule";s:29:"<controller:\w+>/<action:\w+>";s:5:"match";b:0;s:6:"parent";N;}i:1;i:8;i:2;s:32:"yii\web\UrlManager::parseRequest";i:3;d:1762444459.496407;i:4;a:0:{}i:5;i:6784624;}i:41;a:6:{i:0;a:3:{s:4:"rule";s:30:"municipio/get-by-edo/<edo:\d+>";s:5:"match";b:0;s:6:"parent";N;}i:1;i:8;i:2;s:32:"yii\web\UrlManager::parseRequest";i:3;d:1762444459.496423;i:4;a:0:{}i:5;i:6785216;}i:42;a:6:{i:0;a:3:{s:4:"rule";s:32:"parroquia/get-by-muni/<muni:\d+>";s:5:"match";b:0;s:6:"parent";N;}i:1;i:8;i:2;s:32:"yii\web\UrlManager::parseRequest";i:3;d:1762444459.496436;i:4;a:0:{}i:5;i:6785808;}i:43;a:6:{i:0;a:3:{s:4:"rule";s:36:"parroquia/get-by-muni-cod/<muni:\w+>";s:5:"match";b:0;s:6:"parent";N;}i:1;i:8;i:2;s:32:"yii\web\UrlManager::parseRequest";i:3;d:1762444459.496451;i:4;a:0:{}i:5;i:6786400;}i:44;a:6:{i:0;a:3:{s:4:"rule";s:20:"escuela/pre-registro";s:5:"match";b:0;s:6:"parent";N;}i:1;i:8;i:2;s:32:"yii\web\UrlManager::parseRequest";i:3;d:1762444459.496463;i:4;a:0:{}i:5;i:6786992;}i:45;a:6:{i:0;a:3:{s:4:"rule";s:35:"escuela/completar-registro/<id:\d+>";s:5:"match";b:0;s:6:"parent";N;}i:1;i:8;i:2;s:32:"yii\web\UrlManager::parseRequest";i:3;d:1762444459.496474;i:4;a:0:{}i:5;i:6787584;}i:46;a:6:{i:0;a:3:{s:4:"rule";s:18:"escuela/pendientes";s:5:"match";b:0;s:6:"parent";N;}i:1;i:8;i:2;s:32:"yii\web\UrlManager::parseRequest";i:3;d:1762444459.513274;i:4;a:0:{}i:5;i:6788176;}i:47;a:6:{i:0;a:3:{s:4:"rule";s:24:"escuela/aprobar/<id:\d+>";s:5:"match";b:0;s:6:"parent";N;}i:1;i:8;i:2;s:32:"yii\web\UrlManager::parseRequest";i:3;d:1762444459.513346;i:4;a:0:{}i:5;i:6788768;}i:48;a:6:{i:0;a:3:{s:4:"rule";s:25:"escuela/rechazar/<id:\d+>";s:5:"match";b:0;s:6:"parent";N;}i:1;i:8;i:2;s:32:"yii\web\UrlManager::parseRequest";i:3;d:1762444459.51336;i:4;a:0:{}i:5;i:6789360;}i:49;a:6:{i:0;a:3:{s:4:"rule";s:27:"escuela/obtener-coordenadas";s:5:"match";b:0;s:6:"parent";N;}i:1;i:8;i:2;s:32:"yii\web\UrlManager::parseRequest";i:3;d:1762444459.513385;i:4;a:0:{}i:5;i:6789952;}i:50;a:6:{i:0;a:3:{s:4:"rule";s:42:"escuela-club/escuela-registro/<action:\w+>";s:5:"match";b:0;s:6:"parent";N;}i:1;i:8;i:2;s:32:"yii\web\UrlManager::parseRequest";i:3;d:1762444459.513399;i:4;a:0:{}i:5;i:6790544;}i:51;a:6:{i:0;a:3:{s:4:"rule";s:51:"escuela-club/escuela-registro/<action:\w+>/<id:\d+>";s:5:"match";b:0;s:6:"parent";N;}i:1;i:8;i:2;s:32:"yii\web\UrlManager::parseRequest";i:3;d:1762444459.513412;i:4;a:0:{}i:5;i:6791136;}i:52;a:6:{i:0;a:3:{s:4:"rule";s:23:"select-escuela/<id:\d+>";s:5:"match";b:0;s:6:"parent";N;}i:1;i:8;i:2;s:32:"yii\web\UrlManager::parseRequest";i:3;d:1762444459.513431;i:4;a:0:{}i:5;i:6791728;}i:53;a:6:{i:0;a:3:{s:4:"rule";s:13:"clear-escuela";s:5:"match";b:0;s:6:"parent";N;}i:1;i:8;i:2;s:32:"yii\web\UrlManager::parseRequest";i:3;d:1762444459.513447;i:4;a:0:{}i:5;i:6792320;}i:54;a:6:{i:0;s:55:"No matching URL rules. Using default URL parsing logic.";i:1;i:8;i:2;s:32:"yii\web\UrlManager::parseRequest";i:3;d:1762444459.513457;i:4;a:0:{}i:5;i:6792536;}}s:5:"route";s:17:"ged/default/index";s:6:"action";s:60:"app\modules\ged\controllers\DefaultController::actionIndex()";}";s:7:"request";s:7847:"a:15:{s:7:"flashes";a:0:{}s:10:"statusCode";i:200;s:14:"requestHeaders";a:18:{s:4:"host";s:9:"localhost";s:10:"connection";s:10:"keep-alive";s:6:"pragma";s:8:"no-cache";s:13:"cache-control";s:8:"no-cache";s:9:"sec-ch-ua";s:59:""Not)A;Brand";v="8", "Chromium";v="138", "Opera GX";v="122"";s:16:"sec-ch-ua-mobile";s:2:"?1";s:18:"sec-ch-ua-platform";s:9:""Android"";s:25:"upgrade-insecure-requests";s:1:"1";s:10:"user-agent";s:131:"Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Mobile Safari/537.36";s:6:"accept";s:135:"text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7";s:14:"sec-fetch-site";s:11:"same-origin";s:14:"sec-fetch-mode";s:8:"navigate";s:14:"sec-fetch-user";s:2:"?1";s:14:"sec-fetch-dest";s:8:"document";s:7:"referer";s:62:"http://localhost/planealo.sytes.net/web/admin/assignment/index";s:15:"accept-encoding";s:23:"gzip, deflate, br, zstd";s:15:"accept-language";s:29:"en,id;q=0.9,tr;q=0.8,ru;q=0.7";s:6:"cookie";s:451:"_ga=GA1.1.1679908835.1749223008; PHPSESSID=chotesouag6rrnl18evcc5nuon; _identity=9dc3e882c595ff0fa4feeae21489c917fcb86f4f3aef88d6982c5f18402701dea%3A2%3A%7Bi%3A0%3Bs%3A9%3A%22_identity%22%3Bi%3A1%3Bs%3A46%3A%22%5B1%2C%22FCxNRGJia25jro30ecX5r8yVk7nCuaOY%22%2C2592000%5D%22%3B%7D; _csrf=3888a75b31976121bb102895469dd37d6c9b47b62e187fab6c5fabc2e06226dda%3A2%3A%7Bi%3A0%3Bs%3A5%3A%22_csrf%22%3Bi%3A1%3Bs%3A32%3A%22DnKUhlD4t4Wk5Bq6bsY0AIRGkQJ4pyqy%22%3B%7D";}s:15:"responseHeaders";a:9:{s:12:"X-Powered-By";s:9:"PHP/8.2.0";s:7:"Expires";s:29:"Thu, 19 Nov 1981 08:52:00 GMT";s:13:"Cache-Control";s:35:"no-store, no-cache, must-revalidate";s:6:"Pragma";s:8:"no-cache";s:12:"Content-Type";s:24:"text/html; charset=UTF-8";s:11:"X-Debug-Tag";s:13:"690cc4ab6f231";s:16:"X-Debug-Duration";s:5:"1,388";s:12:"X-Debug-Link";s:60:"/planealo.sytes.net/web/debug/default/view?tag=690cc4ab6f231";s:10:"Set-Cookie";s:294:"_identity=9dc3e882c595ff0fa4feeae21489c917fcb86f4f3aef88d6982c5f18402701dea%3A2%3A%7Bi%3A0%3Bs%3A9%3A%22_identity%22%3Bi%3A1%3Bs%3A46%3A%22%5B1%2C%22FCxNRGJia25jro30ecX5r8yVk7nCuaOY%22%2C2592000%5D%22%3B%7D; expires=Sat, 06 Dec 2025 15:54:19 GMT; Max-Age=2592000; path=/; HttpOnly; SameSite=Lax";}s:5:"route";s:17:"ged/default/index";s:6:"action";s:60:"app\modules\ged\controllers\DefaultController::actionIndex()";s:12:"actionParams";a:0:{}s:7:"general";a:5:{s:6:"method";s:3:"GET";s:6:"isAjax";b:0;s:6:"isPjax";b:0;s:7:"isFlash";b:0;s:18:"isSecureConnection";b:0;}s:11:"requestBody";a:0:{}s:6:"SERVER";a:60:{s:16:"REDIRECT_MIBDIRS";s:24:"C:/xampp/php/extras/mibs";s:19:"REDIRECT_MYSQL_HOME";s:16:"\xampp\mysql\bin";s:21:"REDIRECT_OPENSSL_CONF";s:31:"C:/xampp/apache/bin/openssl.cnf";s:29:"REDIRECT_PHP_PEAR_SYSCONF_DIR";s:10:"\xampp\php";s:14:"REDIRECT_PHPRC";s:10:"\xampp\php";s:12:"REDIRECT_TMP";s:10:"\xampp\tmp";s:15:"REDIRECT_STATUS";s:3:"200";s:7:"MIBDIRS";s:24:"C:/xampp/php/extras/mibs";s:10:"MYSQL_HOME";s:16:"\xampp\mysql\bin";s:12:"OPENSSL_CONF";s:31:"C:/xampp/apache/bin/openssl.cnf";s:20:"PHP_PEAR_SYSCONF_DIR";s:10:"\xampp\php";s:5:"PHPRC";s:10:"\xampp\php";s:3:"TMP";s:10:"\xampp\tmp";s:9:"HTTP_HOST";s:9:"localhost";s:15:"HTTP_CONNECTION";s:10:"keep-alive";s:11:"HTTP_PRAGMA";s:8:"no-cache";s:18:"HTTP_CACHE_CONTROL";s:8:"no-cache";s:14:"HTTP_SEC_CH_UA";s:59:""Not)A;Brand";v="8", "Chromium";v="138", "Opera GX";v="122"";s:21:"HTTP_SEC_CH_UA_MOBILE";s:2:"?1";s:23:"HTTP_SEC_CH_UA_PLATFORM";s:9:""Android"";s:30:"HTTP_UPGRADE_INSECURE_REQUESTS";s:1:"1";s:15:"HTTP_USER_AGENT";s:131:"Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Mobile Safari/537.36";s:11:"HTTP_ACCEPT";s:135:"text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7";s:19:"HTTP_SEC_FETCH_SITE";s:11:"same-origin";s:19:"HTTP_SEC_FETCH_MODE";s:8:"navigate";s:19:"HTTP_SEC_FETCH_USER";s:2:"?1";s:19:"HTTP_SEC_FETCH_DEST";s:8:"document";s:12:"HTTP_REFERER";s:62:"http://localhost/planealo.sytes.net/web/admin/assignment/index";s:20:"HTTP_ACCEPT_ENCODING";s:23:"gzip, deflate, br, zstd";s:20:"HTTP_ACCEPT_LANGUAGE";s:29:"en,id;q=0.9,tr;q=0.8,ru;q=0.7";s:11:"HTTP_COOKIE";s:451:"_ga=GA1.1.1679908835.1749223008; PHPSESSID=chotesouag6rrnl18evcc5nuon; _identity=9dc3e882c595ff0fa4feeae21489c917fcb86f4f3aef88d6982c5f18402701dea%3A2%3A%7Bi%3A0%3Bs%3A9%3A%22_identity%22%3Bi%3A1%3Bs%3A46%3A%22%5B1%2C%22FCxNRGJia25jro30ecX5r8yVk7nCuaOY%22%2C2592000%5D%22%3B%7D; _csrf=3888a75b31976121bb102895469dd37d6c9b47b62e187fab6c5fabc2e06226dda%3A2%3A%7Bi%3A0%3Bs%3A5%3A%22_csrf%22%3Bi%3A1%3Bs%3A32%3A%22DnKUhlD4t4Wk5Bq6bsY0AIRGkQJ4pyqy%22%3B%7D";s:4:"PATH";s:772:"C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;C:\Windows\System32\OpenSSH\;C:\xampp\php;C:\ProgramData\ComposerSetup\bin;C:\Program Files\PuTTY\;C:\Program Files\Git\cmd;C:\Program Files\nodejs\;C:\Program Files (x86)\Microsoft SQL Server\160\Tools\Binn\;C:\Program Files\Microsoft SQL Server\160\Tools\Binn\;C:\Program Files\Microsoft SQL Server\Client SDK\ODBC\170\Tools\Binn\;C:\Program Files\Microsoft SQL Server\160\DTS\Binn\;C:\Program Files (x86)\Microsoft SQL Server\160\DTS\Binn\;C:\Users\Otic-Sistemas\AppData\Local\Microsoft\WindowsApps;;C:\Users\Otic-Sistemas\AppData\Local\Programs\Microsoft VS Code\bin;C:\Users\Otic-Sistemas\AppData\Roaming\Composer\vendor\bin;C:\Users\Otic-Sistemas\AppData\Roaming\npm";s:10:"SystemRoot";s:10:"C:\Windows";s:7:"COMSPEC";s:27:"C:\Windows\system32\cmd.exe";s:7:"PATHEXT";s:53:".COM;.EXE;.BAT;.CMD;.VBS;.VBE;.JS;.JSE;.WSF;.WSH;.MSC";s:6:"WINDIR";s:10:"C:\Windows";s:16:"SERVER_SIGNATURE";s:94:"<address>Apache/2.4.54 (Win64) OpenSSL/1.1.1p PHP/8.2.0 Server at localhost Port 80</address>
+";s:15:"SERVER_SOFTWARE";s:46:"Apache/2.4.54 (Win64) OpenSSL/1.1.1p PHP/8.2.0";s:11:"SERVER_NAME";s:9:"localhost";s:11:"SERVER_ADDR";s:3:"::1";s:11:"SERVER_PORT";s:2:"80";s:11:"REMOTE_ADDR";s:3:"::1";s:13:"DOCUMENT_ROOT";s:15:"C:/xampp/htdocs";s:14:"REQUEST_SCHEME";s:4:"http";s:14:"CONTEXT_PREFIX";s:0:"";s:21:"CONTEXT_DOCUMENT_ROOT";s:15:"C:/xampp/htdocs";s:12:"SERVER_ADMIN";s:20:"postmaster@localhost";s:15:"SCRIPT_FILENAME";s:48:"C:/xampp/htdocs/planealo.sytes.net/web/index.php";s:11:"REMOTE_PORT";s:5:"55520";s:12:"REDIRECT_URL";s:27:"/planealo.sytes.net/web/ged";s:21:"REDIRECT_QUERY_STRING";s:15:"id=0&nombre=GED";s:17:"GATEWAY_INTERFACE";s:7:"CGI/1.1";s:15:"SERVER_PROTOCOL";s:8:"HTTP/1.1";s:14:"REQUEST_METHOD";s:3:"GET";s:12:"QUERY_STRING";s:15:"id=0&nombre=GED";s:11:"REQUEST_URI";s:43:"/planealo.sytes.net/web/ged?id=0&nombre=GED";s:11:"SCRIPT_NAME";s:33:"/planealo.sytes.net/web/index.php";s:8:"PHP_SELF";s:33:"/planealo.sytes.net/web/index.php";s:18:"REQUEST_TIME_FLOAT";d:1762444457.969079;s:12:"REQUEST_TIME";i:1762444457;}s:3:"GET";a:2:{s:2:"id";s:1:"0";s:6:"nombre";s:3:"GED";}s:4:"POST";a:0:{}s:6:"COOKIE";a:4:{s:3:"_ga";s:27:"GA1.1.1679908835.1749223008";s:9:"PHPSESSID";s:26:"chotesouag6rrnl18evcc5nuon";s:9:"_identity";s:148:"9dc3e882c595ff0fa4feeae21489c917fcb86f4f3aef88d6982c5f18402701dea:2:{i:0;s:9:"_identity";i:1;s:46:"[1,"FCxNRGJia25jro30ecX5r8yVk7nCuaOY",2592000]";}";s:5:"_csrf";s:130:"3888a75b31976121bb102895469dd37d6c9b47b62e187fab6c5fabc2e06226dda:2:{i:0;s:5:"_csrf";i:1;s:32:"DnKUhlD4t4Wk5Bq6bsY0AIRGkQJ4pyqy";}";}s:5:"FILES";a:0:{}s:7:"SESSION";a:10:{s:7:"__flash";a:0:{}s:11:"__returnUrl";s:76:"http://localhost/planealo.sytes.net/web/escuela_club/escuela-registro/create";s:10:"id_escuela";i:2;s:14:"nombre_escuela";s:19:"Club Aves Voladoras";s:14:"escuela_activa";b:1;s:28:"escuela_ultima_actualizacion";i:1762274382;s:9:"idEscuela";i:2;s:13:"nombreEscuela";s:19:"Club Aves Voladoras";s:4:"__id";i:1;s:9:"__authKey";s:32:"FCxNRGJia25jro30ecX5r8yVk7nCuaOY";}}";s:4:"user";s:5010:"a:5:{s:2:"id";i:1;s:8:"identity";a:15:{s:2:"id";s:1:"1";s:8:"username";s:15:"'maciasjblanco'";s:8:"auth_key";s:34:"'FCxNRGJia25jro30ecX5r8yVk7nCuaOY'";s:13:"password_hash";s:62:"'$2y$13$k9XQv.r.drcSWpNxwC8QXeUE44CK4TP1izYc4KAUsX2df7xBEV2Sm'";s:20:"password_reset_token";s:45:"'iQVU-sGt1OuMIqVjQ4Uzuyye6MqiXQDv_1658173422'";s:5:"email";s:25:"'maciasjblanco@gmail.com'";s:6:"status";s:2:"10";s:10:"created_at";s:10:"1578414999";s:10:"updated_at";s:10:"1658173422";s:17:"verification_code";s:4:"null";s:10:"cod_estado";s:4:"null";s:9:"id_estado";s:4:"null";s:10:"id_empresa";s:4:"null";s:15:"id_nacionalidad";s:1:"1";s:6:"cedula";s:10:"'11408051'";}s:10:"attributes";a:15:{i:0;a:2:{s:9:"attribute";s:2:"id";s:5:"label";s:2:"ID";}i:1;a:2:{s:9:"attribute";s:8:"username";s:5:"label";s:7:"Usuario";}i:2;a:2:{s:9:"attribute";s:8:"auth_key";s:5:"label";s:8:"Auth Key";}i:3;a:2:{s:9:"attribute";s:13:"password_hash";s:5:"label";s:13:"Password Hash";}i:4;a:2:{s:9:"attribute";s:20:"password_reset_token";s:5:"label";s:20:"Password Reset Token";}i:5;a:2:{s:9:"attribute";s:5:"email";s:5:"label";s:19:"Correo Electrónico";}i:6;a:2:{s:9:"attribute";s:6:"status";s:5:"label";s:6:"Estado";}i:7;a:2:{s:9:"attribute";s:10:"created_at";s:5:"label";s:9:"Creado En";}i:8;a:2:{s:9:"attribute";s:10:"updated_at";s:5:"label";s:14:"Actualizado En";}i:9;a:2:{s:9:"attribute";s:17:"verification_code";s:5:"label";s:17:"Verification Code";}i:10;a:2:{s:9:"attribute";s:10:"cod_estado";s:5:"label";s:10:"Cod Estado";}i:11;a:2:{s:9:"attribute";s:9:"id_estado";s:5:"label";s:9:"Id Estado";}i:12;a:2:{s:9:"attribute";s:10:"id_empresa";s:5:"label";s:10:"Id Empresa";}i:13;a:2:{s:9:"attribute";s:15:"id_nacionalidad";s:5:"label";s:15:"Id Nacionalidad";}i:14;a:2:{s:9:"attribute";s:6:"cedula";s:5:"label";s:7:"Cédula";}}s:13:"rolesProvider";O:26:"yii\data\ArrayDataProvider":12:{s:27:" yii\base\Component _events";a:0:{}s:35:" yii\base\Component _eventWildcards";a:0:{}s:30:" yii\base\Component _behaviors";N;s:2:"id";N;s:32:" yii\data\BaseDataProvider _sort";N;s:38:" yii\data\BaseDataProvider _pagination";N;s:32:" yii\data\BaseDataProvider _keys";N;s:34:" yii\data\BaseDataProvider _models";N;s:38:" yii\data\BaseDataProvider _totalCount";N;s:3:"key";N;s:9:"allModels";a:1:{s:5:"admin";a:7:{s:4:"type";i:1;s:4:"name";s:5:"admin";s:11:"description";N;s:8:"ruleName";N;s:4:"data";s:4:"null";s:9:"createdAt";i:1762216006;s:9:"updatedAt";i:1762216006;}}s:10:"modelClass";N;}s:19:"permissionsProvider";O:26:"yii\data\ArrayDataProvider":12:{s:27:" yii\base\Component _events";a:0:{}s:35:" yii\base\Component _eventWildcards";a:0:{}s:30:" yii\base\Component _behaviors";N;s:2:"id";s:4:"dp-1";s:32:" yii\data\BaseDataProvider _sort";N;s:38:" yii\data\BaseDataProvider _pagination";N;s:32:" yii\data\BaseDataProvider _keys";N;s:34:" yii\data\BaseDataProvider _models";N;s:38:" yii\data\BaseDataProvider _totalCount";N;s:3:"key";N;s:9:"allModels";a:8:{s:14:"viewOwnAportes";a:7:{s:4:"type";i:2;s:4:"name";s:14:"viewOwnAportes";s:11:"description";s:23:"Ver sus propios aportes";s:8:"ruleName";s:11:"isOwnAporte";s:4:"data";s:4:"null";s:9:"createdAt";i:1762216006;s:9:"updatedAt";i:1762216006;}s:18:"viewOwnAsistencias";a:7:{s:4:"type";i:2;s:4:"name";s:18:"viewOwnAsistencias";s:11:"description";s:27:"Ver sus propias asistencias";s:8:"ruleName";s:11:"isOwnAporte";s:4:"data";s:4:"null";s:9:"createdAt";i:1762216006;s:9:"updatedAt";i:1762216006;}s:22:"viewRepresentedAportes";a:7:{s:4:"type";i:2;s:4:"name";s:22:"viewRepresentedAportes";s:11:"description";s:28:"Ver aportes de representados";s:8:"ruleName";s:19:"isRepresentedAporte";s:4:"data";s:4:"null";s:9:"createdAt";i:1762216006;s:9:"updatedAt";i:1762216006;}s:26:"viewRepresentedAsistencias";a:7:{s:4:"type";i:2;s:4:"name";s:26:"viewRepresentedAsistencias";s:11:"description";s:32:"Ver asistencias de representados";s:8:"ruleName";s:19:"isRepresentedAporte";s:4:"data";s:4:"null";s:9:"createdAt";i:1762216006;s:9:"updatedAt";i:1762216006;}s:11:"viewOwnInfo";a:7:{s:4:"type";i:2;s:4:"name";s:11:"viewOwnInfo";s:11:"description";s:35:"Ver su propia información personal";s:8:"ruleName";s:11:"isOwnAporte";s:4:"data";s:4:"null";s:9:"createdAt";i:1762216006;s:9:"updatedAt";i:1762216006;}s:13:"viewOwnDeudas";a:7:{s:4:"type";i:2;s:4:"name";s:13:"viewOwnDeudas";s:11:"description";s:22:"Ver sus propias deudas";s:8:"ruleName";s:11:"isOwnAporte";s:4:"data";s:4:"null";s:9:"createdAt";i:1762216006;s:9:"updatedAt";i:1762216006;}s:19:"viewRepresentedInfo";a:7:{s:4:"type";i:2;s:4:"name";s:19:"viewRepresentedInfo";s:11:"description";s:41:"Ver información de atletas representados";s:8:"ruleName";s:19:"isRepresentedAporte";s:4:"data";s:4:"null";s:9:"createdAt";i:1762216006;s:9:"updatedAt";i:1762216006;}s:21:"viewRepresentedDeudas";a:7:{s:4:"type";i:2;s:4:"name";s:21:"viewRepresentedDeudas";s:11:"description";s:35:"Ver deudas de atletas representados";s:8:"ruleName";s:19:"isRepresentedAporte";s:4:"data";s:4:"null";s:9:"createdAt";i:1762216006;s:9:"updatedAt";i:1762216006;}}s:10:"modelClass";N;}}";s:5:"asset";s:2253:"a:5:{s:19:"yii\web\JqueryAsset";a:9:{s:10:"sourcePath";s:65:"C:\xampp\htdocs\planealo.sytes.net\vendor/bower-asset/jquery/dist";s:8:"basePath";s:54:"C:\xampp\htdocs\planealo.sytes.net\web\assets\c92e12e0";s:7:"baseUrl";s:39:"/planealo.sytes.net/web/assets/c92e12e0";s:7:"depends";a:0:{}s:2:"js";a:1:{i:0;s:9:"jquery.js";}s:3:"css";a:0:{}s:9:"jsOptions";a:1:{s:8:"position";i:1;}s:10:"cssOptions";a:0:{}s:14:"publishOptions";a:0:{}}s:19:"app\assets\AppAsset";a:9:{s:10:"sourcePath";N;s:8:"basePath";s:38:"C:/xampp/htdocs/planealo.sytes.net/web";s:7:"baseUrl";s:23:"/planealo.sytes.net/web";s:7:"depends";a:3:{i:0;s:16:"yii\web\YiiAsset";i:1;s:29:"yii\bootstrap5\BootstrapAsset";i:2;s:35:"yii\bootstrap5\BootstrapPluginAsset";}s:2:"js";a:1:{i:0;s:9:"js/ged.js";}s:3:"css";a:2:{i:0;s:11:"css/ged.css";i:1;s:28:"font_ico/bootstrap-icons.css";}s:9:"jsOptions";a:0:{}s:10:"cssOptions";a:0:{}s:14:"publishOptions";a:0:{}}s:16:"yii\web\YiiAsset";a:9:{s:10:"sourcePath";s:61:"C:\xampp\htdocs\planealo.sytes.net\vendor\yiisoft\yii2/assets";s:8:"basePath";s:54:"C:\xampp\htdocs\planealo.sytes.net\web\assets\fb5b2c69";s:7:"baseUrl";s:39:"/planealo.sytes.net/web/assets/fb5b2c69";s:7:"depends";a:1:{i:0;s:19:"yii\web\JqueryAsset";}s:2:"js";a:1:{i:0;s:6:"yii.js";}s:3:"css";a:0:{}s:9:"jsOptions";a:0:{}s:10:"cssOptions";a:0:{}s:14:"publishOptions";a:0:{}}s:29:"yii\bootstrap5\BootstrapAsset";a:9:{s:10:"sourcePath";s:68:"C:\xampp\htdocs\planealo.sytes.net\vendor/bower-asset/bootstrap/dist";s:8:"basePath";s:54:"C:\xampp\htdocs\planealo.sytes.net\web\assets\49dfb675";s:7:"baseUrl";s:39:"/planealo.sytes.net/web/assets/49dfb675";s:7:"depends";a:0:{}s:2:"js";a:0:{}s:3:"css";a:1:{i:0;s:17:"css/bootstrap.css";}s:9:"jsOptions";a:0:{}s:10:"cssOptions";a:0:{}s:14:"publishOptions";a:0:{}}s:35:"yii\bootstrap5\BootstrapPluginAsset";a:9:{s:10:"sourcePath";s:68:"C:\xampp\htdocs\planealo.sytes.net\vendor/bower-asset/bootstrap/dist";s:8:"basePath";s:54:"C:\xampp\htdocs\planealo.sytes.net\web\assets\49dfb675";s:7:"baseUrl";s:39:"/planealo.sytes.net/web/assets/49dfb675";s:7:"depends";a:1:{i:0;s:29:"yii\bootstrap5\BootstrapAsset";}s:2:"js";a:1:{i:0;s:22:"js/bootstrap.bundle.js";}s:3:"css";a:0:{}s:9:"jsOptions";a:0:{}s:10:"cssOptions";a:0:{}s:14:"publishOptions";a:0:{}}}";s:7:"summary";a:13:{s:3:"tag";s:13:"690cc4ab6f231";s:3:"url";s:59:"http://localhost/planealo.sytes.net/web/ged?id=0&nombre=GED";s:4:"ajax";i:0;s:6:"method";s:3:"GET";s:2:"ip";s:3:"::1";s:4:"time";d:1762444457.969079;s:10:"statusCode";i:200;s:8:"sqlCount";i:25;s:21:"excessiveCallersCount";i:0;s:9:"mailCount";i:0;s:9:"mailFiles";a:0:{}s:10:"peakMemory";i:8610240;s:14:"processingTime";d:1.3885657787322998;}s:10:"exceptions";a:0:{}}

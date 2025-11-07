@@ -1,0 +1,1852 @@
+/* =================================================================
+ * ged.css - SISTEMA GED CSS UNIFICADO
+ * Fusionado desde: components.css, widgets.css, landingPageGed.css, 
+ * layout-escuelas.css, navbar-contextual.css, select-escuela.css, site.css
+ * Fecha: $(date)
+ * ================================================================= */
+
+/* ===== VARIABLES CSS UNIFICADAS ===== */
+:root {
+  /* Colores Principales GED */
+  --ged-primary: #2c5aa0;
+  --ged-primary-dark: #1e3a8a;
+  --ged-secondary: #28a745;
+  --ged-secondary-dark: #1e7e34;
+  --ged-danger: #dc3545;
+  --ged-warning: #ffc107;
+  --ged-info: #17a2b8;
+  --ged-light: #f8f9fa;
+  --ged-dark: #343a40;
+  
+  /* Colores Personalizados */
+  --ged-beige: #f5f5dc;
+  --ged-purple: #5B21B6;
+  --ged-orange: #fd7e14;
+  --ged-teal: #20c997;
+  --ged-purple-light: #8e44ad;
+  --ged-purple-dark: #6c3483;
+  
+  /* Colores de Estado */
+  --ged-success-light: #d4edda;
+  --ged-danger-light: #f8d7da;
+  --ged-warning-light: #fff3cd;
+  --ged-info-light: #d1ecf1;
+  
+  /* Colores de Texto */
+  --ged-text-primary: #212529;
+  --ged-text-secondary: #6c757d;
+  --ged-text-light: #f8f9fa;
+  
+  /* Gradientes Unificados */
+  --ged-gradient-primary: linear-gradient(135deg, #2c5aa0 0%, #1e3a8a 100%);
+  --ged-gradient-success: linear-gradient(135deg, #28a745 0%, #1e7e34 100%);
+  --ged-gradient-danger: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+  --ged-gradient-warning: linear-gradient(135deg, #ffc107 0%, #e0a800 100%);
+  --ged-gradient-info: linear-gradient(135deg, #17a2b8 0%, #117a8b 100%);
+  --ged-gradient-beige: linear-gradient(135deg, #f5f5dc 0%, #e8e8d0 100%);
+  --ged-gradient-purple: linear-gradient(135deg, #8e44ad 0%, #6c3483 100%);
+  --ged-gradient-blue-purple: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  
+  /* Espaciado */
+  --ged-spacing-xs: 0.5rem;
+  --ged-spacing-sm: 1rem;
+  --ged-spacing-md: 1.5rem;
+  --ged-spacing-lg: 2rem;
+  --ged-spacing-xl: 3rem;
+  
+  /* Bordes */
+  --ged-border-radius: 0.375rem;
+  --ged-border-radius-lg: 0.5rem;
+  --ged-border-radius-xl: 0.75rem;
+  
+  /* Sombras */
+  --ged-shadow-sm: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+  --ged-shadow-md: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+  --ged-shadow-lg: 0 1rem 3rem rgba(0, 0, 0, 0.175);
+  
+  /* Transiciones */
+  --ged-transition: all 0.3s ease;
+  --ged-transition-slow: all 0.5s ease;
+}
+
+/* ===== RESET Y ESTILOS BASE ===== */
+html, body {
+  overflow-x: hidden;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
+.container-fluid {
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+/* Eliminar márgenes y padding conflictivos */
+.row {
+  margin-left: 0;
+  margin-right: 0;
+}
+
+.col, [class*="col-"] {
+  padding-left: 8px;
+  padding-right: 8px;
+}
+
+/* ===== LAYOUTS PRINCIPALES ===== */
+
+/* LAYOUT ESCUELAS */
+.escuela-layout {
+  min-height: 100vh;
+  background: #f8f9fa;
+}
+
+.escuela-layout main#main {
+  margin-top: 31vh;
+  min-height: calc(100vh - 32vh);
+  width: 100%;
+  padding: 20px 0;
+  position: relative;
+  z-index: 1;
+  background: #f8f9fa;
+}
+
+.escuela-layout .main-container {
+  margin-top: 25vh;
+  min-height: 75vh;
+  width: 100%;
+}
+
+.escuela-layout .main-content-wrapper {
+  margin-top: 0;
+  padding-top: 0;
+}
+
+/* SIDEBAR Y CONTENIDO ESCUELAS */
+.escuela-layout .sidebar-left {
+  background: linear-gradient(135deg, var(--ged-purple-dark), var(--ged-purple-light));
+  color: white;
+  padding: 20px;
+  min-height: calc(100vh - 25vh - 60px);
+  height: auto;
+}
+
+.escuela-layout .content-right {
+  padding: 20px;
+  background: #f8f9fa;
+  min-height: calc(100vh - 25vh - 60px);
+  height: auto;
+}
+
+/* LAYOUT DEFAULT */
+.default-layout main#main {
+  margin-top: 12vh !important;
+  min-height: 88vh;
+}
+
+.default-layout .main-container {
+  margin-top: 12vh !important;
+  min-height: 88vh;
+}
+
+.default-layout .main-content-wrapper {
+  padding: 0;
+  margin: 0;
+}
+
+.default-layout .container {
+  padding-top: 20px;
+  padding-bottom: 20px;
+}
+
+/* ===== NAVBAR CONTEXTUAL UNIFICADO ===== */
+.navbar-contextual {
+  height: 30vh;
+  min-height: 180px;
+  background: var(--ged-gradient-purple) !important;
+  width: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 9999;
+  margin: 0;
+  padding: 0;
+  border-bottom: 3px solid #7d3c98;
+  transition: var(--ged-transition);
+  /* ELIMINAR PROPIEDADES QUE CREAN CONTEXTOS DE APILAMIENTO */
+  transform: none !important;
+  opacity: 1 !important;
+  filter: none !important;
+  perspective: none !important;
+}
+
+/* Contenedor principal del navbar */
+.navbar > .container {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  align-items: center;
+  padding: 0 15px;
+  margin: 0;
+  max-width: 100%;
+  transform: none !important;
+  opacity: 1 !important;
+  filter: none !important;
+  perspective: none !important;
+}
+
+.navbar-container {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  align-items: center;
+  position: relative;
+  z-index: 10000;
+  transform: none !important;
+  opacity: 1 !important;
+}
+
+/* Logo */
+.navbar-brand-section, .navbar-brand {
+  width: 10%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px;
+  z-index: 10001;
+  margin: 0;
+  margin-right: 0 !important;
+}
+
+.navbar-logo {
+  max-height: 80%;
+  max-width: 90%;
+  object-fit: contain;
+}
+
+/* Toggler automático */
+.navbar-toggler {
+  position: absolute !important;
+  right: 15px !important;
+  top: 15px !important;
+  z-index: 10050 !important;
+  border: 2px solid white !important;
+  padding: 8px 10px !important;
+  margin-left: auto;
+}
+
+.navbar-toggler:focus {
+  box-shadow: 0 0 0 0.25rem rgba(255,255,255,0.5) !important;
+  outline: none;
+}
+
+.navbar-toggler-icon {
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%28255, 255, 255, 1%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e") !important;
+}
+
+/* Contenido colapsable */
+.navbar-collapse {
+  width: 90%;
+  height: 100%;
+  display: flex !important;
+  align-items: center;
+  padding: 0 10px;
+  transform: none !important;
+  opacity: 1 !important;
+}
+
+/* Secciones del navbar */
+.navbar-menu-section {
+  width: 45% !important;
+  height: 100%;
+  padding: 5px;
+  display: flex;
+  align-items: center;
+  position: relative;
+  z-index: 10002;
+  transform: none !important;
+  opacity: 1 !important;
+}
+
+.navbar-social-section {
+  width: 12%;
+  height: 100%;
+  padding: 10px 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.navbar-control-section {
+  width: 13%;
+  height: 100%;
+  padding: 10px 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.navbar-carousel-section {
+  width: 20% !important;
+  height: 100%;
+  padding: 3px !important;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+}
+
+.section-container {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Menú principal */
+.navbar-nav {
+  width: 100%;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  margin: 0;
+  position: relative;
+  z-index: 10050;
+  transform: none !important;
+  opacity: 1 !important;
+}
+
+.nav-item {
+  position: relative;
+  z-index: 10051;
+}
+
+.nav-link {
+  color: white !important;
+  font-weight: 500;
+  padding: 12px 15px !important;
+  transition: var(--ged-transition);
+  border-radius: 5px;
+  white-space: nowrap;
+  position: relative;
+  z-index: 10052;
+}
+
+.nav-link:hover {
+  background: rgba(255,255,255,0.1);
+}
+
+/* Dropdown menus */
+.dropdown-menu {
+  background: linear-gradient(135deg, #7d3c98, #6c3483);
+  border: none;
+  border-radius: 5px;
+  z-index: 100000 !important;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+  padding: 0;
+  position: absolute !important;
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  pointer-events: auto !important;
+  border: 1px solid rgba(255,255,255,0.3) !important;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.3) !important;
+  margin-top: 0 !important;
+  /* CREAR NUEVO CONTEXTO DE APILAMIENTO */
+  transform: translateZ(0) !important;
+  will-change: transform !important;
+}
+
+.dropdown-menu.show {
+  display: block !important;
+  z-index: 100000 !important;
+}
+
+.dropdown-item {
+  color: white !important;
+  padding: 12px 15px;
+  transition: var(--ged-transition);
+  white-space: nowrap;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+  position: relative;
+  z-index: 100050;
+}
+
+.dropdown-item:last-child {
+  border-bottom: none;
+}
+
+.dropdown-item:hover {
+  background: rgba(255,255,255,0.1);
+  z-index: 100051;
+}
+
+/* Submenús anidados - Escritorio */
+@media (min-width: 992px) {
+  .dropdown-submenu {
+    position: relative;
+  }
+  
+  .dropdown-submenu > .dropdown-menu {
+    top: 0;
+    left: 100%;
+    margin-top: -6px;
+    margin-left: -1px;
+    display: none;
+    z-index: 100001 !important;
+  }
+  
+  .dropdown-submenu:hover > .dropdown-menu {
+    display: block !important;
+  }
+}
+
+/* Iconos sociales */
+.social-icons-vertical {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.social-icon-circle {
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  background: #6c3483;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  text-decoration: none;
+  border: 2px solid #7d3c98;
+  transition: var(--ged-transition);
+  font-size: 1.2rem;
+}
+
+.social-icon-circle:hover {
+  background: #7d3c98;
+  transform: scale(1.1);
+  color: white;
+}
+
+/* Información de escuela */
+.school-info {
+  background: rgba(255,255,255,0.1);
+  border-radius: 5px;
+  padding: 12px;
+  margin-bottom: 12px;
+  text-align: center;
+}
+
+.school-info small {
+  font-size: 0.8rem;
+}
+
+/* Carrusel del navbar */
+.navbar-carousel-container {
+  width: 100%;
+  height: 100%;
+  max-height: 25vh !important;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+}
+
+#navbarCarousel {
+  width: 100% !important;
+  height: 100% !important;
+  max-height: 25vh !important;
+  border-radius: 6px;
+}
+
+#navbarCarousel .carousel-inner,
+#navbarCarousel .carousel-item {
+  width: 100% !important;
+  height: 100% !important;
+  max-height: 25vh !important;
+  border-radius: 6px;
+}
+
+.carousel-image {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover;
+  object-position: center;
+  border-radius: 6px;
+}
+
+/* ===== COMPONENTES UNIFICADOS ===== */
+
+/* Cards */
+.ged-card {
+  background: white;
+  border-radius: var(--ged-border-radius-lg);
+  box-shadow: var(--ged-shadow-sm);
+  border: 1px solid #e9ecef;
+  margin-bottom: var(--ged-spacing-md);
+  transition: var(--ged-transition);
+}
+
+.ged-card:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--ged-shadow-lg);
+}
+
+/* Dashboard Stats */
+.dashboard-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.stat-card {
+  background: white;
+  padding: 1.5rem;
+  border-radius: 12px;
+  border-left: 4px solid #7C3AED;
+  box-shadow: 0 4px 12px rgba(167, 139, 250, 0.2);
+}
+
+/* Widget Tasa Dólar */
+.tasa-dolar-widget {
+  max-width: 100%;
+  margin-bottom: 20px;
+}
+
+.tasa-dolar-widget .card {
+  border: 1px solid #dee2e6;
+  border-radius: 8px;
+  transition: var(--ged-transition);
+}
+
+.tasa-dolar-widget .card:hover {
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  transform: translateY(-2px);
+}
+
+.tasa-dolar-widget .card-header {
+  font-weight: bold;
+  background-color: #f8f9fa;
+  border-bottom: 1px solid #dee2e6;
+  padding: 10px 15px;
+  color: #333;
+  font-size: 0.9rem;
+}
+
+.tasa-dolar-widget .card-body {
+  font-size: 0.85rem;
+  padding: 15px;
+  color: #333;
+  background-color: #fff;
+}
+
+.tasa-dolar-widget .tasa-actual {
+  font-size: 1.1rem;
+  font-weight: bold;
+  color: #fff;
+  text-align: center;
+  margin: 10px 0;
+  padding: 8px;
+  border-radius: 6px;
+  background: var(--ged-gradient-success);
+}
+
+.tasa-dolar-widget .aporte-info {
+  background-color: #f8f9fa;
+  padding: 8px;
+  border-radius: 4px;
+  border-left: 3px solid var(--ged-secondary);
+}
+
+.tasa-dolar-widget .additional-info {
+  background-color: #e9ecef;
+  padding: 6px 8px;
+  border-radius: 4px;
+  font-size: 0.8rem;
+}
+
+.tasa-dolar-widget .mini-calculadora {
+  background-color: #f8f9fa;
+  padding: 10px;
+  border-radius: 6px;
+}
+
+.tasa-dolar-widget .mini-calculadora .input-group {
+  margin-bottom: 8px;
+}
+
+.tasa-dolar-widget .mini-calculadora .resultado {
+  background-color: #fff;
+  padding: 6px;
+  border-radius: 4px;
+  border: 1px solid #dee2e6;
+}
+
+.tasa-dolar-widget.compact {
+  max-width: 200px;
+}
+
+.tasa-dolar-widget.compact .card-body {
+  padding: 10px;
+}
+
+/* ===== PÁGINA SELECCIÓN ESCUELA ===== */
+.ged-default-select-escuela {
+  background: var(--ged-gradient-blue-purple);
+  min-height: 100vh;
+  padding: 20px 0;
+}
+
+.ged-default-select-escuela .card {
+  border: none;
+  border-radius: 15px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+  margin-bottom: 20px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.ged-default-select-escuela .card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+}
+
+/* Headers de tarjetas */
+.ged-card-header-primary {
+  background: var(--ged-gradient-primary);
+  color: white;
+  border-radius: 15px 15px 0 0 !important;
+  padding: 20px;
+}
+
+.ged-card-header-info {
+  background: var(--ged-gradient-primary);
+  color: white;
+  border-radius: 15px 15px 0 0 !important;
+  padding: 15px;
+}
+
+.ged-card-header-success {
+  background: var(--ged-gradient-success);
+  color: white;
+  border-radius: 15px 15px 0 0 !important;
+  padding: 15px;
+}
+
+.ged-card-header-warning {
+  background: var(--ged-gradient-warning);
+  color: white;
+  border-radius: 15px 15px 0 0 !important;
+  padding: 15px;
+}
+
+/* Componentes específicos select-escuela */
+.ged-list-item {
+  border: none;
+  padding: 8px 0;
+  font-size: 0.9rem;
+  background: transparent;
+}
+
+.ged-stat-card {
+  padding: 15px;
+  text-align: center;
+  background: rgba(255,255,255,0.1);
+  border-radius: 10px;
+  margin: 5px;
+}
+
+.ged-stat-card h3 {
+  margin: 0;
+  font-weight: bold;
+  font-size: 2rem;
+}
+
+.current-school-status {
+  background: rgba(255,255,255,0.1);
+  border-radius: 10px;
+  padding: 15px;
+  margin-bottom: 20px;
+  border-left: 4px solid var(--ged-secondary);
+}
+
+.quick-actions-grid {
+  display: grid;
+  gap: 10px;
+}
+
+.quick-action-btn {
+  background: rgba(255,255,255,0.1);
+  border: 1px solid rgba(255,255,255,0.2);
+  color: white;
+  border-radius: 8px;
+  padding: 10px;
+  text-align: center;
+  text-decoration: none;
+  transition: var(--ged-transition);
+}
+
+.quick-action-btn:hover {
+  background: rgba(255,255,255,0.2);
+  color: white;
+  transform: translateY(-2px);
+}
+
+/* Lista de escuelas */
+.school-list-container {
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.school-option {
+  padding: 12px 15px;
+  border-bottom: 1px solid #e9ecef;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.school-option:hover {
+  background-color: #f8f9fa;
+}
+
+.school-option:last-child {
+  border-bottom: none;
+}
+
+.school-name {
+  font-weight: 600;
+  color: var(--ged-primary);
+  margin-bottom: 2px;
+}
+
+.school-details {
+  font-size: 0.875rem;
+  color: #6c757d;
+}
+
+/* ===== LANDING PAGE GED ===== */
+.site-index .hero-section {
+  width: 100% !important;
+  margin: 0 !important;
+  padding: 40px 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+}
+
+.site-index .schools-section {
+  width: 100% !important;
+  margin: 0 !important;
+  padding: 40px 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+}
+
+.site-index .container {
+  width: 100% !important;
+  max-width: 100% !important;
+  margin: 0 !important;
+  padding: 0 15px !important;
+}
+
+/* Tarjetas de escuelas */
+.site-index .school-card {
+  margin: 10px 5px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.site-index .school-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 25px rgba(0,0,0,0.15) !important;
+}
+
+.site-index .card-body {
+  flex: 1 !important;
+  display: flex !important;
+  flex-direction: column !important;
+}
+
+.site-index .school-description {
+  flex-grow: 1 !important;
+}
+
+.site-index .card-footer {
+  flex-shrink: 0 !important;
+}
+
+/* Imágenes de escuelas */
+.site-index .school-logo-container {
+  position: relative;
+  height: 200px;
+  overflow: hidden;
+}
+
+.site-index .school-logo {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
+  transition: transform 0.3s ease;
+}
+
+.site-index .school-card:hover .school-logo {
+  transform: scale(1.05);
+}
+
+/* Badge responsivo */
+.site-index .school-badge {
+  background: rgba(40, 167, 69, 0.9);
+  color: white;
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+/* Secciones adicionales landing */
+.site-index .about-system-section {
+  background: var(--ged-gradient-blue-purple);
+  color: white;
+  padding: 80px 0;
+}
+
+.site-index .team-section {
+  background: #f8f9fa;
+  padding: 80px 0;
+}
+
+.site-index .team-card {
+  background: white;
+  border-radius: 15px;
+  padding: 30px;
+  text-align: center;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+  transition: transform 0.3s ease;
+  height: 100%;
+}
+
+.site-index .team-card:hover {
+  transform: translateY(-10px);
+}
+
+.site-index .team-photo {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin: 0 auto 20px;
+  border: 5px solid var(--ged-purple-light);
+}
+
+.site-index .team-role {
+  color: var(--ged-purple-light);
+  font-weight: 600;
+  font-size: 1.1rem;
+  margin-bottom: 10px;
+}
+
+.site-index .mission-vision-card {
+  background: rgba(255,255,255,0.1);
+  backdrop-filter: blur(10px);
+  border-radius: 15px;
+  padding: 40px;
+  height: 100%;
+  border: 1px solid rgba(255,255,255,0.2);
+}
+
+.site-index .system-icon {
+  font-size: 3rem;
+  color: var(--ged-purple-light);
+  margin-bottom: 20px;
+}
+
+/* Timeline */
+.site-index .timeline {
+  position: relative;
+  padding-left: 30px;
+}
+
+.site-index .timeline::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  background: var(--ged-purple-light);
+}
+
+.site-index .timeline-item {
+  position: relative;
+  margin-bottom: 30px;
+  padding-left: 20px;
+}
+
+.site-index .timeline-item::before {
+  content: '';
+  position: absolute;
+  left: -30px;
+  top: 5px;
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  background: var(--ged-purple-light);
+  border: 3px solid white;
+}
+
+.site-index .tech-item {
+  text-align: center;
+  padding: 20px;
+}
+
+.site-index .contact-section {
+  background: white;
+  padding: 60px 0;
+}
+
+/* Sports tags */
+.site-index .sports-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  margin-bottom: 15px;
+}
+
+.site-index .sport-tag {
+  background: #e9ecef;
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  color: #495057;
+}
+
+/* Tooltip personalizado */
+.site-index .tooltip-en-construccion {
+  cursor: not-allowed;
+  position: relative;
+}
+
+.site-index .tooltip-en-construccion::after {
+  content: "En construcción - Próximamente";
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #333;
+  color: white;
+  padding: 5px 10px;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  white-space: nowrap;
+  opacity: 0;
+  transition: opacity 0.3s;
+  pointer-events: none;
+}
+
+.site-index .tooltip-en-construccion:hover::after {
+  opacity: 1;
+}
+
+/* ===== BOTONES UNIFICADOS ===== */
+.ged-btn {
+  border: none;
+  border-radius: 8px;
+  padding: 12px 20px;
+  font-weight: 600;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: var(--ged-transition);
+  text-align: center;
+}
+
+.ged-btn-success {
+  background: var(--ged-gradient-success);
+  color: white;
+}
+
+.ged-btn-primary {
+  background: var(--ged-gradient-primary);
+  color: white;
+}
+
+.ged-btn-warning {
+  background: var(--ged-gradient-warning);
+  color: white;
+}
+
+.ged-btn-secondary {
+  background: #6c757d;
+  color: white;
+}
+
+.ged-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+  color: white;
+}
+
+/* Botones de acción rápida */
+.btn-action-1 {
+  background: var(--ged-gradient-primary);
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 6px;
+  text-align: center;
+  text-decoration: none;
+  display: block;
+  transition: var(--ged-transition);
+}
+
+.btn-action-2 {
+  background: var(--ged-gradient-success);
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 6px;
+  text-align: center;
+  text-decoration: none;
+  display: block;
+  transition: var(--ged-transition);
+}
+
+.btn-action-3 {
+  background: var(--ged-gradient-info);
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 6px;
+  text-align: center;
+  text-decoration: none;
+  display: block;
+  transition: var(--ged-transition);
+}
+
+.btn-action-4 {
+  background: var(--ged-gradient-warning);
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 6px;
+  text-align: center;
+  text-decoration: none;
+  display: block;
+  transition: var(--ged-transition);
+}
+
+.btn-action-1:hover,
+.btn-action-2:hover,
+.btn-action-3:hover,
+.btn-action-4:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  color: white;
+}
+
+/* ===== FORMULARIOS UNIFICADOS ===== */
+.ged-form-label {
+  font-weight: 600;
+  color: #495057;
+  margin-bottom: 8px;
+  display: block;
+}
+
+.ged-form-control {
+  border-radius: 8px;
+  border: 2px solid #e9ecef;
+  transition: var(--ged-transition);
+  padding: 12px 15px;
+  font-size: 16px;
+  width: 100%;
+}
+
+.ged-form-control:focus {
+  border-color: var(--ged-primary);
+  box-shadow: 0 0 0 0.2rem rgba(44, 90, 160, 0.25);
+  outline: none;
+}
+
+/* ===== UTILIDADES Y HELPERS ===== */
+
+/* Text colors */
+.text-ged-primary { color: var(--ged-primary) !important; }
+.text-ged-secondary { color: var(--ged-secondary) !important; }
+.text-ged-danger { color: var(--ged-danger) !important; }
+.text-ged-warning { color: var(--ged-warning) !important; }
+.text-ged-info { color: var(--ged-info) !important; }
+.text-ged-white { color: white !important; }
+
+/* Background colors */
+.bg-ged-primary { background-color: var(--ged-primary) !important; }
+.bg-ged-secondary { background-color: var(--ged-secondary) !important; }
+.bg-ged-danger { background-color: var(--ged-danger) !important; }
+.bg-ged-warning { background-color: var(--ged-warning) !important; }
+.bg-ged-info { background-color: var(--ged-info) !important; }
+.bg-ged-light { background-color: var(--ged-light) !important; }
+
+/* Border colors */
+.border-ged-primary { border-color: var(--ged-primary) !important; }
+.border-ged-secondary { border-color: var(--ged-secondary) !important; }
+.border-ged-danger { border-color: var(--ged-danger) !important; }
+.border-ged-warning { border-color: var(--ged-warning) !important; }
+.border-ged-info { border-color: var(--ged-info) !important; }
+
+/* Spacing utilities */
+.mt-ged { margin-top: var(--ged-spacing-md); }
+.mb-ged { margin-bottom: var(--ged-spacing-md); }
+.pt-ged { padding-top: var(--ged-spacing-md); }
+.pb-ged { padding-bottom: var(--ged-spacing-md); }
+
+/* Alertas */
+.alert-ged-success {
+  background: rgba(40, 167, 69, 0.1);
+  border: 1px solid rgba(40, 167, 69, 0.2);
+  border-left: 4px solid var(--ged-secondary);
+  color: #155724;
+}
+
+.alert-ged-warning {
+  background: rgba(255, 193, 7, 0.1);
+  border: 1px solid rgba(255, 193, 7, 0.2);
+  border-left: 4px solid var(--ged-warning);
+  color: #856404;
+}
+
+.alert-ged-danger {
+  background: rgba(220, 53, 69, 0.1);
+  border: 1px solid rgba(220, 53, 69, 0.2);
+  border-left: 4px solid var(--ged-danger);
+  color: #721c24;
+}
+
+/* Iconos */
+.ged-icon {
+  margin-right: 8px;
+  font-size: 1.1em;
+}
+
+.ged-icon-lg {
+  font-size: 3rem;
+  margin-bottom: 15px;
+  display: block;
+}
+
+/* Back to top */
+.back-to-top {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  width: 40px;
+  height: 40px;
+  background: var(--ged-primary);
+  color: white;
+  border-radius: 50%;
+  text-decoration: none;
+  z-index: 1000;
+  opacity: 0.7;
+  transition: var(--ged-transition);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.back-to-top:hover {
+  opacity: 1;
+  transform: translateY(-3px);
+  color: white;
+}
+
+/* ===== COMPONENTES ADICIONALES ===== */
+
+/* Team logo */
+.team-logo {
+  max-width: 150px;
+  max-height: 150px;
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+  border-radius: 10px;
+  margin-bottom: 15px;
+}
+
+/* Social icons generales */
+.social-icons {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+}
+
+.social-icons a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+  text-decoration: none;
+  transition: var(--ged-transition);
+}
+
+.social-icons a:hover {
+  background: rgba(255, 255, 255, 0.2);
+  transform: translateY(-2px);
+}
+
+/* Buscador de escuelas */
+.school-search-container {
+  position: relative;
+  max-width: 200px;
+  margin: 0 auto;
+}
+
+.search-results-dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: white;
+  border: 1px solid #ddd;
+  border-top: none;
+  border-radius: 0 0 4px 4px;
+  max-height: 200px;
+  overflow-y: auto;
+  z-index: 10000;
+  display: none;
+}
+
+.search-result-item {
+  padding: 8px 12px;
+  cursor: pointer;
+  border-bottom: 1px solid #f0f0f0;
+  font-size: 0.875rem;
+}
+
+.search-result-item:hover {
+  background-color: #f8f9fa;
+}
+
+.search-result-item:last-child {
+  border-bottom: none;
+}
+
+/* Controles de sesión */
+.session-controls {
+  width: 100%;
+}
+
+.session-controls .btn {
+  font-size: 0.8rem;
+  padding: 0.25rem 0.5rem;
+}
+
+.session-controls .btn-sm {
+  margin-bottom: 0.25rem;
+}
+
+/* ===== ANIMACIONES ===== */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.ged-animated-card {
+  animation: fadeInUp 0.6s ease-out;
+}
+
+.ged-card-hover {
+  transition: var(--ged-transition);
+}
+
+.ged-card-hover:hover {
+  transform: translateY(-5px) scale(1.02);
+  box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+}
+
+/* ===== SCROLLBAR PERSONALIZADO ===== */
+.school-list-container::-webkit-scrollbar {
+  width: 6px;
+}
+
+.school-list-container::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 3px;
+}
+
+.school-list-container::-webkit-scrollbar-thumb {
+  background: var(--ged-primary);
+  border-radius: 3px;
+}
+
+.school-list-container::-webkit-scrollbar-thumb:hover {
+  background: var(--ged-primary-dark);
+}
+
+/* ===== RESPONSIVE DESIGN UNIFICADO ===== */
+
+/* Tablets y pantallas medianas */
+@media (max-width: 1199.98px) {
+  .navbar-contextual {
+    height: 20vh;
+    min-height: 150px;
+  }
+  
+  .escuela-layout main#main {
+    margin-top: 20vh;
+  }
+  
+  .navbar-menu-section {
+    width: 40% !important;
+  }
+  
+  .navbar-carousel-section {
+    width: 18% !important;
+  }
+}
+
+/* Tablets pequeñas y móviles grandes */
+@media (max-width: 991.98px) {
+  .navbar-contextual {
+    height: auto !important;
+    min-height: 70px !important;
+    padding: 0 !important;
+  }
+  
+  .navbar > .container {
+    flex-wrap: wrap;
+    padding: 0 10px;
+  }
+  
+  .navbar-brand, .navbar-brand-section {
+    width: auto;
+    height: 70px;
+    order: 1;
+  }
+  
+  .navbar-toggler {
+    position: relative !important;
+    top: auto !important;
+    right: auto !important;
+    order: 2;
+    margin-left: auto;
+  }
+  
+  .navbar-collapse {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    background: var(--ged-gradient-purple);
+    z-index: 9998;
+    margin: 0;
+    padding: 20px 15px;
+    border-top: 2px solid #7d3c98;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+    display: none !important;
+    height: auto !important;
+  }
+  
+  .navbar-collapse.show {
+    display: block !important;
+  }
+  
+  .navbar-container {
+    flex-direction: column;
+    height: auto;
+    gap: 20px;
+    width: 100%;
+  }
+  
+  .navbar-menu-section,
+  .navbar-social-section,
+  .navbar-control-section,
+  .navbar-carousel-section {
+    width: 100% !important;
+    height: auto;
+    padding: 10px 0;
+  }
+  
+  .navbar-carousel-section {
+    display: none !important;
+  }
+  
+  /* Menú móvil */
+  .navbar-nav {
+    flex-direction: column;
+    gap: 5px;
+    width: 100%;
+  }
+  
+  .nav-item {
+    width: 100%;
+    text-align: center;
+  }
+  
+  .nav-link {
+    padding: 15px 20px !important;
+    background: rgba(255,255,255,0.1);
+    display: block;
+    margin-bottom: 5px;
+    border-radius: 5px;
+  }
+  
+  /* Dropdowns en móvil */
+  .dropdown-menu {
+    position: static !important;
+    width: 100% !important;
+    margin: 10px 0 !important;
+    background: rgba(0,0,0,0.3) !important;
+    border: 1px solid rgba(255,255,255,0.2);
+    float: none !important;
+  }
+  
+  .dropdown-item {
+    padding: 12px 25px !important;
+    text-align: center;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+  }
+  
+  .dropdown-item:last-child {
+    border-bottom: none;
+  }
+  
+  /* Submenús en móvil */
+  .dropdown-submenu .dropdown-menu {
+    margin-left: 20px !important;
+    width: calc(100% - 40px) !important;
+    background: rgba(0,0,0,0.4) !important;
+  }
+  
+  /* Ajustes de layout para móvil */
+  .escuela-layout main#main,
+  .default-layout main#main {
+    margin-top: 70px !important;
+    min-height: calc(100vh - 70px);
+    padding: 15px 0;
+  }
+  
+  .escuela-layout .main-container,
+  .default-layout .main-container {
+    margin-top: 70px !important;
+  }
+  
+  .sidebar-left,
+  .content-right {
+    min-height: auto;
+    height: auto;
+  }
+  
+  .sidebar-left {
+    border-right: none;
+    border-bottom: 2px solid var(--ged-primary);
+  }
+  
+  /* Social icons en móvil */
+  .social-icons-vertical {
+    flex-direction: row;
+    justify-content: center;
+    gap: 25px;
+  }
+  
+  .social-icon-circle {
+    width: 50px;
+    height: 50px;
+    font-size: 1.4rem;
+  }
+  
+  .school-info {
+    margin: 15px 0;
+    padding: 15px;
+  }
+  
+  /* Ajustes tasa dólar */
+  .tasa-dolar-widget {
+    max-width: 100%;
+    margin: 15px 0;
+  }
+  
+  .tasa-dolar-widget .card-body {
+    padding: 12px;
+  }
+  
+  .tasa-dolar-widget .tasa-actual {
+    font-size: 1rem;
+    padding: 6px;
+  }
+  
+  /* Ajustes landing page */
+  .site-index .school-logo-container {
+    height: 150px;
+  }
+  
+  .site-index .school-badge {
+    font-size: 0.7rem;
+    padding: 3px 6px;
+  }
+  
+  /* Ajustes select escuela */
+  .ged-default-select-escuela {
+    padding: 10px 0;
+  }
+  
+  .ged-default-select-escuela .card {
+    margin-bottom: 15px;
+    border-radius: 10px;
+  }
+  
+  .ged-stat-card h3 {
+    font-size: 1.5rem;
+  }
+  
+  .stats-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .ged-btn {
+    padding: 10px 15px;
+    font-size: 0.9rem;
+  }
+  
+  .ged-form-control {
+    padding: 10px 12px;
+    font-size: 14px;
+  }
+  
+  /* Buscador escuelas */
+  .school-search-container {
+    max-width: 150px;
+  }
+  
+  .search-results-dropdown {
+    position: fixed;
+    left: 10px;
+    right: 10px;
+    max-height: 150px;
+  }
+  
+  /* Controles de sesión */
+  .session-controls .btn {
+    font-size: 0.75rem;
+    padding: 0.2rem 0.4rem;
+  }
+}
+
+/* Móviles */
+@media (max-width: 767.98px) {
+  .navbar-contextual {
+    min-height: 60px !important;
+  }
+  
+  .navbar-brand, .navbar-brand-section {
+    height: 60px;
+  }
+  
+  .navbar-toggler {
+    padding: 6px 8px !important;
+  }
+  
+  .navbar-collapse {
+    padding: 15px 10px !important;
+  }
+  
+  .nav-link {
+    padding: 12px 15px !important;
+    font-size: 0.95rem;
+  }
+  
+  .dropdown-item {
+    padding: 10px 20px !important;
+    font-size: 0.9rem;
+  }
+  
+  .escuela-layout main#main,
+  .default-layout main#main {
+    margin-top: 60px !important;
+    min-height: calc(100vh - 60px);
+    padding: 15px 0;
+  }
+  
+  .escuela-layout .main-container,
+  .default-layout .main-container {
+    margin-top: 60px !important;
+  }
+}
+
+/* Móviles pequeños */
+@media (max-width: 575.98px) {
+  .navbar-contextual {
+    min-height: 55px !important;
+  }
+  
+  .navbar-brand, .navbar-brand-section {
+    height: 55px;
+    padding-left: 10px;
+  }
+  
+  .navbar-logo {
+    max-height: 70%;
+  }
+  
+  .navbar-toggler {
+    padding: 5px 7px !important;
+  }
+  
+  .escuela-layout main#main,
+  .default-layout main#main {
+    margin-top: 55px !important;
+    min-height: calc(100vh - 55px);
+    padding: 10px 0;
+  }
+  
+  .escuela-layout .main-container,
+  .default-layout .main-container {
+    margin-top: 55px !important;
+  }
+  
+  .social-icon-circle {
+    width: 45px;
+    height: 45px;
+    font-size: 1.2rem;
+  }
+  
+  .site-index .school-logo-container {
+    height: 120px;
+  }
+  
+  .ged-default-select-escuela {
+    padding: 5px 0;
+  }
+  
+  .ged-card-header-primary,
+  .ged-card-header-info,
+  .ged-card-header-success,
+  .ged-card-header-warning {
+    padding: 15px;
+  }
+  
+  .ged-stat-card {
+    padding: 10px;
+  }
+}
+
+/* ===== MEJORAS DE ACCESIBILIDAD ===== */
+.ged-form-control:focus,
+.ged-btn:focus,
+.nav-link:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(44, 90, 160, 0.3);
+}
+
+/* Estados de formulario */
+.is-valid {
+  border-color: var(--ged-secondary) !important;
+}
+
+.is-invalid {
+  border-color: var(--ged-danger) !important;
+}
+
+/* Prevenir scroll horizontal global */
+body {
+  overflow-x: hidden;
+}
+
+/* Corrección para submenús en móviles */
+.dropdown-submenu > .dropdown-toggle {
+  cursor: pointer;
+}
+
+/* Garantizar que los dropdowns se muestren correctamente */
+.dropdown-menu.show {
+  display: block !important;
+}
+
+/* ================================================== */
+/* SOLUCIÓN DEFINITIVA - CONTEXTOS DE APILAMIENTO CORREGIDOS */
+/* ================================================== */
+
+/* DEBUG VISUAL - DESCOMENTAR PARA VER CAPAS */
+.navbar-contextual { border: 2px solid red !important; }
+.dropdown-menu { border: 2px solid blue !important; }
+main#main { border: 2px solid green !important; }
+body { border: 2px solid orange !important; }
+
+/* 1. BODY CORREGIDO - PADDING SUPERIOR */
+body {
+    padding-top: 30vh !important;
+    position: relative;
+    z-index: 1;
+}
+
+/* 2. MAIN CONTENT CORREGIDO */
+main#main {
+    margin-top: 0 !important;
+    padding-top: 0 !important;
+    position: relative;
+    z-index: 1;
+    min-height: calc(100vh - 30vh) !important;
+}
+
+/* 3. CONTENEDORES INTERMEDIOS SIN CONTEXTOS DE APILAMIENTO */
+.navbar-container,
+.navbar-menu-section,
+.navbar-nav,
+.nav-item,
+.dropdown {
+    position: static !important;
+    z-index: auto !important;
+    transform: none !important;
+    opacity: 1 !important;
+    overflow: visible !important;
+}
+
+/* 4. DROPDOWNS FUERA DEL CONTEXTO DEL NAVBAR */
+.navbar-contextual .dropdown-menu {
+    z-index: 100000 !important;
+}
+
+/* 5. SUBMENÚS CON Z-INDEX AÚN MÁS ALTO */
+.dropdown-submenu > .dropdown-menu {
+    z-index: 100001 !important;
+}
+
+.dropdown-submenu .dropdown-submenu > .dropdown-menu {
+    z-index: 100002 !important;
+}
+
+/* 6. ELIMINAR CUALQUIER OVERFLOW QUE CAUSA PROBLEMAS */
+.navbar-contextual,
+.navbar-contextual * {
+    overflow: visible !important;
+}
+
+/* 7. POSICIONAMIENTO RELATIVO SOLO PARA LOS ITEMS CON DROPDOWN */
+.nav-item.dropdown {
+    position: relative !important;
+}
+
+/* 8. COMPORTAMIENTO HOVER CORREGIDO */
+@media (min-width: 992px) {
+    .nav-item.dropdown:hover > .dropdown-menu,
+    .dropdown-submenu:hover > .dropdown-menu {
+        display: block !important;
+        opacity: 1 !important;
+        visibility: visible !important;
+        transform: translateY(0) !important;
+    }
+}
+
+/* ================================================== */
+/* CORRECCIÓN ESPECÍFICA PARA EL PROBLEMA ACTUAL */
+/* ================================================== */
+
+/* FORZAR QUE LOS DROPDOWNS ROMPAN EL CONTEXTO DE APILAMIENTO */
+.navbar-menu-section {
+    position: static !important;
+    z-index: auto !important;
+}
+
+.navbar-nav {
+    position: static !important;
+    z-index: auto !important;
+}
+
+/* LOS DROPDOWNS DEBEN SER ABSOLUTOS RESPECTO AL VIEWPORT */
+.nav-item.dropdown .dropdown-menu {
+    position: absolute !important;
+    z-index: 100000 !important;
+}
+
+/* GARANTIZAR QUE LOS SUBMENÚS TAMBIÉN ROMPAN EL CONTEXTO */
+.dropdown-submenu .dropdown-menu {
+    position: absolute !important;
+    z-index: 100001 !important;
+}
+
+/* ================================================== */
+/* RESPONSIVE CORREGIDO */
+/* ================================================== */
+
+@media (max-width: 991.98px) {
+    body {
+        padding-top: 70px !important;
+    }
+    
+    .navbar-contextual.navbar {
+        height: 70px !important;
+        min-height: 70px !important;
+    }
+    
+    main#main {
+        min-height: calc(100vh - 70px) !important;
+    }
+    
+    .dropdown-menu {
+        position: static !important;
+        float: none !important;
+        width: auto !important;
+        margin-top: 0 !important;
+        background-color: rgba(0,0,0,0.3) !important;
+        border: 1px solid rgba(255,255,255,0.2) !important;
+        box-shadow: none !important;
+        z-index: 100002 !important;
+    }
+}
+
+@media (max-width: 767.98px) {
+    body {
+        padding-top: 60px !important;
+    }
+    
+    .navbar-contextual.navbar {
+        height: 60px !important;
+        min-height: 60px !important;
+    }
+    
+    main#main {
+        min-height: calc(100vh - 60px) !important;
+    }
+}
+
+@media (max-width: 575.98px) {
+    body {
+        padding-top: 55px !important;
+    }
+    
+    .navbar-contextual.navbar {
+        height: 55px !important;
+        min-height: 55px !important;
+    }
+    
+    main#main {
+        min-height: calc(100vh - 55px) !important;
+    }
+}
+
+/* ================================================== */
+/* VERIFICACIÓN FINAL - ELIMINAR CONTEXTOS CONFLICTIVOS */
+/* ================================================== */
+
+/* Asegurar que ningún elemento padre cree contexto de apilamiento */
+.navbar > .container,
+.navbar-collapse,
+.navbar-container,
+.navbar-menu-section,
+.navbar-nav {
+    transform: none !important;
+    opacity: 1 !important;
+    filter: none !important;
+    perspective: none !important;
+    will-change: auto !important;
+}
+
+/* ===== FIN DE GED.CSS UNIFICADO ===== */
