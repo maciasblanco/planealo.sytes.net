@@ -21,7 +21,7 @@ class MenuWidget extends Widget
                 return $this->renderFallbackMenu();
             }
             
-            return $this->renderMenuForOffCanvas($menuItems);
+            return $this->renderBootstrapMenu($menuItems);
         } catch (\Exception $e) {
             Yii::error('Error en MenuWidget: ' . $e->getMessage());
             return $this->renderFallbackMenu();
@@ -41,8 +41,13 @@ class MenuWidget extends Widget
         </ul>';
     }
 
-    protected function getMenuItems($parentId = null)
+    protected function getMenuItems($parentId = null, $level = 0)
     {
+        // ✅ LIMITAR a 2 niveles máximo
+        if ($level >= 2) {
+            return [];
+        }
+        
         try {
             if (Yii::$app->db->getIsActive() === false) {
                 Yii::$app->db->open();
@@ -67,7 +72,7 @@ class MenuWidget extends Widget
             $menuItem = [
                 'label' => $item['name'],
                 'url' => $item['route'] ? [$item['route']] : '#',
-                'items' => $this->getMenuItems($item['id'])
+                'items' => $this->getMenuItems($item['id'], $level + 1) // ✅ Pasar nivel
             ];
 
             $menuItems[] = $menuItem;
@@ -76,7 +81,7 @@ class MenuWidget extends Widget
         return $menuItems;
     }
 
-    protected function renderMenuForOffCanvas($menuItems)
+    protected function renderBootstrapMenu($menuItems)
     {
         return $this->renderMenuItems($menuItems);
     }
@@ -120,40 +125,28 @@ class MenuWidget extends Widget
         $childrenHtml = $this->renderMenuItems($item['items'], $level + 1);
         
         if ($level === 0) {
-            // Primer nivel - dropdown estándar
+            // ✅ PRIMER NIVEL - Bootstrap nativo
             return '<li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle text-white" href="#" role="button" 
-                   data-bs-toggle="dropdown" aria-expanded="false" data-level="' . $level . '">
+                   data-bs-toggle="dropdown" aria-expanded="false">
                     ' . $label . '
                 </a>
-                <ul class="dropdown-menu" data-level="' . $level . '">
+                <ul class="dropdown-menu">
                     ' . $childrenHtml . '
                 </ul>
             </li>';
-        } elseif ($level === 1) {
-            // Segundo nivel
-            return '<li class="dropdown-submenu position-relative" data-level="' . $level . '">
-                <a class="dropdown-item dropdown-toggle text-white d-flex justify-content-between align-items-center" 
-                   href="#" role="button" data-level="' . $level . '">
+        } else if ($level === 1) {
+            // ✅ SEGUNDO NIVEL - Bootstrap nativo (sin submenús más profundos)
+            return '<li class="dropdown-submenu">
+                <a class="dropdown-item dropdown-toggle text-white" href="#" role="button">
                     ' . $label . '
-                    <span class="submenu-arrow">›</span>
                 </a>
-                <ul class="dropdown-menu submenu-level-1" data-level="' . $level . '">
-                    ' . $childrenHtml . '
-                </ul>
-            </li>';
-        } else {
-            // Tercer nivel y superiores - CORREGIDO PARA MOSTRARSE
-            return '<li class="dropdown-submenu position-relative" data-level="' . $level . '">
-                <a class="dropdown-item dropdown-toggle text-white d-flex justify-content-between align-items-center" 
-                   href="#" role="button" data-level="' . $level . '">
-                    ' . $label . '
-                    <span class="submenu-arrow">›</span>
-                </a>
-                <ul class="dropdown-menu submenu-level-' . $level . ' deep-level" data-level="' . $level . '">
+                <ul class="dropdown-menu">
                     ' . $childrenHtml . '
                 </ul>
             </li>';
         }
+        
+        return '';
     }
 }

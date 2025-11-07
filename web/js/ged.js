@@ -1,11 +1,14 @@
-// js/ged.js - Sistema GED - JavaScript Unificado
-// Fusiona: navbar-fixed, menu-mobile, components, school-search, escuela-selector, landingPageGed, navbar-menu
+// js/ged.js - Sistema GED - JavaScript con Menú Real en Off-Canvas
 
 class GEDSystem {
     constructor() {
-        this.isMobile = window.innerWidth < 992;
+        this.isMobile = this.checkIsMobile();
         this.menuOpen = false;
         this.init();
+    }
+    
+    checkIsMobile() {
+        return window.innerWidth < 992;
     }
     
     init() {
@@ -17,20 +20,18 @@ class GEDSystem {
     }
     
     setup() {
-        console.log('Sistema GED inicializado - Menú estable');
+        console.log('Sistema GED inicializado - Modo:', this.isMobile ? 'Móvil' : 'Escritorio');
         
         // Inicializar todos los módulos
         this.initNavbarFixed();
-        this.initMenuMobile();
+        this.initOffCanvasSidebar();
         this.initComponents();
         this.initSchoolSearch();
-        this.initNavbarMenu();
         this.initEscuelaSelector();
         this.initLandingPage();
         
-        // Aplicar solución z-index inmediatamente
-        this.applyZIndexSolution();
-        this.applyLayoutCorrections(); // ← NUEVA LINEA
+        // Aplicar correcciones iniciales
+        this.applyBodyCorrections();
         
         // Manejar cambios de tamaño
         window.addEventListener('resize', () => {
@@ -38,122 +39,30 @@ class GEDSystem {
         });
     }
     
-    // ===== VERIFICACIÓN Y CORRECCIÓN AUTOMÁTICA =====
-    applyLayoutCorrections() {
-        console.log('🔧 Aplicando correcciones de layout...');
+    // ===== CORRECCIONES DE BODY Y LAYOUT =====
+    applyBodyCorrections() {
+        console.log('🔧 Aplicando correcciones de body y layout...');
         
-        // 1. Corregir body padding
-        document.body.style.paddingTop = '30vh';
+        // Aplicar padding-top correcto al body según el viewport
+        if (this.isMobile) {
+            document.body.style.paddingTop = '70px';
+        } else {
+            document.body.style.paddingTop = '30vh';
+        }
         
-        // 2. Forzar visibilidad de menús
-        const dropdowns = document.querySelectorAll('.dropdown-menu');
-        dropdowns.forEach(dropdown => {
-            dropdown.style.cssText += `
-                z-index: 100000 !important;
-                position: absolute !important;
-                display: block !important;
-                visibility: visible !important;
-                opacity: 1 !important;
-                pointer-events: auto !important;
-            `;
-        });
-        
-        // 3. Eliminar overflow conflictivo
-        const containers = document.querySelectorAll(`
-            .navbar-container, .navbar-menu-section, .navbar-nav,
-            .nav-item, .dropdown, .container-fluid, .container
-        `);
-        
-        containers.forEach(container => {
-            container.style.overflow = 'visible';
-        });
-        
-        // 4. Corregir main content
+        // Corregir main content
         const main = document.querySelector('main#main');
         if (main) {
             main.style.marginTop = '0';
-            main.style.minHeight = 'calc(100vh - 30vh)';
+            main.style.minHeight = this.isMobile ? 'calc(100vh - 70px)' : 'calc(100vh - 30vh)';
         }
         
         console.log('✅ Correcciones de layout aplicadas');
     }
     
-    // ===== SOLUCIÓN Z-INDEX DINÁMICA =====
-    applyZIndexSolution() {
-        console.log('🎯 Aplicando solución z-index para menús');
-        
-        // Aplicar z-index a contenedores principales
-        const containers = [
-            '.navbar-menu-container',
-            '.navbar-menu-section', 
-            '.navbar-nav'
-        ];
-        
-        containers.forEach(selector => {
-            const elements = document.querySelectorAll(selector);
-            elements.forEach(element => {
-                element.style.cssText += `
-                    z-index: 99999 !important;
-                    position: relative !important;
-                    overflow: visible !important;
-                `;
-            });
-        });
-
-        // Aplicar z-index escalonado a dropdowns
-        const dropdowns = document.querySelectorAll('.navbar-menu-container .dropdown-menu');
-        dropdowns.forEach((dropdown, index) => {
-            const zIndex = 100000 + (index * 10);
-            dropdown.style.cssText += `
-                z-index: ${zIndex} !important;
-                position: absolute !important;
-                display: block !important;
-                visibility: visible !important;
-                opacity: 1 !important;
-                overflow: visible !important;
-                clip-path: none !important;
-            `;
-        });
-
-        this.preventDropdownInterference();
-    }
-    
-    preventDropdownInterference() {
-        console.log('🛡️ Previniendo interferencia de z-index');
-        
-        const potentialInterferers = document.querySelectorAll(`
-            .navbar-contextual, .navbar-main, header, .header,
-            .container, .container-fluid, .row, .col, 
-            [style*="position"], [style*="z-index"],
-            .card, .modal, .popover, .tooltip
-        `);
-        
-        potentialInterferers.forEach(element => {
-            const style = window.getComputedStyle(element);
-            const position = style.position;
-            const zIndex = parseInt(style.zIndex) || 0;
-            
-            // REDUCIR Z-INDEX DE ELEMENTOS QUE PODRÍAN CUBRIR MENÚS
-            if (position !== 'static' && zIndex > 1000) {
-                if (zIndex >= 99999) {
-                    element.style.zIndex = '1000';
-                    console.log(`🔧 Ajustado z-index de ${element.tagName} a 1000`);
-                }
-            }
-            
-            // ASEGURAR QUE NO TIENEN OVERFLOW HIDDEN
-            if (style.overflow === 'hidden') {
-                element.style.overflow = 'visible';
-            }
-        });
-        
-        // ELIMINAR CUALQUIER CLIP-PATH QUE OCULTE CONTENIDO
-        document.querySelectorAll('*').forEach(el => {
-            const style = window.getComputedStyle(el);
-            if (style.clipPath && style.clipPath !== 'none') {
-                el.style.clipPath = 'none';
-            }
-        });
+    // ===== OFF-CANVAS SIDEBAR =====
+    initOffCanvasSidebar() {
+        this.offCanvasSidebar = new OffCanvasSidebar();
     }
     
     // ===== NAVBAR FIXED =====
@@ -167,12 +76,9 @@ class GEDSystem {
         }
         
         this.forceFullWidth();
-        this.removeAllScrollbars();
-        this.forceLogoOnly();
         this.optimizeCarousel();
-        this.optimizeMenuSpace();
         
-        console.log('Navbar Fixed - Ancho 100% y sin barras de desplazamiento');
+        console.log('Navbar Fixed - Configurado');
     }
     
     forceFullWidth() {
@@ -188,10 +94,7 @@ class GEDSystem {
         const elementsToFullWidth = [
             '.navbar-contextual',
             '.navbar-collapse',
-            '.container-fluid',
-            '.navbar-menu-container',
-            '.navbar-control-container',
-            '.navbar-carousel-container'
+            '.container-fluid'
         ];
         
         elementsToFullWidth.forEach(selector => {
@@ -200,73 +103,6 @@ class GEDSystem {
                 element.style.cssText += fullWidthStyle;
             });
         });
-        
-        document.body.style.width = '100%';
-        document.body.style.maxWidth = '100%';
-        document.documentElement.style.width = '100%';
-        document.documentElement.style.maxWidth = '100%';
-    }
-    
-    removeAllScrollbars() {
-        const noScrollStyle = `
-            overflow: hidden !important;
-            overflow-x: hidden !important;
-            overflow-y: hidden !important;
-        `;
-        
-        const elementsToFix = [
-            '.navbar-contextual',
-            '.navbar-collapse',
-            '.navbar-menu-container',
-            '.navbar-control-container',
-            '.navbar-carousel-container',
-            '.navbar-nav',
-            '.dropdown-menu'
-        ];
-        
-        elementsToFix.forEach(selector => {
-            const elements = document.querySelectorAll(selector);
-            elements.forEach(element => {
-                element.style.cssText += noScrollStyle;
-            });
-        });
-    }
-    
-    forceLogoOnly() {
-        const brand = document.querySelector('.navbar-brand');
-        if (brand) {
-            brand.childNodes.forEach(node => {
-                if (node.nodeType === Node.TEXT_NODE && node.textContent.trim() !== '') {
-                    node.remove();
-                }
-            });
-            
-            const children = brand.children;
-            for (let i = 0; i < children.length; i++) {
-                if (!children[i].classList.contains('navbar-brand-container')) {
-                    children[i].style.display = 'none';
-                }
-            }
-            
-            brand.style.textIndent = '-9999px';
-            brand.style.fontSize = '0';
-            brand.style.lineHeight = '0';
-            brand.style.color = 'transparent';
-            brand.style.overflow = 'hidden';
-        }
-        
-        const logo = document.querySelector('.navbar-logo');
-        if (logo) {
-            logo.style.visibility = 'visible';
-            logo.style.opacity = '1';
-            logo.style.display = 'block';
-            
-            if (logo.complete && logo.naturalHeight !== 0) {
-                console.log('Logo cargado correctamente');
-            } else {
-                logo.src = '/img/logos/logoGed.png';
-            }
-        }
     }
     
     optimizeCarousel() {
@@ -279,16 +115,10 @@ class GEDSystem {
             pause: 'hover'
         });
         
-        carousel.style.overflow = 'hidden';
         this.setOptimalCarouselDimensions();
-        this.preloadCarouselImages();
         
         window.addEventListener('resize', () => {
             setTimeout(() => this.setOptimalCarouselDimensions(), 100);
-        });
-        
-        carousel.addEventListener('slid.bs.carousel', () => {
-            setTimeout(() => this.setOptimalCarouselDimensions(), 50);
         });
     }
     
@@ -304,13 +134,11 @@ class GEDSystem {
         
         carousel.style.width = `${containerWidth}px`;
         carousel.style.height = `${Math.min(containerHeight * 0.95, containerHeight - 10)}px`;
-        carousel.style.overflow = 'hidden';
         
         const items = carousel.querySelectorAll('.carousel-item');
         items.forEach(item => {
             item.style.width = `${containerWidth}px`;
             item.style.height = `${Math.min(containerHeight * 0.95, containerHeight - 10)}px`;
-            item.style.overflow = 'hidden';
         });
         
         const images = carousel.querySelectorAll('.carousel-image');
@@ -318,162 +146,17 @@ class GEDSystem {
             img.style.width = `${containerWidth}px`;
             img.style.height = `${Math.min(containerHeight * 0.95, containerHeight - 10)}px`;
             img.style.objectFit = 'cover';
-            img.style.overflow = 'hidden';
         });
-    }
-    
-    preloadCarouselImages() {
-        const images = document.querySelectorAll('.carousel-image');
-        images.forEach(img => {
-            if (!img.complete) {
-                img.onload = () => {
-                    img.style.objectFit = 'cover';
-                    img.style.objectPosition = 'center';
-                    img.style.overflow = 'hidden';
-                };
-            }
-            
-            img.onerror = () => {
-                console.warn('Error cargando imagen del carrusel');
-                img.src = '/img/logos/logoGed.png';
-                img.style.objectFit = 'contain';
-                img.style.overflow = 'hidden';
-            };
-        });
-    }
-    
-    optimizeMenuSpace() {
-        const menuContainer = document.querySelector('.navbar-menu-container');
-        const navItems = menuContainer?.querySelectorAll('.nav-item');
-        
-        if (!navItems || navItems.length === 0) return;
-        
-        const totalItems = navItems.length;
-        console.log(`Optimizando espacio para ${totalItems} items del menú`);
-        
-        menuContainer.style.overflow = 'hidden';
-        
-        if (totalItems > 8) {
-            navItems.forEach(item => {
-                const link = item.querySelector('.nav-link');
-                if (link) {
-                    link.style.padding = '4px 8px';
-                    link.style.fontSize = '0.8rem';
-                }
-            });
-        }
-        
-        if (totalItems > 12) {
-            navItems.forEach(item => {
-                const link = item.querySelector('.nav-link');
-                if (link) {
-                    link.style.padding = '3px 6px';
-                    link.style.fontSize = '0.75rem';
-                }
-            });
-        }
-        
-        if (totalItems > 15) {
-            navItems.forEach(item => {
-                const link = item.querySelector('.nav-link');
-                if (link) {
-                    link.style.padding = '2px 4px';
-                    link.style.fontSize = '0.7rem';
-                }
-            });
-        }
-        
-        this.handleResponsiveWrap();
-    }
-    
-    handleResponsiveWrap() {
-        const menuContainer = document.querySelector('.navbar-menu-container');
-        const nav = menuContainer?.querySelector('.nav, .navbar-nav');
-        
-        if (!nav) return;
-        
-        const checkWrap = () => {
-            const width = window.innerWidth;
-            
-            if (width < 992) {
-                nav.style.flexWrap = 'wrap';
-                nav.style.justifyContent = 'center';
-                nav.style.overflow = 'hidden';
-            } else {
-                nav.style.flexWrap = 'nowrap';
-                nav.style.justifyContent = 'flex-start';
-                nav.style.overflow = 'hidden';
-            }
-        };
-        
-        checkWrap();
-        window.addEventListener('resize', checkWrap);
-    }
-    
-    // ===== MENU MOBILE =====
-    initMenuMobile() {
-        if (window.innerWidth < 992) {
-            this.setupMobileSubmenus();
-        }
-    }
-    
-    setupMobileSubmenus() {
-        console.log('Configurando submenús para móviles');
-        
-        document.querySelectorAll('.dropdown-submenu > .dropdown-toggle').forEach(toggle => {
-            toggle.addEventListener('click', this.handleSubmenuClick.bind(this));
-        });
-    }
-    
-    handleSubmenuClick(e) {
-        if (window.innerWidth < 992) {
-            e.preventDefault();
-            e.stopPropagation();
-            
-            const toggle = e.currentTarget;
-            const submenu = toggle.nextElementSibling;
-            
-            if (submenu && submenu.classList.contains('dropdown-menu')) {
-                this.closeSiblingSubmenus(toggle);
-                
-                if (submenu.classList.contains('show')) {
-                    submenu.classList.remove('show');
-                    toggle.setAttribute('aria-expanded', 'false');
-                } else {
-                    submenu.classList.add('show');
-                    toggle.setAttribute('aria-expanded', 'true');
-                }
-            }
-        }
-    }
-    
-    closeSiblingSubmenus(currentToggle) {
-        const parentItem = currentToggle.closest('.dropdown-submenu');
-        if (parentItem && parentItem.parentElement) {
-            const siblings = parentItem.parentElement.querySelectorAll('.dropdown-submenu');
-            siblings.forEach(sibling => {
-                if (sibling !== parentItem) {
-                    const siblingMenu = sibling.querySelector('.dropdown-menu');
-                    const siblingToggle = sibling.querySelector('.dropdown-toggle');
-                    if (siblingMenu) siblingMenu.classList.remove('show');
-                    if (siblingToggle) siblingToggle.setAttribute('aria-expanded', 'false');
-                }
-            });
-        }
     }
     
     // ===== COMPONENTS =====
     initComponents() {
         console.log('Components inicializado');
         
+        // Solo tooltips básicos si son necesarios
         const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
         tooltipTriggerList.map(function (tooltipTriggerEl) {
             return new bootstrap.Tooltip(tooltipTriggerEl);
-        });
-        
-        const popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'));
-        popoverTriggerList.map(function (popoverTriggerEl) {
-            return new bootstrap.Popover(popoverTriggerEl);
         });
     }
     
@@ -530,10 +213,6 @@ class GEDSystem {
             if (!$(e.target).closest('.school-search-container').length) {
                 this.hideResults();
             }
-        });
-        
-        searchInput.on('focus', () => {
-            this.showResultsIfAvailable();
         });
     }
     
@@ -677,13 +356,6 @@ class GEDSystem {
         this.schoolSearchElements.searchResults.hide().empty();
     }
     
-    showResultsIfAvailable() {
-        const query = this.schoolSearchElements.searchInput.val().trim();
-        if (query.length >= 2 && this.schoolSearchElements.searchResults.children().length > 0) {
-            this.schoolSearchElements.searchResults.show();
-        }
-    }
-    
     showNotification(message, type) {
         const alertClass = type === 'success' ? 'alert-success' : 'alert-danger';
         const alert = $(`
@@ -707,32 +379,6 @@ class GEDSystem {
         }, 800);
     }
     
-    // ===== NAVBAR MENU =====
-    initNavbarMenu() {
-        console.log('NavbarMenu inicializado - Modo:', this.isMobile ? 'Móvil' : 'Escritorio');
-        
-        // Solo mantener la accesibilidad
-        this.improveAccessibility();
-    }
-    
-    improveAccessibility() {
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape') {
-                this.closeAllDropdowns();
-            }
-        });
-    }
-    
-    closeAllDropdowns() {
-        document.querySelectorAll('.nav-item.dropdown.show, .dropdown-submenu.show').forEach(element => {
-            element.classList.remove('show');
-            const dropdownMenu = element.querySelector('.dropdown-menu');
-            const dropdownToggle = element.querySelector('.dropdown-toggle');
-            if (dropdownMenu) dropdownMenu.classList.remove('show');
-            if (dropdownToggle) dropdownToggle.setAttribute('aria-expanded', 'false');
-        });
-    }
-    
     // ===== ESCUELA SELECTOR =====
     initEscuelaSelector() {
         if (typeof $ === 'undefined') {
@@ -741,14 +387,6 @@ class GEDSystem {
         }
 
         try {
-            // Carrusel de noticias en navbar
-            if ($('#carouselNav').length) {
-                $('#carouselNav').carousel({
-                    interval: 4000,
-                    pause: 'hover'
-                });
-            }
-            
             // Smooth scroll para back to top
             $('.back-to-top').on('click', function(e) {
                 e.preventDefault();
@@ -817,11 +455,11 @@ class GEDSystem {
 
         // Smooth scroll para navegación interna
         $('a[href^="#"]').on('click', function(event) {
-            var target = $(this.getAttribute('href'));
-            if (target.length) {
+            var target = $(this).attr('href');
+            if (target && target !== '#' && $(target).length) {
                 event.preventDefault();
                 $('html, body').stop().animate({
-                    scrollTop: target.offset().top - 100
+                    scrollTop: $(target).offset().top - 100
                 }, 1000);
             }
         });
@@ -829,240 +467,428 @@ class GEDSystem {
     
     // ===== MANEJO DE RESIZE =====
     handleResize() {
-        const newIsMobile = window.innerWidth < 992;
+        const newIsMobile = this.checkIsMobile();
         if (newIsMobile !== this.isMobile) {
             this.isMobile = newIsMobile;
             console.log('Cambio de modo:', this.isMobile ? 'Móvil' : 'Escritorio');
+            
+            // Reinicializar off-canvas si cambió el modo
+            if (this.offCanvasSidebar) {
+                this.offCanvasSidebar.handleViewportChange(this.isMobile);
+            }
         }
         
         setTimeout(() => {
             this.forceFullWidth();
-            this.removeAllScrollbars();
-            this.forceLogoOnly();
             this.setOptimalCarouselDimensions();
-            this.optimizeMenuSpace();
-            this.applyZIndexSolution(); // Re-aplicar z-index en resize
-            this.applyLayoutCorrections(); // Re-aplicar correcciones de layout
+            this.applyBodyCorrections();
         }, 100);
     }
 }
 
 // ==================================================
-// GESTIÓN DE MENÚS MULTINIVEL - SOLUCIÓN DEFINITIVA
+// OFF-CANVAS SIDEBAR - CON MENÚ REAL DE MenuWidget
 // ==================================================
 
-class GEDMenuManager {
+class OffCanvasSidebar {
     constructor() {
-        this.menuTimeout = null;
+        this.isOpen = false;
+        this.isMobile = window.innerWidth < 992;
         this.init();
     }
     
     init() {
-        this.cleanupConflicts();
-        this.setupDesktopMenu();
-        this.setupMobileMenu();
-        this.preventBootstrapInterference();
-        console.log('✅ GEDMenuManager inicializado correctamente - Sin conflictos');
+        this.createOffCanvas();
+        this.bindEvents();
+        console.log('✅ Off-Canvas Sidebar inicializado - Móvil:', this.isMobile);
     }
     
-    setupDesktopMenu() {
-        if (window.innerWidth < 992) return;
-        
-        console.log('🖥️ Configurando menú ESTABLE para escritorio');
-        
-        // Limpiar eventos anteriores COMPLETAMENTE
-        $('.nav-item.dropdown, .dropdown-submenu').off('mouseenter mouseleave click');
-        $('.dropdown-toggle').off('click');
-        $('.dropdown-menu').off('mouseenter mouseleave');
-        
-        // SOLUCIÓN DEFINITIVA: Hover con timeout controlado
-        $('.nav-item.dropdown, .dropdown-submenu').hover(
-            // Mouse ENTER - Abrir inmediatamente
-            function() {
-                const $this = $(this);
-                clearTimeout(window.gedMenuManager?.menuTimeout);
-                
-                $this.addClass('show');
-                $this.find('.dropdown-menu:first').addClass('show');
-                $this.find('.dropdown-toggle:first').attr('aria-expanded', 'true');
-                
-                window.gedMenuManager.menuOpen = true;
-            },
-            // Mouse LEAVE - Cerrar con delay controlado
-            function() {
-                const $this = $(this);
-                
-                window.gedMenuManager.menuTimeout = setTimeout(() => {
-                    if (!window.gedMenuManager.isMouseInMenu($this)) {
-                        $this.removeClass('show');
-                        $this.find('.dropdown-menu').removeClass('show');
-                        $this.find('.dropdown-toggle').attr('aria-expanded', 'false');
-                        window.gedMenuManager.menuOpen = false;
-                    }
-                }, 300);
-            }
-        );
-        
-        // Mantener menú abierto cuando el mouse está en dropdowns
-        $('.dropdown-menu').hover(
-            function() {
-                clearTimeout(window.gedMenuManager?.menuTimeout);
-            },
-            function() {
-                const $this = $(this);
-                window.gedMenuManager.menuTimeout = setTimeout(() => {
-                    $this.closest('.dropdown, .dropdown-submenu').removeClass('show');
-                    $this.removeClass('show');
-                    $this.closest('.dropdown, .dropdown-submenu').find('.dropdown-toggle').attr('aria-expanded', 'false');
-                    window.gedMenuManager.menuOpen = false;
-                }, 300);
-            }
-        );
-    }
-    
-    isMouseInMenu($element) {
-        const menuElements = $element.find('.dropdown-menu').addBack();
-        let isInMenu = false;
-        
-        menuElements.each(function() {
-            if ($(this).is(':hover')) {
-                isInMenu = true;
-                return false;
-            }
-        });
-        
-        return isInMenu;
-    }
-    
-    setupMobileMenu() {
-        if (window.innerWidth >= 992) return;
-        
-        console.log('📱 Configurando menú para móvil');
-        
-        // Limpiar eventos anteriores
-        $('.dropdown-toggle').off('click.ged-mobile');
-        
-        // Click para móvil - SOLO para móvil
-        $('.dropdown-toggle').on('click.ged-mobile', function(e) {
-            if (window.innerWidth < 992) {
-                const $this = $(this);
-                const $parent = $this.closest('.dropdown, .dropdown-submenu');
-                const $menu = $parent.find('.dropdown-menu:first');
-                
-                // Cerrar otros menús
-                $('.dropdown, .dropdown-submenu').not($parent).removeClass('show');
-                $('.dropdown-menu').not($menu).removeClass('show');
-                $('.dropdown-toggle').not($this).attr('aria-expanded', 'false');
-                
-                // Toggle este menú
-                $parent.toggleClass('show');
-                $menu.toggleClass('show');
-                $this.attr('aria-expanded', $parent.hasClass('show'));
-                
-                e.preventDefault();
-                e.stopPropagation();
-            }
-        });
-        
-        // Cerrar menús al hacer click fuera - SOLO móvil
-        $(document).off('click.ged-menu-close').on('click.ged-menu-close', function(e) {
-            if (window.innerWidth < 992 && !$(e.target).closest('.dropdown, .dropdown-submenu').length) {
-                $('.dropdown, .dropdown-submenu').removeClass('show');
-                $('.dropdown-menu').removeClass('show');
-                $('.dropdown-toggle').attr('aria-expanded', 'false');
-            }
-        });
-    }
-    
-    preventBootstrapInterference() {
-        // Prevenir que Bootstrap interfiera con nuestros menús
-        $(document).off('hide.bs.dropdown').on('hide.bs.dropdown', function(e) {
-            if (window.innerWidth >= 992 && window.gedMenuManager?.menuOpen) {
-                e.preventDefault();
-                e.stopPropagation();
-                return false;
-            }
-        });
-        
-        // Prevenir clicks en dropdowns en escritorio
-        $('.dropdown-toggle').off('click.bs.dropdown').on('click.bs.dropdown', function(e) {
-            if (window.innerWidth >= 992) {
-                e.preventDefault();
-                e.stopPropagation();
-                return false;
-            }
-        });
-    }
-    
-    cleanupConflicts() {
-        console.log('🧹 Limpiando TODOS los conflictos de eventos');
-        
-        // Eliminar TODOS los event listeners conflictivos
-        $('.nav-item.dropdown, .dropdown-submenu').off('mouseenter mouseleave click');
-        $('.dropdown-toggle').off('click click.ged-mobile click.bs.dropdown');
-        $('.dropdown-menu').off('mouseenter mouseleave');
-        $(document).off('click.ged-menu-close hide.bs.dropdown');
-        
-        // Limpiar timeouts
-        if (this.menuTimeout) {
-            clearTimeout(this.menuTimeout);
-            this.menuTimeout = null;
+    createOffCanvas() {
+        // Solo crear si no existe
+        if (document.querySelector('.ged-offcanvas-sidebar')) {
+            this.sidebar = document.querySelector('.ged-offcanvas-sidebar');
+            this.backdrop = document.querySelector('.ged-sidebar-backdrop');
+            this.sidebarNav = this.sidebar.querySelector('.sidebar-nav');
+            
+            // **IMPORTANTE: Cargar el menú real si no está presente**
+            this.loadRealMenu();
+            return;
         }
+
+        const sidebar = document.createElement('div');
+        sidebar.className = 'ged-offcanvas-sidebar';
+        sidebar.innerHTML = `
+            <div class="sidebar-header">
+                <button class="close-sidebar" aria-label="Cerrar menú">✕</button>
+                <span>Menú Principal</span>
+            </div>
+            <nav class="sidebar-nav" aria-label="Navegación principal">
+                <!-- El menú se cargará dinámicamente -->
+            </nav>
+        `;
+        
+        const backdrop = document.createElement('div');
+        backdrop.className = 'ged-sidebar-backdrop';
+        
+        document.body.appendChild(sidebar);
+        document.body.appendChild(backdrop);
+        
+        this.sidebar = sidebar;
+        this.backdrop = backdrop;
+        this.sidebarNav = this.sidebar.querySelector('.sidebar-nav');
+        
+        // **IMPORTANTE: Cargar el menú real**
+        this.loadRealMenu();
+        
+        this.applyBodyCorrections();
+    }
+    
+    // **NUEVO MÉTODO: Cargar el menú real desde el navbar**
+    loadRealMenu() {
+        console.log('🔄 Cargando menú real...');
+        
+        // Buscar el menú real en el navbar
+        const realMenu = document.querySelector('.navbar-nav');
+        
+        if (!realMenu) {
+            console.warn('❌ No se encontró el menú real en el navbar');
+            this.loadFallbackMenu();
+            return;
+        }
+        
+        console.log('✅ Menú real encontrado, clonando...');
+        
+        // Clonar el menú real profundamente
+        const clonedMenu = realMenu.cloneNode(true);
+        
+        // Limpiar el contenedor del sidebar
+        this.sidebarNav.innerHTML = '';
+        
+        // Agregar el menú clonado
+        this.sidebarNav.appendChild(clonedMenu);
+        
+        // Adaptar el menú para off-canvas
+        this.adaptMenuForOffCanvas(this.sidebarNav);
+        
+        console.log('✅ Menú real cargado y adaptado correctamente');
+    }
+    
+    // **NUEVO MÉTODO: Menú de respaldo si no se encuentra el real**
+    loadFallbackMenu() {
+        console.log('🔄 Cargando menú de respaldo...');
+        
+        this.sidebarNav.innerHTML = `
+            <ul class="sidebar-menu">
+                <li class="menu-item">
+                    <a href="/" class="menu-link">Inicio</a>
+                </li>
+                <li class="menu-item has-children">
+                    <a href="#" class="menu-link">
+                        Sistema
+                        <span class="submenu-indicator">›</span>
+                    </a>
+                    <ul class="submenu">
+                        <li class="menu-item">
+                            <a href="/ged/default/index" class="menu-link">Seleccionar Escuela</a>
+                        </li>
+                        <li class="menu-item">
+                            <a href="/site/login" class="menu-link">Iniciar Sesión</a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="menu-divider"></li>
+                <li class="menu-item">
+                    <a href="#" class="menu-link">Ayuda</a>
+                </li>
+            </ul>
+        `;
+        
+        console.log('✅ Menú de respaldo cargado');
+    }
+    
+    adaptMenuForOffCanvas(menuElement) {
+        console.log('🎨 Adaptando menú para off-canvas...');
+        
+        // Convertir dropdowns de Bootstrap a menú simple COLABSABLE
+        const dropdowns = menuElement.querySelectorAll('.dropdown, .dropdown-submenu');
+        dropdowns.forEach(dropdown => {
+            dropdown.classList.remove('dropdown', 'dropdown-submenu');
+            dropdown.classList.add('has-children');
+            
+            const toggle = dropdown.querySelector('.dropdown-toggle');
+            if (toggle) {
+                toggle.classList.remove('dropdown-toggle');
+                toggle.removeAttribute('data-bs-toggle');
+                toggle.removeAttribute('aria-expanded');
+                // Agregar indicador de submenú si no existe
+                if (!toggle.querySelector('.submenu-indicator')) {
+                    const indicator = document.createElement('span');
+                    indicator.className = 'submenu-indicator';
+                    indicator.textContent = '›';
+                    toggle.appendChild(indicator);
+                }
+            }
+            
+            const menu = dropdown.querySelector('.dropdown-menu');
+            if (menu) {
+                menu.classList.remove('dropdown-menu');
+                menu.classList.add('submenu');
+                menu.style.display = 'none';
+                
+                // Aplicar recursivamente
+                this.adaptMenuForOffCanvas(menu);
+            }
+        });
+        
+        // Limpiar clases de Bootstrap y agregar clases propias
+        const navItems = menuElement.querySelectorAll('.nav-item');
+        navItems.forEach(item => {
+            item.classList.remove('nav-item');
+            item.classList.add('menu-item');
+        });
+        
+        const navLinks = menuElement.querySelectorAll('.nav-link, .dropdown-item');
+        navLinks.forEach(link => {
+            link.classList.remove('nav-link', 'dropdown-item');
+            link.classList.add('menu-link');
+            
+            // Asegurar que los enlaces tengan href válido
+            if (link.getAttribute('href') === '#' && link.querySelector('.submenu-indicator')) {
+                link.style.cursor = 'pointer';
+            }
+        });
+        
+        console.log('✅ Menú adaptado correctamente');
+    }
+    
+    bindEvents() {
+        // **IMPORTANTE: Interceptar el toggler de Bootstrap para móviles**
+        this.interceptBootstrapToggler();
+        
+        // Cerrar sidebar
+        const closeButton = this.sidebar.querySelector('.close-sidebar');
+        if (closeButton) {
+            closeButton.addEventListener('click', () => {
+                this.close();
+            });
+        }
+        
+        // Cerrar con backdrop
+        if (this.backdrop) {
+            this.backdrop.addEventListener('click', () => {
+                this.close();
+            });
+        }
+        
+        // Manejar submenús COLABSABLES
+        if (this.sidebarNav) {
+            this.sidebarNav.addEventListener('click', (e) => {
+                const link = e.target.closest('a');
+                if (link && link.parentElement.classList.contains('has-children')) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    this.toggleSubmenu(link.parentElement);
+                    return false;
+                }
+                
+                // Cerrar sidebar al hacer clic en enlace normal (solo en móviles)
+                if (this.isMobile && link && !link.parentElement.classList.contains('has-children')) {
+                    setTimeout(() => this.close(), 300);
+                }
+            });
+        }
+        
+        // Cerrar con tecla ESC
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && this.isOpen) {
+                this.close();
+            }
+        });
+    }
+    
+    interceptBootstrapToggler() {
+        const navbarToggler = document.querySelector('.navbar-toggler');
+        if (!navbarToggler) {
+            console.warn('❌ No se encontró el navbar toggler');
+            return;
+        }
+        
+        console.log('🎯 Interceptando toggler de Bootstrap...');
+        
+        // Guardar el evento original de Bootstrap
+        const originalOnClick = navbarToggler.onclick;
+        
+        navbarToggler.addEventListener('click', (e) => {
+            // Solo en móviles
+            if (this.isMobile) {
+                e.preventDefault();
+                e.stopPropagation();
+                e.stopImmediatePropagation();
+                
+                console.log('📱 Toggler interceptado - Abriendo off-canvas');
+                
+                // Abrir nuestro off-canvas en lugar del colapso de Bootstrap
+                if (this.isOpen) {
+                    this.close();
+                } else {
+                    this.open();
+                }
+                return false;
+            }
+            
+            // En escritorio, dejar que Bootstrap maneje el evento
+            if (originalOnClick) {
+                originalOnClick.call(navbarToggler, e);
+            }
+        });
+        
+        console.log('✅ Toggler interceptado correctamente');
+    }
+    
+    applyBodyCorrections() {
+        if (this.isMobile) {
+            document.body.style.paddingTop = '70px';
+        } else {
+            document.body.style.paddingTop = '30vh';
+        }
+    }
+    
+    open() {
+        if (this.isOpen) return;
+        
+        console.log('🚀 Abriendo off-canvas sidebar...');
+        
+        this.isOpen = true;
+        this.sidebar.classList.add('open');
+        this.backdrop.classList.add('show');
+        document.body.style.overflow = 'hidden';
+        
+        // Mover foco al sidebar para accesibilidad
+        this.sidebar.setAttribute('tabindex', '-1');
+        this.sidebar.focus();
+        
+        console.log('✅ Off-Canvas abierto correctamente');
+    }
+    
+    close() {
+        if (!this.isOpen) return;
+        
+        console.log('🚀 Cerrando off-canvas sidebar...');
+        
+        this.isOpen = false;
+        this.sidebar.classList.remove('open');
+        this.backdrop.classList.remove('show');
+        document.body.style.overflow = '';
+        
+        // Cerrar todos los submenús
+        this.closeAllSubmenus();
+        
+        console.log('✅ Off-Canvas cerrado correctamente');
+    }
+    
+    toggleSubmenu(parentItem) {
+        const submenu = parentItem.querySelector('.submenu');
+        if (!submenu) return;
+        
+        const isCurrentlyOpen = submenu.style.display === 'block';
+        
+        console.log(`🔄 ${isCurrentlyOpen ? 'Cerrando' : 'Abriendo'} submenú...`);
+        
+        // Cerrar todos los submenús del mismo nivel
+        const siblings = parentItem.parentElement.querySelectorAll('.has-children');
+        siblings.forEach(sibling => {
+            if (sibling !== parentItem) {
+                const siblingSubmenu = sibling.querySelector('.submenu');
+                if (siblingSubmenu) {
+                    siblingSubmenu.style.display = 'none';
+                    sibling.classList.remove('open');
+                }
+            }
+        });
+        
+        // Alternar submenú actual
+        if (isCurrentlyOpen) {
+            submenu.style.display = 'none';
+            parentItem.classList.remove('open');
+        } else {
+            submenu.style.display = 'block';
+            parentItem.classList.add('open');
+        }
+    }
+    
+    closeAllSubmenus() {
+        const submenus = this.sidebar.querySelectorAll('.submenu');
+        const parentItems = this.sidebar.querySelectorAll('.has-children');
+        
+        submenus.forEach(submenu => {
+            submenu.style.display = 'none';
+        });
+        
+        parentItems.forEach(item => {
+            item.classList.remove('open');
+        });
+        
+        console.log('✅ Todos los submenús cerrados');
+    }
+    
+    handleViewportChange(isMobile) {
+        this.isMobile = isMobile;
+        console.log('🔄 Off-Canvas cambió a modo:', this.isMobile ? 'Móvil' : 'Escritorio');
+        
+        // Si cambió a escritorio y el sidebar está abierto, cerrarlo
+        if (!this.isMobile && this.isOpen) {
+            this.close();
+        }
+        
+        this.applyBodyCorrections();
     }
 }
 
 // ==================================================
-// INICIALIZACIÓN GLOBAL DEL SISTEMA GED
+// INICIALIZACIÓN GLOBAL MEJORADA
 // ==================================================
 
 // Inicialización automática del sistema principal
 document.addEventListener('DOMContentLoaded', () => {
-    window.gedSystem = new GEDSystem();
-});
-
-// Inicialización del gestor de menús (con jQuery)
-$(document).ready(function() {
+    // Pequeño delay para asegurar que Bootstrap esté cargado
     setTimeout(() => {
-        if (!window.gedMenuManager) {
-            window.gedMenuManager = new GEDMenuManager();
-            console.log('🎯 SOLUCIÓN MENÚ GED - Inicializada correctamente');
-        }
-    }, 500);
-    
-    $(window).on('resize', function() {
-        setTimeout(() => {
-            if (window.gedMenuManager) {
-                window.gedMenuManager.cleanupConflicts();
-                window.gedMenuManager.init();
-            }
-        }, 150);
-    });
+        window.gedSystem = new GEDSystem();
+        console.log('🚀 Sistema GED completamente inicializado');
+    }, 100);
 });
 
+// Manejo de resize global
 window.addEventListener('resize', () => {
     if (window.gedSystem) {
         window.gedSystem.handleResize();
     }
 });
 
-if (window.gedSystem) {
-    window.gedSystem.handleResize();
+// Debug helper
+function debugGEDSystem() {
+    console.group('🐛 DEBUG GED SYSTEM - MENÚ REAL');
+    console.log('GED System:', window.gedSystem);
+    console.log('OffCanvas Sidebar:', window.gedSystem?.offCanvasSidebar);
+    console.log('Modo móvil:', window.gedSystem?.isMobile);
+    console.log('Sidebar abierto:', window.gedSystem?.offCanvasSidebar?.isOpen);
+    console.log('Toggler encontrado:', !!document.querySelector('.navbar-toggler'));
+    console.log('Menú real encontrado:', !!document.querySelector('.navbar-nav'));
+    console.log('Menú en sidebar:', document.querySelector('.ged-offcanvas-sidebar .sidebar-nav')?.children.length || 0, 'elementos');
+    console.groupEnd();
 }
 
-// Debug
-function debugMenuInfo() {
-    if (console && console.log) {
-        console.group('🐛 DEBUG MENÚ GED - ESTADO ACTUAL');
-        console.log('Navbar z-index:', $('.navbar-contextual').css('z-index'));
-        console.log('Dropdowns encontrados:', $('.dropdown-menu').length);
-        console.log('Submenús encontrados:', $('.dropdown-submenu').length);
-        console.log('Menús abiertos:', $('.dropdown-menu.show').length);
-        console.log('Modo actual:', window.innerWidth < 992 ? 'Móvil' : 'Escritorio');
-        console.log('Menu open state:', window.gedMenuManager?.menuOpen);
-        console.groupEnd();
+// Exponer para debugging
+window.debugGEDSystem = debugGEDSystem;
+
+// Auto-debug en desarrollo
+if (window.location.href.indexOf('localhost') > -1 || window.location.href.indexOf('debug') > -1) {
+    setTimeout(debugGEDSystem, 2000);
+}
+
+// Función para forzar recarga del menú (útil para desarrollo)
+window.reloadOffCanvasMenu = function() {
+    if (window.gedSystem && window.gedSystem.offCanvasSidebar) {
+        window.gedSystem.offCanvasSidebar.loadRealMenu();
+        console.log('🔄 Menú del off-canvas recargado manualmente');
     }
-}
-
-if (window.location.href.indexOf('debug') > -1) {
-    setTimeout(debugMenuInfo, 1000);
-}
+};

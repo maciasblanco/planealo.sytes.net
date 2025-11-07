@@ -1,0 +1,84 @@
+// ged.js - DIAGNÓSTICO BOOTSTRAP NATIVO
+console.log('🎯 INICIANDO DIAGNÓSTICO BOOTSTRAP NATIVO');
+
+// Solo monitorear, no manipular
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('=== DIAGNÓSTICO BOOTSTRAP DROPDOWNS ===');
+    
+    // Contar elementos
+    const dropdowns = document.querySelectorAll('.dropdown, .dropdown-submenu');
+    const menus = document.querySelectorAll('.dropdown-menu');
+    
+    console.log('Dropdowns encontrados:', dropdowns.length);
+    console.log('Menús encontrados:', menus.length);
+    
+    // Verificar estructura Bootstrap
+    menus.forEach((menu, index) => {
+        const parent = menu.closest('.dropdown, .dropdown-submenu');
+        const toggle = parent ? parent.querySelector('.dropdown-toggle') : null;
+        
+        console.log(`Menu ${index}:`, {
+            parent: parent ? parent.className : 'none',
+            toggle: toggle ? toggle.textContent.trim() : 'none',
+            display: getComputedStyle(menu).display,
+            position: getComputedStyle(menu).position,
+            zIndex: getComputedStyle(menu).zIndex
+        });
+    });
+    
+    // Monitorear eventos de Bootstrap
+    document.addEventListener('show.bs.dropdown', function(e) {
+        console.log('🟢 BOOTSTRAP: Dropdown show', e.target);
+    });
+    
+    document.addEventListener('shown.bs.dropdown', function(e) {
+        console.log('🟢 BOOTSTRAP: Dropdown shown', e.target);
+        const menu = e.target.querySelector('.dropdown-menu');
+        if (menu) {
+            console.log('   Menu styles:', {
+                display: getComputedStyle(menu).display,
+                visibility: getComputedStyle(menu).visibility,
+                opacity: getComputedStyle(menu).opacity,
+                zIndex: getComputedStyle(menu).zIndex
+            });
+        }
+    });
+    
+    document.addEventListener('hide.bs.dropdown', function(e) {
+        console.log('🔴 BOOTSTRAP: Dropdown hide', e.target);
+    });
+    
+    // Comando para debug manual
+    window.debugBootstrap = function() {
+        console.log('=== DEBUG BOOTSTRAP ===');
+        const visibleMenus = document.querySelectorAll('.dropdown-menu.show');
+        console.log('Menús visibles:', visibleMenus.length);
+        
+        visibleMenus.forEach((menu, index) => {
+            const rect = menu.getBoundingClientRect();
+            console.log(`Menu ${index}:`, {
+                position: `(${rect.left}, ${rect.top})`,
+                size: `${rect.width}x${rect.height}`,
+                isVisible: rect.width > 0 && rect.height > 0,
+                zIndex: getComputedStyle(menu).zIndex
+            });
+        });
+    };
+    
+    // Comando para forzar mostrar un dropdown específico
+    window.showDropdown = function(index = 0) {
+        const dropdowns = document.querySelectorAll('.dropdown');
+        if (dropdowns[index]) {
+            const toggle = dropdowns[index].querySelector('.dropdown-toggle');
+            if (toggle) {
+                console.log('Forzando toggle en:', toggle.textContent.trim());
+                toggle.click();
+            }
+        }
+    };
+    
+    console.log('💡 Comandos disponibles: debugBootstrap(), showDropdown(index)');
+});
+
+// Eliminar cualquier gestión de menús personalizada
+// NO inicializar GEDSystem, GEDMenuManager, etc.

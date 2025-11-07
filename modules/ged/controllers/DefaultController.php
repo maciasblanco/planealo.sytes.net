@@ -503,7 +503,7 @@ class DefaultController extends Controller
         Yii::$app->session->remove('nombre_escuela');
         
         Yii::$app->session->setFlash('success', 'Selección de escuela eliminada');
-        return $this->redirect(Yii::$app->request->referrer ?: ['site/index']);
+        return $this->redirect(Yii::$app->request->referrer ?: ['ged/default/index']);
     }
 
 }

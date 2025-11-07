@@ -191,6 +191,21 @@ $hasEscuela = !empty($idEscuela) && $idEscuela != 0;
     </div>
 </footer>
 
+<!-- ================================================== -->
+<!-- OFF-CANVAS SIDEBAR - IMPLEMENTACIÓN -->
+<!-- ================================================== -->
+<div class="ged-offcanvas-sidebar">
+    <div class="sidebar-header">
+        <button class="close-sidebar" aria-label="Cerrar menú">✕</button>
+        <span>Menú Principal</span>
+    </div>
+    <nav class="sidebar-nav" aria-label="Navegación principal">
+        <!-- El menú se cargará dinámicamente desde el navbar existente -->
+    </nav>
+</div>
+
+<div class="ged-sidebar-backdrop"></div>
+
 <?php $this->endBody() ?>
 </body>
 </html>
