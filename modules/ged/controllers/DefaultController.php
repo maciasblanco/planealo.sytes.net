@@ -272,6 +272,91 @@ class DefaultController extends Controller
     }
 
     /**
+     * ✅ ACTION CERRAR-ESCUELA - NUEVO
+     * Cierra la escuela actual sin cerrar la sesión del usuario
+     */
+    public function actionCerrarEscuela()
+    {
+        $this->limpiarSesionEscuela();
+        
+        Yii::$app->session->setFlash('success', 
+            'Escuela cerrada correctamente. Puedes seleccionar otra escuela.');
+        
+        return $this->redirect(['select-escuela']);
+    }
+
+    /**
+     * ✅ ACTION SET-SCHOOL - PARA EL BUSCADOR AJAX
+     * Establece la escuela desde el buscador (ya existe pero la mejoramos)
+     */
+    public function actionSetSchool()
+    {
+        Yii::$app->response->format = Response::FORMAT_JSON;
+        
+        $request = Yii::$app->request;
+        $schoolId = $request->post('schoolId');
+        $schoolName = $request->post('schoolName');
+        
+        if (empty($schoolId)) {
+            return ['success' => false, 'message' => 'ID de escuela no proporcionado'];
+        }
+        
+        // Validar que la escuela existe y no está eliminada
+        $escuela = Escuela::find()
+            ->where(['id' => $schoolId, 'eliminado' => false])
+            ->one();
+            
+        if (!$escuela) {
+            return ['success' => false, 'message' => 'La escuela no existe o fue eliminada'];
+        }
+        
+        // Actualizar sesión
+        $this->actualizarSesionEscuela($schoolId);
+        
+        return [
+            'success' => true, 
+            'message' => 'Escuela seleccionada: ' . $escuela->nombre,
+            'schoolName' => $escuela->nombre
+        ];
+    }
+
+    /**
+     * Limpiar selección de escuela
+     */
+    public function actionClearEscuela()
+    {
+        Yii::$app->session->remove('id_escuela');
+        Yii::$app->session->remove('nombre_escuela');
+        
+        Yii::$app->session->setFlash('success', 'Selección de escuela eliminada');
+        return $this->redirect(Yii::$app->request->referrer ?: ['ged/default/index']);
+    }
+
+    /**
+     * ✅ ACTION DEBUG-MOBILE - Para diagnóstico del menú en móviles
+     */
+    public function actionDebugMobile()
+    {
+        Yii::$app->response->format = \yii\web\Response::FORMAT_HTML;
+        
+        echo "<h1>Debug del Menú en Móviles</h1>";
+        
+        // Forzar vista móvil
+        echo "<meta name='viewport' content='width=device-width, initial-scale=1.0'>";
+        
+        // Probar el widget en un contenedor móvil
+        echo "<div style='max-width: 375px; margin: 0 auto; border: 2px solid red; padding: 10px;'>";
+        echo "<h3>Vista Móvil (375px)</h3>";
+        echo \app\components\MenuWidget::widget();
+        echo "</div>";
+        
+        echo "<div style='max-width: 768px; margin: 20px auto; border: 2px solid blue; padding: 10px;'>";
+        echo "<h3>Vista Tablet (768px)</h3>";
+        echo \app\components\MenuWidget::widget();
+        echo "</div>";
+    }
+
+    /**
      * ✅ MÉTODOS LEGACY - MANTENIDOS PARA COMPATIBILIDAD
      */
 
@@ -446,64 +531,4 @@ class DefaultController extends Controller
             'Fútbol' => ['activo' => true, 'categoria' => 'Sub-13, Sub-15']
         ];
     }
-    /**
-     * ✅ ACTION CERRAR-ESCUELA - NUEVO
-     * Cierra la escuela actual sin cerrar la sesión del usuario
-     */
-    public function actionCerrarEscuela()
-    {
-        $this->limpiarSesionEscuela();
-        
-        Yii::$app->session->setFlash('success', 
-            'Escuela cerrada correctamente. Puedes seleccionar otra escuela.');
-        
-        return $this->redirect(['select-escuela']);
-    }
-
-    /**
-     * ✅ ACTION SET-SCHOOL - PARA EL BUSCADOR AJAX
-     * Establece la escuela desde el buscador (ya existe pero la mejoramos)
-     */
-    public function actionSetSchool()
-    {
-        Yii::$app->response->format = Response::FORMAT_JSON;
-        
-        $request = Yii::$app->request;
-        $schoolId = $request->post('schoolId');
-        $schoolName = $request->post('schoolName');
-        
-        if (empty($schoolId)) {
-            return ['success' => false, 'message' => 'ID de escuela no proporcionado'];
-        }
-        
-        // Validar que la escuela existe y no está eliminada
-        $escuela = Escuela::find()
-            ->where(['id' => $schoolId, 'eliminado' => false])
-            ->one();
-            
-        if (!$escuela) {
-            return ['success' => false, 'message' => 'La escuela no existe o fue eliminada'];
-        }
-        
-        // Actualizar sesión
-        $this->actualizarSesionEscuela($schoolId);
-        
-        return [
-            'success' => true, 
-            'message' => 'Escuela seleccionada: ' . $escuela->nombre,
-            'schoolName' => $escuela->nombre
-        ];
-    }
-    /**
-     * Limpiar selección de escuela
-     */
-    public function actionClearEscuela()
-    {
-        Yii::$app->session->remove('id_escuela');
-        Yii::$app->session->remove('nombre_escuela');
-        
-        Yii::$app->session->setFlash('success', 'Selección de escuela eliminada');
-        return $this->redirect(Yii::$app->request->referrer ?: ['ged/default/index']);
-    }
-
 }

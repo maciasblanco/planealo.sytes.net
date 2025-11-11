@@ -10,7 +10,7 @@ use yii\bootstrap5\NavBar;
 
 AppAsset::register($this);
 // ✅ REGISTRAR CSS ESPECÍFICO PARA LAYOUT ESCUELAS
-AppAsset::registerLayoutEscuelas($this);
+//AppAsset::registerLayoutEscuelas($this);
 
 // Select2 configuration
 \app\assets\Select2BootstrapAsset::register($this);
@@ -88,146 +88,18 @@ $logoSidebar = $usarLogoEscuela ? $logoEscuelaPath : $logoGed;
     <title><?= Html::encode($this->title) ?> - <?= Html::encode($nombreEscuela) ?></title>
     <?php $this->head() ?>
 </head>
-<body class="d-flex flex-column h-100">
+<body class="d-flex flex-column h-100 escuela-layout">
 
 <?php $this->beginBody() ?>
 
-<header id="header">
-    <?php
-    NavBar::begin([
-        'brandLabel' => Html::img('@web/img/logos/logoGed.png', [
-            'class' => 'navbar-logo',
-            'alt' => 'GED Logo',
-            'onerror' => "this.src='" . Yii::getAlias('@web') . "/img/logos/logoGed.png'"
-        ]),
-        'brandUrl' => Yii::$app->homeUrl,
-        'options' => [
-            'class' => 'navbar navbar-expand-lg navbar-dark navbar-contextual fixed-top',
-        ],
-        'brandOptions' => [
-            'class' => 'navbar-brand-section',
-        ]
-    ]);
-    ?>
-    
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
-        <span class="navbar-toggler-icon"></span>
-    </button>
-
-    <div class="collapse navbar-collapse" id="navbarCollapse">
-        <div class="navbar-container">
-            
-            <!-- SECCIÓN 1: Menú de Navegación (40%) -->
-            <div class="navbar-menu-section">
-                <div class="section-container">
-                    <?= \app\components\MenuWidget::widget() ?>
-                </div>
-            </div>
-            
-            <!-- SECCIÓN 2: Redes Sociales (12%) -->
-            <div class="navbar-social-section">
-                <div class="section-container">
-                    <div class="social-icons-vertical">
-                        <a href="#" class="social-icon-circle" title="Facebook">
-                            <i class="bi bi-facebook"></i>
-                        </a>
-                        <a href="#" class="social-icon-circle" title="Twitter">
-                            <i class="bi bi-twitter"></i>
-                        </a>
-                        <a href="#" class="social-icon-circle" title="Instagram">
-                            <i class="bi bi-instagram"></i>
-                        </a>
-                        <a href="#" class="social-icon-circle" title="YouTube">
-                            <i class="bi bi-youtube"></i>
-                        </a>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- SECCIÓN 3: Control de Usuario (13%) -->
-            <div class="navbar-control-section">
-                <div class="section-container">
-                    <div class="w-100 text-center">
-                        <div class="school-info">
-                            <small class="text-white d-block">
-                                <strong><?= Html::encode($nombreEscuela) ?></strong>
-                            </small>
-                            <?php if ($idEscuela): ?>
-                            <small class="text-light opacity-75 d-block">
-                                ID: <?= $idEscuela ?>
-                            </small>
-                            <?php endif; ?>
-                        </div>
-                        
-                        <!-- Selector de Escuelas -->
-                        <div class="nav-item dropdown mb-2">
-                            <a class="nav-link text-white dropdown-toggle p-1" href="#" id="navbarEscuelaDropdown" 
-                               role="button" data-bs-toggle="dropdown" aria-expanded="false"
-                               title="Cambiar Escuela">
-                                <i class="bi bi-building me-1"></i>Escuela
-                            </a>
-                            <div class="dropdown-menu dropdown-menu-end escuela-selector-dropdown" 
-                                 aria-labelledby="navbarEscuelaDropdown">
-                                <div class="px-3 py-2">
-                                    <h6 class="dropdown-header">Seleccionar Escuela</h6>
-                                    <select id="navbar-escuela-select" class="form-select form-select-sm">
-                                        <option value="">Buscar escuela...</option>
-                                    </select>
-                                    <div class="mt-2 text-center">
-                                        <small class="text-muted">Escuela actual: <?= Html::encode($nombreEscuela) ?></small>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <!-- Login/Logout -->
-                        <div>
-                            <?php if (Yii::$app->user->isGuest): ?>
-                                <a class="nav-link text-white" href="<?= Yii::$app->urlManager->createUrl(['/site/login']) ?>">
-                                    <i class="bi bi-box-arrow-in-right me-1"></i>Login
-                                </a>
-                            <?php else: ?>
-                                <?= Html::beginForm(['/site/logout'], 'post', ['class' => 'd-inline']) ?>
-                                    <?= Html::submitButton(
-                                        '<i class="bi bi-box-arrow-right me-1"></i>Logout (' . Yii::$app->user->identity->username . ')',
-                                        ['class' => 'nav-link btn btn-link text-white p-0']
-                                    ) ?>
-                                <?= Html::endForm() ?>
-                            <?php endif; ?>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- SECCIÓN 4: Carrusel (25%) -->
-            <div class="navbar-carousel-section d-none d-lg-block">
-                <div class="section-container">
-                    <div id="navbarCarousel" class="carousel slide w-100 h-100" data-bs-ride="carousel">
-                        <div class="carousel-inner h-100 rounded">
-                            <div class="carousel-item active h-100">
-                                <img src="<?= Yii::getAlias('@web') ?>/img/nav_carousel/categorias.png" 
-                                    class="d-block w-100 h-100 carousel-image" 
-                                    alt="Categorías">
-                            </div>
-                            <div class="carousel-item h-100">
-                                <img src="<?= Yii::getAlias('@web') ?>/img/nav_carousel/JuegosDistritales_Entrenar.png" 
-                                    class="d-block w-100 h-100 carousel-image" 
-                                    alt="Entrenamiento">
-                            </div>
-                            <div class="carousel-item h-100">
-                                <img src="<?= Yii::getAlias('@web') ?>/img/nav_carousel/imgMotiva.png" 
-                                    class="d-block w-100 h-100 carousel-image" 
-                                    alt="Motivación">
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    
-    <?php NavBar::end(); ?>
-</header>
+<!-- ================================================== -->
+<!-- NAVBAR USANDO PARTIAL UNIFICADO -->
+<!-- ================================================== -->
+<?= $this->render('_navbar', [
+    'idEscuela' => $idEscuela,
+    'nombreEscuela' => $nombreEscuela,
+    'navbarVariant' => 'escuela'
+]) ?>
 
 <!-- ✅ CONTENIDO PRINCIPAL CON MARGEN ADECUADO -->
 <main id="main" class="flex-shrink-0 main-container" role="main">

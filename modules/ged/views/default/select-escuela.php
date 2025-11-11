@@ -89,7 +89,7 @@ $id_escuela_actual = $session->get('id_escuela');
                     <?php else: ?>
                         <?php $form = ActiveForm::begin([
                             'id' => 'select-escuela-form',
-                            'action' => ['ged/default/select-escuela'],
+                            'action' => ['/ged/default/select-escuela'],
                         ]); ?>
 
                         <div class="form-group mb-4">
@@ -145,7 +145,7 @@ $id_escuela_actual = $session->get('id_escuela');
                             <div class="text-center mt-3">
                                 <?= Html::a(
                                     '<i class="fas fa-play-circle ged-icon"></i> Continuar al Sistema',
-                                    ['ged/default/index'],
+                                    ['/ged/default/index'],
                                     ['class' => 'ged-btn ged-btn-secondary btn-lg']
                                 ) ?>
                             </div>
@@ -240,7 +240,7 @@ $id_escuela_actual = $session->get('id_escuela');
                         <?php if ($escuela_actual): ?>
                             <?= Html::a(
                                 '<i class="fas fa-times ged-icon"></i> Limpiar Selección',
-                                ['ged/default/clear-escuela'],
+                                ['/ged/default/clear-escuela'],
                                 [
                                     'class' => 'quick-action-btn',
                                     'data' => [

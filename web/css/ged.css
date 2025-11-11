@@ -1,6 +1,7 @@
 /* =================================================================
- * ged.css - SISTEMA GED CSS UNIFICADO - VERSIÓN OPTIMIZADA
- * Eliminado código redundante para Off-Canvas Sidebar
+ * ged.css - SISTEMA GED CSS UNIFICADO - VERSIÓN CORREGIDA
+ * CORRECCIONES: Scroll vertical eliminado y z-index solucionado
+ * MEJORAS: Menú móvil completamente funcional
  * ================================================================= */
 
 /* ===== VARIABLES CSS UNIFICADAS ===== */
@@ -24,6 +25,13 @@
   --ged-purple-light: #8e44ad;
   --ged-purple-dark: #6c3483;
   
+  /* ✅ Z-INDEX JERARQUÍA CORREGIDA */
+  --z-index-navbar: 1030;
+  --z-index-dropdown: 1040;
+  --z-index-offcanvas: 1050;
+  --z-index-backdrop: 1049;
+  --z-index-modal: 1060;
+  
   /* Espaciado */
   --ged-spacing-xs: 0.5rem;
   --ged-spacing-sm: 1rem;
@@ -44,12 +52,19 @@
   /* Transiciones */
   --ged-transition: all 0.3s ease;
   --ged-transition-slow: all 0.5s ease;
+
+  /* ✅ ALTURAS FIJAS DEL NAVBAR - CORREGIDAS */
+  --navbar-height-desktop: 180px;
+  --navbar-height-tablet: 70px;
+  --navbar-height-mobile: 60px;
+  --navbar-height-small: 55px;
 }
 
 /* ===== RESET Y ESTILOS BASE ===== */
 html, body {
   overflow-x: hidden;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  height: 100%;
 }
 
 .container-fluid {
@@ -77,8 +92,7 @@ html, body {
 }
 
 .escuela-layout main#main {
-  margin-top: 31vh;
-  min-height: calc(100vh - 32vh);
+  min-height: calc(100vh - var(--navbar-height-desktop));
   width: 100%;
   padding: 20px 0;
   position: relative;
@@ -87,8 +101,7 @@ html, body {
 }
 
 .escuela-layout .main-container {
-  margin-top: 25vh;
-  min-height: 75vh;
+  min-height: calc(100vh - var(--navbar-height-desktop));
   width: 100%;
 }
 
@@ -102,26 +115,24 @@ html, body {
   background: linear-gradient(135deg, var(--ged-purple-dark), var(--ged-purple-light));
   color: white;
   padding: 20px;
-  min-height: calc(100vh - 25vh - 60px);
+  min-height: calc(100vh - var(--navbar-height-desktop) - 60px);
   height: auto;
 }
 
 .escuela-layout .content-right {
   padding: 20px;
   background: #f8f9fa;
-  min-height: calc(100vh - 25vh - 60px);
+  min-height: calc(100vh - var(--navbar-height-desktop) - 60px);
   height: auto;
 }
 
 /* LAYOUT DEFAULT */
 .default-layout main#main {
-  margin-top: 12vh !important;
-  min-height: 88vh;
+  min-height: calc(100vh - var(--navbar-height-desktop));
 }
 
 .default-layout .main-container {
-  margin-top: 12vh !important;
-  min-height: 88vh;
+  min-height: calc(100vh - var(--navbar-height-desktop));
 }
 
 .default-layout .main-content-wrapper {
@@ -134,53 +145,65 @@ html, body {
   padding-bottom: 20px;
 }
 
-/* ===== NAVBAR CONTEXTUAL UNIFICADO ===== */
+/* ===== NAVBAR CONTEXTUAL UNIFICADO - CORREGIDO ===== */
 .navbar-contextual {
-  height: 30vh;
+  height: var(--navbar-height-desktop);
   min-height: 180px;
   background: linear-gradient(135deg, #8e44ad 0%, #6c3483 100%) !important;
   width: 100%;
   position: fixed;
   top: 0;
   left: 0;
-  z-index: 9999;
+  z-index: var(--z-index-navbar);
   margin: 0;
   padding: 0;
   border-bottom: 3px solid #7d3c98;
   transition: var(--ged-transition);
+  /* ✅ CORREGIDO: Prevenir overflow que causa scroll */
+  overflow: visible !important;
+}
+
+/* GARANTIZAR QUE EL NAVBAR SE MANTENGA */
+.navbar-contextual,
+.navbar-contextual * {
+  box-sizing: border-box !important;
 }
 
 /* Contenedor principal del navbar */
-.navbar > .container {
-  display: flex;
-  width: 100%;
-  height: 100%;
-  align-items: center;
-  padding: 0 15px;
-  margin: 0;
-  max-width: 100%;
+.navbar > .container-fluid {
+  display: flex !important;
+  width: 100% !important;
+  height: 100% !important;
+  align-items: center !important;
+  padding: 0 15px !important;
+  margin: 0 !important;
+  /* ✅ CORREGIDO: Prevenir overflow */
+  overflow: visible !important;
 }
 
 .navbar-container {
-  display: flex;
-  width: 100%;
-  height: 100%;
-  align-items: center;
+  display: flex !important;
+  width: 100% !important;
+  height: 100% !important;
+  align-items: center !important;
   position: relative;
-  z-index: 10000;
+  /* ✅ CORREGIDO: Prevenir overflow */
+  overflow: visible !important;
 }
 
-/* Logo */
+/* ✅ LOGO - 15% */
 .navbar-brand-section, .navbar-brand {
-  width: 10%;
+  width: 15% !important;
   height: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 10px;
-  z-index: 10001;
+  z-index: calc(var(--z-index-navbar) + 1);
   margin: 0;
   margin-right: 0 !important;
+  /* ✅ CORREGIDO: Prevenir overflow */
+  overflow: hidden;
 }
 
 .navbar-logo {
@@ -194,7 +217,7 @@ html, body {
   position: absolute !important;
   right: 15px !important;
   top: 15px !important;
-  z-index: 10050 !important;
+  z-index: calc(var(--z-index-navbar) + 2) !important;
   border: 2px solid white !important;
   padding: 8px 10px !important;
   margin-left: auto;
@@ -211,49 +234,54 @@ html, body {
 
 /* Contenido colapsable */
 .navbar-collapse {
-  width: 90%;
+  width: 85% !important;
   height: 100%;
   display: flex !important;
   align-items: center;
   padding: 0 10px;
+  /* ✅ CORREGIDO: Prevenir overflow */
+  overflow: visible !important;
 }
 
-/* Secciones del navbar */
+/* ✅ SECCIONES DEL NAVBAR CON PORCENTAJES ACTUALIZADOS */
 .navbar-menu-section {
-  width: 45% !important;
+  width: 50% !important;
   height: 100%;
   padding: 5px;
   display: flex;
   align-items: center;
   position: relative;
-  z-index: 10002;
+  z-index: calc(var(--z-index-navbar) + 1);
+  /* ✅ CORREGIDO: Permitir que los dropdowns se muestren */
+  overflow: visible !important;
 }
 
 .navbar-social-section {
-  width: 12%;
+  width: 15% !important;
   height: 100%;
   padding: 10px 5px;
   display: flex;
   align-items: center;
   justify-content: center;
+  /* ✅ CORREGIDO: Prevenir overflow */
+  overflow: hidden;
 }
 
 .navbar-control-section {
-  width: 13%;
+  width: 20% !important;
   height: 100%;
   padding: 10px 5px;
   display: flex;
   align-items: center;
   justify-content: center;
+  /* ✅ CORREGIDO: Prevenir overflow */
+  overflow: hidden;
 }
 
+/* ✅ CARRUSEL COMPLETAMENTE ELIMINADO */
 .navbar-carousel-section {
-  width: 20% !important;
-  height: 100%;
-  padding: 3px !important;
-  box-sizing: border-box;
-  display: flex;
-  align-items: center;
+  display: none !important;
+  width: 0% !important;
 }
 
 .section-container {
@@ -272,12 +300,16 @@ html, body {
   align-items: center;
   margin: 0;
   position: relative;
-  z-index: 10050;
+  z-index: calc(var(--z-index-navbar) + 1);
+  /* ✅ CORREGIDO: Permitir overflow para dropdowns */
+  overflow: visible !important;
 }
 
 .nav-item {
   position: relative;
-  z-index: 10051;
+  z-index: calc(var(--z-index-navbar) + 2);
+  /* ✅ CORREGIDO: Permitir que dropdowns se muestren */
+  overflow: visible !important;
 }
 
 .nav-link {
@@ -288,29 +320,32 @@ html, body {
   border-radius: 5px;
   white-space: nowrap;
   position: relative;
-  z-index: 10052;
+  z-index: calc(var(--z-index-navbar) + 3);
 }
 
 .nav-link:hover {
   background: rgba(255,255,255,0.1);
 }
 
-/* Dropdown menus - ESTILOS BASE PARA ESCRITORIO */
+/* ========== DROPDOWN MENUS - CORREGIDOS ========== */
+/* ✅ CORREGIDO: z-index aumentado y overflow permitido */
 .dropdown-menu {
   background: linear-gradient(135deg, #7d3c98, #6c3483);
   border: none;
   border-radius: 5px;
-  z-index: 100000 !important;
+  z-index: var(--z-index-dropdown) !important;
   box-shadow: 0 4px 15px rgba(0,0,0,0.2);
   padding: 0;
   position: absolute !important;
   border: 1px solid rgba(255,255,255,0.3) !important;
   box-shadow: 0 10px 30px rgba(0,0,0,0.3) !important;
+  /* ✅ CORREGIDO: Asegurar que se muestre por encima */
+  overflow: visible !important;
 }
 
 .dropdown-menu.show {
   display: block !important;
-  z-index: 100000 !important;
+  z-index: var(--z-index-dropdown) !important;
 }
 
 .dropdown-item {
@@ -320,7 +355,7 @@ html, body {
   white-space: nowrap;
   border-bottom: 1px solid rgba(255,255,255,0.1);
   position: relative;
-  z-index: 100050;
+  z-index: calc(var(--z-index-dropdown) + 1);
 }
 
 .dropdown-item:last-child {
@@ -329,7 +364,7 @@ html, body {
 
 .dropdown-item:hover {
   background: rgba(255,255,255,0.1);
-  z-index: 100051;
+  z-index: calc(var(--z-index-dropdown) + 1);
 }
 
 /* Iconos sociales */
@@ -368,43 +403,12 @@ html, body {
   padding: 12px;
   margin-bottom: 12px;
   text-align: center;
+  /* ✅ CORREGIDO: Prevenir overflow */
+  overflow: hidden;
 }
 
 .school-info small {
   font-size: 0.8rem;
-}
-
-/* Carrusel del navbar */
-.navbar-carousel-container {
-  width: 100%;
-  height: 100%;
-  max-height: 25vh !important;
-  border-radius: 8px;
-  overflow: hidden;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.3);
-}
-
-#navbarCarousel {
-  width: 100% !important;
-  height: 100% !important;
-  max-height: 25vh !important;
-  border-radius: 6px;
-}
-
-#navbarCarousel .carousel-inner,
-#navbarCarousel .carousel-item {
-  width: 100% !important;
-  height: 100% !important;
-  max-height: 25vh !important;
-  border-radius: 6px;
-}
-
-.carousel-image {
-  width: 100% !important;
-  height: 100% !important;
-  object-fit: cover;
-  object-position: center;
-  border-radius: 6px;
 }
 
 /* ===== COMPONENTES UNIFICADOS ===== */
@@ -775,252 +779,26 @@ html, body {
   color: white;
 }
 
-/* ===== RESPONSIVE DESIGN UNIFICADO ===== */
-
-/* Tablets y pantallas medianas */
-@media (max-width: 1199.98px) {
-  .navbar-contextual {
-    height: 20vh;
-    min-height: 150px;
-  }
-  
-  .escuela-layout main#main {
-    margin-top: 20vh;
-  }
-  
-  .navbar-menu-section {
-    width: 40% !important;
-  }
-  
-  .navbar-carousel-section {
-    width: 18% !important;
-  }
+/* ===== CORRECCIONES PARA BODY Y MAIN - ACTUALIZADAS ===== */
+body {
+  padding-top: var(--navbar-height-desktop) !important;
+  position: relative;
+  z-index: 1;
+  overflow-y: auto;
+  /* ✅ CORREGIDO: Prevenir scroll horizontal */
+  overflow-x: hidden !important;
 }
 
-/* Tablets pequeñas y móviles grandes */
-@media (max-width: 991.98px) {
-  .navbar-contextual {
-    height: auto !important;
-    min-height: 70px !important;
-    padding: 0 !important;
-  }
-  
-  .navbar > .container {
-    flex-wrap: wrap;
-    padding: 0 10px;
-  }
-  
-  .navbar-brand, .navbar-brand-section {
-    width: auto;
-    height: 70px;
-    order: 1;
-  }
-  
-  .navbar-toggler {
-    position: relative !important;
-    top: auto !important;
-    right: auto !important;
-    order: 2;
-    margin-left: auto;
-  }
-  
-  .navbar-collapse {
-    position: absolute;
-    top: 100%;
-    left: 0;
-    width: 100%;
-    background: linear-gradient(135deg, #8e44ad 0%, #6c3483 100%);
-    z-index: 9998;
-    margin: 0;
-    padding: 20px 15px;
-    border-top: 2px solid #7d3c98;
-    box-shadow: 0 5px 20px rgba(0,0,0,0.3);
-    display: none !important;
-    height: auto !important;
-  }
-  
-  .navbar-collapse.show {
-    display: block !important;
-  }
-  
-  .navbar-container {
-    flex-direction: column;
-    height: auto;
-    gap: 20px;
-    width: 100%;
-  }
-  
-  .navbar-menu-section,
-  .navbar-social-section,
-  .navbar-control-section,
-  .navbar-carousel-section {
-    width: 100% !important;
-    height: auto;
-    padding: 10px 0;
-  }
-  
-  .navbar-carousel-section {
-    display: none !important;
-  }
-  
-  /* Menú móvil */
-  .navbar-nav {
-    flex-direction: column;
-    gap: 5px;
-    width: 100%;
-  }
-  
-  .nav-item {
-    width: 100%;
-    text-align: center;
-  }
-  
-  .nav-link {
-    padding: 15px 20px !important;
-    background: rgba(255,255,255,0.1);
-    display: block;
-    margin-bottom: 5px;
-    border-radius: 5px;
-  }
-  
-  /* Dropdowns en móvil */
-  .dropdown-menu {
-    position: static !important;
-    width: 100% !important;
-    margin: 10px 0 !important;
-    background: rgba(0,0,0,0.3) !important;
-    border: 1px solid rgba(255,255,255,0.2);
-    float: none !important;
-  }
-  
-  .dropdown-item {
-    padding: 12px 25px !important;
-    text-align: center;
-    border-bottom: 1px solid rgba(255,255,255,0.1);
-  }
-  
-  .dropdown-item:last-child {
-    border-bottom: none;
-  }
-  
-  /* Ajustes de layout para móvil */
-  .escuela-layout main#main,
-  .default-layout main#main {
-    margin-top: 70px !important;
-    min-height: calc(100vh - 70px);
-    padding: 15px 0;
-  }
-  
-  .escuela-layout .main-container,
-  .default-layout .main-container {
-    margin-top: 70px !important;
-  }
-  
-  .sidebar-left,
-  .content-right {
-    min-height: auto;
-    height: auto;
-  }
-  
-  .sidebar-left {
-    border-right: none;
-    border-bottom: 2px solid var(--ged-primary);
-  }
-  
-  /* Social icons en móvil */
-  .social-icons-vertical {
-    flex-direction: row;
-    justify-content: center;
-    gap: 25px;
-  }
-  
-  .social-icon-circle {
-    width: 50px;
-    height: 50px;
-    font-size: 1.4rem;
-  }
+/* Main content con margen superior corregido */
+main#main {
+  margin-top: 0 !important;
+  padding-top: 0 !important;
+  position: relative;
+  z-index: 1;
+  min-height: calc(100vh - var(--navbar-height-desktop)) !important;
 }
 
-/* Móviles */
-@media (max-width: 767.98px) {
-  .navbar-contextual {
-    min-height: 60px !important;
-  }
-  
-  .navbar-brand, .navbar-brand-section {
-    height: 60px;
-  }
-  
-  .navbar-toggler {
-    padding: 6px 8px !important;
-  }
-  
-  .navbar-collapse {
-    padding: 15px 10px !important;
-  }
-  
-  .nav-link {
-    padding: 12px 15px !important;
-    font-size: 0.95rem;
-  }
-  
-  .dropdown-item {
-    padding: 10px 20px !important;
-    font-size: 0.9rem;
-  }
-  
-  .escuela-layout main#main,
-  .default-layout main#main {
-    margin-top: 60px !important;
-    min-height: calc(100vh - 60px);
-    padding: 15px 0;
-  }
-  
-  .escuela-layout .main-container,
-  .default-layout .main-container {
-    margin-top: 60px !important;
-  }
-}
-
-/* Móviles pequeños */
-@media (max-width: 575.98px) {
-  .navbar-contextual {
-    min-height: 55px !important;
-  }
-  
-  .navbar-brand, .navbar-brand-section {
-    height: 55px;
-    padding-left: 10px;
-  }
-  
-  .navbar-logo {
-    max-height: 70%;
-  }
-  
-  .navbar-toggler {
-    padding: 5px 7px !important;
-  }
-  
-  .escuela-layout main#main,
-  .default-layout main#main {
-    margin-top: 55px !important;
-    min-height: calc(100vh - 55px);
-    padding: 10px 0;
-  }
-  
-  .escuela-layout .main-container,
-  .default-layout .main-container {
-    margin-top: 55px !important;
-  }
-  
-  .social-icon-circle {
-    width: 45px;
-    height: 45px;
-    font-size: 1.2rem;
-  }
-}
-
-/* ===== ESTILOS PARA OFF-CANVAS SIDEBAR ===== */
+/* ===== ESTILOS PARA OFF-CANVAS SIDEBAR - Z-INDEX CORREGIDO ===== */
 .ged-offcanvas-sidebar {
   position: fixed;
   top: 0;
@@ -1029,7 +807,8 @@ html, body {
   max-width: 320px;
   height: 100vh;
   background: white;
-  z-index: 100001;
+  /* ✅ CORREGIDO: z-index aumentado para estar sobre TODO */
+  z-index: var(--z-index-offcanvas);
   transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   box-shadow: 2px 0 15px rgba(0,0,0,0.1);
   overflow-y: auto;
@@ -1046,7 +825,8 @@ html, body {
   width: 100%;
   height: 100%;
   background: rgba(0,0,0,0.5);
-  z-index: 100000;
+  /* ✅ CORREGIDO: z-index entre navbar y offcanvas */
+  z-index: var(--z-index-backdrop);
   opacity: 0;
   visibility: hidden;
   transition: all 0.3s ease;
@@ -1078,70 +858,99 @@ html, body {
 
 .sidebar-nav {
   padding: 1rem 0;
-  height: calc(100vh - 60px);
-  overflow-y: auto;
 }
 
-/* ===== FIN DE GED.CSS OPTIMIZADO ===== */
+/* ===== MEJORAS PARA EL MENÚ MÓVIL ===== */
 
-/* ===== ESTILOS PARA OFF-CANVAS SIDEBAR ===== */
-.ged-offcanvas-sidebar {
-  position: fixed;
-  top: 0;
-  left: -100%;
-  width: 85%;
-  max-width: 320px;
-  height: 100vh;
-  background: white;
-  z-index: 100001;
-  transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 2px 0 15px rgba(0,0,0,0.1);
-  overflow-y: auto;
-}
-
-.ged-offcanvas-sidebar.open {
-  left: 0;
-}
-
-.ged-sidebar-backdrop {
-  position: fixed;
-  top: 0;
-  left: 0;
+.sidebar-menu {
+  list-style: none;
+  padding: 0;
+  margin: 0;
   width: 100%;
-  height: 100%;
-  background: rgba(0,0,0,0.5);
-  z-index: 100000;
-  opacity: 0;
-  visibility: hidden;
-  transition: all 0.3s ease;
 }
 
-.ged-sidebar-backdrop.show {
-  opacity: 1;
-  visibility: visible;
+.sidebar-menu .menu-item {
+  width: 100%;
+  border-bottom: 1px solid #f0f0f0;
 }
 
-.sidebar-header {
-  padding: 1rem;
-  border-bottom: 1px solid #e9ecef;
+.sidebar-menu .menu-item:last-child {
+  border-bottom: none;
+}
+
+.sidebar-menu .menu-link {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background: linear-gradient(135deg, #8e44ad 0%, #6c3483 100%);
-  color: white;
+  padding: 15px 20px;
+  color: #333 !important;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  font-weight: 500;
+  background: white;
 }
 
-.close-sidebar {
-  background: none;
-  border: none;
-  color: white;
-  font-size: 1.5rem;
-  cursor: pointer;
-  padding: 0.25rem;
+.sidebar-menu .menu-link:hover {
+  background: #f8f9fa;
+  color: #2c5aa0 !important;
 }
 
-.sidebar-nav {
-  padding: 1rem 0;
+.sidebar-menu .has-children > .menu-link {
+  background: #f8f9fa;
+  font-weight: 600;
+}
+
+.sidebar-menu .submenu-indicator {
+  transition: transform 0.3s ease;
+  font-size: 1.2rem;
+  color: #666;
+}
+
+.sidebar-menu .has-children.open > .menu-link .submenu-indicator {
+  transform: rotate(90deg);
+  color: #2c5aa0;
+}
+
+.sidebar-menu .submenu {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  background: #f8f9fa;
+  display: none;
+}
+
+.sidebar-menu .submenu .menu-item {
+  border-bottom: 1px solid #e9ecef;
+}
+
+.sidebar-menu .submenu .menu-link {
+  padding-left: 40px;
+  background: #f8f9fa;
+  font-weight: normal;
+}
+
+.sidebar-menu .submenu .submenu .menu-link {
+  padding-left: 60px;
+  background: #f1f3f4;
+}
+
+.sidebar-menu .submenu .menu-link:hover {
+  background: #e9ecef;
+}
+
+/* Estados activos para el menú móvil */
+.sidebar-menu .menu-item.active > .menu-link {
+  background: #2c5aa0 !important;
+  color: white !important;
+}
+
+.sidebar-menu .menu-item.active > .menu-link .submenu-indicator {
+  color: white !important;
+}
+
+/* Transiciones suaves para submenús móviles */
+.sidebar-menu .submenu {
+  transition: all 0.3s ease-in-out;
 }
 
 /* Estilos para el menú dentro del off-canvas */
@@ -1200,58 +1009,31 @@ html, body {
   transform: rotate(90deg);
 }
 
-/* Responsive para off-canvas */
-@media (max-width: 991.98px) {
-  .navbar-nav .dropdown-menu {
-    display: none !important;
-  }
-  
-  .ged-offcanvas-sidebar .dropdown-menu {
-    display: block !important;
-  }
-}
-
-@media (min-width: 992px) {
-  .ged-offcanvas-sidebar {
-    display: none !important;
-  }
-  
-  .ged-sidebar-backdrop {
-    display: none !important;
-  }
-}
-/* ================================================== */
-/* CORRECCIÓN PARA TERCER NIVEL DEL MENÚ */
-/* ================================================== */
-
-/* Asegurar que los submenús de tercer nivel se muestren */
+/* ===== CORRECCIÓN PARA TERCER NIVEL DEL MENÚ ===== */
 .dropdown-submenu .dropdown-submenu .dropdown-menu {
   display: block !important;
   visibility: visible !important;
   opacity: 1 !important;
   position: absolute !important;
-  z-index: 100002 !important;
+  z-index: calc(var(--z-index-dropdown) + 2) !important;
 }
 
-/* Posicionamiento correcto para submenús anidados */
 .dropdown-submenu > .dropdown-menu {
   top: 0 !important;
   left: 100% !important;
   margin-top: -6px !important;
   margin-left: -1px !important;
-  z-index: 100001 !important;
+  z-index: calc(var(--z-index-dropdown) + 1) !important;
 }
 
-/* Submenús de tercer nivel y superiores */
 .dropdown-submenu .dropdown-submenu > .dropdown-menu {
-  z-index: 100002 !important;
+  z-index: calc(var(--z-index-dropdown) + 2) !important;
 }
 
 .dropdown-submenu .dropdown-submenu .dropdown-submenu > .dropdown-menu {
-  z-index: 100003 !important;
+  z-index: calc(var(--z-index-dropdown) + 3) !important;
 }
 
-/* Hover para submenús anidados */
 @media (min-width: 992px) {
   .dropdown-submenu:hover > .dropdown-menu {
       display: block !important;
@@ -1262,783 +1044,771 @@ html, body {
   }
 }
 
-/* ================================================== */
-/* CORRECCIÓN BODY DETRÁS DEL NAVBAR */
-/* ================================================== */
+/* ===== RESPONSIVE DESIGN UNIFICADO - ACTUALIZADO ===== */
 
-/* Asegurar que el body tenga padding-top correcto */
-body {
-  padding-top: 30vh !important;
-  position: relative;
-  z-index: 1;
+/* Tablets y pantallas medianas */
+@media (max-width: 1199.98px) {
+  .navbar-contextual {
+    height: var(--navbar-height-desktop);
+    min-height: 160px;
+  }
+  
+  body {
+    padding-top: var(--navbar-height-desktop) !important;
+  }
+  
+  main#main {
+    min-height: calc(100vh - var(--navbar-height-desktop)) !important;
+  }
+  
+  .navbar-brand-section {
+    width: 15% !important;
+  }
+  
+  .navbar-menu-section {
+    width: 50% !important;
+  }
+  
+  .navbar-social-section {
+    width: 15% !important;
+  }
+  
+  .navbar-control-section {
+    width: 20% !important;
+  }
+  
+  .navbar-carousel-section {
+    display: none !important;
+  }
 }
 
-/* Main content con margen superior corregido */
-main#main {
-  margin-top: 0 !important;
-  padding-top: 0 !important;
-  position: relative;
-  z-index: 1;
-  min-height: calc(100vh - 30vh) !important;
-}
-
-/* Layout específico para escuelas */
-.escuela-layout main#main {
-  margin-top: 0 !important;
-  min-height: calc(100vh - 30vh) !important;
-}
-
-/* Layout default */
-.default-layout main#main {
-  margin-top: 0 !important;
-  min-height: calc(100vh - 30vh) !important;
-}
-
-/* Responsive corrections */
+/* Tablets pequeñas y móviles grandes - ✅ ACTUALIZADO */
 @media (max-width: 991.98px) {
+  .navbar-contextual {
+    height: var(--navbar-height-tablet) !important;
+    min-height: var(--navbar-height-tablet) !important;
+    position: fixed !important;
+    top: 0 !important;
+  }
+  
   body {
-      padding-top: 70px !important;
+    padding-top: var(--navbar-height-tablet) !important;
   }
   
   main#main {
-      min-height: calc(100vh - 70px) !important;
+    margin-top: 0 !important;
+    min-height: calc(100vh - var(--navbar-height-tablet)) !important;
   }
   
-  .navbar-contextual {
-      height: 70px !important;
-      min-height: 70px !important;
-  }
-}
-
-@media (max-width: 767.98px) {
-  body {
-      padding-top: 60px !important;
+  .navbar > .container-fluid {
+    flex-wrap: wrap;
+    padding: 0 10px;
   }
   
-  main#main {
-      min-height: calc(100vh - 60px) !important;
+  .navbar-brand, .navbar-brand-section {
+    width: auto !important;
+    height: var(--navbar-height-tablet);
+    order: 1;
   }
   
-  .navbar-contextual {
-      height: 60px !important;
-      min-height: 60px !important;
-  }
-}
-
-@media (max-width: 575.98px) {
-  body {
-      padding-top: 55px !important;
+  .navbar-toggler {
+    position: relative !important;
+    top: auto !important;
+    right: auto !important;
+    order: 2;
+    margin-left: auto;
   }
   
-  main#main {
-      min-height: calc(100vh - 55px) !important;
+  .navbar-collapse {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    background: linear-gradient(135deg, #8e44ad 0%, #6c3483 100%);
+    z-index: var(--z-index-navbar);
+    margin: 0;
+    padding: 20px 15px;
+    border-top: 2px solid #7d3c98;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+    display: none !important;
+    height: auto !important;
+    /* ✅ CORREGIDO: Permitir overflow para dropdowns móviles */
+    overflow: visible !important;
   }
   
-  .navbar-contextual {
-      height: 55px !important;
-      min-height: 55px !important;
+  .navbar-collapse.show {
+    display: block !important;
   }
-}
-
-/* ================================================== */
-/* ESTILOS MEJORADOS PARA OFF-CANVAS SIDEBAR */
-/* ================================================== */
-
-.ged-offcanvas-sidebar {
-  position: fixed;
-  top: 0;
-  left: -100%;
-  width: 85%;
-  max-width: 320px;
-  height: 100vh;
-  background: white;
-  z-index: 100001;
-  transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 2px 0 15px rgba(0,0,0,0.1);
-  overflow-y: auto;
-}
-
-.ged-offcanvas-sidebar.open {
-  left: 0;
-}
-
-.ged-sidebar-backdrop {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0,0,0,0.5);
-  z-index: 100000;
-  opacity: 0;
-  visibility: hidden;
-  transition: all 0.3s ease;
-}
-
-.ged-sidebar-backdrop.show {
-  opacity: 1;
-  visibility: visible;
-}
-
-.sidebar-header {
-  padding: 1rem;
-  border-bottom: 1px solid #e9ecef;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background: linear-gradient(135deg, #8e44ad 0%, #6c3483 100%);
-  color: white;
-}
-
-.close-sidebar {
-  background: none;
-  border: none;
-  color: white;
-  font-size: 1.5rem;
-  cursor: pointer;
-  padding: 0.25rem;
-}
-
-.sidebar-nav {
-  padding: 1rem 0;
-}
-
-/* Estilos para el menú dentro del off-canvas */
-.sidebar-nav .navbar-nav {
-  flex-direction: column;
-  width: 100%;
-}
-
-.sidebar-nav .nav-item {
-  width: 100%;
-  border-bottom: 1px solid #f0f0f0;
-}
-
-.sidebar-nav .nav-link {
-  color: #333 !important;
-  padding: 12px 16px !important;
-  display: block;
-  width: 100%;
-}
-
-.sidebar-nav .dropdown-menu {
-  position: static !important;
-  float: none !important;
-  width: 100% !important;
-  border: none !important;
-  box-shadow: none !important;
-  background: #f8f9fa !important;
-}
-
-.sidebar-nav .dropdown-item {
-  color: #333 !important;
-  padding: 10px 20px !important;
-  border-bottom: 1px solid #e9ecef;
-}
-
-.sidebar-nav .dropdown-item:hover {
-  background: #e9ecef !important;
-}
-
-/* Submenús en off-canvas - MEJORADO PARA TERCER NIVEL */
-.sidebar-nav .dropdown-submenu {
-  position: relative;
-}
-
-.sidebar-nav .dropdown-submenu .dropdown-menu {
-  margin-left: 15px;
-  background: #f0f0f0 !important;
-}
-
-/* Tercer nivel en off-canvas */
-.sidebar-nav .dropdown-submenu .dropdown-submenu .dropdown-menu {
-  margin-left: 30px;
-  background: #e8e8e8 !important;
-}
-
-.submenu-arrow {
-  font-size: 0.8rem;
-  transition: transform 0.3s ease;
-}
-
-.dropdown-submenu.open .submenu-arrow {
-  transform: rotate(90deg);
-}
-
-/* Responsive para off-canvas */
-@media (max-width: 991.98px) {
+  
+  .navbar-container {
+    flex-direction: column;
+    height: auto;
+    gap: 20px;
+    width: 100%;
+  }
+  
+  /* ✅ EN MÓVIL, TODAS LAS SECCIONES AL 100% */
+  .navbar-menu-section,
+  .navbar-social-section,
+  .navbar-control-section,
+  .navbar-carousel-section {
+    width: 100% !important;
+    height: auto;
+    padding: 10px 0;
+  }
+  
+  .navbar-carousel-section {
+    display: none !important;
+  }
+  
+  /* ✅ ORDEN CORRECTO EN MÓVIL */
+  .navbar-menu-section {
+    order: 3;
+  }
+  
+  .navbar-social-section {
+    order: 4;
+  }
+  
+  .navbar-control-section {
+    order: 2;
+  }
+  
+  /* Menú móvil */
+  .navbar-nav {
+    flex-direction: column;
+    gap: 5px;
+    width: 100%;
+  }
+  
+  .nav-item {
+    width: 100%;
+    text-align: center;
+  }
+  
+  .nav-link {
+    padding: 15px 20px !important;
+    background: rgba(255,255,255,0.1);
+    display: block;
+    margin-bottom: 5px;
+    border-radius: 5px;
+  }
+  
+  /* Dropdowns en móvil */
+  .dropdown-menu {
+    position: static !important;
+    width: 100% !important;
+    margin: 10px 0 !important;
+    background: rgba(0,0,0,0.3) !important;
+    border: 1px solid rgba(255,255,255,0.2);
+    float: none !important;
+  }
+  
+  .dropdown-item {
+    padding: 12px 25px !important;
+    text-align: center;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+  }
+  
+  .dropdown-item:last-child {
+    border-bottom: none;
+  }
+  
+  /* Ajustes de layout para móvil */
+  .escuela-layout main#main,
+  .default-layout main#main {
+    margin-top: 0 !important;
+    min-height: calc(100vh - var(--navbar-height-tablet)) !important;
+    padding: 15px 0;
+  }
+  
+  .escuela-layout .main-container,
+  .default-layout .main-container {
+    margin-top: 0 !important;
+    min-height: calc(100vh - var(--navbar-height-tablet)) !important;
+  }
+  
+  .sidebar-left,
+  .content-right {
+    min-height: auto;
+    height: auto;
+  }
+  
+  .sidebar-left {
+    border-right: none;
+    border-bottom: 2px solid var(--ged-primary);
+  }
+  
+  /* Social icons en móvil */
+  .social-icons-vertical {
+    flex-direction: row;
+    justify-content: center;
+    gap: 25px;
+  }
+  
+  .social-icon-circle {
+    width: 50px;
+    height: 50px;
+    font-size: 1.4rem;
+  }
+  
+  /* Ocultar menú de Bootstrap en móviles */
   .navbar-nav .dropdown-menu {
-      display: none !important;
+    display: none !important;
   }
   
   .ged-offcanvas-sidebar .dropdown-menu {
-      display: block !important;
-  }
-}
-
-@media (min-width: 992px) {
-  .ged-offcanvas-sidebar {
-      display: none !important;
+    display: block !important;
   }
   
-  .ged-sidebar-backdrop {
-      display: none !important;
-  }
-}
-
-/* ================================================== */
-/* GARANTIZAR QUE LOS DROPDOWNS SE VEAN SOBRE TODO */
-/* ================================================== */
-
-.navbar-contextual .dropdown-menu {
-  z-index: 100000 !important;
-}
-
-.dropdown-submenu > .dropdown-menu {
-  z-index: 100001 !important;
-}
-
-.dropdown-submenu .dropdown-submenu > .dropdown-menu {
-  z-index: 100002 !important;
-}
-
-/* Eliminar cualquier overflow que cause problemas */
-.navbar-contextual,
-.navbar-contextual * {
-  overflow: visible !important;
-}
-/* ================================================== */
-/* MEJORAS ESPECÍFICAS PARA MÓVILES */
-/* ================================================== */
-
-@media (max-width: 991.98px) {
-  /* Ocultar el menú de Bootstrap en móviles */
-  .navbar-collapse {
-      display: none !important;
+  /* Mejoras responsive para el menú móvil */
+  .sidebar-menu .menu-link {
+    padding: 12px 16px;
+    font-size: 0.95rem;
   }
   
-  /* Mostrar el off-canvas sidebar */
-  .ged-offcanvas-sidebar {
-      display: block !important;
+  .sidebar-menu .submenu .menu-link {
+    padding-left: 30px;
   }
   
-  /* Asegurar que el toggler sea visible y funcional */
+  .sidebar-menu .submenu .submenu .menu-link {
+    padding-left: 45px;
+  }
+}
+
+/* Móviles */
+@media (max-width: 767.98px) {
+  .navbar-contextual {
+    min-height: var(--navbar-height-mobile) !important;
+    height: var(--navbar-height-mobile) !important;
+  }
+  
+  body {
+    padding-top: var(--navbar-height-mobile) !important;
+  }
+  
+  main#main {
+    min-height: calc(100vh - var(--navbar-height-mobile)) !important;
+  }
+  
+  .navbar-brand, .navbar-brand-section {
+    height: var(--navbar-height-mobile);
+  }
+  
   .navbar-toggler {
-      display: block !important;
-      z-index: 10050 !important;
+    padding: 6px 8px !important;
   }
   
-  /* Prevenir que Bootstrap muestre el menú colapsado */
-  .navbar-collapse.show {
-      display: none !important;
-  }
-}
-
-@media (min-width: 992px) {
-  /* Ocultar off-canvas en escritorio */
-  .ged-offcanvas-sidebar,
-  .ged-sidebar-backdrop {
-      display: none !important;
-  }
-  
-  /* Mostrar menú de Bootstrap en escritorio */
   .navbar-collapse {
-      display: flex !important;
+    padding: 15px 10px !important;
   }
-}
-
-/* ================================================== */
-/* ESTILOS MEJORADOS PARA OFF-CANVAS EN MÓVILES */
-/* ================================================== */
-
-.ged-offcanvas-sidebar {
-  position: fixed;
-  top: 0;
-  left: -100%;
-  width: 85%;
-  max-width: 320px;
-  height: 100vh;
-  background: white;
-  z-index: 100001;
-  transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 2px 0 15px rgba(0,0,0,0.1);
-  overflow-y: auto;
-}
-
-.ged-offcanvas-sidebar.open {
-  left: 0;
-}
-
-.ged-sidebar-backdrop {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0,0,0,0.5);
-  z-index: 100000;
-  opacity: 0;
-  visibility: hidden;
-  transition: all 0.3s ease;
-}
-
-.ged-sidebar-backdrop.show {
-  opacity: 1;
-  visibility: visible;
-}
-
-/* Estilos para el menú colapsable */
-.sidebar-nav .submenu {
-  display: none !important;
-  background: #f8f9fa !important;
-  margin-left: 15px;
-  border-left: 2px solid #8e44ad;
-}
-
-.sidebar-nav .has-children.open > .submenu {
-  display: block !important;
-}
-
-.submenu-indicator {
-  font-size: 0.8rem;
-  transition: transform 0.3s ease;
-  margin-left: auto;
-}
-
-.has-children.open .submenu-indicator {
-  transform: rotate(90deg);
-}
-
-.sidebar-nav .has-children > a {
-  display: flex !important;
-  justify-content: space-between !important;
-  align-items: center !important;
-  cursor: pointer;
-  padding: 12px 16px !important;
-  color: #333 !important;
-  text-decoration: none;
-  border-bottom: 1px solid #f0f0f0;
-  transition: background-color 0.2s ease;
-}
-
-.sidebar-nav .has-children > a:hover {
-  background-color: #f8f9fa;
-}
-
-.sidebar-nav .menu-link {
-  display: block;
-  padding: 12px 16px;
-  color: #333;
-  text-decoration: none;
-  border-bottom: 1px solid #f0f0f0;
-  transition: background-color 0.2s ease;
-}
-
-.sidebar-nav .menu-link:hover {
-  background-color: #f8f9fa;
-}
-
-/* Mejoras visuales para móviles */
-@media (max-width: 991.98px) {
+  
+  .nav-link {
+    padding: 12px 15px !important;
+    font-size: 0.95rem;
+  }
+  
+  .dropdown-item {
+    padding: 10px 20px !important;
+    font-size: 0.9rem;
+  }
+  
+  .escuela-layout main#main,
+  .default-layout main#main {
+    margin-top: 0 !important;
+    padding: 15px 0;
+  }
+  
+  .escuela-layout .main-container,
+  .default-layout .main-container {
+    margin-top: 0 !important;
+  }
+  
   .ged-offcanvas-sidebar {
-      width: 85%;
-      max-width: 300px;
+    width: 85%;
+    max-width: 300px;
   }
   
   .sidebar-header {
-      padding: 1rem;
-      background: linear-gradient(135deg, #8e44ad 0%, #6c3483 100%);
-      color: white;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      border-bottom: 1px solid #e9ecef;
+    padding: 1.2rem;
+    background: linear-gradient(135deg, #8e44ad 0%, #6c3483 100%);
+    color: white;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #7d3c98;
+    font-weight: 600;
+    font-size: 1.1rem;
   }
   
   .close-sidebar {
-      background: none;
-      border: none;
-      color: white;
-      font-size: 1.5rem;
-      cursor: pointer;
-      padding: 0.25rem;
-  }
-}
-/* ================================================== */
-/* MEJORAS ESPECÍFICAS PARA MÓVILES */
-/* ================================================== */
-
-@media (max-width: 991.98px) {
-  /* Ocultar el menú de Bootstrap en móviles */
-  .navbar-collapse {
-      display: none !important;
-  }
-  
-  /* Mostrar el off-canvas sidebar */
-  .ged-offcanvas-sidebar {
-      display: block !important;
-  }
-  
-  /* Asegurar que el toggler sea visible y funcional */
-  .navbar-toggler {
-      display: block !important;
-      z-index: 10050 !important;
-  }
-  
-  /* Prevenir que Bootstrap muestre el menú colapsado */
-  .navbar-collapse.show {
-      display: none !important;
-  }
-}
-
-@media (min-width: 992px) {
-  /* Ocultar off-canvas en escritorio */
-  .ged-offcanvas-sidebar,
-  .ged-sidebar-backdrop {
-      display: none !important;
-  }
-  
-  /* Mostrar menú de Bootstrap en escritorio */
-  .navbar-collapse {
-      display: flex !important;
-  }
-}
-
-/* ================================================== */
-/* ESTILOS MEJORADOS PARA OFF-CANVAS EN MÓVILES */
-/* ================================================== */
-
-.ged-offcanvas-sidebar {
-  position: fixed;
-  top: 0;
-  left: -100%;
-  width: 85%;
-  max-width: 320px;
-  height: 100vh;
-  background: white;
-  z-index: 100001;
-  transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 2px 0 15px rgba(0,0,0,0.1);
-  overflow-y: auto;
-}
-
-.ged-offcanvas-sidebar.open {
-  left: 0;
-}
-
-.ged-sidebar-backdrop {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0,0,0,0.5);
-  z-index: 100000;
-  opacity: 0;
-  visibility: hidden;
-  transition: all 0.3s ease;
-}
-
-.ged-sidebar-backdrop.show {
-  opacity: 1;
-  visibility: visible;
-}
-
-/* Estilos para el menú colapsable */
-.sidebar-nav .submenu {
-  display: none !important;
-  background: #f8f9fa !important;
-  margin-left: 15px;
-  border-left: 2px solid #8e44ad;
-}
-
-.sidebar-nav .has-children.open > .submenu {
-  display: block !important;
-}
-
-.submenu-indicator {
-  font-size: 0.8rem;
-  transition: transform 0.3s ease;
-  margin-left: auto;
-}
-
-.has-children.open .submenu-indicator {
-  transform: rotate(90deg);
-}
-
-.sidebar-nav .has-children > a {
-  display: flex !important;
-  justify-content: space-between !important;
-  align-items: center !important;
-  cursor: pointer;
-  padding: 12px 16px !important;
-  color: #333 !important;
-  text-decoration: none;
-  border-bottom: 1px solid #f0f0f0;
-  transition: background-color 0.2s ease;
-}
-
-.sidebar-nav .has-children > a:hover {
-  background-color: #f8f9fa;
-}
-
-.sidebar-nav .menu-link {
-  display: block;
-  padding: 12px 16px;
-  color: #333;
-  text-decoration: none;
-  border-bottom: 1px solid #f0f0f0;
-  transition: background-color 0.2s ease;
-}
-
-.sidebar-nav .menu-link:hover {
-  background-color: #f8f9fa;
-}
-
-/* Mejoras visuales para móviles */
-@media (max-width: 991.98px) {
-  .ged-offcanvas-sidebar {
-      width: 85%;
-      max-width: 300px;
-  }
-  
-  .sidebar-header {
-      padding: 1rem;
-      background: linear-gradient(135deg, #8e44ad 0%, #6c3483 100%);
-      color: white;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      border-bottom: 1px solid #e9ecef;
-  }
-  
-  .close-sidebar {
-      background: none;
-      border: none;
-      color: white;
-      font-size: 1.5rem;
-      cursor: pointer;
-      padding: 0.25rem;
-  }
-}
-/* ================================================== */
-/* MEJORAS ESPECÍFICAS PARA MENÚ REAL EN OFF-CANVAS */
-/* ================================================== */
-
-@media (max-width: 991.98px) {
-  /* Ocultar el menú de Bootstrap en móviles */
-  .navbar-collapse {
-      display: none !important;
-  }
-  
-  /* Mostrar el off-canvas sidebar */
-  .ged-offcanvas-sidebar {
-      display: block !important;
-  }
-  
-  /* Asegurar que el toggler sea visible y funcional */
-  .navbar-toggler {
-      display: block !important;
-      z-index: 10050 !important;
-  }
-  
-  /* Prevenir que Bootstrap muestre el menú colapsado */
-  .navbar-collapse.show {
-      display: none !important;
-  }
-  
-  /* Asegurar que el menú real esté visible en el navbar para ser clonado */
-  .navbar-nav {
-      display: block !important;
-      opacity: 1 !important;
-      visibility: visible !important;
-  }
-}
-
-@media (min-width: 992px) {
-  /* Ocultar off-canvas en escritorio */
-  .ged-offcanvas-sidebar,
-  .ged-sidebar-backdrop {
-      display: none !important;
-  }
-  
-  /* Mostrar menú de Bootstrap en escritorio */
-  .navbar-collapse {
-      display: flex !important;
-  }
-}
-
-/* ================================================== */
-/* ESTILOS MEJORADOS PARA MENÚ REAL EN OFF-CANVAS */
-/* ================================================== */
-
-.ged-offcanvas-sidebar {
-  position: fixed;
-  top: 0;
-  left: -100%;
-  width: 85%;
-  max-width: 320px;
-  height: 100vh;
-  background: white;
-  z-index: 100001;
-  transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 2px 0 15px rgba(0,0,0,0.1);
-  overflow-y: auto;
-}
-
-.ged-offcanvas-sidebar.open {
-  left: 0;
-}
-
-.ged-sidebar-backdrop {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0,0,0,0.5);
-  z-index: 100000;
-  opacity: 0;
-  visibility: hidden;
-  transition: all 0.3s ease;
-}
-
-.ged-sidebar-backdrop.show {
-  opacity: 1;
-  visibility: visible;
-}
-
-/* Estilos para el menú real en off-canvas */
-.sidebar-nav {
-  padding: 0 !important;
-}
-
-.sidebar-nav .navbar-nav {
-  flex-direction: column !important;
-  width: 100% !important;
-  margin: 0 !important;
-  padding: 0 !important;
-}
-
-.sidebar-nav .menu-item {
-  width: 100% !important;
-  border-bottom: 1px solid #f0f0f0;
-}
-
-.sidebar-nav .menu-link {
-  display: flex !important;
-  justify-content: space-between !important;
-  align-items: center !important;
-  padding: 15px 20px !important;
-  color: #333 !important;
-  text-decoration: none !important;
-  font-weight: 500 !important;
-  transition: all 0.2s ease !important;
-  border: none !important;
-  background: transparent !important;
-  width: 100% !important;
-}
-
-.sidebar-nav .menu-link:hover {
-  background: #f8f9fa !important;
-  color: #5B21B6 !important;
-}
-
-/* Submenús colapsables */
-.sidebar-nav .submenu {
-  display: none !important;
-  background: #f8f9fa !important;
-  margin: 0 !important;
-  padding: 0 !important;
-  border-left: 3px solid #8e44ad;
-}
-
-.sidebar-nav .has-children.open > .submenu {
-  display: block !important;
-}
-
-.submenu-indicator {
-  font-size: 0.9rem;
-  transition: transform 0.3s ease;
-  margin-left: 10px;
-  color: #666;
-}
-
-.has-children.open .submenu-indicator {
-  transform: rotate(90deg);
-  color: #5B21B6;
-}
-
-/* Niveles anidados */
-.sidebar-nav .submenu .submenu {
-  background: #f0f0f0 !important;
-  border-left-color: #7d3c98;
-}
-
-.sidebar-nav .submenu .submenu .submenu {
-  background: #e8e8e8 !important;
-  border-left-color: #6c3483;
-}
-
-/* Mejoras visuales para móviles */
-@media (max-width: 991.98px) {
-  .ged-offcanvas-sidebar {
-      width: 85%;
-      max-width: 300px;
-  }
-  
-  .sidebar-header {
-      padding: 1.2rem;
-      background: linear-gradient(135deg, #8e44ad 0%, #6c3483 100%);
-      color: white;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      border-bottom: 1px solid #7d3c98;
-      font-weight: 600;
-      font-size: 1.1rem;
-  }
-  
-  .close-sidebar {
-      background: none;
-      border: none;
-      color: white;
-      font-size: 1.5rem;
-      cursor: pointer;
-      padding: 0.5rem;
-      border-radius: 4px;
-      transition: background 0.2s ease;
+    background: none;
+    border: none;
+    color: white;
+    font-size: 1.5rem;
+    cursor: pointer;
+    padding: 0.5rem;
+    border-radius: 4px;
+    transition: background 0.2s ease;
   }
   
   .close-sidebar:hover {
-      background: rgba(255,255,255,0.1);
-  }
-  
-  .sidebar-nav .menu-link {
-      padding: 16px 20px !important;
-      font-size: 1rem;
-  }
-  
-  .sidebar-nav .submenu .menu-link {
-      padding-left: 30px !important;
-  }
-  
-  .sidebar-nav .submenu .submenu .menu-link {
-      padding-left: 40px !important;
+    background: rgba(255,255,255,0.1);
   }
 }
 
-/* Estados activos y focus */
-.sidebar-nav .menu-link:focus {
-  outline: 2px solid #5B21B6;
-  outline-offset: -2px;
+/* Móviles pequeños */
+@media (max-width: 575.98px) {
+  .navbar-contextual {
+    min-height: var(--navbar-height-small) !important;
+    height: var(--navbar-height-small) !important;
+  }
+  
+  body {
+    padding-top: var(--navbar-height-small) !important;
+  }
+  
+  main#main {
+    min-height: calc(100vh - var(--navbar-height-small)) !important;
+  }
+  
+  .navbar-brand, .navbar-brand-section {
+    height: var(--navbar-height-small);
+    padding-left: 10px;
+  }
+  
+  .navbar-logo {
+    max-height: 70%;
+  }
+  
+  .navbar-toggler {
+    padding: 5px 7px !important;
+  }
+  
+  .escuela-layout main#main,
+  .default-layout main#main {
+    margin-top: 0 !important;
+    padding: 10px 0;
+  }
+  
+  .escuela-layout .main-container,
+  .default-layout .main-container {
+    margin-top: 0 !important;
+  }
+  
+  .social-icon-circle {
+    width: 45px;
+    height: 45px;
+    font-size: 1.2rem;
+  }
+  
+  .sidebar-menu .menu-link {
+    padding: 10px 14px;
+    font-size: 0.9rem;
+  }
+  
+  .sidebar-menu .submenu .menu-link {
+    padding-left: 25px;
+  }
+  
+  .sidebar-menu .submenu .submenu .menu-link {
+    padding-left: 35px;
+  }
 }
 
-.sidebar-nav .menu-item.active > .menu-link {
-  background: #5B21B6 !important;
-  color: white !important;
+/* ===== MEJORAS PARA OFF-CANVAS EN MÓVILES ===== */
+@media (max-width: 991.98px) {
+  .ged-offcanvas-sidebar {
+    width: 85%;
+    max-width: 300px;
+  }
 }
 
-.sidebar-nav .menu-item.active .submenu-indicator {
-  color: white !important;
+@media (min-width: 992px) {
+  .ged-offcanvas-sidebar {
+    display: none !important;
+  }
+  
+  .ged-sidebar-backdrop {
+    display: none !important;
+  }
+}
+
+/* ===== SOLUCIONES DE EMERGENCIA PARA NAVBAR ===== */
+.navbar-contextual {
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  z-index: var(--z-index-navbar) !important;
+  transform: none !important;
+}
+
+/* PREVENIR COLAPSADO NO DESEADO */
+.navbar-collapse:not(.show) {
+  display: flex !important;
+}
+
+/* EN MÓVIL, GARANTIZAR COMPORTAMIENTO CORRECTO */
+@media (max-width: 991.98px) {
+  .navbar-collapse {
+    position: absolute !important;
+    top: 100% !important;
+    left: 0 !important;
+    width: 100% !important;
+    background: linear-gradient(135deg, #8e44ad 0%, #6c3483 100%) !important;
+    z-index: var(--z-index-navbar) !important;
+  }
+  
+  /* MOSTRAR/OCULTAR CORRECTAMENTE */
+  .navbar-collapse:not(.show) {
+    display: none !important;
+  }
+  
+  .navbar-collapse.show {
+    display: block !important;
+  }
+}
+
+/* ELIMINAR CUALQUIER OVERFLOW QUE CAUSE PROBLEMAS */
+html, body {
+  overflow-x: hidden !important;
+}
+
+.navbar-contextual {
+  overflow: visible !important;
+}
+
+/* ===== FIN DE GED.CSS ACTUALIZADO ===== */
+
+/* ✅ ESTILOS ESPECÍFICOS PARA NUEVA DISTRIBUCIÓN */
+.navbar-contextual {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    z-index: var(--z-index-navbar) !important;
+    width: 100% !important;
+}
+
+/* ✅ NUEVA DISTRIBUCIÓN DE ESPACIOS */
+.navbar-container {
+    display: flex !important;
+    width: 100% !important;
+    height: 100% !important;
+    align-items: center !important;
+}
+
+.navbar-brand-section {
+    width: 15% !important;
+    height: 100% !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+}
+
+.navbar-menu-section {
+    width: 50% !important;
+    height: 100% !important;
+    padding: 5px !important;
+}
+
+.navbar-social-section {
+    width: 15% !important;
+    height: 100% !important;
+    padding: 10px 5px !important;
+}
+
+.navbar-control-section {
+    width: 20% !important;
+    height: 100% !important;
+    padding: 10px 5px !important;
+}
+
+/* ✅ CARRUSEL COMPLETAMENTE ELIMINADO */
+.navbar-carousel-section {
+    display: none !important;
+    width: 0% !important;
+}
+
+/* Prevenir flashes de contenido durante la carga */
+.navbar-container {
+    opacity: 1 !important;
+    visibility: visible !important;
+}
+
+/* Mejoras de accesibilidad para el buscador */
+.search-results-dropdown {
+    position: absolute;
+    z-index: var(--z-index-dropdown);
+    background: white;
+    border: 1px solid #dee2e6;
+    border-radius: 0.375rem;
+    max-height: 200px;
+    overflow-y: auto;
+    display: none;
+}
+
+.search-result-item {
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+    border-bottom: 1px solid #f8f9fa;
+}
+
+.search-result-item:hover {
+    background-color: #f8f9fa;
+}
+
+/* ✅ RESPONSIVE MEJORADO CON NUEVA DISTRIBUCIÓN */
+@media (max-width: 991.98px) {
+    .navbar-contextual {
+        height: auto !important;
+        min-height: var(--navbar-height-tablet) !important;
+    }
+    
+    .navbar-container {
+        flex-direction: column !important;
+    }
+    
+    /* ✅ EN MÓVIL, TODAS LAS SECCIONES AL 100% */
+    .navbar-brand-section,
+    .navbar-menu-section,
+    .navbar-social-section,
+    .navbar-control-section {
+        width: 100% !important;
+        height: auto !important;
+        margin-bottom: 10px !important;
+    }
+    
+    /* ✅ ORDEN EN MÓVIL */
+    .navbar-brand-section {
+        order: 1 !important;
+        height: var(--navbar-height-tablet) !important;
+    }
+    
+    .navbar-control-section {
+        order: 2 !important;
+    }
+    
+    .navbar-menu-section {
+        order: 3 !important;
+    }
+    
+    .navbar-social-section {
+        order: 4 !important;
+    }
+    
+    .social-icons-vertical {
+        flex-direction: row !important;
+        justify-content: center !important;
+        gap: 20px !important;
+    }
+    
+    .navbar-nav {
+        flex-direction: column !important;
+        gap: 5px !important;
+    }
+    
+    main#main {
+        margin-top: 0 !important;
+        z-index: 1 !important;
+    }
+}
+
+/* Mejoras visuales para estados de focus */
+.navbar-toggler:focus,
+.nav-link:focus,
+.dropdown-item:focus,
+.social-icon-circle:focus {
+    box-shadow: 0 0 0 0.2rem rgba(255, 255, 255, 0.25) !important;
+    outline: none;
+}
+
+/* ✅ ASEGURAR QUE LAS IMÁGENES SE MUESTREN CORRECTAMENTE */
+.navbar-logo {
+    max-height: 80% !important;
+    max-width: 90% !important;
+    object-fit: contain !important;
+}
+
+/* ===== CORRECCIONES FINALES DE OVERFLOW ===== */
+/* ✅ ELIMINAR SCROLL VERTICAL EN NAVBAR */
+.navbar-contextual,
+.navbar > .container-fluid,
+.navbar-container,
+.navbar-collapse,
+.navbar-menu-section,
+.navbar-social-section,
+.navbar-control-section,
+.navbar-brand-section {
+    overflow: visible !important;
+}
+
+/* ✅ PERMITIR OVERFLOW SOLO DONDE SE NECESITA */
+.navbar-nav,
+.nav-item,
+.dropdown-menu {
+    overflow: visible !important;
+}
+
+/* ✅ GARANTIZAR QUE LOS DROPDOWNS ESTÉN POR ENCIMA DE TODO */
+.dropdown-menu {
+    z-index: var(--z-index-dropdown) !important;
+}
+
+.navbar-nav .dropdown-menu {
+    z-index: calc(var(--z-index-dropdown) + 1) !important;
+}
+
+/* ✅ CORRECCIÓN ESPECÍFICA PARA MENÚ DETRÁS DEL NAVBAR */
+.navbar-contextual .dropdown-menu {
+    z-index: var(--z-index-dropdown) !important;
+    position: absolute !important;
+}
+
+/* ✅ GARANTIZAR QUE EL OFF-CANVAS ESTÉ POR ENCIMA DEL NAVBAR */
+.ged-offcanvas-sidebar {
+    z-index: var(--z-index-offcanvas) !important;
+}
+
+.ged-sidebar-backdrop {
+    z-index: var(--z-index-backdrop) !important;
+}
+
+/* ===== SECCIONES DEL NAVBAR CON MÁRGENES CORREGIDOS ===== */
+.navbar-menu-section {
+  width: 50% !important;
+  height: 100%;
+  padding: 5px;
+  display: flex;
+  align-items: center;
+  position: relative;
+  z-index: calc(var(--z-index-navbar) + 1);
+  overflow: visible !important;
+}
+
+/* ✅ REDES SOCIALES CON MÁRGENES CORREGIDOS */
+.navbar-social-section {
+  width: 15% !important;
+  height: 100%;
+  padding: 1vh 5px !important; /* ✅ MARGEN VERTICAL DE 1VH */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+/* ✅ CONTROLES CON MÁRGENES CORREGIDOS */
+.navbar-control-section {
+  width: 20% !important;
+  height: 100%;
+  padding: 4vh 5px !important; /* ✅ MARGEN VERTICAL DE 1VH */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+/* ✅ CONTENEDORES INTERNOS CON ALTURA AJUSTADA */
+.section-container {
+  width: 100%;
+  height: calc(100% - 2vh) !important; /* ✅ COMPENSAR PADDING VERTICAL */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ✅ SOCIAL ICONS CON ALTURA AJUSTADA */
+.social-icons-vertical {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px; /* ✅ REDUCIR GAP PARA CABER MEJOR */
+  height: 100%;
+  justify-content: center;
+}
+
+.social-icon-circle {
+  width: 40px !important;  /* ✅ REDUCIR TAMAÑO */
+  height: 40px !important; /* ✅ REDUCIR TAMAÑO */
+  border-radius: 50% !important; /* ✅ COMPLETADO */
+  background: #6c3483;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  text-decoration: none;
+  border: 2px solid #7d3c98;
+  transition: var(--ged-transition);
+  font-size: 1.2rem;
+}/* ===== CORRECCIONES ESPECÍFICAS PARA EL LOGO EN PC ===== */
+
+/* ✅ GARANTIZAR VISIBILIDAD DEL LOGO EN ESCRITORIO */
+@media (min-width: 992px) {
+    .navbar-brand-section {
+        width: 15% !important;
+        min-width: 120px !important;
+        max-width: 200px !important;
+        height: 100% !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+        z-index: 1031 !important;
+    }
+    
+    .navbar-brand {
+        width: 100% !important;
+        height: 100% !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        margin: 0 !important;
+        padding: 5px !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+    }
+    
+    .navbar-logo {
+        max-height: 150px !important;
+        max-width: 180px !important;
+        min-height: 80px !important;
+        min-width: 100px !important;
+        width: auto !important;
+        height: auto !important;
+        display: block !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+        object-fit: contain !important;
+        border-radius: 5px !important;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.3) !important;
+    }
+}
+
+/* ✅ FORZAR DISPLAY EN TODOS LOS DISPOSITIVOS */
+.navbar-brand-section {
+    display: flex !important;
+    visibility: visible !important;
+}
+
+.navbar-brand {
+    display: flex !important;
+    visibility: visible !important;
+}
+
+.navbar-logo {
+    display: block !important;
+    visibility: visible !important;
+}
+
+/* ✅ DEBUG TEMPORAL - QUITAR DESPUÉS DE VERIFICAR */
+.navbar-brand-section {
+    /* border: 2px solid #00ff00 !important;  Verde para debug */
+    background: rgba(0, 255, 0, 0.1) !important; /* Fondo verde claro para debug */
+}
+
+.navbar-logo {
+    /* border: 2px solid #ff0000 !important;  Rojo para debug */
+    background: rgba(255, 0, 0, 0.1) !important; /* Fondo rojo claro para debug */
 }

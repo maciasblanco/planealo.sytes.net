@@ -23,6 +23,9 @@ $config = [
             // !!! insert a secret key in the following (if it is empty) - this is required by cookie validation
             'cookieValidationKey' => 'mjbvsistemas-ged-voleibol-06012025',
         ],
+        'mobileDetect' => [
+            'class' => 'app\components\MobileDetectComponent',
+        ],
         'escuelaSession' => [
             'class' => 'app\components\EscuelaSession',
         ],
@@ -175,7 +178,7 @@ $config = [
         'allowActions' => [
             'site/logout',
             //'site/index',
-            //8'site/error',
+            //'site/error',
             //'site/sidebar',
             //'site/contact',
             //'site/about',

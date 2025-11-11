@@ -37,128 +37,18 @@ $hasEscuela = !empty($idEscuela) && $idEscuela != 0;
 <?php $this->beginBody() ?>
 
 <!-- ================================================== -->
-<!-- NAVBAR CONTEXTUAL CORREGIDO - ESTRUCTURA SIMPLIFICADA -->
+<!-- NAVBAR USANDO PARTIAL UNIFICADO -->
 <!-- ================================================== -->
-<nav class="navbar navbar-expand-lg navbar-dark navbar-contextual fixed-top">
-    <div class="container-fluid">
-        <!-- Logo -->
-        <div class="navbar-brand-section">
-            <a class="navbar-brand" href="<?= Yii::$app->homeUrl ?>">
-                <?= Html::img('@web/img/logos/logoGed.png', [
-                    'class' => 'navbar-logo',
-                    'alt' => 'GED Logo',
-                    'onerror' => "this.src='" . Yii::getAlias('@web') . "/img/logos/logoGed.png'"
-                ]) ?>
-            </a>
-        </div>
+<?= $this->render('_navbar', [
+    'idEscuela' => $idEscuela,
+    'nombreEscuela' => $nombreEscuela,
+    'navbarVariant' => 'default'
+]) ?>
 
-        <!-- Toggler -->
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarGedCollapse" 
-                aria-controls="navbarGedCollapse" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-
-        <!-- Contenido colapsable -->
-        <div class="collapse navbar-collapse" id="navbarGedCollapse">
-            <div class="navbar-container">
-                
-                <!-- SECCIÓN 1: Menú de Navegación -->
-                <div class="navbar-menu-section">
-                    <div class="section-container">
-                        <?= \app\components\MenuWidget::widget() ?>
-                    </div>
-                </div>
-                
-                <!-- SECCIÓN 2: Redes Sociales -->
-                <div class="navbar-social-section">
-                    <div class="section-container">
-                        <div class="social-icons-vertical">
-                            <a href="#" class="social-icon-circle" title="Facebook">
-                                <i class="bi bi-facebook"></i>
-                            </a>
-                            <a href="#" class="social-icon-circle" title="Twitter">
-                                <i class="bi bi-twitter"></i>
-                            </a>
-                            <a href="#" class="social-icon-circle" title="Instagram">
-                                <i class="bi bi-instagram"></i>
-                            </a>
-                            <a href="#" class="social-icon-circle" title="YouTube">
-                                <i class="bi bi-youtube"></i>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- SECCIÓN 3: Control de Usuario -->
-                <div class="navbar-control-section">
-                    <div class="section-container">
-                        <div class="w-100 text-center">
-                            <!-- Información de Escuela -->
-                            <div class="school-info mb-3">
-                                <div class="school-search-container mb-2">
-                                    <?php if ($idEscuela): ?>
-                                        <div class="escuela-activa-indicator">
-                                            <small class="text-white d-block">
-                                                <i class="bi bi-building"></i> 
-                                                <strong id="current-school"><?= Html::encode($nombreEscuela) ?></strong>
-                                            </small>
-                                            <small class="text-light opacity-75 d-block" id="current-school-id">
-                                                ID: <?= $idEscuela ?>
-                                            </small>
-                                            <small class="text-light opacity-50 d-block mt-1">
-                                                <i class="bi bi-check-circle-fill text-success"></i> Escuela activa
-                                            </small>
-                                        </div>
-                                    <?php else: ?>
-                                        <div class="alert alert-warning py-1 mb-2">
-                                            <small>
-                                                <i class="bi bi-exclamation-triangle"></i>
-                                                <strong>Sin escuela seleccionada</strong>
-                                            </small>
-                                        </div>
-                                    <?php endif; ?>
-                                </div>
-                                
-                                <!-- Buscador de Escuelas -->
-                                <div class="school-search-container mb-2">
-                                    <div class="input-group input-group-sm">
-                                        <input type="text" 
-                                            id="schoolSearch" 
-                                            class="form-control" 
-                                            placeholder="Buscar escuela..."
-                                            autocomplete="off">
-                                        <button class="btn btn-outline-light" type="button" id="searchSchoolBtn">
-                                            <i class="bi bi-search"></i>
-                                        </button>
-                                    </div>
-                                    <div id="schoolSearchResults" class="search-results-dropdown"></div>
-                                </div>
-                            </div>                        
-                            
-                            <!-- Control de Sesión -->
-                            <div class="session-controls">
-                                <?php if (Yii::$app->user->isGuest): ?>
-                                    <a class="btn btn-sm btn-outline-light w-100 mb-1" href="<?= Yii::$app->urlManager->createUrl(['/site/login']) ?>">
-                                        <i class="bi bi-box-arrow-in-right me-1"></i>Login
-                                    </a>
-                                <?php else: ?>
-                                    <?= Html::beginForm(['/site/logout'], 'post', ['class' => 'd-inline w-100']) ?>
-                                        <?= Html::submitButton(
-                                            '<i class="bi bi-box-arrow-right me-1"></i>Logout (' . Yii::$app->user->identity->username . ')',
-                                            ['class' => 'btn btn-sm btn-outline-light w-100']
-                                        ) ?>
-                                    <?= Html::endForm() ?>
-                                <?php endif; ?>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</nav>
-
-<main id="main" class="flex-shrink-0" role="main">
+<!-- ================================================== -->
+<!-- CONTENIDO PRINCIPAL CON MARGEN CORREGIDO -->
+<!-- ================================================== -->
+<main id="main" class="flex-shrink-0 ged-main-content" role="main">
     <div class="container-fluid">
         <?php if (!empty($this->params['breadcrumbs'])): ?>
             <?= Breadcrumbs::widget(['links' => $this->params['breadcrumbs']]) ?>

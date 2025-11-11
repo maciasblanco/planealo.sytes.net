@@ -1,14 +1,32 @@
-// js/ged.js - Sistema GED - JavaScript con Menú Real en Off-Canvas
+// js/ged.js - Sistema GED - JavaScript ACTUALIZADO para Navbar sin Carrusel
+// Versión optimizada con nuevos porcentajes: Logo 15%, Menú 50%, Redes 15%, Control 20%
+// MEJORAS: Menú móvil completamente funcional
 
 class GEDSystem {
     constructor() {
         this.isMobile = this.checkIsMobile();
         this.menuOpen = false;
+        this.navbarHeight = this.getNavbarHeight();
         this.init();
     }
     
     checkIsMobile() {
         return window.innerWidth < 992;
+    }
+    
+    getNavbarHeight() {
+        const navbar = document.querySelector('.navbar-contextual');
+        if (!navbar) return this.isMobile ? 70 : 180;
+        
+        // Calcular altura basada en viewport y modo
+        if (this.isMobile) {
+            if (window.innerWidth < 576) return 55;
+            if (window.innerWidth < 768) return 60;
+            return 70;
+        } else {
+            // ✅ ALTURA REDUCIDA PARA NUEVO NAVBAR SIN CARRUSEL
+            return window.innerHeight * 0.25; // 25vh en lugar de 30vh
+        }
     }
     
     init() {
@@ -20,7 +38,7 @@ class GEDSystem {
     }
     
     setup() {
-        console.log('Sistema GED inicializado - Modo:', this.isMobile ? 'Móvil' : 'Escritorio');
+        console.log('🚀 Sistema GED inicializado - Modo:', this.isMobile ? 'Móvil' : 'Escritorio');
         
         // Inicializar todos los módulos
         this.initNavbarFixed();
@@ -37,27 +55,50 @@ class GEDSystem {
         window.addEventListener('resize', () => {
             this.handleResize();
         });
+        
+        // Forzar recálculo después de la carga completa
+        setTimeout(() => {
+            this.forceNavbarRecalculation();
+            this.applyBodyCorrections();
+        }, 500);
     }
     
     // ===== CORRECCIONES DE BODY Y LAYOUT =====
     applyBodyCorrections() {
         console.log('🔧 Aplicando correcciones de body y layout...');
         
-        // Aplicar padding-top correcto al body según el viewport
-        if (this.isMobile) {
-            document.body.style.paddingTop = '70px';
-        } else {
-            document.body.style.paddingTop = '30vh';
-        }
+        this.navbarHeight = this.getNavbarHeight();
+        
+        // ✅ PADDING REDUCIDO PARA NUEVO NAVBAR (25vh)
+        document.body.style.paddingTop = this.navbarHeight + 'px';
         
         // Corregir main content
-        const main = document.querySelector('main#main');
-        if (main) {
+        const mainElements = document.querySelectorAll('main#main');
+        mainElements.forEach(main => {
             main.style.marginTop = '0';
-            main.style.minHeight = this.isMobile ? 'calc(100vh - 70px)' : 'calc(100vh - 30vh)';
-        }
+            main.style.minHeight = `calc(100vh - ${this.navbarHeight}px)`;
+        });
         
-        console.log('✅ Correcciones de layout aplicadas');
+        // Corregir contenedores principales
+        const mainContainers = document.querySelectorAll('.main-container');
+        mainContainers.forEach(container => {
+            container.style.marginTop = '0';
+            container.style.minHeight = `calc(100vh - ${this.navbarHeight}px)`;
+        });
+        
+        console.log('✅ Correcciones aplicadas - Navbar height:', this.navbarHeight);
+    }
+    
+    forceNavbarRecalculation() {
+        const navbar = document.querySelector('.navbar-contextual');
+        if (navbar) {
+            // Forzar reflow para recalcular dimensiones
+            navbar.style.display = 'none';
+            void navbar.offsetHeight; // Trigger reflow
+            navbar.style.display = '';
+            
+            console.log('🔄 Navbar recalculation forzado');
+        }
     }
     
     // ===== OFF-CANVAS SIDEBAR =====
@@ -65,20 +106,37 @@ class GEDSystem {
         this.offCanvasSidebar = new OffCanvasSidebar();
     }
     
-    // ===== NAVBAR FIXED =====
+    // ===== NAVBAR FIXED - ACTUALIZADO SIN CARRUSEL =====
     initNavbarFixed() {
         this.navbar = document.querySelector('.navbar-contextual');
-        this.carousel = document.getElementById('navbarCarousel');
         
         if (!this.navbar) {
-            console.warn('Navbar contextual no encontrado');
+            console.warn('❌ Navbar contextual no encontrado');
             return;
         }
         
         this.forceFullWidth();
-        this.optimizeCarousel();
+        this.stabilizeNavbar();
         
-        console.log('Navbar Fixed - Configurado');
+        // ✅ INICIALIZAR SELECTOR DE ESCUELAS DEL NAVBAR
+        this.initNavbarEscuelaSelector();
+        
+        console.log('✅ Navbar Fixed - Configurado correctamente (sin carrusel)');
+    }
+    
+    stabilizeNavbar() {
+        // Aplicar estilos críticos para estabilizar el navbar
+        const criticalStyles = `
+            position: fixed !important;
+            top: 0 !important;
+            left: 0 !important;
+            right: 0 !important;
+            z-index: 1030 !important;
+            width: 100% !important;
+            transform: none !important;
+        `;
+        
+        this.navbar.style.cssText += criticalStyles;
     }
     
     forceFullWidth() {
@@ -105,64 +163,42 @@ class GEDSystem {
         });
     }
     
-    optimizeCarousel() {
-        const carousel = document.getElementById('navbarCarousel');
-        if (!carousel) return;
-        
-        const bootstrapCarousel = new bootstrap.Carousel(carousel, {
-            interval: 5000,
-            wrap: true,
-            pause: 'hover'
-        });
-        
-        this.setOptimalCarouselDimensions();
-        
-        window.addEventListener('resize', () => {
-            setTimeout(() => this.setOptimalCarouselDimensions(), 100);
-        });
+    // ✅ NUEVO MÉTODO PARA SELECTOR DE ESCUELAS EN NAVBAR
+    initNavbarEscuelaSelector() {
+        const escuelaSelect = document.getElementById('navbar-escuela-select');
+        if (escuelaSelect) {
+            escuelaSelect.addEventListener('change', function() {
+                const escuelaId = this.value;
+                if (escuelaId && escuelaId > 0) {
+                    const escuelaNombre = this.options[this.selectedIndex].text;
+                    window.location.href = '/ged/default/escuela?id=' + escuelaId + '&nombre=' + encodeURIComponent(escuelaNombre);
+                }
+            });
+            console.log('✅ Selector de escuelas del navbar inicializado');
+        }
     }
     
-    setOptimalCarouselDimensions() {
-        const carousel = document.getElementById('navbarCarousel');
-        if (!carousel) return;
-        
-        const container = carousel.closest('.navbar-carousel-container');
-        if (!container) return;
-        
-        const containerWidth = container.offsetWidth;
-        const containerHeight = container.offsetHeight;
-        
-        carousel.style.width = `${containerWidth}px`;
-        carousel.style.height = `${Math.min(containerHeight * 0.95, containerHeight - 10)}px`;
-        
-        const items = carousel.querySelectorAll('.carousel-item');
-        items.forEach(item => {
-            item.style.width = `${containerWidth}px`;
-            item.style.height = `${Math.min(containerHeight * 0.95, containerHeight - 10)}px`;
-        });
-        
-        const images = carousel.querySelectorAll('.carousel-image');
-        images.forEach(img => {
-            img.style.width = `${containerWidth}px`;
-            img.style.height = `${Math.min(containerHeight * 0.95, containerHeight - 10)}px`;
-            img.style.objectFit = 'cover';
-        });
+    // ✅ MÉTODO OPTIMIZECAROUSEL VACÍO - CARRUSEL ELIMINADO
+    optimizeCarousel() {
+        console.log('✅ Carrusel eliminado del navbar - No se requiere optimización');
     }
     
     // ===== COMPONENTS =====
     initComponents() {
-        console.log('Components inicializado');
+        console.log('🔧 Components inicializado');
         
         // Solo tooltips básicos si son necesarios
-        const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
-        tooltipTriggerList.map(function (tooltipTriggerEl) {
-            return new bootstrap.Tooltip(tooltipTriggerEl);
-        });
+        if (typeof bootstrap !== 'undefined') {
+            const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+            tooltipTriggerList.map(function (tooltipTriggerEl) {
+                return new bootstrap.Tooltip(tooltipTriggerEl);
+            });
+        }
     }
     
     // ===== SCHOOL SEARCH =====
     initSchoolSearch() {
-        if (!document.querySelector('#schoolSearch')) return;
+        if (!document.querySelector('#schoolSearch') || typeof $ === 'undefined') return;
         
         this.schoolSearchSelectors = {
             searchInput: '#schoolSearch',
@@ -194,6 +230,8 @@ class GEDSystem {
     
     bindSchoolSearchEvents() {
         const { searchInput, searchResults, searchBtn } = this.schoolSearchElements;
+        
+        if (searchInput.length === 0) return;
         
         searchInput.on('input', (e) => {
             this.handleSearchInput(e.target.value.trim());
@@ -402,7 +440,7 @@ class GEDSystem {
                 }
             });
             
-            console.log('Escuela selector inicializado correctamente');
+            console.log('✅ Escuela selector inicializado correctamente');
             
         } catch (error) {
             console.error('Error en escuela selector:', error);
@@ -411,6 +449,8 @@ class GEDSystem {
     
     // ===== LANDING PAGE =====
     initLandingPage() {
+        if (typeof $ === 'undefined') return;
+        
         // Selector principal de escuelas
         $('#main-escuela-select').on('change', function() {
             var escuelaId = $(this).val();
@@ -447,11 +487,13 @@ class GEDSystem {
             }
         );
 
-        // Carrusel automático
-        $('#carouselHero').carousel({
-            interval: 3000,
-            pause: 'hover'
-        });
+        // Carrusel automático (solo para landing page)
+        if (typeof bootstrap !== 'undefined') {
+            $('#carouselHero').carousel({
+                interval: 3000,
+                pause: 'hover'
+            });
+        }
 
         // Smooth scroll para navegación interna
         $('a[href^="#"]').on('click', function(event) {
@@ -465,12 +507,14 @@ class GEDSystem {
         });
     }
     
-    // ===== MANEJO DE RESIZE =====
+    // ===== MANEJO DE RESIZE - ACTUALIZADO SIN CARRUSEL =====
     handleResize() {
         const newIsMobile = this.checkIsMobile();
+        const oldNavbarHeight = this.navbarHeight;
+        
         if (newIsMobile !== this.isMobile) {
             this.isMobile = newIsMobile;
-            console.log('Cambio de modo:', this.isMobile ? 'Móvil' : 'Escritorio');
+            console.log('🔄 Cambio de modo:', this.isMobile ? 'Móvil' : 'Escritorio');
             
             // Reinicializar off-canvas si cambió el modo
             if (this.offCanvasSidebar) {
@@ -478,16 +522,22 @@ class GEDSystem {
             }
         }
         
-        setTimeout(() => {
-            this.forceFullWidth();
-            this.setOptimalCarouselDimensions();
-            this.applyBodyCorrections();
-        }, 100);
+        // Recalcular altura del navbar
+        this.navbarHeight = this.getNavbarHeight();
+        
+        // Solo aplicar correcciones si cambió la altura
+        if (this.navbarHeight !== oldNavbarHeight) {
+            setTimeout(() => {
+                this.forceFullWidth();
+                this.applyBodyCorrections();
+                this.forceNavbarRecalculation();
+            }, 100);
+        }
     }
 }
 
 // ==================================================
-// OFF-CANVAS SIDEBAR - CON MENÚ REAL DE MenuWidget
+// OFF-CANVAS SIDEBAR - CON MENÚ MÓVIL MEJORADO
 // ==================================================
 
 class OffCanvasSidebar {
@@ -510,8 +560,8 @@ class OffCanvasSidebar {
             this.backdrop = document.querySelector('.ged-sidebar-backdrop');
             this.sidebarNav = this.sidebar.querySelector('.sidebar-nav');
             
-            // **IMPORTANTE: Cargar el menú real si no está presente**
-            this.loadRealMenu();
+            // ✅ CARGAR MENÚ MÓVIL ESPECÍFICO
+            this.loadMobileMenu();
             return;
         }
 
@@ -537,15 +587,59 @@ class OffCanvasSidebar {
         this.backdrop = backdrop;
         this.sidebarNav = this.sidebar.querySelector('.sidebar-nav');
         
-        // **IMPORTANTE: Cargar el menú real**
-        this.loadRealMenu();
-        
-        this.applyBodyCorrections();
+        // ✅ CARGAR MENÚ MÓVIL ESPECÍFICO
+        this.loadMobileMenu();
     }
     
-    // **NUEVO MÉTODO: Cargar el menú real desde el navbar**
+    // ✅ NUEVO MÉTODO MEJORADO PARA CARGAR MENÚ MÓVIL
+    loadMobileMenu() {
+        console.log('📱 Cargando menú específico para móvil...');
+        
+        // Mostrar loading
+        this.sidebarNav.innerHTML = `
+            <div class="text-center py-4">
+                <div class="spinner-border text-primary" role="status">
+                    <span class="visually-hidden">Cargando menú...</span>
+                </div>
+                <p class="text-muted mt-2">Cargando menú...</p>
+            </div>
+        `;
+        
+        // Intentar cargar el menú móvil via AJAX
+        if (typeof $ !== 'undefined') {
+            this.loadMobileMenuViaAJAX();
+        } else {
+            // Fallback: cargar menú desde el navbar existente
+            setTimeout(() => {
+                this.loadRealMenu();
+            }, 100);
+        }
+    }
+    
+    // ✅ CARGAR MENÚ MÓVIL VIA AJAX
+    loadMobileMenuViaAJAX() {
+        $.ajax({
+            url: '/site/mobile-menu',
+            type: 'GET',
+            data: {
+                _csrf: $('meta[name="csrf-token"]').attr('content')
+            },
+            success: (response) => {
+                console.log('✅ Menú móvil cargado via AJAX');
+                this.sidebarNav.innerHTML = response;
+                this.adaptMenuForOffCanvas(this.sidebarNav);
+            },
+            error: (xhr, status, error) => {
+                console.error('❌ Error cargando menú móvil via AJAX:', error);
+                console.log('🔄 Intentando cargar menú desde navbar...');
+                this.loadRealMenu();
+            }
+        });
+    }
+    
+    // ✅ Cargar el menú real desde el navbar (fallback)
     loadRealMenu() {
-        console.log('🔄 Cargando menú real...');
+        console.log('🔄 Cargando menú real desde navbar...');
         
         // Buscar el menú real en el navbar
         const realMenu = document.querySelector('.navbar-nav');
@@ -573,7 +667,7 @@ class OffCanvasSidebar {
         console.log('✅ Menú real cargado y adaptado correctamente');
     }
     
-    // **NUEVO MÉTODO: Menú de respaldo si no se encuentra el real**
+    // ✅ Menú de respaldo si no se encuentra el real
     loadFallbackMenu() {
         console.log('🔄 Cargando menú de respaldo...');
         
@@ -603,11 +697,36 @@ class OffCanvasSidebar {
             </ul>
         `;
         
+        // Adaptar el menú de respaldo
+        this.adaptMenuForOffCanvas(this.sidebarNav);
         console.log('✅ Menú de respaldo cargado');
     }
     
+    // ✅ ADAPTAR MENÚ PARA OFF-CANVAS - MEJORADO
     adaptMenuForOffCanvas(menuElement) {
         console.log('🎨 Adaptando menú para off-canvas...');
+        
+        // Buscar el menú principal
+        let mainMenu = menuElement.querySelector('.navbar-nav, .sidebar-menu');
+        if (!mainMenu) {
+            console.warn('❌ No se encontró el menú principal para adaptar');
+            return;
+        }
+        
+        // Convertir a estructura móvil si es necesario
+        if (mainMenu.classList.contains('navbar-nav')) {
+            this.convertBootstrapToMobileMenu(mainMenu);
+        }
+        
+        // Agregar eventos para submenús colapsables
+        this.addMobileMenuEvents(menuElement);
+        
+        console.log('✅ Menú adaptado correctamente para móvil');
+    }
+    
+    // ✅ CONVERTIR MENÚ BOOTSTRAP A ESTRUCTURA MÓVIL
+    convertBootstrapToMobileMenu(menuElement) {
+        console.log('🔄 Convirtiendo menú Bootstrap a estructura móvil...');
         
         // Convertir dropdowns de Bootstrap a menú simple COLABSABLE
         const dropdowns = menuElement.querySelectorAll('.dropdown, .dropdown-submenu');
@@ -620,6 +739,7 @@ class OffCanvasSidebar {
                 toggle.classList.remove('dropdown-toggle');
                 toggle.removeAttribute('data-bs-toggle');
                 toggle.removeAttribute('aria-expanded');
+                
                 // Agregar indicador de submenú si no existe
                 if (!toggle.querySelector('.submenu-indicator')) {
                     const indicator = document.createElement('span');
@@ -634,9 +754,6 @@ class OffCanvasSidebar {
                 menu.classList.remove('dropdown-menu');
                 menu.classList.add('submenu');
                 menu.style.display = 'none';
-                
-                // Aplicar recursivamente
-                this.adaptMenuForOffCanvas(menu);
             }
         });
         
@@ -653,16 +770,92 @@ class OffCanvasSidebar {
             link.classList.add('menu-link');
             
             // Asegurar que los enlaces tengan href válido
-            if (link.getAttribute('href') === '#' && link.querySelector('.submenu-indicator')) {
+            if (link.getAttribute('href') === '#' && link.parentElement.classList.contains('has-children')) {
                 link.style.cursor = 'pointer';
             }
         });
         
-        console.log('✅ Menú adaptado correctamente');
+        // Cambiar la clase principal a sidebar-menu
+        menuElement.classList.remove('navbar-nav');
+        menuElement.classList.add('sidebar-menu');
+    }
+    
+    // ✅ AGREGAR EVENTOS PARA MENÚ MÓVIL
+    addMobileMenuEvents(menuElement) {
+        const menuItems = menuElement.querySelectorAll('.has-children > .menu-link');
+        
+        menuItems.forEach(menuItem => {
+            // Remover eventos existentes para evitar duplicados
+            menuItem.replaceWith(menuItem.cloneNode(true));
+        });
+        
+        // Agregar nuevos eventos
+        const refreshedMenuItems = menuElement.querySelectorAll('.has-children > .menu-link');
+        
+        refreshedMenuItems.forEach(menuItem => {
+            menuItem.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                
+                this.toggleSubmenu(menuItem.parentElement);
+            });
+        });
+        
+        // Agregar eventos para enlaces normales (cerrar sidebar)
+        const normalLinks = menuElement.querySelectorAll('.menu-item:not(.has-children) > .menu-link');
+        normalLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                if (this.isMobile) {
+                    setTimeout(() => this.close(), 300);
+                }
+            });
+        });
+    }
+    
+    // ✅ ALTERNAR SUBMENÚ
+    toggleSubmenu(parentItem) {
+        const submenu = parentItem.querySelector('.submenu');
+        if (!submenu) return;
+        
+        const isCurrentlyOpen = submenu.style.display === 'block';
+        const indicator = parentItem.querySelector('.submenu-indicator');
+        
+        console.log(`🔄 ${isCurrentlyOpen ? 'Cerrando' : 'Abriendo'} submenú...`);
+        
+        // Cerrar todos los submenús del mismo nivel
+        const siblings = parentItem.parentElement.querySelectorAll('.has-children');
+        siblings.forEach(sibling => {
+            if (sibling !== parentItem) {
+                const siblingSubmenu = sibling.querySelector('.submenu');
+                const siblingIndicator = sibling.querySelector('.submenu-indicator');
+                if (siblingSubmenu) {
+                    siblingSubmenu.style.display = 'none';
+                }
+                if (siblingIndicator) {
+                    siblingIndicator.style.transform = 'rotate(0deg)';
+                }
+                sibling.classList.remove('open');
+            }
+        });
+        
+        // Alternar submenú actual
+        if (isCurrentlyOpen) {
+            submenu.style.display = 'none';
+            if (indicator) {
+                indicator.style.transform = 'rotate(0deg)';
+            }
+            parentItem.classList.remove('open');
+        } else {
+            submenu.style.display = 'block';
+            if (indicator) {
+                indicator.style.transform = 'rotate(90deg)';
+            }
+            parentItem.classList.add('open');
+        }
     }
     
     bindEvents() {
-        // **IMPORTANTE: Interceptar el toggler de Bootstrap para móviles**
+        // Interceptar el toggler de Bootstrap para móviles
         this.interceptBootstrapToggler();
         
         // Cerrar sidebar
@@ -677,24 +870,6 @@ class OffCanvasSidebar {
         if (this.backdrop) {
             this.backdrop.addEventListener('click', () => {
                 this.close();
-            });
-        }
-        
-        // Manejar submenús COLABSABLES
-        if (this.sidebarNav) {
-            this.sidebarNav.addEventListener('click', (e) => {
-                const link = e.target.closest('a');
-                if (link && link.parentElement.classList.contains('has-children')) {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    this.toggleSubmenu(link.parentElement);
-                    return false;
-                }
-                
-                // Cerrar sidebar al hacer clic en enlace normal (solo en móviles)
-                if (this.isMobile && link && !link.parentElement.classList.contains('has-children')) {
-                    setTimeout(() => this.close(), 300);
-                }
             });
         }
         
@@ -745,14 +920,6 @@ class OffCanvasSidebar {
         console.log('✅ Toggler interceptado correctamente');
     }
     
-    applyBodyCorrections() {
-        if (this.isMobile) {
-            document.body.style.paddingTop = '70px';
-        } else {
-            document.body.style.paddingTop = '30vh';
-        }
-    }
-    
     open() {
         if (this.isOpen) return;
         
@@ -786,36 +953,6 @@ class OffCanvasSidebar {
         console.log('✅ Off-Canvas cerrado correctamente');
     }
     
-    toggleSubmenu(parentItem) {
-        const submenu = parentItem.querySelector('.submenu');
-        if (!submenu) return;
-        
-        const isCurrentlyOpen = submenu.style.display === 'block';
-        
-        console.log(`🔄 ${isCurrentlyOpen ? 'Cerrando' : 'Abriendo'} submenú...`);
-        
-        // Cerrar todos los submenús del mismo nivel
-        const siblings = parentItem.parentElement.querySelectorAll('.has-children');
-        siblings.forEach(sibling => {
-            if (sibling !== parentItem) {
-                const siblingSubmenu = sibling.querySelector('.submenu');
-                if (siblingSubmenu) {
-                    siblingSubmenu.style.display = 'none';
-                    sibling.classList.remove('open');
-                }
-            }
-        });
-        
-        // Alternar submenú actual
-        if (isCurrentlyOpen) {
-            submenu.style.display = 'none';
-            parentItem.classList.remove('open');
-        } else {
-            submenu.style.display = 'block';
-            parentItem.classList.add('open');
-        }
-    }
-    
     closeAllSubmenus() {
         const submenus = this.sidebar.querySelectorAll('.submenu');
         const parentItems = this.sidebar.querySelectorAll('.has-children');
@@ -826,6 +963,10 @@ class OffCanvasSidebar {
         
         parentItems.forEach(item => {
             item.classList.remove('open');
+            const indicator = item.querySelector('.submenu-indicator');
+            if (indicator) {
+                indicator.style.transform = 'rotate(0deg)';
+            }
         });
         
         console.log('✅ Todos los submenús cerrados');
@@ -839,8 +980,6 @@ class OffCanvasSidebar {
         if (!this.isMobile && this.isOpen) {
             this.close();
         }
-        
-        this.applyBodyCorrections();
     }
 }
 
@@ -852,43 +991,65 @@ class OffCanvasSidebar {
 document.addEventListener('DOMContentLoaded', () => {
     // Pequeño delay para asegurar que Bootstrap esté cargado
     setTimeout(() => {
-        window.gedSystem = new GEDSystem();
-        console.log('🚀 Sistema GED completamente inicializado');
+        if (!window.gedSystem) {
+            window.gedSystem = new GEDSystem();
+            console.log('🚀 Sistema GED completamente inicializado y estable');
+        }
     }, 100);
 });
 
-// Manejo de resize global
+// Manejo de resize global mejorado
+let resizeTimeout;
 window.addEventListener('resize', () => {
-    if (window.gedSystem) {
-        window.gedSystem.handleResize();
-    }
+    clearTimeout(resizeTimeout);
+    resizeTimeout = setTimeout(() => {
+        if (window.gedSystem) {
+            window.gedSystem.handleResize();
+        }
+    }, 250);
 });
 
-// Debug helper
+// Debug helper mejorado
 function debugGEDSystem() {
-    console.group('🐛 DEBUG GED SYSTEM - MENÚ REAL');
+    console.group('🐛 DEBUG GED SYSTEM - ESTADO COMPLETO');
     console.log('GED System:', window.gedSystem);
-    console.log('OffCanvas Sidebar:', window.gedSystem?.offCanvasSidebar);
+    console.log('Navbar Height:', window.gedSystem?.navbarHeight);
     console.log('Modo móvil:', window.gedSystem?.isMobile);
+    console.log('OffCanvas Sidebar:', window.gedSystem?.offCanvasSidebar);
     console.log('Sidebar abierto:', window.gedSystem?.offCanvasSidebar?.isOpen);
     console.log('Toggler encontrado:', !!document.querySelector('.navbar-toggler'));
     console.log('Menú real encontrado:', !!document.querySelector('.navbar-nav'));
-    console.log('Menú en sidebar:', document.querySelector('.ged-offcanvas-sidebar .sidebar-nav')?.children.length || 0, 'elementos');
+    console.log('Body padding-top:', document.body.style.paddingTop);
+    
+    const main = document.querySelector('main#main');
+    console.log('Main min-height:', main?.style.minHeight);
+    
     console.groupEnd();
 }
 
 // Exponer para debugging
 window.debugGEDSystem = debugGEDSystem;
 
-// Auto-debug en desarrollo
-if (window.location.href.indexOf('localhost') > -1 || window.location.href.indexOf('debug') > -1) {
-    setTimeout(debugGEDSystem, 2000);
-}
-
 // Función para forzar recarga del menú (útil para desarrollo)
 window.reloadOffCanvasMenu = function() {
     if (window.gedSystem && window.gedSystem.offCanvasSidebar) {
-        window.gedSystem.offCanvasSidebar.loadRealMenu();
+        window.gedSystem.offCanvasSidebar.loadMobileMenu();
         console.log('🔄 Menú del off-canvas recargado manualmente');
     }
 };
+
+// Función para forzar recálculo del navbar
+window.forceNavbarRecalculation = function() {
+    if (window.gedSystem) {
+        window.gedSystem.forceNavbarRecalculation();
+        window.gedSystem.applyBodyCorrections();
+    }
+};
+
+// Auto-debug en desarrollo
+if (window.location.href.indexOf('localhost') > -1 || window.location.href.indexOf('debug') > -1) {
+    setTimeout(() => {
+        debugGEDSystem();
+        console.log('🔧 Modo desarrollo activo - Debug functions disponibles');
+    }, 2000);
+}
