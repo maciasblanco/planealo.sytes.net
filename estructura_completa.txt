@@ -1,0 +1,171 @@
+ESTRUCTURA DEL SISTEMA PLANEALO
+===============================
+Fecha: mar. 11/11/2025 13:17:57,40
+
+1. ESTRUCTURA GENERAL
+.bowerrc
+.container
+.dropdown-menu
+.gitignore
+actualizar_tasa.bat
+assets
+codeception.yml
+commands
+components
+composer.json
+composer.lock
+config
+controllers
+cron.log
+dir
+docker-compose.yml
+estructura_completa.bat
+estructura_completa.txt
+LICENSE.md
+mail
+migrations
+models
+modules
+README.md
+requirements.php
+runtime
+tests
+vagrant
+Vagrantfile
+vendor
+views
+web
+widgets
+yii
+yii.bat
+
+2. MODELOS
+Alergias.php
+AportesSemanales.php
+Asistencia.php
+AtletasRegistro.php
+CambioPasswordForm.php
+CategoriaAtletas.php
+ComprasEscuela.php
+ContactForm.php
+Discapacidad.php
+Enfermedades.php
+Escuela.php
+Estado.php
+LoginForm.php
+Municipio.php
+Nacionalidad.php
+Parroquia.php
+RegistroRepresentantes.php
+Sexo.php
+TasaDolar.php
+User.php
+
+3. CONTROLADORES
+CoordenadasController.php
+MunicipioController.php
+ParroquiaController.php
+PerfilController.php
+probar_fuentes.php
+SiteController.php
+TasaDolarController.php
+
+4. VISTAS PRINCIPALES
+layouts
+perfil
+site
+tasa-dolar
+
+5. ESTRUCTURA DE MODULOS
+[modules\acces]
+  Controladores:
+DefaultController.php
+UserController.php
+  Vistas:
+    -- default
+index.php
+    -- user
+signup.php
+    -- 2>nul
+
+[modules\aportes]
+  Controladores:
+AportesController.php
+  Vistas:
+    -- aportes
+atletas-morosos.php
+gestion-atleta.php
+index.php
+pago-adelantado.php
+pago-multiple.php
+registro-masivo.php
+reporte.php
+    -- layouts
+escuelas.php
+_navbar.php
+    -- 2>nul
+
+[modules\atletas]
+  Controladores:
+AsistenciaController.php
+AtletasRegistroController.php
+DefaultController.php
+  Vistas:
+    -- asistencia
+registro-multiple.php
+registro-rapido.php
+    -- atletas-registro
+create.php
+index.php
+update.php
+view.php
+_form.php
+_search.php
+    -- default
+index.php
+    -- layouts
+escuelas.php
+_navbar.php
+    -- 2>nul
+
+[modules\escuela_club]
+  Controladores:
+ClubRegistroController.php
+DefaultController.php
+EscuelaPreRegistroController.php
+EscuelaRegistroController.php
+  Vistas:
+    -- club-registro
+create.php
+index.php
+update.php
+view.php
+_form.php
+_search.php
+    -- default
+index.php
+    -- escuela-registro
+completar-registro.php
+create.php
+index.php
+pre-registro.php
+update.php
+view.php
+_form.php
+_search.php
+    -- 2>nul
+
+[modules\ged]
+  Controladores:
+DefaultController.php
+  Vistas:
+    -- default
+escuelaSinUso.php
+index.php
+indexDinamico.php
+select-escuela.php
+    -- layouts
+main.php
+_navbar.php
+    -- 2>nul
+

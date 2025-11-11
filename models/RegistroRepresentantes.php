@@ -220,4 +220,21 @@ class RegistroRepresentantes extends \yii\db\ActiveRecord
             }
         }
     }
+        /**
+     * Gets query for [[Escuela]].
+     * RELACIÓN FALTANTE - AGREGADA
+     */
+    public function getEscuela()
+    {
+        return $this->hasOne(Escuela::class, ['id' => 'id_escuela']);
+    }
+
+    /**
+     * Gets query for [[Nacionalidad]].
+     * RELACIÓN FALTANTE - AGREGADA
+     */
+    public function getNacionalidad()
+    {
+        return $this->hasOne(Nacionalidad::class, ['id' => 'id_nac']);
+    }
 }

@@ -397,4 +397,39 @@ class Escuela extends ActiveRecord
             'total_representantes' => RegistroRepresentantes::find()->where(['id_escuela' => $this->id, 'eliminado' => false])->count(),
         ];
     }
+    /**
+     * Gets query for [[Atletas]].
+     * RELACIÓN FALTANTE - AGREGADA
+     */
+    public function getAtletas()
+    {
+        return $this->hasMany(AtletasRegistro::class, ['id_escuela' => 'id']);
+    }
+
+    /**
+     * Gets query for [[Representantes]].
+     * RELACIÓN FALTANTE - AGREGADA
+     */
+    public function getRepresentantes()
+    {
+        return $this->hasMany(RegistroRepresentantes::class, ['id_escuela' => 'id']);
+    }
+
+    /**
+     * Gets query for [[Asistencias]].
+     * RELACIÓN FALTANTE - AGREGADA
+     */
+    public function getAsistencias()
+    {
+        return $this->hasMany(Asistencia::class, ['id_escuela' => 'id']);
+    }
+
+    /**
+     * Gets query for [[Aportes]].
+     * RELACIÓN FALTANTE - AGREGADA
+     */
+    public function getAportes()
+    {
+        return $this->hasMany(AportesSemanales::class, ['escuela_id' => 'id']);
+    }
 }

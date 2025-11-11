@@ -189,7 +189,7 @@ $config = [
             'admin/user/signup',
             'admin/user/request-password-reset',
             'admin/user/reset-password',
-            //'*',
+            '*',
         ]
     ],
 

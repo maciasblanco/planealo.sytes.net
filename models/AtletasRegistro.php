@@ -330,4 +330,57 @@ class AtletasRegistro extends \yii\db\ActiveRecord
             }
         }
     }
+    /**
+     * Gets query for [[Asistencias]].
+     * RELACIÓN FALTANTE - AGREGADA
+     */
+    public function getAsistencias()
+    {
+        return $this->hasMany(Asistencia::class, ['id_atleta' => 'id']);
+    }
+
+    /**
+     * Gets query for [[Alergias]].
+     * RELACIÓN FALTANTE - AGREGADA
+     */
+    public function getAlergias()
+    {
+        return $this->hasOne(Alergias::class, ['id' => 'id_alergias']);
+    }
+
+    /**
+     * Gets query for [[Enfermedades]].
+     * RELACIÓN FALTANTE - AGREGADA
+     */
+    public function getEnfermedades()
+    {
+        return $this->hasOne(Enfermedades::class, ['id' => 'id_enfermedades']);
+    }
+
+    /**
+     * Gets query for [[Discapacidad]].
+     * RELACIÓN FALTANTE - AGREGADA
+     */
+    public function getDiscapacidad()
+    {
+        return $this->hasOne(Discapacidad::class, ['id' => 'id_discapacidad']);
+    }
+
+    /**
+     * Gets query for [[Nacionalidad]].
+     * RELACIÓN FALTANTE - AGREGADA
+     */
+    public function getNacionalidad()
+    {
+        return $this->hasOne(Nacionalidad::class, ['id' => 'id_nac']);
+    }
+
+    /**
+     * Gets query for [[SexoModel]].
+     * RELACIÓN FALTANTE - AGREGADA
+     */
+    public function getSexoModel()
+    {
+        return $this->hasOne(Sexo::class, ['id' => 'sexo']);
+    }
 }
