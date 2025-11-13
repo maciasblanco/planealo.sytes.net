@@ -144,14 +144,18 @@ $this->params['breadcrumbs'][] = $this->title;
 </div>
 
 <?php
-// Solo la inicialización del mapa con timeout para asegurar que el DOM esté listo
-$this->registerJs("
-    setTimeout(function() {
-        if (typeof initMapaEscuela === 'function') {
-            initMapaEscuela();
-        } else {
-            console.error('La función initMapaEscuela no está disponible');
-        }
-    }, 500);
-");
+// Solo la inicialización del mapa con verificación
+$js = <<< JS
+// Esperar a que todo esté listo
+setTimeout(function() {
+    if (typeof initMapaEscuela === 'function' && !window.mapaInicializado) {
+        console.log('📱 Inicializando mapa desde la vista...');
+        initMapaEscuela();
+    } else {
+        console.log('ℹ️ Mapa ya inicializado o función no disponible');
+    }
+}, 1500);
+JS;
+
+$this->registerJs($js);
 ?>

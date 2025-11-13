@@ -2,8 +2,19 @@
  * Mapa interactivo para selección de ubicación de escuelas
  */
 
+// Variable global para controlar si el mapa ya fue inicializado
+let mapaInicializado = false;
+let mapaEscuela = null;
+let marcador = null;
+
 function initMapaEscuela() {
-    console.log('🔍 Inicializando mapa para escuela...');
+    console.log('🔍 Intentando inicializar mapa para escuela...');
+    
+    // Si ya está inicializado, no hacer nada
+    if (mapaInicializado) {
+        console.log('ℹ️ El mapa ya estaba inicializado, omitiendo...');
+        return;
+    }
     
     // Verificar que el elemento del mapa exista
     const mapElement = document.getElementById('map');
@@ -61,6 +72,14 @@ function initMapaEscuela() {
         console.log('🗺️ Creando mapa interactivo...');
         
         try {
+            // Verificar si el contenedor ya tiene un mapa
+            if (mapElement._leaflet_id) {
+                console.log('🔄 El contenedor ya tiene un mapa, limpiando...');
+                // Si ya existe un mapa, limpiar el contenedor
+                mapElement._leaflet_id = null;
+                mapElement.innerHTML = '';
+            }
+            
             // Coordenadas por defecto (Caracas)
             let defaultLat = 10.480594;
             let defaultLng = -66.903600;
@@ -78,28 +97,26 @@ function initMapaEscuela() {
             }
             
             // Crear mapa
-            const map = L.map('map').setView([defaultLat, defaultLng], 13);
+            mapaEscuela = L.map('map').setView([defaultLat, defaultLng], 13);
             console.log('✅ Mapa creado');
             
             // Agregar capa de tiles
             L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                 attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
                 maxZoom: 19
-            }).addTo(map);
+            }).addTo(mapaEscuela);
             console.log('✅ Capa de tiles agregada');
-            
-            let marker = null;
             
             // Si hay coordenadas existentes, agregar marcador
             if (currentLat && currentLng) {
-                marker = L.marker([defaultLat, defaultLng]).addTo(map)
+                marcador = L.marker([defaultLat, defaultLng]).addTo(mapaEscuela)
                     .bindPopup('📍 Ubicación actual de la escuela/club')
                     .openPopup();
                 console.log('✅ Marcador existente agregado');
             }
             
             // Evento al hacer clic en el mapa
-            map.on('click', function(e) {
+            mapaEscuela.on('click', function(e) {
                 const lat = e.latlng.lat;
                 const lng = e.latlng.lng;
                 
@@ -110,12 +127,12 @@ function initMapaEscuela() {
                 $('#lng-input').val(lng.toFixed(6));
                 
                 // Remover marcador anterior si existe
-                if (marker) {
-                    map.removeLayer(marker);
+                if (marcador) {
+                    mapaEscuela.removeLayer(marcador);
                 }
                 
                 // Agregar nuevo marcador
-                marker = L.marker([lat, lng]).addTo(map)
+                marcador = L.marker([lat, lng]).addTo(mapaEscuela)
                     .bindPopup('📍 Nueva ubicación seleccionada')
                     .openPopup();
                 
@@ -124,10 +141,14 @@ function initMapaEscuela() {
             
             // Forzar redimensionamiento del mapa
             setTimeout(() => {
-                map.invalidateSize();
-                console.log('✅ Mapa redimensionado');
+                if (mapaEscuela) {
+                    mapaEscuela.invalidateSize();
+                    console.log('✅ Mapa redimensionado');
+                }
             }, 100);
             
+            // Marcar como inicializado
+            mapaInicializado = true;
             console.log('🎉 Mapa interactivo inicializado correctamente');
             
         } catch (error) {
@@ -144,15 +165,20 @@ function initMapaEscuela() {
     // Inicializar el mapa
     cargarLeaflet()
         .then(() => {
-            // Esperar a que jQuery esté listo si se usa
+            // Usar jQuery si está disponible, si no usar vanilla JS
             if (typeof $ !== 'undefined') {
-                $(document).ready(crearMapa);
+                $(document).ready(function() {
+                    // Pequeño delay para asegurar que el DOM esté listo
+                    setTimeout(crearMapa, 100);
+                });
             } else {
-                // Si no hay jQuery, usar DOMContentLoaded
+                // Si no hay jQuery, usar vanilla JS
                 if (document.readyState === 'loading') {
-                    document.addEventListener('DOMContentLoaded', crearMapa);
+                    document.addEventListener('DOMContentLoaded', function() {
+                        setTimeout(crearMapa, 100);
+                    });
                 } else {
-                    crearMapa();
+                    setTimeout(crearMapa, 100);
                 }
             }
         })
@@ -166,19 +192,36 @@ function initMapaEscuela() {
         });
 }
 
-// Hacer la función disponible globalmente
-window.initMapaEscuela = initMapaEscuela;
+// Función para destruir el mapa (útil si necesitas recargarlo)
+function destruirMapaEscuela() {
+    if (mapaEscuela) {
+        mapaEscuela.remove();
+        mapaEscuela = null;
+    }
+    if (marcador) {
+        marcador = null;
+    }
+    mapaInicializado = false;
+    console.log('🗑️ Mapa destruido');
+}
 
-// Auto-inicialización si el script se carga después de que el DOM está listo
+// Hacer las funciones disponibles globalmente
+window.initMapaEscuela = initMapaEscuela;
+window.destruirMapaEscuela = destruirMapaEscuela;
+
+// Auto-inicialización solo si no hay otra inicialización programada
 if (document.readyState !== 'loading') {
-    // Si el DOM ya está listo, verificar si hay un mapa en la página
-    if (document.getElementById('map')) {
+    // Si el DOM ya está listo, verificar si hay un mapa en la página y no está inicializado
+    if (document.getElementById('map') && !mapaInicializado) {
         console.log('🚀 Auto-inicializando mapa...');
-        setTimeout(initMapaEscuela, 100);
+        // Usar un timeout más largo para evitar conflictos
+        setTimeout(initMapaEscuela, 1000);
     }
 } else {
     document.addEventListener('DOMContentLoaded', function() {
         console.log('🚀 Inicializando mapa después de DOMContentLoaded...');
-        setTimeout(initMapaEscuela, 100);
+        if (document.getElementById('map') && !mapaInicializado) {
+            setTimeout(initMapaEscuela, 1000);
+        }
     });
 }
