@@ -1,0 +1,23 @@
+ARBOL COMPLETO - SISTEMA PLANEALO 
+Generado: mié. 12/11/2025  9:26:26,50 
+================================= 
+ 
+[RAIZ] . 
+├── 📄 .bowerrc 
+├── 📄 .container 
+├── 📄 .dropdown-menu 
+├── 📄 .gitignore 
+├── 📄 actualizar_tasa.bat 
+├── 📄 arbol_completo.bat 
+├── 📄 arbol_esencial.bat 
+├── 📄 arbol_por_modulos.bat 
+├── 📄 codeception.yml 
+├── 📄 composer.json 
+├── 📄 composer.lock 
+├── 📄 cron.log 
+├── 📄 docker-compose.yml 
+├── 📄 estructura_completa.bat 
+├── 📄 estructura_completa.txt 
+├── 📄 LICENSE.md 
+├── 📄 mapeo_final.bat 
+├── 📄 README.md 

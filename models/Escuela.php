@@ -69,8 +69,8 @@ class Escuela extends ActiveRecord
     public function rules()
     {
         return [
-            // Campos requeridos para pre-registro
-            [['id_estado', 'id_municipio', 'id_parroquia', 'direccion_practicas', 'nombre', 'telefono', 'email'], 'required'],
+            // Campos requeridos para pre-registro (sin user_id)
+            [['id_estado', 'id_municipio', 'id_parroquia', 'direccion_practicas', 'nombre', 'telefono', 'email', 'tipo_entidad'], 'required'],
             
             // Validaciones de tipo
             [['id_estado', 'id_municipio', 'id_parroquia', 'u_creacion', 'u_update', 'puntuacion', 'aprobado_por'], 'integer'],
@@ -98,11 +98,7 @@ class Escuela extends ActiveRecord
             // Valores por defecto
             [['puntuacion'], 'default', 'value' => 0],
             [['eliminado'], 'default', 'value' => false],
-            [['tipo_entidad'], 'default', 'value' => true],
             [['estado_registro'], 'default', 'value' => self::ESTADO_PRE_REGISTRO],
-            [['direccion_administrativa'], 'default', 'value' => function($model) {
-                return $model->direccion_practicas;
-            }],
             
             // Validaciones personalizadas
             [['nombre'], 'filter', 'filter' => 'trim'],
@@ -167,8 +163,43 @@ class Escuela extends ActiveRecord
                 'class' => BlameableBehavior::class,
                 'createdByAttribute' => 'u_creacion',
                 'updatedByAttribute' => 'u_update',
+                'value' => function () {
+                    // Solo asigna usuario si está autenticado, de lo contrario null
+                    return Yii::$app->user->isGuest ? null : Yii::$app->user->id;
+                },
             ],
         ];
+    }
+
+    /**
+     * Before save - CORREGIDO para manejar direccion_administrativa
+     */
+    public function beforeSave($insert)
+    {
+        if (parent::beforeSave($insert)) {
+            // SI ES NUEVO REGISTRO: Establecer direccion_administrativa con el mismo valor de direccion_practicas
+            if ($insert && empty($this->direccion_administrativa)) {
+                $this->direccion_administrativa = $this->direccion_practicas;
+            }
+            
+            // SI ES ACTUALIZACIÓN: Mantener el valor existente o usar direccion_practicas si está vacío
+            if (!$insert && empty($this->direccion_administrativa)) {
+                $this->direccion_administrativa = $this->direccion_practicas;
+            }
+            
+            // Guardar la IP del usuario
+            if (empty($this->dir_ip)) {
+                $this->dir_ip = Yii::$app->request->userIP;
+            }
+            
+            // Si es nueva y no tiene estado, establecer como pre-registro
+            if ($insert && empty($this->estado_registro)) {
+                $this->estado_registro = self::ESTADO_PRE_REGISTRO;
+            }
+            
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -300,7 +331,7 @@ class Escuela extends ActiveRecord
     {
         $this->estado_registro = self::ESTADO_APROBADO;
         $this->comentarios_aprobacion = $comentarios;
-        $this->aprobado_por = $aprobado_por ?: Yii::$app->user->id;
+        $this->aprobado_por = $aprobado_por ?: (Yii::$app->user->isGuest ? null : Yii::$app->user->id);
         $this->fecha_aprobacion = new Expression('NOW()');
         return $this->save(false);
     }
@@ -335,27 +366,6 @@ class Escuela extends ActiveRecord
         }
         
         return implode(', ', $partes);
-    }
-
-    /**
-     * Before save
-     */
-    public function beforeSave($insert)
-    {
-        if (parent::beforeSave($insert)) {
-            // Guardar la IP del usuario
-            if (empty($this->dir_ip)) {
-                $this->dir_ip = Yii::$app->request->userIP;
-            }
-            
-            // Si es nueva y no tiene estado, establecer como pre-registro
-            if ($insert && empty($this->estado_registro)) {
-                $this->estado_registro = self::ESTADO_PRE_REGISTRO;
-            }
-            
-            return true;
-        }
-        return false;
     }
 
     /**
@@ -397,6 +407,7 @@ class Escuela extends ActiveRecord
             'total_representantes' => RegistroRepresentantes::find()->where(['id_escuela' => $this->id, 'eliminado' => false])->count(),
         ];
     }
+
     /**
      * Gets query for [[Atletas]].
      * RELACIÓN FALTANTE - AGREGADA
@@ -431,5 +442,27 @@ class Escuela extends ActiveRecord
     public function getAportes()
     {
         return $this->hasMany(AportesSemanales::class, ['escuela_id' => 'id']);
+    }
+
+    /**
+     * Scopes para diferentes estados
+     */
+    public static function findPreRegistros()
+    {
+        return self::find()->where(['eliminado' => false, 'estado_registro' => self::ESTADO_PRE_REGISTRO]);
+    }
+
+    /**
+     * Verificar si la escuela puede ser editada por el usuario actual
+     */
+    public function puedeEditar()
+    {
+        // Si está en pre-registro, siempre puede editarse
+        if ($this->isPreRegistro()) {
+            return true;
+        }
+        
+        // Para otros estados, verificar permisos de usuario
+        return !Yii::$app->user->isGuest;
     }
 }

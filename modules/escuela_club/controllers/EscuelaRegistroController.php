@@ -20,16 +20,21 @@ use yii\web\UploadedFile;
  */
 class EscuelaRegistroController extends Controller
 {
-    /**
-     * {@inheritdoc}
-     */
     public function behaviors()
     {
         return [
             'access' => [
                 'class' => AccessControl::class,
                 'rules' => [
+                    // REGLA NUEVA: Pre-registro accesible sin autenticación
                     [
+                        'actions' => ['pre-registro', 'completar-registro'],
+                        'allow' => true,
+                        'roles' => ['?', '@'], // ← CAMBIO CLAVE: '?' = usuarios anónimos
+                    ],
+                    // REGLA EXISTENTE: Acciones administrativas requieren auth
+                    [
+                        'actions' => ['index', 'view', 'create', 'update', 'delete', 'dashboard'],
                         'allow' => true,
                         'roles' => ['@'],
                     ],
@@ -258,4 +263,87 @@ class EscuelaRegistroController extends Controller
             'cancelados' => 2, 'total' => 62,
         ];
     }
+
+    /**
+     * Pre-registro de escuela/club - Etapa 1
+     * @return mixed
+     */
+    public function actionPreRegistro()
+    {
+        $model = new Escuela();
+        
+        // Establecer estado inicial como pre-registro
+        $model->estado_registro = Escuela::ESTADO_PRE_REGISTRO;
+        $model->eliminado = false;
+
+        if ($model->load(Yii::$app->request->post())) {
+            // **CORRECCIÓN: Asignar direccion_administrativa si está vacía**
+            if (empty($model->direccion_administrativa)) {
+                $model->direccion_administrativa = $model->direccion_practicas;
+            }
+
+            // **CORRECCIÓN: Validar todos los campos requeridos para pre-registro**
+            if ($model->validate(['nombre', 'tipo_entidad', 'telefono', 'email', 'id_estado', 'id_municipio', 'id_parroquia', 'direccion_practicas', 'direccion_administrativa'])) {
+                if ($model->save(false)) {
+                    Yii::$app->session->setFlash('success', 'Pre-registro completado. Ahora complete la información adicional.');
+                    return $this->redirect(['completar-registro', 'id' => $model->id]);
+                } else {
+                    Yii::$app->session->setFlash('error', 'Error al guardar el pre-registro en la base de datos.');
+                }
+            } else {
+                Yii::$app->session->setFlash('error', 'Error en el pre-registro. Verifique los datos.');
+                // Debug: mostrar errores de validación
+                Yii::error('Errores de validación en pre-registro: ' . print_r($model->errors, true));
+            }
+        }
+
+        return $this->render('pre-registro', [
+            'model' => $model,
+        ]);
+    }
+
+    /**
+     * Completar registro - Etapa 2
+     * @param integer $id
+     * @return mixed
+     * @throws NotFoundHttpException if the model cannot be found
+     */
+    public function actionCompletarRegistro($id)
+    {
+        $model = $this->findModel($id);
+
+        // Verificar que esté en estado pre-registro
+        if ($model->estado_registro !== Escuela::ESTADO_PRE_REGISTRO) {
+            Yii::$app->session->setFlash('error', 'Esta escuela ya ha completado su registro.');
+            return $this->redirect(['view', 'id' => $model->id]);
+        }
+
+        if ($model->load(Yii::$app->request->post())) {
+            $model->logoFile = UploadedFile::getInstance($model, 'logoFile');
+            
+            // Procesar upload de logo usando el método del modelo
+            if ($model->logoFile) {
+                if (!$model->uploadLogo()) {
+                    Yii::$app->session->setFlash('error', 'Error al subir el logo. Verifique el archivo.');
+                    return $this->refresh();
+                }
+            }
+            
+            // Cambiar estado a pendiente de aprobación
+            $model->estado_registro = Escuela::ESTADO_PENDIENTE;
+            
+            if ($model->save()) {
+                Yii::$app->session->setFlash('success', 'Registro completado exitosamente. La escuela está pendiente de aprobación.');
+                return $this->redirect(['view', 'id' => $model->id]);
+            } else {
+                Yii::$app->session->setFlash('error', 'Error al completar el registro. Verifique los datos.');
+                // Debug: mostrar errores de validación
+                Yii::error('Errores de validación en completar-registro: ' . print_r($model->errors, true));
+            }
+        }
+
+        return $this->render('completar-registro', [
+            'model' => $model,
+        ]);
+    }   
 }

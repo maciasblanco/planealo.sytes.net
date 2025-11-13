@@ -2,8 +2,11 @@
 
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
+use app\assets\AppAsset;
 
-$this->title = 'Completar Registro: ' . $model->nombre;
+AppAsset::register($this);
+
+$this->title = 'Completar Registro de Escuela/Club - Fase 2';
 $this->params['breadcrumbs'][] = ['label' => 'Escuelas/Clubes', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
@@ -13,99 +16,126 @@ $this->params['breadcrumbs'][] = $this->title;
         <div class="card-header">
             <div class="card-title">
                 <h3 class="card-label">
-                    <i class="fas fa-map-marked-alt text-primary"></i>
+                    <i class="fas fa-map-marker-alt text-primary"></i>
                     Fase 2: Completar Registro
                 </h3>
             </div>
         </div>
         <div class="card-body">
-            <div class="alert alert-warning">
-                <h4><i class="fas fa-map-marker-alt"></i> Seleccione la Ubicación Exacta</h4>
-                <p>Use el mapa para seleccionar la ubicación exacta de la cancha donde se practica. Haga clic en el mapa para establecer las coordenadas.</p>
+            <div class="alert alert-success">
+                <h4><i class="fas fa-check-circle"></i> Pre-Registro Completado</h4>
+                <p>Ahora complete la información adicional de su escuela/club. Todos los campos son opcionales excepto donde se indique.</p>
             </div>
 
-            <?php $form = ActiveForm::begin(['options' => ['enctype' => 'multipart/form-data']]); ?>
+            <?php $form = ActiveForm::begin([
+                'id' => 'completar-registro-form',
+                'options' => ['enctype' => 'multipart/form-data']
+            ]); ?>
 
-            <!-- Mapa para seleccionar ubicación -->
-            <div class="row mb-4">
-                <div class="col-md-12">
-                    <div class="form-group">
-                        <label class="control-label">Seleccione la ubicación en el mapa:</label>
-                        <div id="map" style="height: 400px; border: 2px solid #007bff; border-radius: 5px;"></div>
-                    </div>
-                </div>
+            <!-- SECCIÓN INFORMACIÓN ADICIONAL -->
+            <div class="section-title">
+                <h4><i class="fas fa-info-circle"></i> Información Adicional</h4>
             </div>
 
-            <!-- Campos ocultos para coordenadas -->
-            <div class="row">
-                <div class="col-md-6">
-                    <?= $form->field($model, 'lat')->textInput(['maxlength' => true, 'id' => 'lat-input', 'readonly' => true]) ?>
-                </div>
-                <div class="col-md-6">
-                    <?= $form->field($model, 'lng')->textInput(['maxlength' => true, 'id' => 'lng-input', 'readonly' => true]) ?>
-                </div>
-            </div>
-
-            <!-- Información adicional -->
             <div class="row">
                 <div class="col-md-12">
-                    <?= $form->field($model, 'logoFile')->fileInput() ?>
+                    <?= $form->field($model, 'mision')->textarea(['rows' => 3, 'class' => 'form-control']) ?>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-12">
+                    <?= $form->field($model, 'vision')->textarea(['rows' => 3, 'class' => 'form-control']) ?>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-12">
+                    <?= $form->field($model, 'objetivos')->textarea(['rows' => 3, 'class' => 'form-control']) ?>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-12">
+                    <?= $form->field($model, 'historia')->textarea(['rows' => 5, 'class' => 'form-control']) ?>
+                </div>
+            </div>
+
+            <!-- SECCIÓN LOGO -->
+            <div class="section-title mt-4">
+                <h4><i class="fas fa-image"></i> Logo de la Escuela/Club</h4>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <?= $form->field($model, 'logoFile')->fileInput(['class' => 'form-control-file']) ?>
+                    <small class="form-text text-muted">
+                        Formatos permitidos: PNG, JPG, JPEG, GIF. Tamaño máximo: 2MB.
+                    </small>
+                </div>
+                <div class="col-md-6">
                     <?php if ($model->logo): ?>
-                        <div class="form-group">
-                            <label>Logo Actual:</label>
-                            <div>
-                                <?= Html::img($model->getLogoUrl(), ['class' => 'img-thumbnail', 'style' => 'max-width: 200px;']) ?>
-                            </div>
+                        <div class="current-logo">
+                            <p><strong>Logo actual:</strong></p>
+                            <?= Html::img($model->getLogoUrl(), [
+                                'class' => 'img-thumbnail',
+                                'style' => 'max-width: 200px; max-height: 200px;'
+                            ]) ?>
                         </div>
                     <?php endif; ?>
                 </div>
             </div>
 
+            <!-- SECCIÓN UBICACIÓN EN MAPA -->
+            <div class="section-title mt-4">
+                <h4><i class="fas fa-map-marked-alt"></i> Ubicación en Mapa</h4>
+            </div>
+
+            <div class="alert alert-info">
+                <i class="fas fa-info-circle"></i> 
+                <strong>Información importante:</strong> 
+                Las coordenadas (Latitud y Longitud) se pueden obtener mediante el mapa interactivo 
+                o se completarán automáticamente basándose en la dirección proporcionada.
+            </div>
+
             <div class="row">
-                <div class="col-md-12">
-                    <?= $form->field($model, 'mision')->textarea(['rows' => 3]) ?>
+                <div class="col-md-6">
+                    <?= $form->field($model, 'lat')->textInput([
+                        'class' => 'form-control',
+                        'placeholder' => 'Ej: 10.480594',
+                        'id' => 'lat-input'
+                    ]) ?>
+                </div>
+                <div class="col-md-6">
+                    <?= $form->field($model, 'lng')->textInput([
+                        'class' => 'form-control',
+                        'placeholder' => 'Ej: -66.903600',
+                        'id' => 'lng-input'
+                    ]) ?>
                 </div>
             </div>
 
             <div class="row">
                 <div class="col-md-12">
-                    <?= $form->field($model, 'vision')->textarea(['rows' => 3]) ?>
-                </div>
-            </div>
-
-            <div class="row">
-                <div class="col-md-12">
-                    <?= $form->field($model, 'horarios')->textarea(['rows' => 3]) ?>
-                </div>
-            </div>
-
-            <div class="row">
-                <div class="col-md-12">
-                    <?= $form->field($model, 'objetivos')->textarea(['rows' => 3]) ?>
-                </div>
-            </div>
-
-            <div class="row">
-                <div class="col-md-12">
-                    <?= $form->field($model, 'historia')->textarea(['rows' => 3]) ?>
-                </div>
-            </div>
-
-            <div class="row">
-                <div class="col-md-12">
-                    <?= $form->field($model, 'redes_sociales')->textarea(['rows' => 2]) ?>
+                    <div class="form-group">
+                        <label>Mapa Interactivo</label>
+                        <div id="map" style="height: 300px; width: 100%; border: 1px solid #ddd; border-radius: 4px; background-color: #f8f9fa;"></div>
+                        <small class="form-text text-muted">
+                            Haga clic en el mapa para establecer la ubicación exacta de la escuela/club.
+                        </small>
+                    </div>
                 </div>
             </div>
 
             <div class="form-group text-center mt-4">
-                <?= Html::submitButton('<i class="fas fa-check-circle"></i> Completar Registro', [
-                    'class' => 'btn btn-success btn-lg px-4',
-                    'data' => [
-                        'confirm' => '¿Está seguro de que la ubicación seleccionada es correcta?',
-                        'method' => 'post'
-                    ]
+                <?= Html::submitButton('<i class="fas fa-check"></i> Completar Registro', [
+                    'class' => 'btn btn-success btn-lg',
+                    'id' => 'submit-btn'
                 ]) ?>
-                <?= Html::a('<i class="fas fa-arrow-left"></i> Volver', ['pre-registro'], ['class' => 'btn btn-secondary btn-lg px-4 ms-2']) ?>
+                
+                <?= Html::a('<i class="fas fa-arrow-left"></i> Volver', ['view', 'id' => $model->id], [
+                    'class' => 'btn btn-secondary btn-lg ml-2'
+                ]) ?>
             </div>
 
             <?php ActiveForm::end(); ?>
@@ -114,115 +144,14 @@ $this->params['breadcrumbs'][] = $this->title;
 </div>
 
 <?php
-// Incluir Leaflet CSS y JS
-$this->registerCssFile('https://unpkg.com/leaflet@1.7.1/dist/leaflet.css');
-$this->registerJsFile('https://unpkg.com/leaflet@1.7.1/dist/leaflet.js', ['depends' => [yii\web\JqueryAsset::className()]]);
-
-$mapScript = <<< JS
-// Inicializar mapa
-var map = L.map('map').setView([6.4238, -66.5897], 6);
-var marker = null;
-
-// Capa base de OpenStreetMap
-L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    attribution: '© OpenStreetMap contributors'
-}).addTo(map);
-
-// Inicializar marcador si hay coordenadas existentes
-if ($('#lat-input').val() && $('#lng-input').val()) {
-    var existingLat = parseFloat($('#lat-input').val());
-    var existingLng = parseFloat($('#lng-input').val());
-    
-    if (!isNaN(existingLat) && !isNaN(existingLng)) {
-        marker = L.marker([existingLat, existingLng]).addTo(map);
-        map.setView([existingLat, existingLng], 15);
-        
-        // Agregar popup informativo
-        marker.bindPopup('Ubicación actual de la escuela').openPopup();
-    }
-}
-
-// Evento click en el mapa
-map.on('click', function(e) {
-    var lat = e.latlng.lat;
-    var lng = e.latlng.lng;
-    
-    // Actualizar campos
-    $('#lat-input').val(lat.toFixed(6));
-    $('#lng-input').val(lng.toFixed(6));
-    
-    // Mover o crear marcador
-    if (marker) {
-        marker.setLatLng(e.latlng);
-    } else {
-        marker = L.marker(e.latlng).addTo(map);
-    }
-    
-    // Mostrar coordenadas en popup
-    marker.bindPopup(
-        'Ubicación seleccionada:<br>' +
-        'Lat: ' + lat.toFixed(6) + '<br>' +
-        'Lng: ' + lng.toFixed(6)
-    ).openPopup();
-});
-
-// Función para centrar mapa según ubicación seleccionada
-function centrarMapa() {
-    var estadoId = $('#estado-dropdown').val();
-    var municipioId = $('#municipio-dropdown').val();
-    var parroquiaId = $('#parroquia-dropdown').val();
-    
-    if (estadoId) {
-        $.get('/escuela-pre-registro/obtener-coordenadas', {
-            estado_id: estadoId,
-            municipio_id: municipioId,
-            parroquia_id: parroquiaId
-        }, function(data) {
-            if (data.success && data.lat && data.lng) {
-                map.setView([data.lat, data.lng], data.zoom || 12);
-                
-                // Si no hay marcador, crear uno en la nueva ubicación
-                if (!marker) {
-                    marker = L.marker([data.lat, data.lng]).addTo(map);
-                    $('#lat-input').val(data.lat);
-                    $('#lng-input').val(data.lng);
-                }
-            }
-        }).fail(function() {
-            console.error('Error al cargar coordenadas');
-        });
-    }
-}
-
-// Centrar mapa cuando cambie la ubicación
-$('#estado-dropdown, #municipio-dropdown, #parroquia-dropdown').change(function() {
-    centrarMapa();
-});
-
-// Centrar mapa al cargar si hay ubicación
-$(document).ready(function() {
-    // Si no hay coordenadas pero hay ubicación seleccionada, centrar el mapa
-    if (!$('#lat-input').val() && $('#estado-dropdown').val()) {
-        centrarMapa();
-    }
-});
-
-// Validación antes de enviar el formulario
-$('form').on('submit', function(e) {
-    if (!$('#lat-input').val() || !$('#lng-input').val()) {
-        alert('Por favor, seleccione una ubicación en el mapa antes de enviar el formulario.');
-        e.preventDefault();
-        return false;
-    }
-    
-    if (!$('#estado-dropdown').val() || !$('#municipio-dropdown').val() || !$('#parroquia-dropdown').val()) {
-        alert('Por favor, complete toda la información de ubicación (Estado, Municipio y Parroquia).');
-        e.preventDefault();
-        return false;
-    }
-    
-    return true;
-});
-JS;
-$this->registerJs($mapScript);
+// Solo la inicialización del mapa con timeout para asegurar que el DOM esté listo
+$this->registerJs("
+    setTimeout(function() {
+        if (typeof initMapaEscuela === 'function') {
+            initMapaEscuela();
+        } else {
+            console.error('La función initMapaEscuela no está disponible');
+        }
+    }, 500);
+");
 ?>

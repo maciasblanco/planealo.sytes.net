@@ -130,7 +130,7 @@ $id_escuela_actual = $session->get('id_escuela');
                             <div class="col-md-6">
                                 <?= Html::a(
                                     '<i class="fas fa-plus-circle ged-icon"></i> Registrar Nueva Escuela',
-                                    ['/escuela-club/escuela-pre-registro/pre-registro'],
+                                    ['/escuela_club/escuela-registro/pre-registro'],
                                     [
                                         'class' => 'ged-btn ged-btn-primary btn-lg w-100',
                                         'style' => 'padding: 12px;'
