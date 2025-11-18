@@ -29,6 +29,7 @@ class AppAsset extends AssetBundle
         'js/ged.js', // JS ya unificado
         'js/dropdowns-dependientes.js', // ← AGREGAR ESTA LÍNEA
         'js/mapa-escuela.js',
+        'js/horarioSelector.js', // Agregar esta línea
     ];
     
     public $depends = [

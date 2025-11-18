@@ -37,8 +37,7 @@ use yii\db\Expression;
  * @property string|null $telefono
  * @property string|null $email
  * @property bool|null $tipo_entidad
- * @property string|null $redes_sociales
- * @property string|null $horarios
+ * @property string|null $horario
  * @property string $estado_registro
  * @property string|null $comentarios_aprobacion
  * @property int|null $aprobado_por
@@ -77,7 +76,7 @@ class Escuela extends ActiveRecord
             [['lat', 'lng'], 'number'],
             [['d_creacion', 'd_update', 'fecha_aprobacion'], 'safe'],
             [['eliminado', 'tipo_entidad'], 'boolean'],
-            [['mision', 'vision', 'objetivos', 'historia', 'horarios', 'redes_sociales', 'comentarios_aprobacion'], 'string'],
+            [['mision', 'vision', 'objetivos', 'historia', 'horario', 'comentarios_aprobacion'], 'string'],
             
             // Validaciones de string
             [['direccion_administrativa', 'direccion_practicas'], 'string', 'max' => 255],
@@ -138,8 +137,7 @@ class Escuela extends ActiveRecord
             'telefono' => 'Teléfono',
             'email' => 'Correo Electrónico',
             'tipo_entidad' => 'Tipo de Entidad',
-            'redes_sociales' => 'Redes Sociales',
-            'horarios' => 'Horarios de Entrenamiento',
+            'horario' => 'Horarios de Entrenamiento',
             'estado_registro' => 'Estado del Registro',
             'comentarios_aprobacion' => 'Comentarios de Aprobación',
             'aprobado_por' => 'Aprobado Por',
@@ -464,5 +462,66 @@ class Escuela extends ActiveRecord
         
         // Para otros estados, verificar permisos de usuario
         return !Yii::$app->user->isGuest;
+    }
+    
+    /**
+     * Gets query for [[Encargado]].
+     */
+    public function getEncargado()
+    {
+        return $this->hasOne(EncargadoEscuela::class, ['id_escuela' => 'id'])
+                    ->andWhere(['eliminado' => false]);
+    }
+
+    /**
+     * Verificar si la escuela tiene registro completo
+     */
+    public function tieneRegistroCompleto()
+    {
+        return $this->estado_registro === self::ESTADO_APROBADO && 
+            $this->encargado !== null;
+    }
+
+    /**
+     * Método para formatear los horarios para display
+     */
+    public function getHorarioFormateado()
+    {
+        if (empty($this->horario)) {
+            return 'No se han definido horarios';
+        }
+        
+        try {
+            $horarios = json_decode($this->horario, true);
+            if (json_last_error() !== JSON_ERROR_NONE) {
+                return $this->horario; // Retornar el string original si no es JSON válido
+            }
+            
+            $diasMap = [
+                'lunes' => 'Lunes',
+                'martes' => 'Martes',
+                'miercoles' => 'Miércoles',
+                'jueves' => 'Jueves',
+                'viernes' => 'Viernes',
+                'sabado' => 'Sábado',
+                'domingo' => 'Domingo'
+            ];
+            
+            $resultado = [];
+            foreach ($horarios as $dia => $horas) {
+                if (!empty($horas) && is_array($horas)) {
+                    sort($horas);
+                    $horasFormateadas = array_map(function($hora) {
+                        return $hora <= 12 ? $hora . ':00 AM' : ($hora - 12) . ':00 PM';
+                    }, $horas);
+                    
+                    $resultado[] = $diasMap[$dia] . ': ' . implode(', ', $horasFormateadas);
+                }
+            }
+            
+            return empty($resultado) ? 'No se han definido horarios' : implode(' | ', $resultado);
+        } catch (\Exception $e) {
+            return $this->horario; // Retornar el string original si hay error
+        }
     }
 }

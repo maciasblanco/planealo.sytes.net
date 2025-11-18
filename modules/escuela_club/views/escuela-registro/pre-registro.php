@@ -135,6 +135,112 @@ $urlParroquias = Yii::$app->urlManager->createUrl(['/parroquia/get-by-muni']);
                     ])->textInput(['maxlength' => true])->label('Dirección de Prácticas (Ubicación de la Cancha) <span class="text-danger">*</span>', ['class' => 'required-field']) ?>
                 </div>
             </div>
+            <!-- SECCIÓN DATOS DEL ENCARGADO -->
+            <div class="section-title mt-4">
+                <h4><i class="fas fa-user-tie"></i> Datos del Encargado/Representante</h4>
+            </div>
+
+            <div class="alert alert-warning">
+                <i class="fas fa-exclamation-triangle"></i> 
+                <strong>Importante:</strong> Un encargado solo puede estar registrado en una escuela. 
+                Verifique que la cédula no esté ya registrada en otra escuela.
+            </div>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <?= $form->field($encargado, 'p_nombre')->textInput([
+                        'maxlength' => true,
+                        'placeholder' => 'Primer nombre',
+                        'class' => 'form-control'
+                    ])->label('Primer Nombre <span class="text-danger">*</span>') ?>
+                </div>
+                <div class="col-md-6">
+                    <?= $form->field($encargado, 's_nombre')->textInput([
+                        'maxlength' => true,
+                        'placeholder' => 'Segundo nombre',
+                        'class' => 'form-control'
+                    ]) ?>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <?= $form->field($encargado, 'p_apellido')->textInput([
+                        'maxlength' => true,
+                        'placeholder' => 'Primer apellido',
+                        'class' => 'form-control'
+                    ])->label('Primer Apellido <span class="text-danger">*</span>') ?>
+                </div>
+                <div class="col-md-6">
+                    <?= $form->field($encargado, 's_apellido')->textInput([
+                        'maxlength' => true,
+                        'placeholder' => 'Segundo apellido',
+                        'class' => 'form-control'
+                    ]) ?>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <?= $form->field($encargado, 'identificacion')->textInput([
+                        'maxlength' => true,
+                        'placeholder' => 'Ej: V12345678',
+                        'class' => 'form-control'
+                    ])->label('Cédula de Identidad <span class="text-danger">*</span>') ?>
+                </div>
+                <div class="col-md-6">
+                    <?= $form->field($encargado, 'fn')->textInput([
+                        'type' => 'date',
+                        'class' => 'form-control'
+                    ])->label('Fecha de Nacimiento <span class="text-danger">*</span>') ?>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <?= $form->field($encargado, 'sexo')->dropDownList(
+                        ArrayHelper::map(\app\models\Sexo::find()->where(['eliminado' => false])->all(), 'id', 'descripcion'),
+                        [
+                            'prompt' => 'Seleccione...',
+                            'class' => 'form-control'
+                        ]
+                    )->label('Sexo <span class="text-danger">*</span>') ?>
+                </div>
+                <div class="col-md-6">
+                    <?= $form->field($encargado, 'cell')->textInput([
+                        'maxlength' => true,
+                        'placeholder' => 'Ej: 0412-1234567',
+                        'class' => 'form-control'
+                    ])->label('Teléfono Celular <span class="text-danger">*</span>') ?>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <?= $form->field($encargado, 'telf')->textInput([
+                        'maxlength' => true,
+                        'placeholder' => 'Teléfono local (opcional)',
+                        'class' => 'form-control'
+                    ]) ?>
+                </div>
+                <div class="col-md-6">
+                    <?= $form->field($encargado, 'email')->textInput([
+                        'maxlength' => true,
+                        'placeholder' => 'correo@ejemplo.com',
+                        'class' => 'form-control'
+                    ]) ?>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-12">
+                    <?= $form->field($encargado, 'cargo')->textInput([
+                        'maxlength' => true,
+                        'placeholder' => 'Ej: Director, Coordinador, Entrenador Principal...',
+                        'class' => 'form-control'
+                    ]) ?>
+                </div>
+            </div>
 
             <div class="form-group text-center mt-4">
                 <?= Html::submitButton('<i class="fas fa-arrow-right"></i> Continuar a Fase 2', [

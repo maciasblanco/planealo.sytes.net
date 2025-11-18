@@ -9,6 +9,11 @@ AppAsset::register($this);
 
 /** @var yii\web\View $this */
 /** @var app\models\Escuela[] $escuelas */
+/** @var int $totalEscuelas */
+/** @var int $totalPreRegistro */
+/** @var int $totalAprobadas */
+/** @var int $totalPendientes */
+/** @var string $cedula */
 
 $this->title = 'Seleccionar Escuela - Sistema GED';
 $this->params['breadcrumbs'][] = $this->title;
@@ -73,6 +78,53 @@ $id_escuela_actual = $session->get('id_escuela');
                         </div>
                     <?php endif; ?>
 
+                    <!-- Estadísticas -->
+                    <div class="row mb-4">
+                        <div class="col-md-3">
+                            <div class="stat-card text-center border-end">
+                                <h3 class="text-primary"><?= $totalEscuelas ?></h3>
+                                <p class="text-muted mb-0">Total Escuelas</p>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="stat-card text-center border-end">
+                                <h3 class="text-warning"><?= $totalPreRegistro ?></h3>
+                                <p class="text-muted mb-0">Pre-Registro</p>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="stat-card text-center border-end">
+                                <h3 class="text-info"><?= $totalPendientes ?></h3>
+                                <p class="text-muted mb-0">Pendientes</p>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="stat-card text-center">
+                                <h3 class="text-success"><?= $totalAprobadas ?></h3>
+                                <p class="text-muted mb-0">Aprobadas</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Barra de Progreso de Estados -->
+                    <div class="mb-4">
+                        <div class="progress mb-2" style="height: 12px;">
+                            <?php if ($totalEscuelas > 0): ?>
+                                <div class="progress-bar bg-success" style="width: <?= ($totalAprobadas / $totalEscuelas * 100) ?>%" 
+                                     title="<?= $totalAprobadas ?> Aprobadas (<?= round($totalAprobadas / $totalEscuelas * 100, 1) ?>%)"></div>
+                                <div class="progress-bar bg-info" style="width: <?= ($totalPendientes / $totalEscuelas * 100) ?>%" 
+                                     title="<?= $totalPendientes ?> Pendientes (<?= round($totalPendientes / $totalEscuelas * 100, 1) ?>%)"></div>
+                                <div class="progress-bar bg-warning" style="width: <?= ($totalPreRegistro / $totalEscuelas * 100) ?>%" 
+                                     title="<?= $totalPreRegistro ?> Pre-Registro (<?= round($totalPreRegistro / $totalEscuelas * 100, 1) ?>%)"></div>
+                            <?php endif; ?>
+                        </div>
+                        <div class="d-flex justify-content-between small text-muted">
+                            <span>Aprobadas: <?= $totalAprobadas ?></span>
+                            <span>Pendientes: <?= $totalPendientes ?></span>
+                            <span>Pre-Registro: <?= $totalPreRegistro ?></span>
+                        </div>
+                    </div>
+
                     <!-- Formulario de Selección -->
                     <?php if (empty($escuelas)): ?>
                         <div class="alert alert-ged-danger text-center">
@@ -81,7 +133,7 @@ $id_escuela_actual = $session->get('id_escuela');
                             <div class="mt-3">
                                 <?= Html::a(
                                     '<i class="fas fa-plus-circle ged-icon"></i> Registrar Primera Escuela',
-                                    ['/escuela-club/escuela-pre-registro/pre-registro'],
+                                    ['/escuela_club/escuela-registro/pre-registro'],
                                     ['class' => 'ged-btn ged-btn-success btn-lg']
                                 ) ?>
                             </div>
@@ -94,7 +146,7 @@ $id_escuela_actual = $session->get('id_escuela');
 
                         <div class="form-group mb-4">
                             <label class="control-label ged-form-label">
-                                <strong>Seleccione una Escuela:</strong>
+                                <strong>Seleccione una Escuela para Trabajar:</strong>
                             </label>
                             <select name="id_escuela" class="form-control form-select ged-form-control" required 
                                     style="font-size: 16px; padding: 12px; height: auto;">
@@ -106,6 +158,14 @@ $id_escuela_actual = $session->get('id_escuela');
                                         - <?= Html::encode($escuela->estado->estado ?? 'N/A') ?>
                                         <?php if ($escuela->direccion_administrativa): ?>
                                             | <?= Html::encode(substr($escuela->direccion_administrativa, 0, 30)) ?>...
+                                        <?php endif; ?>
+                                        <!-- Mostrar estado de registro -->
+                                        <?php if ($escuela->estado_registro == 'pre_registro'): ?>
+                                            <span class="badge bg-warning float-end">Pre-Registro</span>
+                                        <?php elseif ($escuela->estado_registro == 'pendiente'): ?>
+                                            <span class="badge bg-info float-end">Pendiente</span>
+                                        <?php elseif ($escuela->estado_registro == 'aprobado'): ?>
+                                            <span class="badge bg-success float-end">Aprobada</span>
                                         <?php endif; ?>
                                     </option>
                                 <?php endforeach; ?>
@@ -140,6 +200,92 @@ $id_escuela_actual = $session->get('id_escuela');
                         </div>
 
                         <?php ActiveForm::end(); ?>
+
+                        <!-- Lista de Escuelas en Pre-Registro -->
+                        <?php 
+                        // Filter pre-registration schools first
+                        $escuelasPreRegistro = array_filter($escuelas, function($escuela) {
+                            return $escuela->estado_registro == 'pre_registro';
+                        });
+                        ?>
+                        
+                        <!-- Formulario de Búsqueda por Cédula -->
+                        <div class="card mb-4">
+                            <h4 class="border-bottom pb-2">
+                                <i class="fas fa-clock text-warning me-2"></i> 
+                                Escuelas en Pre-Registro
+                                <span class="badge bg-warning"><?= count($escuelasPreRegistro) ?></span>
+                            </h4>
+                            <p class="text-muted">Estas escuelas necesitan completar su registro para ser aprobadas.</p>
+                            <div class="card-body">
+                                <h5 class="card-title">
+                                    <i class="fas fa-search ged-icon"></i> Buscar Escuela por Cédula del Encargado
+                                </h5>
+                                <form method="get" action="<?= Url::to(['/ged/default/select-escuela']) ?>">
+                                    <div class="row g-2">
+                                        <div class="col-md-8">
+                                            <input type="text" 
+                                                name="cedula" 
+                                                class="form-control" 
+                                                placeholder="Ingrese la cédula del encargado..."
+                                                value="<?= Html::encode($cedula) ?>"
+                                                pattern="[0-9]{7,10}"
+                                                title="La cédula debe tener entre 7 y 10 dígitos">
+                                        </div>
+                                        <div class="col-md-4">
+                                            <button type="submit" class="btn btn-primary w-100">
+                                                <i class="fas fa-search me-1"></i> Buscar
+                                            </button>
+                                        </div>
+                                    </div>
+                                </form>
+                                <?php if ($cedula): ?>
+                                    <div class="mt-2">
+                                        <a href="<?= Url::to(['/ged/default/select-escuela']) ?>" class="btn btn-sm btn-outline-secondary">
+                                            <i class="fas fa-times me-1"></i> Limpiar búsqueda
+                                        </a>
+                                    </div>
+                                <?php endif; ?>
+                            </div>
+                        
+                            <?php if (!empty($escuelasPreRegistro)): ?>
+                                <div class="mt-3">
+                                    <div class="list-group">
+                                        <?php foreach ($escuelasPreRegistro as $escuela): ?>
+                                            <div class="list-group-item">
+                                                <div class="d-flex w-100 justify-content-between align-items-start">
+                                                    <div class="flex-grow-1">
+                                                        <h5 class="mb-1"><?= Html::encode($escuela->nombre) ?></h5>
+                                                        <p class="mb-1">
+                                                            <strong>Encargado:</strong> 
+                                                            <?= $escuela->encargado ? 
+                                                                Html::encode($escuela->encargado->p_nombre . ' ' . $escuela->encargado->p_apellido) : 
+                                                                'No asignado' ?>
+                                                        </p>
+                                                        <p class="mb-1">
+                                                            <strong>Cédula:</strong> 
+                                                            <?= $escuela->encargado ? 
+                                                                Html::encode($escuela->encargado->identificacion) : 
+                                                                'No disponible' ?>
+                                                        </p>
+                                                        <small class="text-muted">
+                                                            <strong>Dirección:</strong> <?= Html::encode($escuela->direccion_administrativa ?? 'No disponible') ?>
+                                                        </small>
+                                                    </div>
+                                                    <div class="ms-3">
+                                                        <?= Html::a(
+                                                            '<i class="fas fa-edit me-1"></i> Completar Registro',
+                                                            ['/escuela_club/escuela-registro/completar-registro', 'id' => $escuela->id],
+                                                            ['class' => 'btn btn-warning btn-sm']
+                                                        ) ?>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        <?php endforeach; ?>
+                                    </div>
+                                </div>
+                            <?php endif; ?>
+                        </div>
 
                         <?php if ($escuela_actual): ?>
                             <div class="text-center mt-3">
@@ -201,13 +347,24 @@ $id_escuela_actual = $session->get('id_escuela');
                 <div class="card-body">
                     <div class="stats-grid">
                         <div class="stat-item">
-                            <span class="stat-number"><?= count($escuelas) ?></span>
-                            <span class="stat-label">Escuelas Activas</span>
+                            <span class="stat-number"><?= $totalEscuelas ?></span>
+                            <span class="stat-label">Total Escuelas</span>
                         </div>
                         <div class="stat-item">
-                            <span class="stat-number"><?= $escuela_actual ? '1' : '0' ?></span>
-                            <span class="stat-label">Seleccionada</span>
+                            <span class="stat-number"><?= $totalPreRegistro ?></span>
+                            <span class="stat-label">Pre-Registro</span>
                         </div>
+                        <div class="stat-item">
+                            <span class="stat-number"><?= $totalAprobadas ?></span>
+                            <span class="stat-label">Aprobadas</span>
+                        </div>
+                    </div>
+                    <div class="progress mb-2" style="height: 8px;">
+                        <?php if ($totalEscuelas > 0): ?>
+                            <div class="progress-bar bg-success" style="width: <?= ($totalAprobadas / $totalEscuelas * 100) ?>%"></div>
+                            <div class="progress-bar bg-warning" style="width: <?= ($totalPreRegistro / $totalEscuelas * 100) ?>%"></div>
+                            <div class="progress-bar bg-info" style="width: <?= ($totalPendientes / $totalEscuelas * 100) ?>%"></div>
+                        <?php endif; ?>
                     </div>
                     <div class="alert alert-warning mt-3 mb-0">
                         <small>
@@ -229,7 +386,7 @@ $id_escuela_actual = $session->get('id_escuela');
                     <div class="quick-actions-grid">
                         <?= Html::a(
                             '<i class="fas fa-list ged-icon"></i> Ver Todas las Escuelas',
-                            ['/escuela-club/escuela-registro/index'],
+                            ['/escuela_club/escuela-registro/index'],
                             ['class' => 'quick-action-btn']
                         ) ?>
                         <?= Html::a(

@@ -100,7 +100,7 @@ class DefaultController extends Controller
     }
 
     /**
-     * ✅ ACTION SELECT-ESCUELA - MEJORADO
+     * ✅ ACTION SELECT-ESCUELA - COMPLETAMENTE CORREGIDO
      * Selección de escuela con validaciones robustas
      */
     public function actionSelectEscuela()
@@ -111,19 +111,54 @@ class DefaultController extends Controller
         // ✅ LIMPIAR BANDERA DE REDIRECCIÓN
         $session->remove('en_redireccion_ged');
 
-        // ✅ OBTENER LISTA DE ESCUELAS ACTIVAS (no eliminadas)
-        $escuelas = Escuela::find()
-            ->where(['eliminado' => false])
-            ->orderBy(['nombre' => SORT_ASC])
-            ->all();
+        // ✅ OBTENER PARÁMETRO DE BÚSQUEDA (cédula)
+        $cedula = $request->get('cedula');
 
-        if (empty($escuelas)) {
-            Yii::$app->session->setFlash('error', 
-                'No hay escuelas disponibles en el sistema.');
-            return $this->render('select-escuela', ['escuelas' => []]);
+        // ✅ OBTENER ESTADÍSTICAS
+        $totalEscuelas = Escuela::find()->where(['eliminado' => false])->count();
+        $totalPreRegistro = Escuela::find()
+            ->where(['eliminado' => false, 'estado_registro' => 'pre_registro'])
+            ->count();
+        $totalAprobadas = Escuela::find()
+            ->where(['eliminado' => false, 'estado_registro' => 'aprobado'])
+            ->count();
+        $totalPendientes = Escuela::find()
+            ->where(['eliminado' => false, 'estado_registro' => 'pendiente'])
+            ->count();
+
+        // ✅ OBTENER LISTA DE ESCUELAS CON FILTROS - SOLUCIÓN DEFINITIVA
+        if (!empty($cedula)) {
+            // CONSULTA ESPECÍFICA PARA BÚSQUEDA POR CÉDULA - USANDO JOIN MANUAL
+            $query = Escuela::find()
+                ->alias('e')
+                ->select(['e.*'])
+                ->innerJoin('atletas.encargado_escuela ec', 'e.id = ec.id_escuela')
+                ->where(['e.eliminado' => false])
+                ->andWhere(['ec.identificacion' => $cedula])
+                ->andWhere(['ec.eliminado' => false])
+                ->orderBy([
+                    'e.estado_registro' => SORT_ASC,
+                    'e.nombre' => SORT_ASC
+                ]);
+        } else {
+            // CONSULTA GENERAL SIN FILTRO DE CÉDULA
+            $query = Escuela::find()
+                ->alias('e')
+                ->where(['e.eliminado' => false])
+                ->orderBy([
+                    'e.estado_registro' => SORT_ASC,
+                    'e.nombre' => SORT_ASC
+                ]);
         }
 
-        // ✅ MANEJO DE FORMULARIO POST
+        $escuelas = $query->all();
+
+        if (empty($escuelas) && !empty($cedula)) {
+            Yii::$app->session->setFlash('info', 
+                'No se encontraron escuelas con la cédula del encargado: ' . $cedula);
+        }
+
+        // ✅ MANEJO DE FORMULARIO POST (selección de escuela)
         if ($request->isPost) {
             $id_escuela = $request->post('id_escuela');
             
@@ -153,6 +188,11 @@ class DefaultController extends Controller
 
         return $this->render('select-escuela', [
             'escuelas' => $escuelas,
+            'totalEscuelas' => $totalEscuelas,
+            'totalPreRegistro' => $totalPreRegistro,
+            'totalAprobadas' => $totalAprobadas,
+            'totalPendientes' => $totalPendientes,
+            'cedula' => $cedula
         ]);
     }
 
