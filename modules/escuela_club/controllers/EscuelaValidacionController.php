@@ -197,6 +197,23 @@ class EscuelaValidacionController extends Controller
     }
 
     /**
+     * Mapa de escuelas aprobadas
+     */
+    public function actionMapaEscuelas()
+    {
+        $escuelas = Escuela::find()
+            ->where(['estado_registro' => Escuela::ESTADO_APROBADO])
+            ->andWhere(['eliminado' => false])
+            ->andWhere(['IS NOT', 'lat', null])
+            ->andWhere(['IS NOT', 'lng', null])
+            ->all();
+
+        return $this->render('mapa-escuelas', [
+            'escuelas' => $escuelas,
+        ]);
+    }
+
+    /**
      * Finds the Escuela model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
      * @param integer $id

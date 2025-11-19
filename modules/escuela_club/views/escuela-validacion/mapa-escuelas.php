@@ -36,8 +36,8 @@ foreach ($escuelas as $escuela) {
     }
 }
 
-// Registrar assets
-AppAsset::register($this);
+// Registrar assets específicos del mapa
+AppAsset::addMap($this);
 ?>
 
 <div class="escuela-mapa">
@@ -180,4 +180,16 @@ AppAsset::register($this);
 <?php
 // Pasar datos a JavaScript
 $this->registerJs("var escuelasData = " . json_encode($escuelasData) . ";", \yii\web\View::POS_HEAD);
+
+// Inicializar el mapa cuando el documento esté listo
+$this->registerJs(<<<JS
+    $(document).ready(function() {
+        if (typeof inicializarAplicacionMapa === 'function') {
+            inicializarAplicacionMapa();
+        } else {
+            console.error('La función inicializarAplicacionMapa no está disponible');
+        }
+    });
+JS
+);
 ?>
