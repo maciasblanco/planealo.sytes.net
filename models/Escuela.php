@@ -341,6 +341,7 @@ class Escuela extends ActiveRecord
     {
         $this->estado_registro = self::ESTADO_RECHAZADO;
         $this->comentarios_aprobacion = $comentarios;
+        $this->fecha_aprobacion = new Expression('NOW()');
         return $this->save(false);
     }
 

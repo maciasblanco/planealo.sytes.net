@@ -112,6 +112,10 @@ $config = [
                 // ✅ NUEVAS RUTAS PARA SELECCIÓN DE ESCUELA
                 'select-escuela/<id:\d+>' => 'escuela-club/escuela-registro/select-escuela',
                 'clear-escuela' => 'escuela-club/escuela-registro/clear-escuela',
+                // ✅ NUEVAS RUTAS PARA VALIDACIÓN DE ESCUELA
+                'escuela-validacion/pendientes' => 'escuela-club/escuela-validacion/pendientes',
+                'escuela-validacion/aprobar/<id:\d+>' => 'escuela-club/escuela-validacion/aprobar',
+                'escuela-validacion/rechazar/<id:\d+>' => 'escuela-club/escuela-validacion/rechazar',
             ],
         ],
         'assetManager' => [

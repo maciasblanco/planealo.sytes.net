@@ -23,6 +23,7 @@ class AppAsset extends AssetBundle
     public $css = [
         'css/ged.css', // ÚNICO ARCHIVO CSS UNIFICADO
         'font_ico/bootstrap-icons.css',
+        'mapa-escuelas.css',
     ];
     
     public $js = [
@@ -30,6 +31,7 @@ class AppAsset extends AssetBundle
         'js/dropdowns-dependientes.js', // ← AGREGAR ESTA LÍNEA
         'js/mapa-escuela.js',
         'js/horarioSelector.js', // Agregar esta línea
+       ' mapa-escuelas-show.js',
     ];
     
     public $depends = [
@@ -37,4 +39,10 @@ class AppAsset extends AssetBundle
         'yii\bootstrap5\BootstrapAsset',
         'yii\bootstrap5\BootstrapPluginAsset', // Para JS de Bootstrap
     ];
+    // Para cargar solo en páginas específicas
+    public static function addMap($view)
+    {
+        $view->registerCssFile('@web/css/mapa-escuelas.css', ['depends' => [AppAsset::class]]);
+        $view->registerJsFile('@web/js/mapa-escuelas-show.js', ['depends' => [AppAsset::class]]);
+    }
 }
