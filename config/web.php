@@ -116,6 +116,14 @@ $config = [
                 'escuela-validacion/pendientes' => 'escuela-club/escuela-validacion/pendientes',
                 'escuela-validacion/aprobar/<id:\d+>' => 'escuela-club/escuela-validacion/aprobar',
                 'escuela-validacion/rechazar/<id:\d+>' => 'escuela-club/escuela-validacion/rechazar',
+                // Reglas para el módulo tienda
+                'tienda' => 'tienda/default/index',
+                'tienda/marketplace' => 'tienda/marketplace/index',
+                'tienda/registro-vendedor' => 'tienda/default/registro-vendedor',
+                'tienda/dashboard-vendedor' => 'tienda/default/dashboard-vendedor',
+                'tienda/buscar' => 'tienda/marketplace/buscar',
+                'tienda/categoria/<id:\d+>' => 'tienda/marketplace/categoria',
+                'tienda/producto/<id:\d+>' => 'tienda/marketplace/producto',
             ],
         ],
         'assetManager' => [
@@ -142,6 +150,10 @@ $config = [
         //modulo de acceso al sistema
         'acces' => [
             'class' => 'app\modules\acces\acces',
+        ],
+        //modulo de acceso al sistema
+        'tienda' => [
+            'class' => 'app\modules\tienda\tienda',
         ],
         'atletas' => [
             'class' => 'app\modules\atletas\atletas',
@@ -194,6 +206,11 @@ $config = [
             'admin/user/request-password-reset',
             'admin/user/reset-password',
             '*',
+        ],
+        'tienda' => [
+            'maxProductosPorTienda' => 100,
+            'comisionVenta' => 5, // 5% de comisión
+            'monedaPredeterminada' => 'USD',
         ]
     ],
 

@@ -375,6 +375,55 @@ $id_escuela_actual = $session->get('id_escuela');
                 </div>
             </div>
 
+            <!-- Card del Marketplace - NUEVA SECCIÓN -->
+            <div class="card ged-card ged-animated-card mt-4">
+                <div class="card-header ged-card-header-tienda">
+                    <h4 class="card-title ged-text-white mb-0">
+                        <i class="fas fa-store ged-icon"></i> Marketplace Deportivo
+                    </h4>
+                </div>
+                <div class="card-body">
+                    <div class="store-promo-content">
+                        <div class="store-icon-large mb-3">
+                            <i class="fas fa-shopping-bag fa-2x text-primary"></i>
+                        </div>
+                        <h5 class="store-title">Encuentra todo para el deporte</h5>
+                        <p class="store-description">
+                            Equipamiento, nutrición, entrenamiento y servicios para atletas, clubes y escuelas.
+                        </p>
+                        
+                        <div class="store-features">
+                            <div class="store-feature-item">
+                                <i class="fas fa-check-circle text-success me-2"></i>
+                                Productos locales
+                            </div>
+                            <div class="store-feature-item">
+                                <i class="fas fa-check-circle text-success me-2"></i>
+                                Servicios deportivos
+                            </div>
+                            <div class="store-feature-item">
+                                <i class="fas fa-check-circle text-success me-2"></i>
+                                Transacciones seguras
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="text-center mt-4">
+                        <a href="<?= Url::to(['/tienda/marketplace']) ?>" 
+                           class="ged-btn ged-btn-tienda btn-lg w-100" 
+                           id="btn-marketplace">
+                            <i class="fas fa-rocket ged-icon"></i> Explorar Marketplace
+                        </a>
+                    </div>
+                    
+                    <div class="text-center mt-2">
+                        <small class="text-muted">
+                            ¿Quieres vender? <a href="<?= Url::to(['/tienda/registro-vendedor']) ?>">Regístrate como vendedor</a>
+                        </small>
+                    </div>
+                </div>
+            </div>
+
             <!-- Acciones Rápidas -->
             <div class="card ged-card ged-animated-card mt-4">
                 <div class="card-header ged-card-header-warning">

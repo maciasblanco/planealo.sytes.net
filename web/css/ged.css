@@ -2447,3 +2447,130 @@ html, body {
         gap: 8px;
     }
 }
+/* ===== ESTILOS ESPECÍFICOS PARA TIENDA ===== */
+/* Agregar al final de ged.css para no interferir con estilos existentes */
+
+/* Card Header específico para Tienda */
+.ged-card-header-tienda {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+  border-bottom: none !important;
+}
+
+/* Botón específico para Tienda */
+.ged-btn-tienda {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+  border: none !important;
+  color: white !important;
+  font-weight: 600 !important;
+  transition: all 0.3s ease !important;
+}
+
+.ged-btn-tienda:hover {
+  transform: translateY(-2px) !important;
+  box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4) !important;
+  color: white !important;
+}
+
+/* Contenido de la promoción de tienda */
+.store-promo-content {
+  text-align: center;
+}
+
+.store-icon-large {
+  font-size: 3rem;
+  opacity: 0.8;
+}
+
+.store-title {
+  font-weight: 700;
+  color: #2c3e50;
+  margin-bottom: 0.5rem;
+}
+
+.store-description {
+  color: #6c757d;
+  font-size: 0.9rem;
+  line-height: 1.4;
+}
+
+.store-features {
+  text-align: left;
+  margin-top: 1rem;
+}
+
+.store-feature-item {
+  padding: 0.25rem 0;
+  font-size: 0.85rem;
+  color: #495057;
+}
+
+/* Estados hover para cards de tienda */
+.ged-card:hover .ged-card-header-tienda {
+  background: linear-gradient(135deg, #5a6fd8 0%, #6a4190 100%) !important;
+}
+
+/* Responsive para móviles */
+@media (max-width: 768px) {
+  .store-promo-content {
+      padding: 0 1rem;
+  }
+  
+  .ged-btn-tienda {
+      padding: 12px 20px !important;
+      font-size: 1rem !important;
+  }
+  
+  .store-icon-large {
+      font-size: 2.5rem;
+  }
+}
+
+/* Animaciones específicas para elementos de tienda */
+@keyframes pulse-tienda {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+  100% { transform: scale(1); }
+}
+
+.ged-btn-tienda:active {
+  animation: pulse-tienda 0.3s ease;
+}
+
+/* Clases utilitarias para futuros componentes de tienda */
+.tienda-badge {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 0.25rem 0.5rem;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.tienda-price {
+  font-weight: 700;
+  color: #28a745;
+  font-size: 1.1rem;
+}
+
+.tienda-discount {
+  color: #dc3545;
+  text-decoration: line-through;
+  font-size: 0.9rem;
+  margin-left: 0.5rem;
+}
+
+/* Loading específico para tienda */
+.tienda-loading {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  border: 3px solid #f3f3f3;
+  border-top: 3px solid #667eea;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
