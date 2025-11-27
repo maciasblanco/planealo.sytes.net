@@ -69,7 +69,7 @@ $config = [
                 'tasa-dolar' => 'tasa-dolar/index',
                 'tasa-dolar/actualizar' => 'tasa-dolar/actualizar',
                 // NUEVAS RUTAS PARA PERFIL
-                ' mi-perfil' => 'perfil/mi-informacion',
+                'mi-perfil' => 'perfil/mi-informacion',
                 'mis-deudas' => 'perfil/mis-deudas',
                 'mis-representados' => 'perfil/mis-representados',
                 'mi-perfil/<id:\d+>' => 'perfil/mi-informacion',
@@ -124,6 +124,14 @@ $config = [
                 'tienda/buscar' => 'tienda/marketplace/buscar',
                 'tienda/categoria/<id:\d+>' => 'tienda/marketplace/categoria',
                 'tienda/producto/<id:\d+>' => 'tienda/marketplace/producto',
+                // Reportes
+                'reportes' => 'reportes/default/index',
+                'reportes/atletas' => 'reportes/reportes/atletas',
+                'reportes/estadisticas-atleta' => 'reportes/reportes/estadisticas-atleta',
+                'reportes/deudas-pendientes' => 'reportes/reportes/deudas-pendientes',
+                'reportes/asistencias' => 'reportes/reportes/asistencias',
+                'reportes/exportar-pdf/<reporte>' => 'reportes/reportes/exportar-pdf',
+                'reportes/exportar-excel/<reporte>' => 'reportes/reportes/exportar-excel',
             ],
         ],
         'assetManager' => [
@@ -170,6 +178,9 @@ $config = [
         'aportes' => [
             'class' => 'app\modules\aportes\aportes',
         ],
+        'reportes' => [
+            'class' => 'app\modules\reportes\reportes',
+        ],
         
     ],
 
@@ -188,7 +199,13 @@ $config = [
     /** 
      * aqui termina el codigo de prueba
     */
-    'params' => $params,
+    'params' => array_merge($params, [
+        'tienda' => [
+            'maxProductosPorTienda' => 100,
+            'comisionVenta' => 5, // 5% de comisión
+            'monedaPredeterminada' => 'USD',
+        ]
+    ]),
         'as access' => [
         'class' => 'mdm\admin\components\AccessControl',
         'allowActions' => [
@@ -206,11 +223,6 @@ $config = [
             'admin/user/request-password-reset',
             'admin/user/reset-password',
             '*',
-        ],
-        'tienda' => [
-            'maxProductosPorTienda' => 100,
-            'comisionVenta' => 5, // 5% de comisión
-            'monedaPredeterminada' => 'USD',
         ]
     ],
 

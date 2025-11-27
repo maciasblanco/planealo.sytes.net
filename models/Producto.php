@@ -1,7 +1,7 @@
 <?php
 // modules/tienda/models/Producto.php
 
-namespace app\modules\tienda\models;
+namespace app\models;
 
 use Yii;
 use yii\db\ActiveRecord;

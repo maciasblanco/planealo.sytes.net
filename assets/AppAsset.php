@@ -24,6 +24,7 @@ class AppAsset extends AssetBundle
         'css/ged.css', // ÚNICO ARCHIVO CSS UNIFICADO
         'font_ico/bootstrap-icons.css',
         'css/mapa-escuelas.css',
+        'css/reportes.css',
     ];
     
     public $js = [
@@ -31,8 +32,9 @@ class AppAsset extends AssetBundle
         'js/dropdowns-dependientes.js', // ← AGREGAR ESTA LÍNEA
         'js/mapa-escuela.js',
         'js/horarioSelector.js', // Agregar esta línea
-        ' js/mapa-escuelas-show.js',
+        'js/mapa-escuelas-show.js',
         'js/tienda.js', // NUEVO: Agregar el JS de tienda
+        'js/reportes.js',
     ];
     
     public $depends = [
