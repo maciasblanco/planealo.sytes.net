@@ -19,7 +19,7 @@ $controlWidth = '20%'; // Aumentado desde 13%
 $navbarClasses = 'navbar navbar-expand-lg navbar-dark navbar-contextual fixed-top';
 $containerClasses = 'container-fluid';
 
-// ✅ CSS CORREGIDO PARA GARANTIZAR VISIBILIDAD DEL LOGO
+// ✅ CSS CORREGIDO PARA GARANTIZAR VISIBILIDAD DEL LOGO Y MENÚ
 $this->registerCss("
 .navbar-contextual {
     position: fixed !important;
@@ -64,6 +64,9 @@ $this->registerCss("
 
 .navbar-menu-section {
     width: {$menuWidth} !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
 }
 
 .navbar-social-section {
@@ -80,6 +83,26 @@ $this->registerCss("
     width: 0% !important;
 }
 
+/* ✅ ESTILOS PARA EL MENÚ PRINCIPAL */
+.navbar-container {
+    display: flex !important;
+    width: 100% !important;
+    align-items: center !important;
+}
+
+.section-container {
+    width: 100% !important;
+    display: flex !important;
+    justify-content: center !important;
+}
+
+.main-navigation {
+    width: 100% !important;
+    display: flex !important;
+    justify-content: center !important;
+    flex-wrap: wrap !important;
+}
+
 /* ✅ CORRECCIÓN ESPECÍFICA PARA ESCRITORIO */
 @media (min-width: 992px) {
     .navbar-brand-section {
@@ -94,8 +117,70 @@ $this->registerCss("
         min-height: 80px !important;
         min-width: 100px !important;
     }
+    
+    .main-navigation {
+        justify-content: center !important;
+        gap: 15px !important;
+    }
+    
+    .nav-item {
+        white-space: nowrap !important;
+    }
+}
+
+/* ✅ CORRECCIÓN PARA MÓVILES */
+@media (max-width: 991.98px) {
+    .navbar-menu-section {
+        width: 100% !important;
+        order: 3 !important;
+        margin-top: 15px !important;
+    }
+    
+    .navbar-social-section {
+        width: 100% !important;
+        order: 2 !important;
+        justify-content: center !important;
+        margin: 10px 0 !important;
+    }
+    
+    .navbar-control-section {
+        width: 100% !important;
+        order: 1 !important;
+    }
+    
+    .navbar-container {
+        flex-direction: column !important;
+    }
+}
+
+/* ✅ ESTILOS PARA REDES SOCIALES */
+.social-icons-vertical {
+    display: flex !important;
+    justify-content: center !important;
+    gap: 10px !important;
+}
+
+.social-icon-circle {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    width: 35px !important;
+    height: 35px !important;
+    border-radius: 50% !important;
+    background: rgba(255, 255, 255, 0.1) !important;
+    color: white !important;
+    text-decoration: none !important;
+    transition: all 0.3s ease !important;
+}
+
+.social-icon-circle:hover {
+    background: rgba(255, 255, 255, 0.2) !important;
+    transform: translateY(-2px) !important;
 }
 ");
+
+// ✅ DETECCIÓN DE MÓVIL PARA EL MENÚ
+$mobileDetect = Yii::$app->has('mobileDetect') ? Yii::$app->mobileDetect->isMobile() : false;
 
 ?>
 
@@ -136,7 +221,10 @@ $this->registerCss("
                 <div class="navbar-menu-section">
                     <div class="section-container">
                         <?= \app\components\MenuWidget::widget([
-                            'options' => ['class' => 'navbar-nav main-navigation']
+                            'options' => [
+                                'class' => 'navbar-nav main-navigation',
+                                'mobileMode' => $mobileDetect // ✅ PASAR DETECCIÓN DE MÓVIL
+                            ]
                         ]) ?>
                     </div>
                 </div>

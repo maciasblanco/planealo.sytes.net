@@ -178,6 +178,14 @@ class MenuWidget extends Widget
      */
     protected function checkMenuItemPermission($item)
     {
+        // ✅ CORRECCIÓN: Verificar si el item tiene marca de público en data
+        if (!empty($item['data'])) {
+            $data = json_decode($item['data'], true);
+            if (isset($data['public']) && $data['public'] === true) {
+                return true; // Item público - siempre visible
+            }
+        }
+
         // Si no hay ruta definida, es un contenedor - mostrar si tiene hijos con permisos
         if (empty($item['route']) || $item['route'] == '#') {
             return true; // Los contenedores se manejan en getMenuItems
@@ -187,7 +195,7 @@ class MenuWidget extends Widget
         try {
             $route = $item['route'];
             
-            // ✅ 1. PRIMERO VERIFICAR RUTAS PÚBLICAS
+            // ✅ 1. PRIMERO VERIFICAR RUTAS PÚBLICAS (actualizada)
             if ($this->isPublicRoute($route)) {
                 return true;
             }
@@ -256,6 +264,14 @@ class MenuWidget extends Widget
             'admin/user/reset-password',
             'ged/*', // Según tu configuración en allowActions
             'site/*', // Según tu configuración en allowActions
+            
+            // ✅ AGREGAR MARKETPLACE COMO RUTA PÚBLICA
+            'tienda/marketplace/index',
+            'tienda/marketplace/buscar',
+            'tienda/marketplace/categoria',
+            'tienda/marketplace/producto',
+            'tienda/default/registro-vendedor',
+            'tienda/*', // Patrón wildcard para todo el módulo tienda
         ];
 
         // Verificar rutas exactas
