@@ -20,12 +20,21 @@ class SiteController extends Controller
         return [
             'access' => [
                 'class' => AccessControl::class,
-                'only' => ['logout'],
+                'only' => ['logout', 'acceder-sistema', 'mi-cuenta'],
                 'rules' => [
                     [
-                        'actions' => ['logout'],
+                        'actions' => ['logout', 'mi-cuenta'],
                         'allow' => true,
                         'roles' => ['@'],
+                    ],
+                    [
+                        'actions' => ['acceder-sistema'],
+                        'allow' => true,
+                        'roles' => ['@'],
+                        'denyCallback' => function ($rule, $action) {
+                            Yii::$app->session->setFlash('error', 'Debe iniciar sesión para acceder al sistema.');
+                            return $this->redirect(['/site/login']);
+                        }
                     ],
                 ],
             ],
@@ -55,18 +64,41 @@ class SiteController extends Controller
     }
 
     /**
-     * Displays homepage.
+     * Landing page pública - NO revela rutas internas
      *
      * @return string
      */
     public function actionIndex()
     {
-        //return $this->render('index');
-        return $this->redirect(['/ged',
-            'id'=>'0',
-            'nombre'=>'GED'
-            ]
-        );
+        // ✅ SEGURO: NUNCA redirigir automáticamente a rutas internas
+        // ✅ Mostrar siempre landing page pública
+        
+        return $this->render('index', [
+            'isAuthenticated' => !Yii::$app->user->isGuest
+        ]);
+    }
+
+    /**
+     * ✅ PUNTO DE ENTRADA SEGURO al sistema
+     * No revela rutas internas directamente
+     */
+    public function actionAccederSistema()
+    {
+        // Verificar autenticación (ya lo hace el behavior, pero por redundancia)
+        if (Yii::$app->user->isGuest) {
+            Yii::$app->session->setFlash('error', 'Debe iniciar sesión para acceder al sistema.');
+            return $this->redirect(['/site/login']);
+        }
+        
+        // ✅ REDIRECCIÓN SEGURA: Usar nombre de ruta en lugar de URL completa
+        // Esto no revela la estructura interna al usuario
+        
+        // Registrar el acceso en logs para auditoría
+        Yii::info("Usuario " . Yii::$app->user->identity->username . 
+                  " accede al sistema desde IP: " . Yii::$app->request->userIP, 'security');
+        
+        // Redirigir al punto de entrada del módulo GED
+        return $this->redirect(['/ged/default/select-escuela']);
     }
 
     /**
@@ -82,6 +114,15 @@ class SiteController extends Controller
 
         $model = new LoginForm();
         if ($model->load(Yii::$app->request->post()) && $model->login()) {
+            // Verificar si debe cambiar contraseña temporal
+            $user = Yii::$app->user->identity;
+            if ($user && $user->debeCambiarPassword()) {
+                Yii::$app->session->setFlash('warning', 
+                    'Debe cambiar su contraseña temporal antes de continuar.');
+                return $this->redirect(['/site/cambiar-password']);
+            }
+            
+            Yii::$app->session->setFlash('success', 'Sesión iniciada correctamente.');
             return $this->goBack();
         }
 
@@ -91,11 +132,17 @@ class SiteController extends Controller
         ]);
     }
 
-  /**
+    /**
      * Cierra sesión y también limpia la escuela
      */
     public function actionLogout()
     {
+        // Registrar logout en logs
+        if (!Yii::$app->user->isGuest) {
+            Yii::info("Usuario " . Yii::$app->user->identity->username . 
+                      " cierra sesión desde IP: " . Yii::$app->request->userIP, 'security');
+        }
+        
         // Limpiar escuela antes de hacer logout
         $session = Yii::$app->session;
         $session->remove('id_escuela');
@@ -106,6 +153,7 @@ class SiteController extends Controller
         // Logout normal
         Yii::$app->user->logout();
 
+        Yii::$app->session->setFlash('success', 'Sesión cerrada correctamente.');
         return $this->goHome();
     }
 
@@ -136,7 +184,6 @@ class SiteController extends Controller
     {
         return $this->render('about');
     }
-    // Agregar en SiteController
 
     /**
      * Action para cambiar contraseña obligatorio
@@ -160,10 +207,11 @@ class SiteController extends Controller
             if ($user->cambiarPassword($model->newPassword)) {
                 Yii::$app->session->setFlash('success', 'Contraseña cambiada exitosamente. Ahora puede usar el sistema.');
                 
-                // Registrar el cambio
+                // Registrar el cambio en logs de seguridad
                 Yii::info("Usuario {$user->username} cambió su contraseña temporal", 'security');
                 
-                return $this->goHome();
+                // Redirigir al punto de entrada seguro
+                return $this->redirect(['/site/acceder-sistema']);
             } else {
                 Yii::$app->session->setFlash('error', 'Error al cambiar la contraseña. Por favor intente nuevamente.');
             }
@@ -190,6 +238,10 @@ class SiteController extends Controller
         if (Yii::$app->request->post() && $model->load(Yii::$app->request->post()) && $model->validate()) {
             if ($user->cambiarPassword($model->newPassword)) {
                 Yii::$app->session->setFlash('success', 'Contraseña cambiada exitosamente.');
+                
+                // Registrar cambio en logs
+                Yii::info("Usuario {$user->username} actualizó su contraseña desde Mi Cuenta", 'security');
+                
                 return $this->refresh();
             } else {
                 Yii::$app->session->setFlash('error', 'Error al cambiar la contraseña.');
@@ -201,6 +253,4 @@ class SiteController extends Controller
             'model' => $model,
         ]);
     }
-
-
 }
