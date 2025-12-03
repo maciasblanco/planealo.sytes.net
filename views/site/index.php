@@ -7,7 +7,74 @@ $this->params['breadcrumbs'] = []; // Eliminar breadcrumbs en landing
 ?>
 
 <div class="site-index landing-page">
-    <!-- Hero Section - Sin información sensible -->
+    <!-- Carrusel Hero -->
+    <section id="hero-carousel" class="carousel-hero">
+        <div id="carouselHero" class="carousel slide" data-bs-ride="carousel">
+            <!-- Indicadores -->
+            <div class="carousel-indicators">
+                <button type="button" data-bs-target="#carouselHero" data-bs-slide-to="0" class="active"></button>
+                <button type="button" data-bs-target="#carouselHero" data-bs-slide-to="1"></button>
+                <button type="button" data-bs-target="#carouselHero" data-bs-slide-to="2"></button>
+            </div>
+            
+            <!-- Slides -->
+            <div class="carousel-inner">
+                <!-- Slide 1 -->
+                <div class="carousel-item active">
+                    <img src="<?= Yii::getAlias('@web') ?>/img/hero/slide1.jpg" 
+                         alt="Gestión Escuelas Deportivas"
+                         onerror="this.src='https://images.unsplash.com/photo-1552674605-db6ffd8facb5?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80'">
+                    <div class="carousel-caption d-none d-md-block">
+                        <h2 class="display-4">Sistema GED</h2>
+                        <p class="lead">Gestión integral de escuelas deportivas</p>
+                        <a href="#productos-mas-vendidos" class="btn btn-primary btn-lg mt-3">
+                            Ver Productos
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- Slide 2 -->
+                <div class="carousel-item">
+                    <img src="<?= Yii::getAlias('@web') ?>/img/hero/slide2.jpg" 
+                         alt="Marketplace Deportivo"
+                         onerror="this.src='https://images.unsplash.com/photo-1519861531473-920034658307?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80'">
+                    <div class="carousel-caption d-none d-md-block">
+                        <h2 class="display-4">Marketplace Deportivo</h2>
+                        <p class="lead">Los mejores productos para atletas</p>
+                        <a href="#tiendas-patrocinadas" class="btn btn-success btn-lg mt-3">
+                            Tiendas Destacadas
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- Slide 3 -->
+                <div class="carousel-item">
+                    <img src="<?= Yii::getAlias('@web') ?>/img/hero/slide3.jpg" 
+                         alt="Productos Más Vendidos"
+                         onerror="this.src='https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80'">
+                    <div class="carousel-caption d-none d-md-block">
+                        <h2 class="display-4">Productos Destacados</h2>
+                        <p class="lead">Lo más vendido en nuestra comunidad</p>
+                        <a href="#productos-mas-vendidos" class="btn btn-warning btn-lg mt-3">
+                            Más Vendidos
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Controles -->
+            <button class="carousel-control-prev" type="button" data-bs-target="#carouselHero" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon"></span>
+                <span class="visually-hidden">Anterior</span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#carouselHero" data-bs-slide="next">
+                <span class="carousel-control-next-icon"></span>
+                <span class="visually-hidden">Siguiente</span>
+            </button>
+        </div>
+    </section>
+
+    <!-- Hero Section -->
     <div class="hero-section text-center py-5">
         <div class="container">
             <img src="<?= Yii::getAlias('@web') ?>/img/logos/logoGed.png" 
@@ -23,13 +90,11 @@ $this->params['breadcrumbs'] = []; // Eliminar breadcrumbs en landing
             <!-- Acciones según estado de autenticación -->
             <div class="mt-4 landing-actions">
                 <?php if (!$isAuthenticated): ?>
-                    <!-- Usuario NO autenticado -->
                     <a href="<?= Yii::$app->urlManager->createUrl(['/site/login']) ?>" 
                        class="btn btn-primary btn-lg mx-2 landing-btn">
                         Iniciar Sesión
                     </a>
                 <?php else: ?>
-                    <!-- Usuario autenticado -->
                     <a href="<?= Yii::$app->urlManager->createUrl(['/site/acceder-sistema']) ?>" 
                        class="btn btn-success btn-lg mx-2 landing-btn"
                        id="btn-acceder-sistema">
@@ -41,7 +106,6 @@ $this->params['breadcrumbs'] = []; // Eliminar breadcrumbs en landing
                     </a>
                 <?php endif; ?>
                 
-                <!-- Marketplace siempre visible -->
                 <a href="<?= Yii::$app->urlManager->createUrl(['/tienda/marketplace/index']) ?>" 
                    class="btn btn-warning btn-lg mx-2 landing-btn"
                    id="btn-marketplace">
@@ -51,94 +115,13 @@ $this->params['breadcrumbs'] = []; // Eliminar breadcrumbs en landing
         </div>
     </div>
     
-    <!-- ✅ NUEVO: Banner de Tiendas Patrocinadas (60% de pantalla) -->
+    <!-- Banner de Tiendas Patrocinadas -->
     <section id="tiendas-patrocinadas" class="tiendas-patrocinadas-section vh-60">
         <div class="container-fluid h-100">
             <div class="row h-100 align-items-center">
                 <div class="col-lg-8 offset-lg-2 text-center">
-                    <h2 class="display-4 fw-bold mb-4 text-white">✨ Tiendas Destacadas</h2>
-                    <p class="lead mb-5 text-white">Descubre las mejores tiendas deportivas patrocinadas</p>
-                    
-                    <div class="row g-4 justify-content-center">
-                        <!-- Tienda 1 -->
-                        <div class="col-md-4">
-                            <div class="tienda-card patrocinada">
-                                <div class="tienda-badge">⭐ Patrocinada</div>
-                                <div class="tienda-logo">
-                                    <i class="bi bi-shop-window"></i>
-                                </div>
-                                <h5 class="tienda-nombre">SportPro Store</h5>
-                                <p class="tienda-desc">Equipamiento profesional</p>
-                                <div class="tienda-rating">
-                                    <i class="bi bi-star-fill"></i>
-                                    <i class="bi bi-star-fill"></i>
-                                    <i class="bi bi-star-fill"></i>
-                                    <i class="bi bi-star-fill"></i>
-                                    <i class="bi bi-star-half"></i>
-                                    <span class="ms-2">4.5</span>
-                                </div>
-                                <a href="/tienda/marketplace/tienda/1" class="btn btn-light btn-sm mt-3">
-                                    Visitar Tienda
-                                </a>
-                            </div>
-                        </div>
-                        
-                        <!-- Tienda 2 -->
-                        <div class="col-md-4">
-                            <div class="tienda-card patrocinada">
-                                <div class="tienda-badge">🔥 Popular</div>
-                                <div class="tienda-logo">
-                                    <i class="bi bi-trophy"></i>
-                                </div>
-                                <h5 class="tienda-nombre">Champion Gear</h5>
-                                <p class="tienda-desc">Para campeones</p>
-                                <div class="tienda-rating">
-                                    <i class="bi bi-star-fill"></i>
-                                    <i class="bi bi-star-fill"></i>
-                                    <i class="bi bi-star-fill"></i>
-                                    <i class="bi bi-star-fill"></i>
-                                    <i class="bi bi-star"></i>
-                                    <span class="ms-2">4.0</span>
-                                </div>
-                                <a href="/tienda/marketplace/tienda/2" class="btn btn-light btn-sm mt-3">
-                                    Visitar Tienda
-                                </a>
-                            </div>
-                        </div>
-                        
-                        <!-- Tienda 3 -->
-                        <div class="col-md-4">
-                            <div class="tienda-card patrocinada">
-                                <div class="tienda-badge">💎 Premium</div>
-                                <div class="tienda-logo">
-                                    <i class="bi bi-gem"></i>
-                                </div>
-                                <h5 class="tienda-nombre">Elite Sports</h5>
-                                <p class="tienda-desc">Calidad premium</p>
-                                <div class="tienda-rating">
-                                    <i class="bi bi-star-fill"></i>
-                                    <i class="bi bi-star-fill"></i>
-                                    <i class="bi bi-star-fill"></i>
-                                    <i class="bi bi-star-fill"></i>
-                                    <i class="bi bi-star-fill"></i>
-                                    <span class="ms-2">5.0</span>
-                                </div>
-                                <a href="/tienda/marketplace/tienda/3" class="btn btn-light btn-sm mt-3">
-                                    Visitar Tienda
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Call to Action -->
-                    <div class="mt-5">
-                        <a href="/tienda/marketplace/tiendas" class="btn btn-outline-light btn-lg me-3">
-                            <i class="bi bi-eye"></i> Ver Todas las Tiendas
-                        </a>
-                        <a href="/tienda/marketplace/anunciarse" class="btn btn-light btn-lg">
-                            <i class="bi bi-megaphone"></i> Anunciar Mi Tienda
-                        </a>
-                    </div>
+                    <!-- Contenedor para banner dinámico -->
+                    <div id="banner-tiendas-patrocinadas"></div>
                 </div>
             </div>
         </div>
@@ -155,7 +138,7 @@ $this->params['breadcrumbs'] = []; // Eliminar breadcrumbs en landing
                                 <i class="fas fa-lock fa-2x"></i>
                             </div>
                             <h5 class="feature-title">Acceso Seguro</h5>
-                            <p class="feature-description">Autenticación protegida y encriptada para garantizar la seguridad de tus datos</p>
+                            <p class="feature-description">Autenticación protegida y encriptada</p>
                         </div>
                     </div>
                 </div>
@@ -166,7 +149,7 @@ $this->params['breadcrumbs'] = []; // Eliminar breadcrumbs en landing
                                 <i class="fas fa-store fa-2x"></i>
                             </div>
                             <h5 class="feature-title">Marketplace</h5>
-                            <p class="feature-description">Productos y servicios deportivos para complementar tu experiencia</p>
+                            <p class="feature-description">Productos y servicios deportivos</p>
                         </div>
                     </div>
                 </div>
@@ -177,7 +160,7 @@ $this->params['breadcrumbs'] = []; // Eliminar breadcrumbs en landing
                                 <i class="fas fa-shield-alt fa-2x"></i>
                             </div>
                             <h5 class="feature-title">Sistema Privado</h5>
-                            <p class="feature-description">Acceso restringido a usuarios autorizados para proteger la información</p>
+                            <p class="feature-description">Acceso restringido a usuarios autorizados</p>
                         </div>
                     </div>
                 </div>
@@ -185,12 +168,12 @@ $this->params['breadcrumbs'] = []; // Eliminar breadcrumbs en landing
         </div>
     </div>
     
-    <!-- ✅ CORREGIDO: Productos Más Vendidos -->
+    <!-- Productos Más Vendidos -->
     <section id="productos-mas-vendidos" class="productos-mas-vendidos py-5">
         <div class="container">
             <div class="text-center mb-5">
                 <h2 class="display-5 fw-bold text-primary mb-3">🏆 Productos Más Vendidos</h2>
-                <p class="lead text-muted">Los productos preferidos por nuestra comunidad deportiva</p>
+                <p class="lead text-muted">Los productos preferidos por nuestra comunidad</p>
             </div>
             
             <div class="row g-4">
@@ -199,13 +182,12 @@ $this->params['breadcrumbs'] = []; // Eliminar breadcrumbs en landing
                     <div class="categoria-card h-100">
                         <div class="categoria-header vestimenta-bg">
                             <div class="categoria-icon">
-                                <i class="bi bi-tshirt-fill"></i>
+                                <i class="fa-solid fa-shirt"></i>
                             </div>
                             <h3 class="categoria-title">Vestimenta</h3>
                             <span class="categoria-badge">3 productos</span>
                         </div>
                         <div class="categoria-body" id="productos-vestimenta">
-                            <!-- Los 3 productos se cargarán dinámicamente -->
                             <div class="text-center py-3">
                                 <div class="spinner-border text-primary" role="status">
                                     <span class="visually-hidden">Cargando...</span>
@@ -246,7 +228,6 @@ $this->params['breadcrumbs'] = []; // Eliminar breadcrumbs en landing
                             <span class="categoria-badge">3 productos</span>
                         </div>
                         <div class="categoria-body" id="productos-implementos-deportivos">
-                            <!-- CORREGIDO: ID actualizado -->
                             <div class="text-center py-3">
                                 <div class="spinner-border text-primary" role="status">
                                     <span class="visually-hidden">Cargando...</span>
@@ -284,8 +265,8 @@ $this->params['breadcrumbs'] = []; // Eliminar breadcrumbs en landing
                     <div class="total-info">
                         <h4 class="total-titulo">Total de Productos Vendidos</h4>
                         <div class="total-cantidad">
-                            <span id="total-productos">0</span>
-                            <small class="text-muted">productos este mes</small>
+                            <span id="total-productos-vendidos">0</span>
+                            <small class="text-muted">productos vendidos</small>
                         </div>
                     </div>
                 </div>
@@ -293,7 +274,7 @@ $this->params['breadcrumbs'] = []; // Eliminar breadcrumbs en landing
         </div>
     </section>
     
-    <!-- Información adicional según estado de autenticación -->
+    <!-- Información adicional -->
     <?php if (!$isAuthenticated): ?>
     <div class="container py-5">
         <div class="row">
@@ -302,9 +283,7 @@ $this->params['breadcrumbs'] = []; // Eliminar breadcrumbs en landing
                     <div class="card-body text-center">
                         <h4 class="card-title">¡Bienvenido al Sistema GED!</h4>
                         <p class="card-text">
-                            Para acceder al sistema completo de gestión de escuelas deportivas, 
-                            por favor inicia sesión con tus credenciales. Si aún no tienes una cuenta, 
-                            contacta al administrador del sistema.
+                            Para acceder al sistema completo, por favor inicia sesión.
                         </p>
                         <div class="mt-3">
                             <a href="<?= Yii::$app->urlManager->createUrl(['/site/login']) ?>" 
@@ -318,7 +297,6 @@ $this->params['breadcrumbs'] = []; // Eliminar breadcrumbs en landing
         </div>
     </div>
     <?php else: ?>
-    <!-- Información adicional para usuarios autenticados -->
     <div class="container py-5">
         <div class="row">
             <div class="col-lg-8 mx-auto">
@@ -326,8 +304,7 @@ $this->params['breadcrumbs'] = []; // Eliminar breadcrumbs en landing
                     <div class="card-body text-center">
                         <h4 class="card-title">¡Hola de nuevo!</h4>
                         <p class="card-text">
-                            Estás autenticado en el sistema GED. Haz clic en "Acceder al Sistema" 
-                            para comenzar a gestionar las escuelas deportivas.
+                            Estás autenticado en el sistema GED.
                         </p>
                         <div class="mt-3">
                             <a href="<?= Yii::$app->urlManager->createUrl(['/site/acceder-sistema']) ?>" 
@@ -346,7 +323,7 @@ $this->params['breadcrumbs'] = []; // Eliminar breadcrumbs en landing
     </div>
     <?php endif; ?>
     
-    <!-- Footer de la landing page -->
+    <!-- Footer -->
     <div class="landing-footer py-4">
         <div class="container text-center">
             <p class="mb-2">

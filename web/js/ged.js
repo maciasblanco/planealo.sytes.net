@@ -1,6 +1,6 @@
-// js/ged.js - Sistema GED - JavaScript ACTUALIZADO para Navbar sin Carrusel
+// js/ged.js - Sistema GED - JavaScript ACTUALIZADO con LandingPageManager corregido
 // Versión optimizada con nuevos porcentajes: Logo 15%, Menú 50%, Redes 15%, Control 20%
-// MEJORAS: Menú móvil completamente funcional
+// MEJORAS: Menú móvil completamente funcional y Landing Page con productos y carrusel
 
 class GEDSystem {
     constructor() {
@@ -447,9 +447,22 @@ class GEDSystem {
         }
     }
     
-    // ===== LANDING PAGE =====
+    // ===== LANDING PAGE - ACTUALIZADO CON CARRUSEL =====
     initLandingPage() {
         if (typeof $ === 'undefined') return;
+        
+        // ✅ INICIALIZAR CARRUSEL HERO CON BOOTSTRAP 5
+        const carouselHero = document.getElementById('carouselHero');
+        if (carouselHero && typeof bootstrap !== 'undefined') {
+            // Configurar carrusel con Bootstrap 5
+            const carousel = new bootstrap.Carousel(carouselHero, {
+                interval: 5000,
+                ride: 'carousel',
+                wrap: true,
+                pause: 'hover'
+            });
+            console.log('✅ Carrusel Hero inicializado con Bootstrap 5');
+        }
         
         // Selector principal de escuelas
         $('#main-escuela-select').on('change', function() {
@@ -486,14 +499,6 @@ class GEDSystem {
                 $(this).removeClass('shadow-lg');
             }
         );
-
-        // Carrusel automático (solo para landing page)
-        if (typeof bootstrap !== 'undefined') {
-            $('#carouselHero').carousel({
-                interval: 3000,
-                pause: 'hover'
-            });
-        }
 
         // Smooth scroll para navegación interna
         $('a[href^="#"]').on('click', function(event) {
@@ -984,117 +989,121 @@ class OffCanvasSidebar {
 }
 
 // ==================================================
-// INICIALIZACIÓN GLOBAL MEJORADA
+// LANDING PAGE MANAGER - ACTUALIZADO CON PRODUCTOS CORREGIDOS
 // ==================================================
-
-// Inicialización automática del sistema principal
-document.addEventListener('DOMContentLoaded', () => {
-    // Pequeño delay para asegurar que Bootstrap esté cargado
-    setTimeout(() => {
-        if (!window.gedSystem) {
-            window.gedSystem = new GEDSystem();
-            console.log('🚀 Sistema GED completamente inicializado y estable');
-        }
-    }, 100);
-});
-
-// Manejo de resize global mejorado
-let resizeTimeout;
-window.addEventListener('resize', () => {
-    clearTimeout(resizeTimeout);
-    resizeTimeout = setTimeout(() => {
-        if (window.gedSystem) {
-            window.gedSystem.handleResize();
-        }
-    }, 250);
-});
-
-// Debug helper mejorado
-function debugGEDSystem() {
-    console.group('🐛 DEBUG GED SYSTEM - ESTADO COMPLETO');
-    console.log('GED System:', window.gedSystem);
-    console.log('Navbar Height:', window.gedSystem?.navbarHeight);
-    console.log('Modo móvil:', window.gedSystem?.isMobile);
-    console.log('OffCanvas Sidebar:', window.gedSystem?.offCanvasSidebar);
-    console.log('Sidebar abierto:', window.gedSystem?.offCanvasSidebar?.isOpen);
-    console.log('Toggler encontrado:', !!document.querySelector('.navbar-toggler'));
-    console.log('Menú real encontrado:', !!document.querySelector('.navbar-nav'));
-    console.log('Body padding-top:', document.body.style.paddingTop);
-    
-    const main = document.querySelector('main#main');
-    console.log('Main min-height:', main?.style.minHeight);
-    
-    console.groupEnd();
-}
-
-// Exponer para debugging
-window.debugGEDSystem = debugGEDSystem;
-
-// Función para forzar recarga del menú (útil para desarrollo)
-window.reloadOffCanvasMenu = function() {
-    if (window.gedSystem && window.gedSystem.offCanvasSidebar) {
-        window.gedSystem.offCanvasSidebar.loadMobileMenu();
-        console.log('🔄 Menú del off-canvas recargado manualmente');
-    }
-};
-
-// Función para forzar recálculo del navbar
-window.forceNavbarRecalculation = function() {
-    if (window.gedSystem) {
-        window.gedSystem.forceNavbarRecalculation();
-        window.gedSystem.applyBodyCorrections();
-    }
-};
-
-// Auto-debug en desarrollo
-if (window.location.href.indexOf('localhost') > -1 || window.location.href.indexOf('debug') > -1) {
-    setTimeout(() => {
-        debugGEDSystem();
-        console.log('🔧 Modo desarrollo activo - Debug functions disponibles');
-    }, 2000);
-}
-
-///////////////////////////////////////////////////////////////////////////////////////////
-/////////// Para uso del Index Landpage - MEJORADO CON PRODUCTOS MÁS VENDIDOS /////////////
-///////////////////////////////////////////////////////////////////////////////////////////
 
 class LandingPageManager {
     constructor() {
-        this.productos = {
-            vestimenta: [],
-            alimentacion: [],
-            'implementos-deportivos': [],
-            suplementos: []
-        };
+        this.productos = {};
+        this.carrito = [];
+        this.totalVendidos = 0;
         this.init();
     }
-    
+
     init() {
         console.log('🚀 Landing Page Manager inicializado');
-        
-        // Verificar si estamos en la landing page
-        if (!document.querySelector('.landing-page')) return;
-        
-        // Esperar a que el DOM esté listo
-        if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', () => this.setup());
-        } else {
-            this.setup();
+        this.cargarProductos();
+        this.renderizarProductos();
+        this.actualizarTotalVendidos();
+        this.setupEventListeners();
+        this.mostrarBannerTiendas();
+        this.initAnimaciones();
+    }
+
+    cargarProductos() {
+        // ✅ ESTRUCTURA CORREGIDA - implementos-deportivos coincide con HTML
+        this.productos = {
+            vestimenta: [
+                { id: 1, nombre: 'Camiseta Deportiva', precio: 25, vendidos: 150 },
+                { id: 2, nombre: 'Pantalón Deportivo', precio: 35, vendidos: 120 },
+                { id: 3, nombre: 'Sudadera con Capucha', precio: 45, vendidos: 95 }
+            ],
+            alimentacion: [
+                { id: 4, nombre: 'Barra Energética', precio: 3, vendidos: 200 },
+                { id: 5, nombre: 'Bebida Isotónica', precio: 2, vendidos: 180 },
+                { id: 6, nombre: 'Snack Proteico', precio: 4, vendidos: 150 }
+            ],
+            'implementos-deportivos': [  // ✅ ID CORREGIDO para coincidir con HTML
+                { id: 7, nombre: 'Balón de Fútbol', precio: 20, vendidos: 80 },
+                { id: 8, nombre: 'Cuerda para Saltar', precio: 10, vendidos: 75 },
+                { id: 9, nombre: 'Banda Elástica', precio: 15, vendidos: 90 }
+            ],
+            suplementos: [
+                { id: 10, nombre: 'Proteína en Polvo', precio: 50, vendidos: 110 },
+                { id: 11, nombre: 'Multivitamínico', precio: 15, vendidos: 85 },
+                { id: 12, nombre: 'Creatina', precio: 30, vendidos: 70 }
+            ]
+        };
+    }
+
+    renderizarProductos() {
+        for (const categoria in this.productos) {
+            const contenedor = document.getElementById(`productos-${categoria}`);
+            if (!contenedor) {
+                console.warn(`No se encontró el contenedor para: productos-${categoria}`);
+                continue;
+            }
+
+            contenedor.innerHTML = '';
+            this.productos[categoria].forEach(producto => {
+                const productoHTML = `
+                    <div class="producto-card">
+                        <h3>${producto.nombre}</h3>
+                        <p class="precio">$${producto.precio}</p>
+                        <p class="vendidos">${producto.vendidos} vendidos</p>
+                        <button class="btn-agregar-carrito" 
+                                data-id="${producto.id}"
+                                data-nombre="${producto.nombre}"
+                                data-precio="${producto.precio}">
+                            Agregar al carrito
+                        </button>
+                    </div>
+                `;
+                contenedor.insertAdjacentHTML('beforeend', productoHTML);
+            });
         }
     }
-    
-    setup() {
-        this.bindEvents();
-        this.initAnimations();
-        this.initProductosMasVendidos(); // ✅ Inicializar productos
+
+    actualizarTotalVendidos() {
+        this.totalVendidos = 0;
+        for (const categoria in this.productos) {
+            this.productos[categoria].forEach(producto => {
+                this.totalVendidos += producto.vendidos;
+            });
+        }
         
-        // Si hay un usuario autenticado, agregar funcionalidad extra
+        const totalElement = document.getElementById('total-productos-vendidos');
+        if (totalElement) {
+            totalElement.textContent = this.totalVendidos.toLocaleString();
+        }
+    }
+
+    setupEventListeners() {
+        // Event listeners para botones de carrito
+        document.addEventListener('click', (e) => {
+            if (e.target.classList.contains('btn-agregar-carrito')) {
+                const id = parseInt(e.target.dataset.id);
+                const nombre = e.target.dataset.nombre;
+                const precio = parseFloat(e.target.dataset.precio);
+                
+                this.agregarAlCarrito(id, nombre, precio);
+                
+                // Feedback visual
+                e.target.textContent = '✓ Agregado';
+                e.target.disabled = true;
+                setTimeout(() => {
+                    e.target.textContent = 'Agregar al carrito';
+                    e.target.disabled = false;
+                }, 1500);
+            }
+        });
+        
+        // Event listeners para botones de acción
         const accederBtn = document.getElementById('btn-acceder-sistema');
         if (accederBtn) {
             this.enhanceAccederButton(accederBtn);
         }
         
-        // Marketplace button enhancement
         const marketplaceBtn = document.getElementById('btn-marketplace');
         if (marketplaceBtn) {
             this.enhanceMarketplaceButton(marketplaceBtn);
@@ -1106,368 +1115,6 @@ class LandingPageManager {
             this.addLogoAnimation(logo);
         }
         
-        console.log('✅ Landing Page completamente configurada');
-    }
-    
-    // ✅ MÉTODO: Cargar productos (puedes reemplazar con datos reales de tu API)
-    initProductosMasVendidos() {
-        console.log('🛍️ Inicializando productos más vendidos...');
-        
-        // Cargar productos desde API o datos estáticos
-        this.cargarProductos()
-            .then(() => {
-                // Renderizar productos en cada categoría
-                this.renderizarProductosPorCategoria('vestimenta');
-                this.renderizarProductosPorCategoria('alimentacion');
-                this.renderizarProductosPorCategoria('implementos-deportivos');
-                this.renderizarProductosPorCategoria('suplementos');
-                
-                // Actualizar total
-                this.actualizarTotalProductos();
-                
-                // Inicializar interactividad
-                this.initProductosInteractividad();
-            })
-            .catch(error => console.error('Error cargando productos:', error));
-    }
-    
-    cargarProductos() {
-        return new Promise((resolve) => {
-            // Simulación de datos - en producción deberías usar fetch() a tu API
-            this.productos = {
-                vestimenta: [
-                    { id: 1, nombre: 'Camiseta Deportiva', precio: 25, imagen: '/img/productos/camiseta.jpg', vendidos: 150 },
-                    { id: 2, nombre: 'Pantalón Deportivo', precio: 35, imagen: '/img/productos/pantalon.jpg', vendidos: 120 },
-                    { id: 3, nombre: 'Sudadera con Capucha', precio: 45, imagen: '/img/productos/sudadera.jpg', vendidos: 95 }
-                ],
-                alimentacion: [
-                    { id: 4, nombre: 'Barra Energética', precio: 3, imagen: '/img/productos/barra.jpg', vendidos: 200 },
-                    { id: 5, nombre: 'Bebida Isotónica', precio: 2, imagen: '/img/productos/bebida.jpg', vendidos: 180 },
-                    { id: 6, nombre: 'Snack Proteico', precio: 4, imagen: '/img/productos/snack.jpg', vendidos: 150 }
-                ],
-                'implementos-deportivos': [
-                    { id: 7, nombre: 'Balón de Fútbol', precio: 20, imagen: '/img/productos/balon.jpg', vendidos: 80 },
-                    { id: 8, nombre: 'Cuerda para Saltar', precio: 10, imagen: '/img/productos/cuerda.jpg', vendidos: 75 },
-                    { id: 9, nombre: 'Banda Elástica', precio: 15, imagen: '/img/productos/banda.jpg', vendidos: 90 }
-                ],
-                suplementos: [
-                    { id: 10, nombre: 'Proteína en Polvo', precio: 50, imagen: '/img/productos/proteina.jpg', vendidos: 110 },
-                    { id: 11, nombre: 'Multivitamínico', precio: 15, imagen: '/img/productos/vitaminas.jpg', vendidos: 85 },
-                    { id: 12, nombre: 'Creatina', precio: 30, imagen: '/img/productos/creatina.jpg', vendidos: 70 }
-                ]
-            };
-            
-            console.log('✅ Productos cargados:', this.productos);
-            resolve();
-        });
-    }
-    
-    // ✅ MÉTODO: Renderizar productos por categoría
-    renderizarProductosPorCategoria(categoria) {
-        const container = document.getElementById(`productos-${categoria}`);
-        if (!container || !this.productos[categoria]) return;
-        
-        const productos = this.productos[categoria];
-        
-        // Ordenar por más vendidos
-        productos.sort((a, b) => b.vendidos - a.vendidos);
-        
-        let productosHTML = '';
-        
-        productos.forEach((producto, index) => {
-            const badgeClass = index === 0 ? 'badge-top' : 'badge-normal';
-            
-            productosHTML += `
-                <div class="producto-item" data-id="${producto.id}">
-                    <div class="producto-header">
-                        <div class="producto-badge ${badgeClass}">
-                            <i class="bi bi-fire"></i>
-                            <span>${producto.vendidos} vendidos</span>
-                        </div>
-                        <div class="producto-imagen-placeholder">
-                            ${producto.imagen ? 
-                                `<img src="${producto.imagen}" alt="${producto.nombre}" class="img-fluid" 
-                                      onerror="this.onerror=null; this.parentElement.innerHTML='<i class=\\'bi bi-box-seam\\'></i>';">` :
-                                `<i class="bi bi-box-seam"></i>`
-                            }
-                        </div>
-                    </div>
-                    <div class="producto-info">
-                        <h5 class="producto-nombre">${producto.nombre}</h5>
-                        <div class="producto-precio">
-                            <span class="precio-actual">$${producto.precio}</span>
-                        </div>
-                        <button class="btn btn-sm btn-outline-primary btn-agregar-carrito" 
-                                data-id="${producto.id}"
-                                data-nombre="${producto.nombre}"
-                                data-precio="${producto.precio}">
-                            <i class="bi bi-cart-plus"></i> Agregar
-                        </button>
-                    </div>
-                </div>
-            `;
-        });
-        
-        // Agregar botón "Ver más"
-        productosHTML += `
-            <div class="text-center mt-3">
-                <button class="btn btn-link btn-ver-mas" data-categoria="${categoria}">
-                    <i class="bi bi-arrow-right-circle"></i> Ver todos los productos
-                </button>
-            </div>
-        `;
-        
-        container.innerHTML = productosHTML;
-    }
-    
-    // ✅ MÉTODO: Actualizar total de productos
-    actualizarTotalProductos() {
-        const totalElement = document.getElementById('total-productos');
-        if (!totalElement) return;
-        
-        let total = 0;
-        Object.values(this.productos).forEach(categoria => {
-            categoria.forEach(producto => {
-                total += producto.vendidos;
-            });
-        });
-        
-        totalElement.textContent = total.toLocaleString();
-    }
-    
-    // ✅ MÉTODO: Inicializar interactividad de productos
-    initProductosInteractividad() {
-        // Evento para botones "Agregar al carrito"
-        document.addEventListener('click', (e) => {
-            if (e.target.closest('.btn-agregar-carrito')) {
-                const button = e.target.closest('.btn-agregar-carrito');
-                const productoId = button.getAttribute('data-id');
-                const productoNombre = button.getAttribute('data-nombre');
-                const productoPrecio = button.getAttribute('data-precio');
-                
-                this.agregarAlCarrito({
-                    id: productoId,
-                    nombre: productoNombre,
-                    precio: productoPrecio
-                });
-            }
-            
-            // Evento para botones "Ver más"
-            if (e.target.closest('.btn-ver-mas')) {
-                const button = e.target.closest('.btn-ver-mas');
-                const categoria = button.getAttribute('data-categoria');
-                this.mostrarModalCategoria(categoria);
-            }
-        });
-        
-        // Efecto hover en productos
-        document.querySelectorAll('.producto-item').forEach(item => {
-            item.addEventListener('mouseenter', () => {
-                item.classList.add('producto-hover');
-            });
-            
-            item.addEventListener('mouseleave', () => {
-                item.classList.remove('producto-hover');
-            });
-        });
-        
-        // Cargar carrito existente
-        this.cargarCarritoExistente();
-    }
-    
-    // ✅ MÉTODO: Agregar al carrito
-    agregarAlCarrito(producto) {
-        console.log('🛒 Agregando producto al carrito:', producto);
-        
-        // Mostrar notificación
-        this.mostrarNotificacion(`"${producto.nombre}" agregado al carrito`, 'success');
-        
-        // Animación de producto al carrito
-        this.animarAgregarAlCarrito(producto.id);
-        
-        // Guardar en carrito local
-        this.guardarEnCarritoLocal(producto);
-        
-        // Si existe Google Analytics, registrar evento
-        if (typeof gtag !== 'undefined') {
-            gtag('event', 'add_to_cart', {
-                'event_category': 'productos',
-                'event_label': producto.nombre,
-                'value': parseFloat(producto.precio)
-            });
-        }
-    }
-    
-    // ✅ MÉTODO: Animación al agregar al carrito
-    animarAgregarAlCarrito(productoId) {
-        const productoElement = document.querySelector(`.producto-item[data-id="${productoId}"]`);
-        if (!productoElement) return;
-        
-        // Buscar icono del carrito en el navbar
-        const iconoCarrito = document.querySelector('.navbar .bi-cart, .navbar .bi-cart3');
-        if (!iconoCarrito) return;
-        
-        // Crear elemento flotante
-        const flotante = document.createElement('div');
-        flotante.className = 'producto-flotante';
-        flotante.innerHTML = '<i class="bi bi-cart-check-fill"></i>';
-        flotante.style.position = 'fixed';
-        flotante.style.zIndex = '9999';
-        
-        // Posición inicial (desde el producto)
-        const productoRect = productoElement.getBoundingClientRect();
-        flotante.style.left = `${productoRect.left + productoRect.width / 2}px`;
-        flotante.style.top = `${productoRect.top}px`;
-        
-        document.body.appendChild(flotante);
-        
-        // Posición final (hacia el carrito)
-        const carritoRect = iconoCarrito.getBoundingClientRect();
-        const finalX = carritoRect.left + carritoRect.width / 2;
-        const finalY = carritoRect.top + carritoRect.height / 2;
-        
-        // Animación
-        flotante.animate([
-            { 
-                transform: 'translate(0, 0) scale(1)', 
-                opacity: 1 
-            },
-            { 
-                transform: `translate(${finalX - productoRect.left - productoRect.width / 2}px, 
-                                     ${finalY - productoRect.top}px) scale(0.5)`, 
-                opacity: 0 
-            }
-        ], {
-            duration: 800,
-            easing: 'cubic-bezier(0.68, -0.55, 0.265, 1.55)'
-        });
-        
-        // Eliminar después de la animación
-        setTimeout(() => {
-            flotante.remove();
-        }, 800);
-    }
-    
-    // ✅ MÉTODO: Guardar en carrito local (sessionStorage)
-    guardarEnCarritoLocal(producto) {
-        try {
-            let carrito = JSON.parse(sessionStorage.getItem('ged-carrito') || '[]');
-            
-            // Verificar si el producto ya está en el carrito
-            const productoExistente = carrito.find(item => item.id == producto.id);
-            
-            if (productoExistente) {
-                productoExistente.cantidad += 1;
-            } else {
-                carrito.push({
-                    id: producto.id,
-                    nombre: producto.nombre,
-                    precio: producto.precio,
-                    cantidad: 1
-                });
-            }
-            
-            sessionStorage.setItem('ged-carrito', JSON.stringify(carrito));
-            
-            // Actualizar contador del carrito
-            this.actualizarContadorCarrito(carrito.length);
-            
-            console.log('✅ Producto guardado en carrito:', producto);
-        } catch (error) {
-            console.error('Error guardando en carrito:', error);
-        }
-    }
-    
-    // ✅ MÉTODO: Actualizar contador del carrito
-    actualizarContadorCarrito(cantidad) {
-        // Buscar o crear contador del carrito
-        let contador = document.querySelector('.carrito-contador');
-        const iconoCarrito = document.querySelector('.navbar .bi-cart, .navbar .bi-cart3');
-        
-        if (!contador && iconoCarrito) {
-            // Crear contador si no existe
-            contador = document.createElement('span');
-            contador.className = 'carrito-contador';
-            iconoCarrito.parentElement.appendChild(contador);
-        }
-        
-        if (contador) {
-            if (cantidad > 0) {
-                contador.textContent = cantidad > 9 ? '9+' : cantidad.toString();
-                contador.style.display = 'flex';
-            } else {
-                contador.style.display = 'none';
-            }
-        }
-    }
-    
-    // ✅ MÉTODO: Mostrar notificación
-    mostrarNotificacion(mensaje, tipo = 'info') {
-        const tipos = {
-            'success': 'alert-success',
-            'error': 'alert-danger',
-            'info': 'alert-info',
-            'warning': 'alert-warning'
-        };
-        
-        const alertClass = tipos[tipo] || 'alert-info';
-        
-        // Eliminar notificaciones anteriores
-        document.querySelectorAll('.ged-notificacion').forEach(el => el.remove());
-        
-        const notificacion = document.createElement('div');
-        notificacion.className = `alert ${alertClass} alert-dismissible fade show ged-notificacion`;
-        notificacion.innerHTML = `
-            ${mensaje}
-            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-        `;
-        
-        // Agregar al DOM
-        document.body.appendChild(notificacion);
-        
-        // Mostrar con animación
-        setTimeout(() => {
-            notificacion.classList.add('show');
-        }, 10);
-        
-        // Auto-eliminar después de 3 segundos
-        setTimeout(() => {
-            notificacion.classList.remove('show');
-            setTimeout(() => {
-                if (notificacion.parentNode) {
-                    notificacion.parentNode.removeChild(notificacion);
-                }
-            }, 300);
-        }, 3000);
-    }
-    
-    // ✅ MÉTODO: Cargar carrito existente
-    cargarCarritoExistente() {
-        try {
-            const carrito = JSON.parse(sessionStorage.getItem('ged-carrito') || '[]');
-            this.actualizarContadorCarrito(carrito.length);
-        } catch (error) {
-            console.error('Error cargando carrito:', error);
-        }
-    }
-    
-    // ✅ MÉTODO: Mostrar modal de categoría
-    mostrarModalCategoria(categoriaNombre) {
-        console.log('📋 Mostrando modal para:', categoriaNombre);
-        
-        // Aquí podrías implementar un modal con todos los productos de la categoría
-        // Por ahora, solo redirigir al marketplace
-        const nombreFormateado = categoriaNombre.replace('-', ' ');
-        this.mostrarNotificacion(`Redirigiendo a productos de ${nombreFormateado}...`, 'info');
-        
-        // Redirigir al marketplace con filtro de categoría
-        setTimeout(() => {
-            window.location.href = '/tienda/marketplace/index?categoria=' + categoriaNombre;
-        }, 1500);
-    }
-    
-    // Métodos existentes (mantenerlos igual)
-    bindEvents() {
         // Smooth scroll para enlaces internos
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function (e) {
@@ -1484,20 +1131,114 @@ class LandingPageManager {
                 }
             });
         });
+    }
+
+    agregarAlCarrito(id, nombre, precio) {
+        const productoExistente = this.carrito.find(p => p.id === id);
         
-        // Efecto hover mejorado para cards
-        document.querySelectorAll('.feature-card').forEach(card => {
-            card.addEventListener('mouseenter', () => {
-                card.style.transform = 'translateY(-10px)';
+        if (productoExistente) {
+            productoExistente.cantidad++;
+        } else {
+            this.carrito.push({
+                id,
+                nombre,
+                precio,
+                cantidad: 1
             });
+        }
+        
+        this.actualizarContadorCarrito();
+        this.mostrarNotificacion(`${nombre} agregado al carrito`);
+    }
+
+    actualizarContadorCarrito() {
+        const contador = document.getElementById('contador-carrito');
+        if (contador) {
+            const totalItems = this.carrito.reduce((sum, item) => sum + item.cantidad, 0);
+            contador.textContent = totalItems;
+            contador.style.display = totalItems > 0 ? 'block' : 'none';
+        }
+    }
+
+    mostrarNotificacion(mensaje) {
+        // Crear o reutilizar notificación
+        let notificacion = document.getElementById('notificacion-carrito');
+        
+        if (!notificacion) {
+            notificacion = document.createElement('div');
+            notificacion.id = 'notificacion-carrito';
+            notificacion.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: #4CAF50;
+                color: white;
+                padding: 15px 25px;
+                border-radius: 5px;
+                z-index: 1000;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+                animation: slideIn 0.3s ease-out;
+            `;
+            document.body.appendChild(notificacion);
+        }
+        
+        notificacion.textContent = mensaje;
+        notificacion.style.display = 'block';
+        
+        // Ocultar después de 3 segundos
+        setTimeout(() => {
+            notificacion.style.display = 'none';
+        }, 3000);
+    }
+
+    mostrarBannerTiendas() {
+        const banner = document.getElementById('banner-tiendas-patrocinadas');
+        if (banner) {
+            // Configurar el banner para ocupar el 60% de la pantalla
+            banner.style.width = '60%';
+            banner.style.margin = '20px auto';
+            banner.style.padding = '20px';
+            banner.style.backgroundColor = '#f8f9fa';
+            banner.style.borderRadius = '10px';
+            banner.style.boxShadow = '0 4px 6px rgba(0,0,0,0.1)';
             
-            card.addEventListener('mouseleave', () => {
-                card.style.transform = 'translateY(0)';
-            });
-        });
+            // Contenido del banner
+            banner.innerHTML = `
+                <h2 style="color: #2c3e50; margin-bottom: 15px;">🏪 Tiendas Patrocinadas</h2>
+                <p style="color: #7f8c8d; margin-bottom: 20px;">
+                    Descubre nuestras tiendas aliadas con los mejores productos deportivos y descuentos exclusivos.
+                </p>
+                <div style="display: flex; justify-content: space-around; flex-wrap: wrap;">
+                    <div class="tienda" style="text-align: center; margin: 10px;">
+                        <div style="background: #3498db; color: white; width: 60px; height: 60px; 
+                                    line-height: 60px; border-radius: 50%; margin: 0 auto 10px;">
+                            🏀
+                        </div>
+                        <p style="font-weight: bold;">Deportes Total</p>
+                        <p style="font-size: 0.9em;">15% descuento</p>
+                    </div>
+                    <div class="tienda" style="text-align: center; margin: 10px;">
+                        <div style="background: #2ecc71; color: white; width: 60px; height: 60px; 
+                                    line-height: 60px; border-radius: 50%; margin: 0 auto 10px;">
+                            👟
+                        </div>
+                        <p style="font-weight: bold;">Running Pro</p>
+                        <p style="font-size: 0.9em;">Envío gratis</p>
+                    </div>
+                    <div class="tienda" style="text-align: center; margin: 10px;">
+                        <div style="background: #e74c3c; color: white; width: 60px; height: 60px; 
+                                    line-height: 60px; border-radius: 50%; margin: 0 auto 10px;">
+                            🥤
+                        </div>
+                        <p style="font-weight: bold;">NutriSport</p>
+                        <p style="font-size: 0.9em;">2x1 en suplementos</p>
+                    </div>
+                </div>
+            `;
+        }
     }
     
-    initAnimations() {
+    initAnimaciones() {
         // Intersection Observer para animaciones al hacer scroll
         const observerOptions = {
             threshold: 0.1,
@@ -1550,19 +1291,11 @@ class LandingPageManager {
             `;
             button.disabled = true;
             
-            // Simular tiempo de carga (en producción esto no sería necesario)
+            // Simular tiempo de carga
             setTimeout(() => {
                 button.innerHTML = originalText;
                 button.disabled = false;
             }, 1500);
-            
-            // Registrar acceso en analytics (si está configurado)
-            if (typeof gtag !== 'undefined') {
-                gtag('event', 'acceder_sistema', {
-                    'event_category': 'landing_page',
-                    'event_label': 'boton_acceder'
-                });
-            }
         });
         
         // Efecto hover especial
@@ -1582,14 +1315,6 @@ class LandingPageManager {
             
             // Efecto visual
             button.classList.add('pulse-animation');
-            
-            // Registrar acceso a marketplace
-            if (typeof gtag !== 'undefined') {
-                gtag('event', 'acceder_marketplace', {
-                    'event_category': 'landing_page',
-                    'event_label': 'boton_marketplace'
-                });
-            }
             
             setTimeout(() => {
                 button.classList.remove('pulse-animation');
@@ -1625,18 +1350,105 @@ class LandingPageManager {
     }
 }
 
-// Inicializar Landing Page Manager automáticamente
+// ==================================================
+// INICIALIZACIÓN GLOBAL MEJORADA
+// ==================================================
+
+// Inicialización automática del sistema principal
 document.addEventListener('DOMContentLoaded', () => {
+    // Pequeño delay para asegurar que Bootstrap esté cargado
+    setTimeout(() => {
+        if (!window.gedSystem) {
+            window.gedSystem = new GEDSystem();
+            console.log('🚀 Sistema GED completamente inicializado y estable');
+        }
+    }, 100);
+});
+
+// ✅ INICIALIZACIÓN SEGURA DEL LANDING PAGE MANAGER
+document.addEventListener('DOMContentLoaded', function() {
     // Verificar si estamos en la landing page
-    const isLandingPage = document.querySelector('.landing-page');
+    if (!document.querySelector('.landing-page')) return;
     
-    if (isLandingPage) {
-        // Inicializar el gestor de landing page
-        window.landingPageManager = new LandingPageManager();
-        
-        console.log('🌐 Landing Page Manager activado con productos más vendidos');
+    if (typeof window.landingPageManager !== 'undefined') {
+        console.log('✅ Landing Page Manager ya está cargado');
+    } else {
+        // Pequeño delay para asegurar carga
+        setTimeout(function() {
+            console.log('🌐 Intentando cargar Landing Page Manager...');
+            if (typeof LandingPageManager !== 'undefined') {
+                window.landingPageManager = new LandingPageManager();
+                console.log('✅ Landing Page Manager inicializado correctamente');
+                
+                // Verificación de contenedores
+                ['vestimenta', 'alimentacion', 'implementos-deportivos', 'suplementos'].forEach(categoria => {
+                    const contenedor = document.getElementById(`productos-${categoria}`);
+                    console.log(`Contenedor productos-${categoria}:`, contenedor ? '✅ Encontrado' : '❌ No encontrado');
+                });
+                
+            } else {
+                console.error('❌ LandingPageManager no está definido');
+            }
+        }, 500);
     }
 });
+
+// Manejo de resize global mejorado
+let resizeTimeout;
+window.addEventListener('resize', () => {
+    clearTimeout(resizeTimeout);
+    resizeTimeout = setTimeout(() => {
+        if (window.gedSystem) {
+            window.gedSystem.handleResize();
+        }
+    }, 250);
+});
+
+// Debug helper mejorado
+function debugGEDSystem() {
+    console.group('🐛 DEBUG GED SYSTEM - ESTADO COMPLETO');
+    console.log('GED System:', window.gedSystem);
+    console.log('Navbar Height:', window.gedSystem?.navbarHeight);
+    console.log('Modo móvil:', window.gedSystem?.isMobile);
+    console.log('OffCanvas Sidebar:', window.gedSystem?.offCanvasSidebar);
+    console.log('Sidebar abierto:', window.gedSystem?.offCanvasSidebar?.isOpen);
+    console.log('Toggler encontrado:', !!document.querySelector('.navbar-toggler'));
+    console.log('Menú real encontrado:', !!document.querySelector('.navbar-nav'));
+    console.log('Body padding-top:', document.body.style.paddingTop);
+    
+    const main = document.querySelector('main#main');
+    console.log('Main min-height:', main?.style.minHeight);
+    
+    console.groupEnd();
+}
+
+// Exponer para debugging
+window.debugGEDSystem = debugGEDSystem;
+
+// Función para forzar recarga del menú (útil para desarrollo)
+window.reloadOffCanvasMenu = function() {
+    if (window.gedSystem && window.gedSystem.offCanvasSidebar) {
+        window.gedSystem.offCanvasSidebar.loadMobileMenu();
+        console.log('🔄 Menú del off-canvas recargado manualmente');
+    }
+};
+
+// Función para forzar recálculo del navbar
+window.forceNavbarRecalculation = function() {
+    if (window.gedSystem) {
+        window.gedSystem.forceNavbarRecalculation();
+        window.gedSystem.applyBodyCorrections();
+    }
+};
+
+// Función auxiliar para limpiar carrito (útil para desarrollo)
+window.limpiarCarrito = function() {
+    sessionStorage.removeItem('ged-carrito');
+    if (window.landingPageManager) {
+        window.landingPageManager.actualizarContadorCarrito(0);
+    }
+    console.log('🧹 Carrito limpiado');
+};
 
 // Función para debug de landing page mejorada
 function debugLandingPage() {
@@ -1648,7 +1460,7 @@ function debugLandingPage() {
     console.log('- Botón Marketplace:', document.getElementById('btn-marketplace'));
     console.log('- Logo principal:', document.getElementById('ged-main-logo'));
     console.log('- Sección productos:', document.getElementById('productos-mas-vendidos'));
-    console.log('- Cards de productos:', document.querySelectorAll('.producto-item').length);
+    console.log('- Cards de productos:', document.querySelectorAll('.producto-card').length);
     console.log('- Carrito en sesión:', sessionStorage.getItem('ged-carrito'));
     console.groupEnd();
 }
@@ -1656,11 +1468,15 @@ function debugLandingPage() {
 // Exponer para debugging
 window.debugLandingPage = debugLandingPage;
 
-// Función auxiliar para limpiar carrito (útil para desarrollo)
-window.limpiarCarrito = function() {
-    sessionStorage.removeItem('ged-carrito');
-    if (window.landingPageManager) {
-        window.landingPageManager.actualizarContadorCarrito(0);
-    }
-    console.log('🧹 Carrito limpiado');
-};
+// Auto-debug en desarrollo
+if (window.location.href.indexOf('localhost') > -1 || window.location.href.indexOf('debug') > -1) {
+    setTimeout(() => {
+        debugGEDSystem();
+        console.log('🔧 Modo desarrollo activo - Debug functions disponibles');
+    }, 2000);
+}
+
+// Exportar para uso en otros módulos si es necesario
+if (typeof module !== 'undefined' && module.exports) {
+    module.exports = { GEDSystem, LandingPageManager, OffCanvasSidebar };
+}
