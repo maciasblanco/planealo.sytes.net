@@ -202,7 +202,7 @@ $config = [
     'params' => array_merge($params, [
         'tienda' => [
             'maxProductosPorTienda' => 100,
-            'comisionVenta' => 5, // 5% de comisión
+            'comisionVenta' => 3, // 3% de comisión
             'monedaPredeterminada' => 'USD',
         ]
     ]),
@@ -217,12 +217,14 @@ $config = [
             //'site/about',
             'ged/*',
             'site/*',
+            'tienda/*',
+            'tienda/marketplace/*',
             'municipio/get-by-edo',
             'parroquia/get-by-muni',
             'admin/user/signup',
             'admin/user/request-password-reset',
             'admin/user/reset-password',
-            '*',
+            //'*',
         ]
     ],
 

@@ -4,6 +4,25 @@
 
 $this->title = 'Sistema GED - Gestión Escuelas Deportivas';
 $this->params['breadcrumbs'] = []; // Eliminar breadcrumbs en landing
+
+// Determinar si mostrar menú marketplace en landing
+$showMarketplaceMenu = true;
+$mobileDetect = Yii::$app->has('mobileDetect') ? Yii::$app->mobileDetect->isMobile() : false;
+
+// DEBUG: Verificar si el MenuWidget funciona
+try {
+    $testMenu = \app\components\MenuWidget::widget([
+        'parentId' => 177, // ID del menú "MarketPlace" en la base de datos
+        'options' => [
+            'class' => 'nav justify-content-center marketplace-nav',
+            'mobileMode' => false
+        ]
+    ]);
+    // Esto te mostrará en los logs qué está devolviendo el widget
+    Yii::info('MenuWidget output (parentId=177): ' . substr($testMenu, 0, 500));
+} catch (\Exception $e) {
+    Yii::error('Error al cargar MenuWidget: ' . $e->getMessage());
+}
 ?>
 
 <div class="site-index landing-page">
@@ -73,6 +92,38 @@ $this->params['breadcrumbs'] = []; // Eliminar breadcrumbs en landing
             </button>
         </div>
     </section>
+
+    <!-- ================================================== -->
+    <!-- MENÚ MARKETPLACE EN LANDING PAGE - MENÚ DINÁMICO -->
+    <!-- ================================================== -->
+    <?php if ($showMarketplaceMenu): ?>
+    <section id="marketplace-menu-landing" class="marketplace-menu-section py-3 bg-light">
+        <div class="container">
+            <h3 class="text-center mb-3">Marketplace Deportivo</h3>
+            <div class="row justify-content-center">
+                <div class="col-md-8">
+                    <?= \app\components\MenuWidget::widget([
+                        'parentId' => 177, // ID del menú "MarketPlace" en la base de datos
+                        'options' => [
+                            'class' => 'nav justify-content-center marketplace-nav',
+                            'mobileMode' => false // Forzar modo escritorio para landing
+                        ]
+                    ]) ?>
+                    
+                    <!-- Fallback en caso de que el menú no cargue -->
+                    <?php if (YII_ENV_DEV && empty($testMenu)): ?>
+                    <div class="alert alert-warning mt-2" role="alert">
+                        <small>
+                            <i class="bi bi-exclamation-triangle"></i> 
+                            Menú del marketplace no cargado. Mostrando fallback...
+                        </small>
+                    </div>
+                    <?php endif; ?>
+                </div>
+            </div>
+        </div>
+    </section>
+    <?php endif; ?>
 
     <!-- Hero Section -->
     <div class="hero-section text-center py-5">
@@ -335,3 +386,24 @@ $this->params['breadcrumbs'] = []; // Eliminar breadcrumbs en landing
         </div>
     </div>
 </div>
+
+<!-- Script de debug para verificar en consola -->
+<?php if (YII_ENV_DEV): ?>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('🔍 DEBUG - Landing Page Marketplace Menu');
+    console.log('URLs del Marketplace:');
+    console.log('- Marketplace Index: <?= Yii::$app->urlManager->createUrl(['/tienda/marketplace/index']) ?>');
+    console.log('- Estatus usuario: <?= $isAuthenticated ? "Autenticado" : "No autenticado" ?>');
+    
+    // Verificar si el menú cargó
+    const marketplaceMenu = document.querySelector('.marketplace-nav');
+    if (marketplaceMenu) {
+        console.log('✅ Menú marketplace encontrado en DOM');
+        console.log('Número de items:', marketplaceMenu.querySelectorAll('li').length);
+    } else {
+        console.warn('⚠️ Menú marketplace NO encontrado en DOM');
+    }
+});
+</script>
+<?php endif; ?>

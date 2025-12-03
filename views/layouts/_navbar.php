@@ -13,12 +13,13 @@ $logoWidth = '15%';    // Aumentado desde 10%
 $menuWidth = '50%';    // Aumentado desde 40%
 $socialWidth = '15%';  // Aumentado desde 12%
 $controlWidth = '20%'; // Aumentado desde 13%
+// Carrusel eliminado (antes 25%)
 
 // Determinar clases CSS según el layout
 $navbarClasses = 'navbar navbar-expand-lg navbar-dark navbar-contextual fixed-top';
 $containerClasses = 'container-fluid';
 
-// ✅ CSS SIMPLIFICADO PARA GARANTIZAR VISIBILIDAD
+// ✅ CSS CORREGIDO PARA GARANTIZAR VISIBILIDAD DEL LOGO Y MENÚ
 $this->registerCss("
 .navbar-contextual {
     position: fixed !important;
@@ -27,19 +28,17 @@ $this->registerCss("
     right: 0 !important;
     z-index: 1030 !important;
     width: 100% !important;
-    background-color: var(--bs-dark) !important;
-    min-height: 70px !important;
 }
 
-/* ✅ LOGO */
+/* ✅ GARANTIZAR QUE EL LOGO SEA VISIBLE EN PC */
 .navbar-brand-section {
     width: {$logoWidth} !important;
-    min-width: 150px !important;
-    max-width: 250px !important;
     height: 100% !important;
     display: flex !important;
     align-items: center !important;
     justify-content: center !important;
+    visibility: visible !important;
+    opacity: 1 !important;
 }
 
 .navbar-brand {
@@ -53,15 +52,16 @@ $this->registerCss("
 }
 
 .navbar-logo {
-    max-height: 60px !important;
-    max-width: 100% !important;
+    max-height: 85% !important;
+    max-width: 90% !important;
     width: auto !important;
     height: auto !important;
     display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
     object-fit: contain !important;
 }
 
-/* ✅ MENÚ DE NAVEGACIÓN */
 .navbar-menu-section {
     width: {$menuWidth} !important;
     display: flex !important;
@@ -71,56 +71,56 @@ $this->registerCss("
 
 .navbar-social-section {
     width: {$socialWidth} !important;
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
 }
 
 .navbar-control-section {
     width: {$controlWidth} !important;
-    display: flex !important;
-    align-items: center !important;
-    justify-content: flex-end !important;
 }
 
-/* ✅ CONTENEDOR PRINCIPAL */
+/* ✅ CARRUSEL ELIMINADO */
+.navbar-carousel-section {
+    display: none !important;
+    width: 0% !important;
+}
+
+/* ✅ ESTILOS PARA EL MENÚ PRINCIPAL */
 .navbar-container {
     display: flex !important;
     width: 100% !important;
     align-items: center !important;
-    justify-content: space-between !important;
 }
 
 .section-container {
     width: 100% !important;
     display: flex !important;
     justify-content: center !important;
-    align-items: center !important;
 }
 
 .main-navigation {
     width: 100% !important;
     display: flex !important;
     justify-content: center !important;
-    flex-wrap: nowrap !important;
-    gap: 20px !important;
-    margin: 0 !important;
-    padding: 0 !important;
+    flex-wrap: wrap !important;
 }
 
-/* ✅ ESCRITORIO */
+/* ✅ CORRECCIÓN ESPECÍFICA PARA ESCRITORIO */
 @media (min-width: 992px) {
     .navbar-brand-section {
-        min-width: 180px !important;
-        max-width: 300px !important;
+        width: {$logoWidth} !important;
+        min-width: 120px !important;
+        max-width: 200px !important;
     }
     
     .navbar-logo {
-        max-height: 70px !important;
+        max-height: 150px !important;
+        max-width: 180px !important;
+        min-height: 80px !important;
+        min-width: 100px !important;
     }
     
     .main-navigation {
-        gap: 25px !important;
+        justify-content: center !important;
+        gap: 15px !important;
     }
     
     .nav-item {
@@ -128,20 +128,8 @@ $this->registerCss("
     }
 }
 
-/* ✅ MÓVILES */
+/* ✅ CORRECCIÓN PARA MÓVILES */
 @media (max-width: 991.98px) {
-    .navbar-brand-section {
-        width: 100% !important;
-        max-width: 200px !important;
-        min-width: auto !important;
-        order: 1 !important;
-        margin-bottom: 10px !important;
-    }
-    
-    .navbar-logo {
-        max-height: 50px !important;
-    }
-    
     .navbar-menu-section {
         width: 100% !important;
         order: 3 !important;
@@ -157,60 +145,51 @@ $this->registerCss("
     
     .navbar-control-section {
         width: 100% !important;
-        order: 4 !important;
-        justify-content: center !important;
-        margin-top: 15px !important;
+        order: 1 !important;
     }
     
     .navbar-container {
         flex-direction: column !important;
     }
-    
-    .main-navigation {
-        flex-wrap: wrap !important;
-        justify-content: center !important;
-        gap: 10px !important;
-    }
 }
 
-/* ✅ REDES SOCIALES */
+/* ✅ ESTILOS PARA REDES SOCIALES */
 .social-icons-vertical {
     display: flex !important;
     justify-content: center !important;
-    gap: 12px !important;
+    gap: 10px !important;
 }
 
 .social-icon-circle {
     display: inline-flex !important;
     align-items: center !important;
     justify-content: center !important;
-    width: 40px !important;
-    height: 40px !important;
+    width: 35px !important;
+    height: 35px !important;
     border-radius: 50% !important;
-    background: rgba(255, 255, 255, 0.15) !important;
+    background: rgba(255, 255, 255, 0.1) !important;
     color: white !important;
     text-decoration: none !important;
     transition: all 0.3s ease !important;
-    font-size: 1.1rem !important;
 }
 
 .social-icon-circle:hover {
-    background: rgba(255, 255, 255, 0.25) !important;
-    transform: translateY(-3px) scale(1.1) !important;
+    background: rgba(255, 255, 255, 0.2) !important;
+    transform: translateY(-2px) !important;
 }
 ");
 
-// ✅ DETECCIÓN DE MÓVIL
+// ✅ DETECCIÓN DE MÓVIL PARA EL MENÚ
 $mobileDetect = Yii::$app->has('mobileDetect') ? Yii::$app->mobileDetect->isMobile() : false;
 
 ?>
 
 <!-- ================================================== -->
-<!-- NAVBAR UNIFICADO - CON MENÚ MARKETPLACE -->
+<!-- NAVBAR UNIFICADO - PORCENTAJES ACTUALIZADOS -->
 <!-- ================================================== -->
 <nav class="<?= $navbarClasses ?>" aria-label="Navegación principal">
     <div class="<?= $containerClasses ?>">
-        <!-- ✅ LOGO -->
+        <!-- ✅ LOGO - 15% (AUMENTADO) - CORREGIDO -->
         <div class="navbar-brand-section">
             <a class="navbar-brand" href="<?= Yii::$app->homeUrl ?>" title="Inicio - Sistema GED">
                 <?= Html::img('@web/img/logos/logoGed.png', [
@@ -220,6 +199,7 @@ $mobileDetect = Yii::$app->has('mobileDetect') ? Yii::$app->mobileDetect->isMobi
                     'onerror' => "this.style.display='none'; this.nextElementSibling.style.display='block';",
                     'style' => 'display: block;'
                 ]) ?>
+                <!-- Fallback en caso de error -->
                 <div style="display: none; background: #6c3483; color: white; padding: 10px; border-radius: 5px; text-align: center;">
                     <strong>GED</strong><br>
                     <small>Sistema Deportivo</small>
@@ -237,20 +217,19 @@ $mobileDetect = Yii::$app->has('mobileDetect') ? Yii::$app->mobileDetect->isMobi
         <div class="collapse navbar-collapse" id="navbarGedCollapse">
             <div class="navbar-container">
                 
-                <!-- ✅ SECCIÓN 1: Menú de Navegación Principal -->
+                <!-- ✅ SECCIÓN 1: Menú de Navegación Principal - 50% (AUMENTADO) -->
                 <div class="navbar-menu-section">
                     <div class="section-container">
                         <?= \app\components\MenuWidget::widget([
-                            'parentId' => 177, // ✅ ID del menú "MarketPlace"
                             'options' => [
                                 'class' => 'navbar-nav main-navigation',
-                                'mobileMode' => $mobileDetect
+                                'mobileMode' => $mobileDetect // ✅ PASAR DETECCIÓN DE MÓVIL
                             ]
                         ]) ?>
                     </div>
                 </div>
                 
-                <!-- ✅ SECCIÓN 2: Redes Sociales -->
+                <!-- ✅ SECCIÓN 2: Redes Sociales - 15% (AUMENTADO) -->
                 <div class="navbar-social-section">
                     <div class="section-container">
                         <div class="social-icons-vertical" aria-label="Redes sociales">
@@ -270,7 +249,7 @@ $mobileDetect = Yii::$app->has('mobileDetect') ? Yii::$app->mobileDetect->isMobi
                     </div>
                 </div>
                 
-                <!-- ✅ SECCIÓN 3: Control de Usuario y Escuela -->
+                <!-- ✅ SECCIÓN 3: Control de Usuario y Escuela - 20% (AUMENTADO) -->
                 <div class="navbar-control-section">
                     <div class="section-container">
                         <div class="w-100 text-center">
@@ -336,6 +315,7 @@ $mobileDetect = Yii::$app->has('mobileDetect') ? Yii::$app->mobileDetect->isMobi
                                                 <h6 class="dropdown-header">Seleccionar Escuela</h6>
                                                 <select id="navbar-escuela-select" class="form-select form-select-sm" aria-label="Seleccionar escuela">
                                                     <option value="">Buscar escuela...</option>
+                                                    <!-- Las opciones se cargarán dinámicamente -->
                                                 </select>
                                                 <?php if ($idEscuela && $idEscuela > 0): ?>
                                                     <div class="mt-2 text-center">
@@ -389,6 +369,9 @@ $mobileDetect = Yii::$app->has('mobileDetect') ? Yii::$app->mobileDetect->isMobi
                         </div>
                     </div>
                 </div>
+
+                <!-- ✅ SECCIÓN 4: Carrusel ELIMINADO (antes 25%) -->
+                <!-- No hay código para carrusel - Completamente eliminado -->
             </div>
         </div>
     </div>

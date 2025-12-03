@@ -1480,3 +1480,89 @@ if (window.location.href.indexOf('localhost') > -1 || window.location.href.index
 if (typeof module !== 'undefined' && module.exports) {
     module.exports = { GEDSystem, LandingPageManager, OffCanvasSidebar };
 }
+// ==================================================
+// FUNCIONALIDAD PARA MENÚ MARKETPLACE EN LANDING
+// ==================================================
+
+(function() {
+    'use strict';
+    
+    // Verificar si estamos en la página de inicio (landing)
+    if (document.querySelector('.landing-page')) {
+        
+        // Inicializar menú marketplace solo en landing
+        function initMarketplaceMenu() {
+            const marketplaceMenu = document.querySelector('.marketplace-nav');
+            if (!marketplaceMenu) return;
+            
+            // Añadir eventos a dropdowns del menú marketplace
+            const dropdownToggles = marketplaceMenu.querySelectorAll('.dropdown-toggle');
+            dropdownToggles.forEach(toggle => {
+                toggle.addEventListener('click', function(e) {
+                    if (window.innerWidth < 992) {
+                        e.preventDefault();
+                        const dropdownMenu = this.nextElementSibling;
+                        dropdownMenu.style.display = dropdownMenu.style.display === 'block' ? 'none' : 'block';
+                    }
+                });
+            });
+            
+            // Cerrar dropdowns al hacer clic fuera
+            document.addEventListener('click', function(e) {
+                if (!e.target.closest('.marketplace-nav .dropdown')) {
+                    marketplaceMenu.querySelectorAll('.dropdown-menu').forEach(menu => {
+                        menu.style.display = 'none';
+                    });
+                }
+            });
+            
+            // Prevenir comportamiento por defecto en enlaces '#'
+            marketplaceMenu.querySelectorAll('a[href="#"]').forEach(link => {
+                link.addEventListener('click', function(e) {
+                    if (window.innerWidth >= 992) {
+                        e.preventDefault();
+                    }
+                });
+            });
+        }
+        
+        // Esperar a que el DOM esté listo
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initMarketplaceMenu);
+        } else {
+            initMarketplaceMenu();
+        }
+        
+        // Ajustar menú marketplace en redimensionamiento
+        let resizeTimer;
+        window.addEventListener('resize', function() {
+            clearTimeout(resizeTimer);
+            resizeTimer = setTimeout(function() {
+                const marketplaceMenu = document.querySelector('.marketplace-nav');
+                if (marketplaceMenu) {
+                    const dropdowns = marketplaceMenu.querySelectorAll('.dropdown-menu');
+                    if (window.innerWidth >= 992) {
+                        dropdowns.forEach(menu => {
+                            menu.style.display = '';
+                        });
+                    } else {
+                        dropdowns.forEach(menu => {
+                            menu.style.display = 'none';
+                        });
+                    }
+                }
+            }, 250);
+        });
+        
+        // Efecto hover mejorado para botones del marketplace
+        document.querySelectorAll('.marketplace-nav .nav-link').forEach(link => {
+            link.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateY(-2px) scale(1.02)';
+            });
+            
+            link.addEventListener('mouseleave', function() {
+                this.style.transform = '';
+            });
+        });
+    }
+})();

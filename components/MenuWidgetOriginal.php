@@ -186,11 +186,6 @@ class MenuWidget extends Widget
             }
         }
 
-        // ✅ CORRECCIÓN CRÍTICA: Si es parte del menú Marketplace (ID 177 o sus hijos), siempre permitir
-        if ($item['id'] == 177 || $item['parent'] == 177) {
-            return true; // Marketplace y sus hijos siempre visibles
-        }
-
         // Si no hay ruta definida, es un contenedor - mostrar si tiene hijos con permisos
         if (empty($item['route']) || $item['route'] == '#') {
             return true; // Los contenedores se manejan en getMenuItems
@@ -205,12 +200,13 @@ class MenuWidget extends Widget
                 return true;
             }
             
-            // ✅ 2. SI ES USUARIO GUEST, SOLO PUEDE VER RUTAS PÚBLICAS (YA VERIFICADO)
+            // ✅ 2. SI ES USUARIO GUEST, SOLO PUEDE VER RUTAS PÚBLICAS
             if (Yii::$app->user->isGuest) {
-                return false; // Ya verificamos rutas públicas arriba
+                return false;
             }
 
             // ✅ 3. VERIFICAR PERMISO DIRECTAMENTE CON EL SISTEMA RBAC
+            // Yii::$app->user->can() verifica automáticamente los roles y permisos del usuario
             if (Yii::$app->user->can($route)) {
                 return true;
             }
@@ -253,18 +249,7 @@ class MenuWidget extends Widget
      */
     protected function isPublicRoute($route)
     {
-        // ✅ CORRECCIÓN CRÍTICA: TODAS las rutas del marketplace son públicas automáticamente
-        if (strpos($route, 'tienda/') === 0 || strpos($route, 'marketplace/') !== false) {
-            return true;
-        }
-        
-        // ✅ Para usuarios autenticados, algunas rutas pueden no ser "públicas" pero sí accesibles por permisos
-        if (!Yii::$app->user->isGuest) {
-            return false;
-        }
-        
         $publicRoutes = [
-            // Rutas del site
             'site/index',
             'site/login',
             'site/logout',
@@ -274,31 +259,19 @@ class MenuWidget extends Widget
             'site/signup',
             'site/request-password-reset',
             'site/reset-password',
-            
-            // Rutas de admin para recuperación de contraseña
             'admin/user/signup',
             'admin/user/request-password-reset', 
             'admin/user/reset-password',
+            'ged/*', // Según tu configuración en allowActions
+            'site/*', // Según tu configuración en allowActions
             
-            // ✅ AGREGAR MARKETPLACE COMO RUTA PÚBLICA - IMPORTANTE!
+            // ✅ AGREGAR MARKETPLACE COMO RUTA PÚBLICA
             'tienda/marketplace/index',
             'tienda/marketplace/buscar',
             'tienda/marketplace/categoria',
             'tienda/marketplace/producto',
             'tienda/default/registro-vendedor',
-            'tienda/default/dashboard-vendedor',
-            'tienda/default/index',
-            
-            // Rutas GED
-            'ged/default/index',
-            'ged/default/search-schools',
-            'ged/default/set-school',
-            
-            // Patrones con wildcards para todo el módulo
-            'ged/*',       // Todo el módulo GED
-            'site/*',      // Todo el módulo Site
-            'tienda/*',    // ✅ IMPORTANTE: Todo el módulo Tienda como público
-            'marketplace/*', // Todas las rutas de marketplace
+            'tienda/*', // Patrón wildcard para todo el módulo tienda
         ];
 
         // Verificar rutas exactas
