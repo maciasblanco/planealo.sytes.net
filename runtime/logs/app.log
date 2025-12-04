@@ -157871,3 +157871,72 @@ $_SERVER = [
     'REQUEST_TIME_FLOAT' => 1764889489.3137
     'REQUEST_TIME' => 1764889489
 ]
+2025-12-04 19:13:07 [34.77.91.166][-][-][warning][application] Base de datos no disponible para menú
+    in C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php:172
+    in C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php:51
+    in C:\xampp\htdocs\planealo.sytes.net\views\site\index.php:26
+2025-12-04 19:13:07 [34.77.91.166][-][-][warning][application] Base de datos no disponible para menú
+    in C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php:172
+    in C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php:51
+    in C:\xampp\htdocs\planealo.sytes.net\views\site\index.php:100
+2025-12-04 19:13:07 [34.77.91.166][-][-][warning][application] Base de datos no disponible para menú
+    in C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php:172
+    in C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php:51
+    in C:\xampp\htdocs\planealo.sytes.net\views\layouts\_navbar.php:201
+2025-12-04 19:13:07 [34.77.91.166][-][-][info][application] $_GET = []
+
+$_POST = []
+
+$_FILES = []
+
+$_COOKIE = []
+
+$_SESSION = [
+    '__flash' => []
+]
+
+$_SERVER = [
+    'SCRIPT_URL' => '/'
+    'SCRIPT_URI' => 'https://planealo.sytes.net/'
+    'MIBDIRS' => 'C:/xampp/php/extras/mibs'
+    'MYSQL_HOME' => '\\xampp\\mysql\\bin'
+    'OPENSSL_CONF' => 'C:/xampp/apache/bin/openssl.cnf'
+    'PHP_PEAR_SYSCONF_DIR' => '\\xampp\\php'
+    'PHPRC' => '\\xampp\\php'
+    'TMP' => '\\xampp\\tmp'
+    'HTTPS' => 'on'
+    'SSL_TLS_SNI' => 'planealo.sytes.net'
+    'HTTP_HOST' => 'planealo.sytes.net'
+    'HTTP_USER_AGENT' => 'python-requests/2.32.5'
+    'HTTP_ACCEPT_ENCODING' => 'gzip, deflate'
+    'HTTP_ACCEPT' => '*/*'
+    'HTTP_CONNECTION' => 'keep-alive'
+    'PATH' => 'C:\\Windows\\system32;C:\\Windows;C:\\Windows\\System32\\Wbem;C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\;C:\\xampp\\php;C:\\ProgramData\\ComposerSetup\\bin;C:\\Program Files\\Git\\cmd;C:\\Program Files\\Git LFS;C:\\Windows\\System32\\OpenSSH\\;C:\\Users\\BlackOwl\\AppData\\Local\\Microsoft\\WindowsApps;C:\\Users\\BlackOwl\\AppData\\Roaming\\Composer\\vendor\\bin;C:\\Users\\BlackOwl\\AppData\\Local\\Programs\\Microsoft VS Code\\bin'
+    'SystemRoot' => 'C:\\Windows'
+    'COMSPEC' => 'C:\\Windows\\system32\\cmd.exe'
+    'PATHEXT' => '.COM;.EXE;.BAT;.CMD;.VBS;.VBE;.JS;.JSE;.WSF;.WSH;.MSC'
+    'WINDIR' => 'C:\\Windows'
+    'SERVER_SIGNATURE' => '<address>Apache/2.4.58 (Win64) OpenSSL/3.1.3 PHP/8.1.25 Server at planealo.sytes.net Port 443</address>
+'
+    'SERVER_SOFTWARE' => 'Apache/2.4.58 (Win64) OpenSSL/3.1.3 PHP/8.1.25'
+    'SERVER_NAME' => 'planealo.sytes.net'
+    'SERVER_ADDR' => '192.168.1.120'
+    'SERVER_PORT' => '443'
+    'REMOTE_ADDR' => '34.77.91.166'
+    'DOCUMENT_ROOT' => 'C:/xampp/htdocs/planealo.sytes.net/web'
+    'REQUEST_SCHEME' => 'https'
+    'CONTEXT_PREFIX' => ''
+    'CONTEXT_DOCUMENT_ROOT' => 'C:/xampp/htdocs/planealo.sytes.net/web'
+    'SERVER_ADMIN' => 'postmaster@localhost'
+    'SCRIPT_FILENAME' => 'C:/xampp/htdocs/planealo.sytes.net/web/index.php'
+    'REMOTE_PORT' => '35740'
+    'GATEWAY_INTERFACE' => 'CGI/1.1'
+    'SERVER_PROTOCOL' => 'HTTP/1.1'
+    'REQUEST_METHOD' => 'GET'
+    'QUERY_STRING' => ''
+    'REQUEST_URI' => '/'
+    'SCRIPT_NAME' => '/index.php'
+    'PHP_SELF' => '/index.php'
+    'REQUEST_TIME_FLOAT' => 1764889987.4652
+    'REQUEST_TIME' => 1764889987
+]
