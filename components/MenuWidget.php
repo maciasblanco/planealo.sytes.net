@@ -91,6 +91,52 @@ class MenuWidget extends Widget
         return false;
     }
 
+    /**
+     * ✅ VERIFICAR SI UN ITEM DEL MENÚ ES PÚBLICO (MARKETPLACE)
+     * Basado en ID del menú o configuración
+     */
+    protected function isPublicMenuItem($item)
+    {
+        // IDs de menús que deben ser públicos
+        $publicMenuIds = [
+            177, // Marketplace principal
+            // Agrega aquí otros IDs públicos si los conoces
+        ];
+        
+        // Verificar por ID
+        if (isset($item['id']) && in_array($item['id'], $publicMenuIds)) {
+            return true;
+        }
+        
+        // Verificar por ruta (patrones de marketplace)
+        if (isset($item['route'])) {
+            $route = $item['route'];
+            $publicPatterns = [
+                'tienda/*',
+                'tienda/marketplace/*',
+                'marketplace/*',
+                'tienda/default/*',
+                'tienda/marketplace/index',
+                'tienda/marketplace/categoria',
+                'tienda/marketplace/producto',
+                'tienda/marketplace/buscar',
+            ];
+            
+            foreach ($publicPatterns as $pattern) {
+                if (strpos($pattern, '*') !== false) {
+                    $regexPattern = str_replace('\*', '.*', preg_quote($pattern, '/'));
+                    if (preg_match('/^' . $regexPattern . '$/', $route)) {
+                        return true;
+                    }
+                } elseif ($route === $pattern) {
+                    return true;
+                }
+            }
+        }
+        
+        return false;
+    }
+
     protected function renderFallbackMenu()
     {
         $menuClass = $this->mobileMode ? 'sidebar-menu' : $this->menuClass;
@@ -143,7 +189,31 @@ class MenuWidget extends Widget
         $menuItems = [];
 
         foreach ($items as $item) {
-            // ✅ VERIFICAR PERMISOS RBAC ANTES DE AGREGAR EL ITEM
+            // ✅ VERIFICAR SI ES MENÚ PÚBLICO (MARKETPLACE) PRIMERO
+            if ($this->isPublicMenuItem($item)) {
+                // Para menús públicos, mostrarlos siempre
+                $childItems = $this->getMenuItems($item['id']);
+                
+                // INCLUIR ITEM PADRE AUNQUE NO TENGA HIJOS
+                $hasVisibleChildren = !empty($childItems);
+                $isContainer = empty($item['route']) || $item['route'] == '#';
+                
+                if ($isContainer && !$hasVisibleChildren) {
+                    continue; // Saltar contenedores vacíos
+                }
+                
+                $menuItem = [
+                    'label' => $item['name'],
+                    'url' => $item['route'] ? [$item['route']] : '#',
+                    'items' => $childItems,
+                    'visible' => true // Siempre visible por ser público
+                ];
+
+                $menuItems[] = $menuItem;
+                continue;
+            }
+            
+            // ✅ VERIFICAR PERMISOS RBAC PARA MENÚS NO PÚBLICOS
             if (!$this->checkMenuItemPermission($item)) {
                 continue; // Saltar item si no tiene permisos
             }
@@ -151,7 +221,6 @@ class MenuWidget extends Widget
             $childItems = $this->getMenuItems($item['id']);
             
             // ✅ INCLUIR ITEM PADRE AUNQUE NO TENGA HIJOS SI TIENE RUTA Y PERMISOS
-            // O si es un contenedor (sin ruta) pero tiene hijos visibles
             $hasVisibleChildren = !empty($childItems);
             $isContainer = empty($item['route']) || $item['route'] == '#';
             
@@ -178,19 +247,11 @@ class MenuWidget extends Widget
      */
     protected function checkMenuItemPermission($item)
     {
-        // ✅ CORRECCIÓN: Verificar si el item tiene marca de público en data
-        if (!empty($item['data'])) {
-            $data = json_decode($item['data'], true);
-            if (isset($data['public']) && $data['public'] === true) {
-                return true; // Item público - siempre visible
-            }
+        // ✅ PRIMERO VERIFICAR SI ES UN MENÚ PÚBLICO (MARKETPLACE)
+        if ($this->isPublicMenuItem($item)) {
+            return true;
         }
-
-        // ✅ CORRECCIÓN CRÍTICA: Si es parte del menú Marketplace (ID 177 o sus hijos), siempre permitir
-        if ($item['id'] == 177 || $item['parent'] == 177) {
-            return true; // Marketplace y sus hijos siempre visibles
-        }
-
+        
         // Si no hay ruta definida, es un contenedor - mostrar si tiene hijos con permisos
         if (empty($item['route']) || $item['route'] == '#') {
             return true; // Los contenedores se manejan en getMenuItems
@@ -200,17 +261,18 @@ class MenuWidget extends Widget
         try {
             $route = $item['route'];
             
-            // ✅ 1. PRIMERO VERIFICAR RUTAS PÚBLICAS (actualizada)
+            // ✅ 1. PRIMERO VERIFICAR RUTAS PÚBLICAS
             if ($this->isPublicRoute($route)) {
                 return true;
             }
             
-            // ✅ 2. SI ES USUARIO GUEST, SOLO PUEDE VER RUTAS PÚBLICAS (YA VERIFICADO)
+            // ✅ 2. SI ES USUARIO GUEST, SOLO PUEDE VER RUTAS PÚBLICAS
             if (Yii::$app->user->isGuest) {
-                return false; // Ya verificamos rutas públicas arriba
+                return false;
             }
 
             // ✅ 3. VERIFICAR PERMISO DIRECTAMENTE CON EL SISTEMA RBAC
+            // Yii::$app->user->can() verifica automáticamente los roles y permisos del usuario
             if (Yii::$app->user->can($route)) {
                 return true;
             }
@@ -253,18 +315,7 @@ class MenuWidget extends Widget
      */
     protected function isPublicRoute($route)
     {
-        // ✅ CORRECCIÓN CRÍTICA: TODAS las rutas del marketplace son públicas automáticamente
-        if (strpos($route, 'tienda/') === 0 || strpos($route, 'marketplace/') !== false) {
-            return true;
-        }
-        
-        // ✅ Para usuarios autenticados, algunas rutas pueden no ser "públicas" pero sí accesibles por permisos
-        if (!Yii::$app->user->isGuest) {
-            return false;
-        }
-        
         $publicRoutes = [
-            // Rutas del site
             'site/index',
             'site/login',
             'site/logout',
@@ -274,31 +325,22 @@ class MenuWidget extends Widget
             'site/signup',
             'site/request-password-reset',
             'site/reset-password',
-            
-            // Rutas de admin para recuperación de contraseña
             'admin/user/signup',
             'admin/user/request-password-reset', 
             'admin/user/reset-password',
+            'ged/*', // Según tu configuración en allowActions
+            'site/*', // Según tu configuración en allowActions
             
-            // ✅ AGREGAR MARKETPLACE COMO RUTA PÚBLICA - IMPORTANTE!
+            // ✅ AGREGAR TODAS LAS RUTAS DEL MARKETPLACE
+            'tienda/*',
+            'tienda/marketplace/*',
             'tienda/marketplace/index',
             'tienda/marketplace/buscar',
             'tienda/marketplace/categoria',
             'tienda/marketplace/producto',
+            'tienda/default/index',
             'tienda/default/registro-vendedor',
             'tienda/default/dashboard-vendedor',
-            'tienda/default/index',
-            
-            // Rutas GED
-            'ged/default/index',
-            'ged/default/search-schools',
-            'ged/default/set-school',
-            
-            // Patrones con wildcards para todo el módulo
-            'ged/*',       // Todo el módulo GED
-            'site/*',      // Todo el módulo Site
-            'tienda/*',    // ✅ IMPORTANTE: Todo el módulo Tienda como público
-            'marketplace/*', // Todas las rutas de marketplace
         ];
 
         // Verificar rutas exactas
@@ -420,7 +462,7 @@ class MenuWidget extends Widget
             return '<li class="dropdown-submenu position-relative" data-level="' . $level . '">
                 <a class="dropdown-item dropdown-toggle text-white d-flex justify-content-between align-items-center" 
                    href="#" role="button" data-level="' . $level . '">
-                    ' . $label . '
+                    ' . $label . ' 
                     <span class="submenu-arrow">›</span>
                 </a>
                 <ul class="dropdown-menu submenu-level-1" data-level="' . $level . '">

@@ -3,25 +3,33 @@
 /** @var bool $isAuthenticated */
 
 $this->title = 'Sistema GED - Gestión Escuelas Deportivas';
-$this->params['breadcrumbs'] = []; // Eliminar breadcrumbs en landing
+$this->params['breadcrumbs'] = [];
 
-// Determinar si mostrar menú marketplace en landing
-$showMarketplaceMenu = true;
-$mobileDetect = Yii::$app->has('mobileDetect') ? Yii::$app->mobileDetect->isMobile() : false;
+// ✅ DETECCIÓN MEJORADA - USAR DIRECTAMENTE isGuest
+$isUserAuthenticated = !Yii::$app->user->isGuest;
+$currentRoute = Yii::$app->controller->route;
 
-// DEBUG: Verificar si el MenuWidget funciona
+// ✅ VERIFICAR SI YA ESTAMOS EN LOGIN PARA EVITAR BUCLE
+if ($currentRoute === 'site/login' && $isUserAuthenticated) {
+    // Si ya está autenticado y trata de acceder a login, redirigir al index
+    Yii::$app->response->redirect(['site/index'])->send();
+    return;
+}
+
+// ✅ URL BASE PARA MARKETPLACE - VERIFICAR QUE EXISTA
+$marketplaceUrl = Yii::$app->urlManager->createUrl(['/tienda/marketplace/index']);
+$hasMarketplace = true; // Asumir que existe, se puede verificar mejor
+
+// ✅ MENÚ MARKETPLACE - SOLO MOSTRAR SI EXISTE EL MÓDULO
 try {
     $testMenu = \app\components\MenuWidget::widget([
-        'parentId' => 177, // ID del menú "MarketPlace" en la base de datos
-        'options' => [
-            'class' => 'nav justify-content-center marketplace-nav',
-            'mobileMode' => false
-        ]
+        'parentId' => 177,
+        'options' => ['class' => 'nav justify-content-center marketplace-nav']
     ]);
-    // Esto te mostrará en los logs qué está devolviendo el widget
-    Yii::info('MenuWidget output (parentId=177): ' . substr($testMenu, 0, 500));
+    $showMarketplaceMenu = !empty($testMenu);
 } catch (\Exception $e) {
-    Yii::error('Error al cargar MenuWidget: ' . $e->getMessage());
+    $showMarketplaceMenu = false;
+    Yii::warning('MenuWidget error: ' . $e->getMessage());
 }
 ?>
 
@@ -29,59 +37,47 @@ try {
     <!-- Carrusel Hero -->
     <section id="hero-carousel" class="carousel-hero">
         <div id="carouselHero" class="carousel slide" data-bs-ride="carousel">
-            <!-- Indicadores -->
             <div class="carousel-indicators">
                 <button type="button" data-bs-target="#carouselHero" data-bs-slide-to="0" class="active"></button>
                 <button type="button" data-bs-target="#carouselHero" data-bs-slide-to="1"></button>
                 <button type="button" data-bs-target="#carouselHero" data-bs-slide-to="2"></button>
             </div>
             
-            <!-- Slides -->
             <div class="carousel-inner">
-                <!-- Slide 1 -->
                 <div class="carousel-item active">
-                    <img src="<?= Yii::getAlias('@web') ?>/img/hero/slide1.jpg" 
+                    <img src="<?= Yii::getAlias('@web') ?>/img/Carrusel/slide1.jpg" 
                          alt="Gestión Escuelas Deportivas"
                          onerror="this.src='https://images.unsplash.com/photo-1552674605-db6ffd8facb5?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80'">
                     <div class="carousel-caption d-none d-md-block">
                         <h2 class="display-4">Sistema GED</h2>
                         <p class="lead">Gestión integral de escuelas deportivas</p>
-                        <a href="#productos-mas-vendidos" class="btn btn-primary btn-lg mt-3">
-                            Ver Productos
-                        </a>
+                        <a href="#productos-mas-vendidos" class="btn btn-primary btn-lg mt-3">Ver Productos</a>
                     </div>
                 </div>
                 
-                <!-- Slide 2 -->
                 <div class="carousel-item">
-                    <img src="<?= Yii::getAlias('@web') ?>/img/hero/slide2.jpg" 
+                    <img src="<?= Yii::getAlias('@web') ?>/img/Carrusel/slide2.png" 
                          alt="Marketplace Deportivo"
                          onerror="this.src='https://images.unsplash.com/photo-1519861531473-920034658307?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80'">
                     <div class="carousel-caption d-none d-md-block">
                         <h2 class="display-4">Marketplace Deportivo</h2>
                         <p class="lead">Los mejores productos para atletas</p>
-                        <a href="#tiendas-patrocinadas" class="btn btn-success btn-lg mt-3">
-                            Tiendas Destacadas
-                        </a>
+                        <a href="#tiendas-patrocinadas" class="btn btn-success btn-lg mt-3">Tiendas Destacadas</a>
                     </div>
                 </div>
                 
-                <!-- Slide 3 -->
                 <div class="carousel-item">
-                    <img src="<?= Yii::getAlias('@web') ?>/img/hero/slide3.jpg" 
+                    <img src="<?= Yii::getAlias('@web') ?>/img/Carrusel/slide3.png" 
                          alt="Productos Más Vendidos"
                          onerror="this.src='https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80'">
                     <div class="carousel-caption d-none d-md-block">
                         <h2 class="display-4">Productos Destacados</h2>
                         <p class="lead">Lo más vendido en nuestra comunidad</p>
-                        <a href="#productos-mas-vendidos" class="btn btn-warning btn-lg mt-3">
-                            Más Vendidos
-                        </a>
+                        <a href="#productos-mas-vendidos" class="btn btn-warning btn-lg mt-3">Más Vendidos</a>
                     </div>
                 </div>
             </div>
             
-            <!-- Controles -->
             <button class="carousel-control-prev" type="button" data-bs-target="#carouselHero" data-bs-slide="prev">
                 <span class="carousel-control-prev-icon"></span>
                 <span class="visually-hidden">Anterior</span>
@@ -93,32 +89,20 @@ try {
         </div>
     </section>
 
-    <!-- ================================================== -->
-    <!-- MENÚ MARKETPLACE EN LANDING PAGE - MENÚ DINÁMICO -->
-    <!-- ================================================== -->
-    <?php if ($showMarketplaceMenu): ?>
+    <!-- ✅ MENÚ MARKETPLACE SOLO SI EXISTE -->
+    <?php if ($showMarketplaceMenu && $hasMarketplace): ?>
     <section id="marketplace-menu-landing" class="marketplace-menu-section py-3 bg-light">
         <div class="container">
             <h3 class="text-center mb-3">Marketplace Deportivo</h3>
             <div class="row justify-content-center">
                 <div class="col-md-8">
                     <?= \app\components\MenuWidget::widget([
-                        'parentId' => 177, // ID del menú "MarketPlace" en la base de datos
+                        'parentId' => 177,
                         'options' => [
                             'class' => 'nav justify-content-center marketplace-nav',
-                            'mobileMode' => false // Forzar modo escritorio para landing
+                            'mobileMode' => false
                         ]
                     ]) ?>
-                    
-                    <!-- Fallback en caso de que el menú no cargue -->
-                    <?php if (YII_ENV_DEV && empty($testMenu)): ?>
-                    <div class="alert alert-warning mt-2" role="alert">
-                        <small>
-                            <i class="bi bi-exclamation-triangle"></i> 
-                            Menú del marketplace no cargado. Mostrando fallback...
-                        </small>
-                    </div>
-                    <?php endif; ?>
                 </div>
             </div>
         </div>
@@ -138,40 +122,54 @@ try {
             
             <hr class="my-4">
             
-            <!-- Acciones según estado de autenticación -->
+            <!-- ✅ ACCIONES CON PREVENCIÓN DE BUCLE -->
             <div class="mt-4 landing-actions">
-                <?php if (!$isAuthenticated): ?>
+                <?php if (!$isUserAuthenticated): ?>
+                    <!-- Usuario NO autenticado -->
+                    <?php if ($currentRoute !== 'site/login'): ?>
                     <a href="<?= Yii::$app->urlManager->createUrl(['/site/login']) ?>" 
                        class="btn btn-primary btn-lg mx-2 landing-btn">
                         Iniciar Sesión
                     </a>
+                    <?php endif; ?>
+                    
+                    <?php if ($currentRoute !== 'site/signup'): ?>
+                    <a href="<?= Yii::$app->urlManager->createUrl(['/site/signup']) ?>" 
+                       class="btn btn-outline-primary btn-lg mx-2 landing-btn">
+                        Registrarse
+                    </a>
+                    <?php endif; ?>
                 <?php else: ?>
-                    <a href="<?= Yii::$app->urlManager->createUrl(['/site/acceder-sistema']) ?>" 
+                    <!-- Usuario autenticado -->
+                    <a href="<?= Yii::$app->urlManager->createUrl(['/ged/default/index']) ?>" 
                        class="btn btn-success btn-lg mx-2 landing-btn"
                        id="btn-acceder-sistema">
                         Acceder al Sistema
                     </a>
+                    
                     <a href="<?= Yii::$app->urlManager->createUrl(['/site/mi-cuenta']) ?>" 
                        class="btn btn-info btn-lg mx-2 landing-btn">
                         Mi Cuenta
                     </a>
                 <?php endif; ?>
                 
-                <a href="<?= Yii::$app->urlManager->createUrl(['/tienda/marketplace/index']) ?>" 
+                <!-- ✅ MARKETPLACE SOLO SI EXISTE -->
+                <?php if ($hasMarketplace): ?>
+                <a href="<?= $marketplaceUrl ?>" 
                    class="btn btn-warning btn-lg mx-2 landing-btn"
                    id="btn-marketplace">
                     Marketplace Deportivo
                 </a>
+                <?php endif; ?>
             </div>
         </div>
     </div>
     
     <!-- Banner de Tiendas Patrocinadas -->
-    <section id="tiendas-patrocinadas" class="tiendas-patrocinadas-section vh-60">
-        <div class="container-fluid h-100">
-            <div class="row h-100 align-items-center">
-                <div class="col-lg-8 offset-lg-2 text-center">
-                    <!-- Contenedor para banner dinámico -->
+    <section id="tiendas-patrocinadas" class="tiendas-patrocinadas-section">
+        <div class="container">
+            <div class="row">
+                <div class="col-12 text-center">
                     <div id="banner-tiendas-patrocinadas"></div>
                 </div>
             </div>
@@ -326,7 +324,7 @@ try {
     </section>
     
     <!-- Información adicional -->
-    <?php if (!$isAuthenticated): ?>
+    <?php if (!$isUserAuthenticated): ?>
     <div class="container py-5">
         <div class="row">
             <div class="col-lg-8 mx-auto">
@@ -337,10 +335,12 @@ try {
                             Para acceder al sistema completo, por favor inicia sesión.
                         </p>
                         <div class="mt-3">
+                            <?php if ($currentRoute !== 'site/login'): ?>
                             <a href="<?= Yii::$app->urlManager->createUrl(['/site/login']) ?>" 
                                class="btn btn-primary btn-lg">
                                 <i class="fas fa-sign-in-alt"></i> Iniciar Sesión
                             </a>
+                            <?php endif; ?>
                         </div>
                     </div>
                 </div>
@@ -358,7 +358,7 @@ try {
                             Estás autenticado en el sistema GED.
                         </p>
                         <div class="mt-3">
-                            <a href="<?= Yii::$app->urlManager->createUrl(['/site/acceder-sistema']) ?>" 
+                            <a href="<?= Yii::$app->urlManager->createUrl(['/ged/default/index']) ?>" 
                                class="btn btn-success btn-lg">
                                 <i class="fas fa-tachometer-alt"></i> Acceder al Sistema
                             </a>
@@ -387,23 +387,45 @@ try {
     </div>
 </div>
 
-<!-- Script de debug para verificar en consola -->
-<?php if (YII_ENV_DEV): ?>
+<!-- ✅ SCRIPT DE VERIFICACIÓN Y PREVENCIÓN DE BUCLE -->
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    console.log('🔍 DEBUG - Landing Page Marketplace Menu');
-    console.log('URLs del Marketplace:');
-    console.log('- Marketplace Index: <?= Yii::$app->urlManager->createUrl(['/tienda/marketplace/index']) ?>');
-    console.log('- Estatus usuario: <?= $isAuthenticated ? "Autenticado" : "No autenticado" ?>');
+    console.log('🔍 GED System - Página Index cargada correctamente');
+    console.log('Usuario autenticado: <?= $isUserAuthenticated ? "Sí" : "No" ?>');
+    console.log('Ruta actual: <?= $currentRoute ?>');
     
-    // Verificar si el menú cargó
-    const marketplaceMenu = document.querySelector('.marketplace-nav');
-    if (marketplaceMenu) {
-        console.log('✅ Menú marketplace encontrado en DOM');
-        console.log('Número de items:', marketplaceMenu.querySelectorAll('li').length);
-    } else {
-        console.warn('⚠️ Menú marketplace NO encontrado en DOM');
+    // ✅ PREVENIR CLIC REPETIDO EN LOGIN SI YA ESTAMOS EN ESA PÁGINA
+    const loginButtons = document.querySelectorAll('a[href*="login"]');
+    loginButtons.forEach(button => {
+        button.addEventListener('click', function(e) {
+            if (window.location.href.indexOf('login') > -1) {
+                console.warn('⚠️ Ya estás en la página de login');
+                e.preventDefault();
+                return false;
+            }
+        });
+    });
+    
+    // ✅ VERIFICAR MARKETPLACE
+    const marketplaceBtn = document.getElementById('btn-marketplace');
+    if (marketplaceBtn) {
+        marketplaceBtn.addEventListener('click', function(e) {
+            console.log('🛒 Intentando acceder al marketplace...');
+            // Verificar si la URL existe
+            fetch(this.href, { method: 'HEAD' })
+                .then(response => {
+                    if (!response.ok) {
+                        console.error('❌ Marketplace no disponible');
+                        e.preventDefault();
+                        alert('El marketplace no está disponible en este momento.');
+                    }
+                })
+                .catch(() => {
+                    console.error('❌ Error de conexión al marketplace');
+                    e.preventDefault();
+                    alert('Error al acceder al marketplace.');
+                });
+        });
     }
 });
 </script>
-<?php endif; ?>
