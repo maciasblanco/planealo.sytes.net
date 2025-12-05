@@ -3081,9 +3081,9 @@ main#main {
 }
 
 /* PREVENIR COLAPSADO NO DESEADO */
-.navbar-collapse:not(.show) {
+/*.navbar-collapse:not(.show) {
   display: flex !important;
-}
+}*/
 
 /* ELIMINAR CUALQUIER OVERFLOW QUE CAUSE PROBLEMAS */
 html, body {
@@ -3502,4 +3502,149 @@ html, body {
         min-width: 100%;
         min-height: 100%;
     }
+}
+/* ===== CORRECCIÓN DE EMERGENCIA PARA NAVBAR EN MÓVIL ===== */
+@media (max-width: 991.98px) {
+  .navbar-contextual .navbar-collapse {
+      display: none !important;
+      visibility: hidden !important;
+      opacity: 0 !important;
+      height: 0 !important;
+      overflow: hidden !important;
+      padding: 0 !important;
+      margin: 0 !important;
+      transition: none !important;
+  }
+  
+  .navbar-contextual .navbar-collapse.show {
+      display: block !important;
+      visibility: visible !important;
+      opacity: 1 !important;
+      height: auto !important;
+      overflow: visible !important;
+  }
+  
+  /* Forzar que el toggler funcione */
+  .navbar-toggler {
+      display: block !important;
+      position: relative !important;
+      margin-left: auto !important;
+  }
+  
+  /* Ocultar el menú completo en móvil por defecto */
+  .navbar-nav.desktop-menu {
+      display: none !important;
+  }
+  
+  /* Mostrar solo el off-canvas en móvil */
+  .navbar-nav.desktop-menu {
+      flex-direction: column !important;
+  }
+}
+/* ===== CORRECCIÓN CRÍTICA: FORZAR COMPORTAMIENTO CORRECTO DEL NAVBAR EN MÓVIL ===== */
+@media (max-width: 991.98px) {
+  /* ✅ Asegurar que el navbar-collapse esté OCULTO por defecto */
+  .navbar-contextual .navbar-collapse:not(.show) {
+      display: none !important;
+      visibility: hidden !important;
+      opacity: 0 !important;
+      height: 0 !important;
+      overflow: hidden !important;
+  }
+  
+  /* ✅ Cuando Bootstrap lo abre, mostrar con animación */
+  .navbar-contextual .navbar-collapse.show {
+      display: block !important;
+      visibility: visible !important;
+      opacity: 1 !important;
+      height: auto !important;
+      overflow: visible !important;
+      animation: fadeIn 0.3s ease-in-out;
+  }
+  
+  /* ✅ Asegurar que las 4 secciones estén DENTRO del menú colapsable */
+  .navbar-contextual .navbar-container {
+      flex-direction: column !important;
+      gap: 20px !important;
+      padding: 20px 0 !important;
+  }
+  
+  .navbar-contextual .navbar-menu-section,
+  .navbar-contextual .navbar-social-section,
+  .navbar-contextual .navbar-control-section {
+      width: 100% !important;
+      display: block !important;
+  }
+  
+  /* ✅ El logo y el toggler deben estar FUERA del menú colapsable */
+  .navbar-contextual .navbar-brand-section {
+      width: auto !important;
+      display: flex !important;
+  }
+  
+  /* ✅ Estilos para el menú en móvil dentro del colapsable */
+  .navbar-contextual .navbar-nav {
+      flex-direction: column !important;
+      width: 100% !important;
+  }
+  
+  .navbar-contextual .nav-item {
+      width: 100% !important;
+      text-align: center !important;
+      margin-bottom: 5px !important;
+  }
+  
+  .navbar-contextual .nav-link {
+      display: block !important;
+      padding: 12px 15px !important;
+      background: rgba(255,255,255,0.1) !important;
+      border-radius: 5px !important;
+      margin-bottom: 5px !important;
+  }
+  
+  .navbar-contextual .dropdown-menu {
+      position: static !important;
+      width: 100% !important;
+      margin: 10px 0 !important;
+      background: rgba(0,0,0,0.3) !important;
+      border: 1px solid rgba(255,255,255,0.2) !important;
+      float: none !important;
+  }
+  
+  /* ✅ Redes sociales en vertical dentro del menú colapsable */
+  .navbar-contextual .social-icons-vertical {
+      flex-direction: row !important;
+      justify-content: center !important;
+      gap: 15px !important;
+  }
+}
+
+/* Animación para mostrar el menú */
+@keyframes fadeIn {
+  from {
+      opacity: 0;
+      transform: translateY(-10px);
+  }
+  to {
+      opacity: 1;
+      transform: translateY(0);
+  }
+}
+
+/* ✅ Asegurar que Bootstrap pueda controlar la visibilidad */
+.navbar-collapse {
+  transition: all 0.3s ease !important;
+}
+.session-controls .btn-group-horizontal {
+  display: flex !important;
+  gap: 8px !important;
+  justify-content: center !important;
+  margin-top: 8px !important;
+}
+
+.session-controls .btn-group-horizontal .btn {
+  flex: 1 !important;
+  min-width: 80px !important;
+  padding: 6px 10px !important;
+  font-size: 0.85rem !important;
 }

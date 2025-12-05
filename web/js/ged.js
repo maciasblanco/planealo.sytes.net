@@ -175,12 +175,13 @@ class GEDSystem {
 }
 
 // ==================================================
-// NAVBAR MANAGER
+// NAVBAR MANAGER - MODIFICADO PARA OCULTAR EN MÓVIL
 // ==================================================
 
 class NavbarManager {
     constructor() {
         this.navbar = null;
+        this.isMobile = window.innerWidth < 992;
     }
     
     init() {
@@ -192,13 +193,30 @@ class NavbarManager {
                 return;
             }
             
-            this.forceFullWidth();
+            // ✅ CORRECCIÓN CRÍTICA: Ocultar navbar-collapse en móviles
+            if (this.isMobile) {
+                this.hideNavbarCollapseOnMobile();
+            }
+            
             this.stabilizeNavbar();
             this.initNavbarEscuelaSelector();
             
-            console.log('✅ NavbarManager inicializado');
+            console.log('✅ NavbarManager inicializado - Móvil:', this.isMobile);
         } catch (error) {
             console.error('Error en NavbarManager.init:', error);
+        }
+    }
+    
+    hideNavbarCollapseOnMobile() {
+        try {
+            const navbarCollapse = document.getElementById('navbarGedCollapse');
+            if (navbarCollapse) {
+                navbarCollapse.style.display = 'none';
+                navbarCollapse.classList.remove('show');
+                console.log('✅ Navbar-collapse ocultado en móvil');
+            }
+        } catch (error) {
+            console.error('Error en hideNavbarCollapseOnMobile:', error);
         }
     }
     
