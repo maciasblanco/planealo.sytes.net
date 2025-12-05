@@ -39,6 +39,17 @@ $this->registerCss("
         right: 0 !important;
         z-index: 1030 !important;
         width: 100% !important;
+        height: 180px !important;
+        min-height: 180px !important;
+        display: flex !important;
+        align-items: center !important;
+    }
+    
+    .navbar-contextual > .container-fluid {
+        height: 100% !important;
+        display: flex !important;
+        align-items: center !important;
+        padding: 0 15px !important;
     }
     
     .navbar-brand-section {
@@ -49,44 +60,68 @@ $this->registerCss("
         justify-content: center !important;
     }
     
+    /* ✅ CORRECCIÓN CRÍTICA: MENÚ ALINEADO AL CENTRO VERTICALMENTE */
     .navbar-menu-section {
         width: {$menuWidth} !important;
+        height: 100% !important;
+        display: flex !important;
+        align-items: center !important; /* Esto centra verticalmente */
+        justify-content: center !important;
+    }
+    
+    .navbar-menu-section .section-container {
+        width: 100% !important;
+        height: 100% !important;
+        display: flex !important;
+        align-items: center !important; /* Centra verticalmente */
+        justify-content: center !important; /* Centra horizontalmente */
+    }
+    
+    .navbar-menu-section .navbar-nav {
+        width: 100% !important;
+        display: flex !important;
+        align-items: center !important; /* Asegura que los items estén centrados verticalmente */
+        justify-content: space-around !important; /* Distribuye los items horizontalmente */
+        margin: 0 !important;
+        padding: 0 !important;
+        height: auto !important;
+    }
+    
+    .navbar-menu-section .nav-item {
+        display: flex !important;
+        align-items: center !important;
+    }
+    
+    .navbar-menu-section .nav-link {
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        height: auto !important;
+        padding: 10px 15px !important;
+    }
+    
+    .navbar-social-section {
+        width: {$socialWidth} !important;
+        height: 100% !important;
         display: flex !important;
         align-items: center !important;
         justify-content: center !important;
     }
     
-    .navbar-social-section {
-        width: {$socialWidth} !important;
-    }
-    
     .navbar-control-section {
         width: {$controlWidth} !important;
+        height: 100% !important;
         display: flex !important;
         flex-direction: column !important;
-        justify-content: space-between !important;
-        height: 100% !important;
-        padding: 15px 0 !important;
+        justify-content: center !important; /* Centra verticalmente todo el contenido */
+        padding: 10px 0 !important;
     }
     
     .navbar-container {
         display: flex !important;
         width: 100% !important;
-        align-items: center !important;
-    }
-    
-    .navbar-nav {
-        width: 100% !important;
-        display: flex !important;
-        justify-content: space-around !important;
-    }
-    
-    .section-container {
-        width: 100% !important;
-        display: flex !important;
-        flex-direction: column !important;
-        justify-content: space-between !important;
         height: 100% !important;
+        align-items: center !important; /* Esto es clave: centra todas las secciones verticalmente */
     }
     
     /* ✅ OPTIMIZACIÓN: Login y Registro en línea horizontal */
@@ -106,13 +141,28 @@ $this->registerCss("
     
     /* ✅ Optimización del espacio de escuela */
     .school-info {
-        padding: 8px !important;
-        margin-bottom: 8px !important;
+        padding: 5px 8px !important;
+        margin-bottom: 10px !important;
+        background: rgba(255,255,255,0.1) !important;
+        border-radius: 5px !important;
+        text-align: center !important;
     }
     
     .school-info .escuela-activa-indicator {
-        padding: 5px !important;
+        padding: 3px 0 !important;
         font-size: 0.9rem !important;
+    }
+    
+    .navbar-control-section .section-container {
+        display: flex !important;
+        flex-direction: column !important;
+        justify-content: center !important;
+        height: 100% !important;
+    }
+    
+    /* ✅ Asegurar que los dropdowns también estén alineados */
+    .dropdown-menu {
+        margin-top: 0 !important;
     }
 }
 
@@ -167,7 +217,8 @@ $mobileDetect = Yii::$app->has('mobileDetect') ? Yii::$app->mobileDetect->isMobi
                     'class' => 'navbar-logo',
                     'alt' => 'GED Logo - Sistema de Gestión Deportiva',
                     'loading' => 'eager',
-                    'onerror' => "this.style.display='none'; this.nextElementSibling.style.display='block';"
+                    'onerror' => "this.style.display='none'; this.nextElementSibling.style.display='block';",
+                    'style' => 'max-height: 70%; max-width: 90%; width: auto; height: auto; object-fit: contain;'
                 ]) ?>
                 <div style="display: none; background: #6c3483; color: white; padding: 10px; border-radius: 5px; text-align: center;">
                     <strong>GED</strong><br>
@@ -341,7 +392,7 @@ $mobileDetect = Yii::$app->has('mobileDetect') ? Yii::$app->mobileDetect->isMobi
 <!-- Script para asegurar el comportamiento correcto -->
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    console.log('✅ Navbar optimizado inicializado');
+    console.log('✅ Navbar con menú centrado inicializado');
     
     // Verificar que Bootstrap está funcionando
     const navbarToggler = document.querySelector('.navbar-toggler');
@@ -380,6 +431,37 @@ document.addEventListener('DOMContentLoaded', function() {
                 btn.classList.add('w-100');
             });
         }
+    } else {
+        // En escritorio, centrar el menú verticalmente
+        console.log('💻 Modo escritorio: Centrando menú verticalmente...');
+        
+        // Forzar el cálculo de altura y centrado
+        setTimeout(() => {
+            const navbar = document.querySelector('.navbar-contextual');
+            const menuSection = document.querySelector('.navbar-menu-section');
+            const navItems = document.querySelectorAll('.navbar-menu-section .nav-item');
+            
+            if (navbar && menuSection) {
+                const navbarHeight = navbar.offsetHeight;
+                const menuHeight = menuSection.offsetHeight;
+                
+                console.log('📐 Alturas - Navbar:', navbarHeight, 'px, Menú:', menuHeight, 'px');
+                
+                // Si el menú no está centrado, aplicar corrección
+                if (menuHeight < navbarHeight) {
+                    menuSection.style.alignItems = 'center';
+                    menuSection.style.justifyContent = 'center';
+                    
+                    // También centrar los items individualmente
+                    navItems.forEach(item => {
+                        item.style.display = 'flex';
+                        item.style.alignItems = 'center';
+                    });
+                    
+                    console.log('🎯 Menú centrado verticalmente');
+                }
+            }
+        }, 300);
     }
 });
 </script>
