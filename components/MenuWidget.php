@@ -72,18 +72,17 @@ class MenuWidget extends Widget
             // ✅ CONSULTA CORREGIDA PARA POSTGRESQL (ESCAPAR "order")
             $query = new Query();
             
-            // Opción 1: Usar alias para evitar problemas con palabra reservada
             $query->select([
                 'm.id', 
                 'm.name', 
                 'm.route', 
                 'm.parent', 
-                'm."order" as menu_order',  // ¡IMPORTANTE: Comillas dobles para PostgreSQL!
+                'm."order" as menu_order',
                 'm.data'
             ])
             ->from('seguridad.menu m')
             ->where(['m.parent' => $parentId])
-            ->orderBy('m."order" ASC');  // ¡Comillas dobles para "order"!
+            ->orderBy('m."order" ASC');
             
             $items = $query->all();
             
@@ -117,7 +116,13 @@ class MenuWidget extends Widget
                 continue;
             }
             
-            // ✅ VERIFICAR PERMISOS RBAC PARA MENÚS NO PÚBLICOS
+            // ✅ PARA USUARIOS NO REGISTRADOS, SOLO MOSTRAR MENÚS PÚBLICOS
+            if (Yii::$app->user->isGuest) {
+                echo '<!-- Usuario es guest, omitiendo item no público -->' . "\n";
+                continue;
+            }
+            
+            // ✅ VERIFICAR PERMISOS RBAC PARA MENÚS NO PÚBLICOS (solo usuarios logueados)
             $hasPermission = $this->checkMenuItemPermission($item);
             
             if (!$hasPermission) {
@@ -141,7 +146,7 @@ class MenuWidget extends Widget
     }
 
     /**
-     * ✅ VERIFICAR SI UN ITEM DEL MENÚ ES PÚBLICO
+     * ✅ VERIFICAR SI UN ITEM DEL MENÚ ES PÚBLICO - MEJORADO
      */
     protected function isPublicMenuItem($item)
     {
@@ -156,16 +161,29 @@ class MenuWidget extends Widget
         $itemName = strtolower($item['name'] ?? '');
         $itemRoute = $item['route'] ?? '';
         
-        // Si el nombre contiene "marketplace", "tienda", "comercio"
-        if (strpos($itemName, 'market') !== false || 
-            strpos($itemName, 'tienda') !== false ||
-            strpos($itemName, 'comercio') !== false) {
-            return true;
+        echo '<!-- isPublicMenuItem: Nombre="' . $itemName . '", Ruta="' . $itemRoute . '" -->' . "\n";
+        
+        // Si el nombre contiene palabras clave de marketplace
+        $marketplaceKeywords = ['market', 'tienda', 'comercio', 'shop', 'store', 'marketplace'];
+        foreach ($marketplaceKeywords as $keyword) {
+            if (strpos($itemName, $keyword) !== false) {
+                echo '<!-- Encontrada palabra clave marketplace: ' . $keyword . ' -->' . "\n";
+                return true;
+            }
         }
         
-        // Si la ruta pertenece al módulo tienda
-        if (strpos($itemRoute, 'tienda/') === 0 || 
-            strpos($itemRoute, 'marketplace') !== false) {
+        // Si la ruta pertenece al módulo tienda o marketplace
+        $publicRoutePatterns = ['tienda/', 'marketplace', 'shop/', 'store/', 'tienda/default', 'tienda/marketplace'];
+        foreach ($publicRoutePatterns as $pattern) {
+            if (strpos($itemRoute, $pattern) === 0 || strpos($itemRoute, $pattern) !== false) {
+                echo '<!-- Ruta pública detectada por patrón: ' . $pattern . ' -->' . "\n";
+                return true;
+            }
+        }
+        
+        // Verificar si la ruta es pública usando el método isPublicRoute
+        if (!empty($itemRoute) && $itemRoute !== '#' && $this->isPublicRoute($itemRoute)) {
+            echo '<!-- Ruta marcada como pública en isPublicRoute -->' . "\n";
             return true;
         }
         
@@ -173,17 +191,19 @@ class MenuWidget extends Widget
     }
 
     /**
-     * ✅ VERIFICAR PERMISOS RBAC
+     * ✅ VERIFICAR PERMISOS RBAC - SIMPLIFICADO
      */
     protected function checkMenuItemPermission($item)
     {
         // ✅ PRIMERO VERIFICAR SI ES UN MENÚ PÚBLICO
         if ($this->isPublicMenuItem($item)) {
+            echo '<!-- checkMenuItemPermission: Item es público -->' . "\n";
             return true;
         }
         
         // Si no hay ruta definida, es un contenedor
         if (empty($item['route']) || $item['route'] == '#') {
+            echo '<!-- checkMenuItemPermission: Es contenedor sin ruta -->' . "\n";
             return true;
         }
 
@@ -192,16 +212,19 @@ class MenuWidget extends Widget
             
             // ✅ VERIFICAR RUTAS PÚBLICAS
             if ($this->isPublicRoute($route)) {
+                echo '<!-- checkMenuItemPermission: Ruta pública -->' . "\n";
                 return true;
             }
             
-            // ✅ SI ES USUARIO GUEST, SOLO PUEDE VER RUTAS PÚBLICAS
+            // ✅ SI ES USUARIO GUEST, NO PUEDE ACCEDER A RUTAS NO PÚBLICAS
             if (Yii::$app->user->isGuest) {
+                echo '<!-- checkMenuItemPermission: Usuario guest, ruta no pública -->' . "\n";
                 return false;
             }
 
             // ✅ VERIFICAR PERMISO CON RBAC
             if (Yii::$app->user->can($route)) {
+                echo '<!-- checkMenuItemPermission: Tiene permiso RBAC -->' . "\n";
                 return true;
             }
             
@@ -210,33 +233,39 @@ class MenuWidget extends Widget
             if (count($routeParts) >= 2) {
                 $modulePattern = $routeParts[0] . '/*';
                 if (Yii::$app->user->can($modulePattern)) {
+                    echo '<!-- checkMenuItemPermission: Tiene permiso por patrón módulo -->' . "\n";
                     return true;
                 }
                 
                 if (count($routeParts) >= 2) {
                     $controllerPattern = $routeParts[0] . '/' . $routeParts[1] . '/*';
                     if (Yii::$app->user->can($controllerPattern)) {
+                        echo '<!-- checkMenuItemPermission: Tiene permiso por patrón controlador -->' . "\n";
                         return true;
                     }
                 }
             }
 
             // ✅ VERIFICAR ROLES DE ADMINISTRADOR
-            if (Yii::$app->user->can('admin') || 
-                Yii::$app->user->can('administrator') || 
-                Yii::$app->user->can('superadmin')) {
-                return true;
+            $adminRoles = ['admin', 'administrator', 'superadmin'];
+            foreach ($adminRoles as $role) {
+                if (Yii::$app->user->can($role)) {
+                    echo '<!-- checkMenuItemPermission: Tiene rol de administrador -->' . "\n";
+                    return true;
+                }
             }
 
+            echo '<!-- checkMenuItemPermission: NO tiene permiso -->' . "\n";
             return false;
 
         } catch (\Exception $e) {
+            echo '<!-- checkMenuItemPermission ERROR: ' . htmlspecialchars($e->getMessage()) . ' -->' . "\n";
             return false;
         }
     }
 
     /**
-     * ✅ VERIFICAR SI UNA RUTA ES PÚBLICA
+     * ✅ VERIFICAR SI UNA RUTA ES PÚBLICA - EXPANDIDO
      */
     protected function isPublicRoute($route)
     {
@@ -256,17 +285,23 @@ class MenuWidget extends Widget
             'ged/*',
             'site/*',
             
-            // ✅ TODAS LAS RUTAS DEL MARKETPLACE
+            // ✅ TODAS LAS RUTAS DEL MARKETPLACE Y TIENDA
             'tienda/*',
             'tienda/marketplace/*',
             'tienda/marketplace/index',
             'tienda/marketplace/buscar',
             'tienda/marketplace/categoria',
             'tienda/marketplace/producto',
+            'tienda/marketplace/detalle',
+            'tienda/default/*',
             'tienda/default/index',
             'tienda/default/registro-vendedor',
             'tienda/default/dashboard-vendedor',
-            'tienda/marketplace',
+            'tienda/default/carrito',
+            'tienda/default/checkout',
+            'marketplace/*',
+            'shop/*',
+            'store/*',
             
             // Otras rutas públicas
             'municipio/get-by-edo',
@@ -299,6 +334,12 @@ class MenuWidget extends Widget
         <ul class="' . $menuClass . '">
             <li class="' . ($this->mobileMode ? 'menu-item' : 'nav-item') . '">
                 <a class="' . ($this->mobileMode ? 'menu-link' : 'nav-link text-white') . '" href="' . Url::to(['/']) . '">Inicio</a>
+            </li>';
+            
+        // ✅ SIEMPRE MOSTRAR MARKETPLACE EN EL FALLBACK
+        $menuItems .= '
+            <li class="' . ($this->mobileMode ? 'menu-item' : 'nav-item') . '">
+                <a class="' . ($this->mobileMode ? 'menu-link' : 'nav-link text-white') . '" href="' . Url::to(['/tienda/marketplace']) . '">Marketplace</a>
             </li>';
             
         if (Yii::$app->user->isGuest) {
@@ -446,10 +487,10 @@ class MenuWidget extends Widget
                     'm.name', 
                     'm.route', 
                     'm.parent', 
-                    'm."order" as menu_order'  // ¡Comillas dobles para PostgreSQL!
+                    'm."order" as menu_order'
                 ])
                 ->from('seguridad.menu m')
-                ->orderBy('m."order" ASC')  // ¡Comillas dobles para PostgreSQL!
+                ->orderBy('m."order" ASC')
                 ->all();
             
             $result = [];
@@ -460,6 +501,37 @@ class MenuWidget extends Widget
             return $result;
         } catch (\Exception $e) {
             return ['error' => $e->getMessage()];
+        }
+    }
+    
+    /**
+     * ✅ MÉTODO PARA VER TODOS LOS MENÚS DISPONIBLES
+     */
+    public static function getAllMenus()
+    {
+        try {
+            $query = new Query();
+            $allMenus = $query->select([
+                    'm.id', 
+                    'm.name', 
+                    'm.route', 
+                    'm.parent', 
+                    'm."order" as menu_order'
+                ])
+                ->from('seguridad.menu m')
+                ->orderBy('m.parent ASC, m."order" ASC')
+                ->all();
+            
+            echo '<!-- === TODOS LOS MENÚS EN LA BD === -->' . "\n";
+            foreach ($allMenus as $menu) {
+                echo '<!-- ID: ' . $menu['id'] . ' | Nombre: ' . $menu['name'] . ' | Ruta: ' . ($menu['route'] ?: 'null') . ' | Parent: ' . ($menu['parent'] ?: 'null') . ' -->' . "\n";
+            }
+            echo '<!-- === FIN MENÚS === -->' . "\n";
+            
+            return $allMenus;
+        } catch (\Exception $e) {
+            echo '<!-- ERROR obteniendo menús: ' . htmlspecialchars($e->getMessage()) . ' -->' . "\n";
+            return [];
         }
     }
 }
