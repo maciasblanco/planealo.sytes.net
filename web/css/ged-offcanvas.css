@@ -1,0 +1,352 @@
+/* web/css/ged-offcanvas.css */
+
+/* ===== OFF-CANVAS UNIFICADO ===== */
+.ged-offcanvas-wrapper {
+  position: relative;
+  z-index: var(--z-index-offcanvas);
+}
+
+/* ✅ OFF-CANVAS PARA PC (SIDEBAR FIXED) */
+@media (min-width: 992px) {
+  .ged-offcanvas-sidebar {
+      position: fixed;
+      top: var(--navbar-height-desktop);
+      left: 0;
+      width: 280px;
+      height: calc(100vh - var(--navbar-height-desktop));
+      background: linear-gradient(135deg, #2c3e50, #34495e);
+      color: white;
+      z-index: var(--z-index-offcanvas);
+      box-shadow: 2px 0 10px rgba(0,0,0,0.2);
+      transform: translateX(0) !important;
+      visibility: visible !important;
+      overflow-y: auto;
+      transition: width 0.3s ease;
+      scrollbar-width: thin;
+      scrollbar-color: #3498db #2c3e50;
+  }
+  
+  /* Custom scrollbar */
+  .ged-offcanvas-sidebar::-webkit-scrollbar {
+      width: 6px;
+  }
+  
+  .ged-offcanvas-sidebar::-webkit-scrollbar-track {
+      background: #2c3e50;
+  }
+  
+  .ged-offcanvas-sidebar::-webkit-scrollbar-thumb {
+      background: #3498db;
+      border-radius: 3px;
+  }
+  
+  /* Compact mode */
+  .ged-offcanvas-sidebar.compact {
+      width: 70px;
+  }
+  
+  .ged-offcanvas-sidebar.compact .menu-text {
+      display: none;
+  }
+  
+  .ged-offcanvas-sidebar.compact .submenu-indicator {
+      display: none !important;
+  }
+  
+  .ged-offcanvas-sidebar.compact .menu-link {
+      justify-content: center;
+      padding: 12px !important;
+  }
+  
+  .ged-offcanvas-sidebar.compact .menu-icon {
+      margin-right: 0 !important;
+  }
+  
+  /* Ajustar contenido principal */
+  body {
+      padding-left: 280px; /* Espacio para sidebar */
+      transition: padding-left 0.3s ease;
+  }
+  
+  body.sidebar-compact {
+      padding-left: 70px;
+  }
+  
+  /* ✅ Toggler para PC */
+  .sidebar-toggler-pc {
+      position: fixed;
+      bottom: 20px;
+      left: 20px;
+      z-index: calc(var(--z-index-offcanvas) + 1);
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: #3498db;
+      color: white;
+      border: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+      transition: all 0.3s ease;
+  }
+  
+  .sidebar-toggler-pc:hover {
+      transform: scale(1.1);
+      box-shadow: 0 4px 15px rgba(52, 152, 219, 0.4);
+  }
+  
+  .sidebar-toggler-pc i {
+      transition: transform 0.3s ease;
+  }
+  
+  .ged-offcanvas-sidebar.compact + .sidebar-toggler-pc i {
+      transform: rotate(180deg);
+  }
+}
+
+/* ✅ OFF-CANVAS PARA MÓVIL (MODAL) */
+@media (max-width: 991.98px) {
+  .ged-offcanvas-sidebar {
+      position: fixed;
+      top: var(--navbar-height-tablet);
+      left: -100%;
+      width: 85%;
+      max-width: 320px;
+      height: calc(100vh - var(--navbar-height-tablet));
+      background: linear-gradient(135deg, #2c3e50, #34495e);
+      color: white;
+      z-index: var(--z-index-offcanvas);
+      box-shadow: 2px 0 15px rgba(0,0,0,0.3);
+      transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      overflow-y: auto;
+  }
+  
+  .ged-offcanvas-sidebar.open {
+      left: 0;
+  }
+  
+  /* Backdrop para móvil */
+  .ged-sidebar-backdrop {
+      position: fixed;
+      top: var(--navbar-height-tablet);
+      left: 0;
+      width: 100%;
+      height: calc(100vh - var(--navbar-height-tablet));
+      background: rgba(0,0,0,0.5);
+      z-index: calc(var(--z-index-offcanvas) - 1);
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.3s ease;
+      backdrop-filter: blur(2px);
+  }
+  
+  .ged-sidebar-backdrop.show {
+      opacity: 1;
+      visibility: visible;
+  }
+  
+  body {
+      padding-left: 0; /* Sin padding en móvil */
+  }
+  
+  /* Botón toggler en navbar móvil */
+  .navbar-toggler[data-bs-toggle="offcanvas"] {
+      display: block !important;
+      margin-left: auto;
+  }
+  
+  /* Ocultar compact toggler en móvil */
+  .sidebar-toggler-pc {
+      display: none !important;
+  }
+}
+
+/* ===== ESTILOS COMUNES DEL MENÚ OFF-CANVAS ===== */
+.offcanvas-menu {
+  padding: 1rem 0;
+  margin: 0;
+  list-style: none;
+}
+
+.menu-item {
+  position: relative;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+
+.menu-item:last-child {
+  border-bottom: none;
+}
+
+.menu-link {
+  display: flex;
+  align-items: center;
+  padding: 12px 20px !important;
+  color: rgba(255,255,255,0.9) !important;
+  text-decoration: none !important;
+  transition: all 0.3s ease;
+  position: relative;
+  font-size: 0.95rem;
+  border-radius: 0 !important;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.menu-link:hover,
+.menu-link:focus,
+.menu-link.active {
+  background: rgba(255,255,255,0.1);
+  color: white !important;
+  padding-left: 25px !important;
+}
+
+/* Iconos */
+.menu-icon {
+  width: 20px;
+  margin-right: 10px;
+  text-align: center;
+  font-size: 1rem;
+  flex-shrink: 0;
+}
+
+.menu-text {
+  flex-grow: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ✅ INDICADOR DE SUBMENÚ */
+.submenu-indicator {
+  margin-left: auto;
+  transition: transform 0.3s ease;
+  font-size: 0.8rem;
+  opacity: 0.7;
+}
+
+.menu-link[aria-expanded="true"] .submenu-indicator {
+  transform: rotate(90deg);
+}
+
+/* ✅ SUBMENÚS - 3 NIVELES */
+.offcanvas-menu .offcanvas-menu {
+  background: rgba(0,0,0,0.2);
+  padding: 0;
+  margin: 0;
+  border-left: 3px solid #3498db;
+}
+
+.offcanvas-menu .offcanvas-menu .menu-link {
+  padding-left: 40px !important;
+  font-size: 0.9rem;
+}
+
+.offcanvas-menu .offcanvas-menu .menu-link:hover {
+  padding-left: 45px !important;
+}
+
+.offcanvas-menu .offcanvas-menu .offcanvas-menu .menu-link {
+  padding-left: 60px !important;
+  font-size: 0.85rem;
+}
+
+.offcanvas-menu .offcanvas-menu .offcanvas-menu .menu-link:hover {
+  padding-left: 65px !important;
+}
+
+/* Animación para submenús */
+.collapse {
+  transition: height 0.3s ease;
+}
+
+.collapse.show {
+  animation: slideDown 0.3s ease;
+}
+
+@keyframes slideDown {
+  from {
+      opacity: 0;
+      transform: translateY(-10px);
+  }
+  to {
+      opacity: 1;
+      transform: translateY(0);
+  }
+}
+
+/* Header del offcanvas */
+.offcanvas-header {
+  padding: 1.5rem;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+  background: rgba(0,0,0,0.2);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.offcanvas-title {
+  color: white;
+  font-weight: 600;
+  margin: 0;
+  font-size: 1.1rem;
+}
+
+.close-offcanvas {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 1.2rem;
+  cursor: pointer;
+  padding: 0.5rem;
+  border-radius: 4px;
+  transition: background 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+}
+
+.close-offcanvas:hover {
+  background: rgba(255,255,255,0.1);
+}
+
+/* Ajustes para el contenido principal */
+.main-content-wrapper {
+  transition: margin-left 0.3s ease;
+}
+
+@media (min-width: 992px) {
+  .main-content-wrapper {
+      margin-left: 280px;
+  }
+  
+  body.sidebar-compact .main-content-wrapper {
+      margin-left: 70px;
+  }
+}
+
+/* Estado activo para menú */
+.menu-link.active {
+  background: linear-gradient(90deg, rgba(52, 152, 219, 0.3), transparent);
+  border-left: 3px solid #3498db;
+}
+
+/* Mejoras de accesibilidad */
+.menu-link:focus-visible {
+  outline: 2px solid #3498db;
+  outline-offset: -2px;
+}
+
+/* Loading state */
+.menu-loading {
+  padding: 2rem;
+  text-align: center;
+  color: rgba(255,255,255,0.6);
+}
+
+.menu-loading i {
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+  display: block;
+}

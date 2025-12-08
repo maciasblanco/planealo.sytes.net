@@ -25,16 +25,19 @@ class AppAsset extends AssetBundle
         'font_ico/bootstrap-icons.css',
         'css/mapa-escuelas.css',
         'css/reportes.css',
+        'css/navbar.css',
+        'css/ged-offcanvas.css', // ✅ NUEVO: Offcanvas CSS
     ];
     
     public $js = [
         'js/ged.js', // JS ya unificado
-        'js/dropdowns-dependientes.js', // ← AGREGAR ESTA LÍNEA
+        'js/dropdowns-dependientes.js',
         'js/mapa-escuela.js',
-        'js/horarioSelector.js', // Agregar esta línea
+        'js/horarioSelector.js',
         'js/mapa-escuelas-show.js',
-        'js/tienda.js', // NUEVO: Agregar el JS de tienda
+        'js/tienda.js',
         'js/reportes.js',
+        'js/ged-offcanvas.js', // ✅ NUEVO: Offcanvas JS
     ];
     
     public $depends = [
@@ -42,6 +45,7 @@ class AppAsset extends AssetBundle
         'yii\bootstrap5\BootstrapAsset',
         'yii\bootstrap5\BootstrapPluginAsset', // Para JS de Bootstrap
     ];
+    
     // Para cargar solo en páginas específicas
     public static function addMap($view)
     {

@@ -8,6 +8,10 @@
 
 use yii\bootstrap5\Html;
 
+// ✅ REGISTRAR ARCHIVOS CSS Y JS SEPARADOS
+$this->registerCssFile('@web/css/navbar.css', ['depends' => [\yii\bootstrap5\BootstrapAsset::class]]);
+$this->registerJsFile('@web/js/navbar.js', ['depends' => [\yii\bootstrap5\BootstrapPluginAsset::class]]);
+
 // ✅ CONFIGURACIÓN ACTUALIZADA SEGÚN REUNIÓN
 $logoWidth = '15%';
 $menuWidth = '50%';
@@ -28,183 +32,13 @@ $showSignupButton = !Yii::$app->user->isGuest ? false : (!$isSignupRoute && !$is
 $navbarClasses = 'navbar navbar-expand-lg navbar-dark navbar-contextual fixed-top';
 $containerClasses = 'container-fluid';
 
-// ✅ CSS MINIMALISTA - SOLO PARA ESCRITORIO
-$this->registerCss("
-/* ESTILOS SOLO PARA ESCRITORIO - NO INTERFIERE CON BOOTSTRAP EN MÓVIL */
-@media (min-width: 992px) {
-    .navbar-contextual {
-        position: fixed !important;
-        top: 0 !important;
-        left: 0 !important;
-        right: 0 !important;
-        z-index: 1030 !important;
-        width: 100% !important;
-        height: 180px !important;
-        min-height: 180px !important;
-        display: flex !important;
-        align-items: center !important;
-    }
-    
-    .navbar-contextual > .container-fluid {
-        height: 100% !important;
-        display: flex !important;
-        align-items: center !important;
-        padding: 0 15px !important;
-    }
-    
-    .navbar-brand-section {
-        width: {$logoWidth} !important;
-        height: 100% !important;
-        display: flex !important;
-        align-items: center !important;
-        justify-content: center !important;
-    }
-    
-    /* ✅ CORRECCIÓN CRÍTICA: MENÚ ALINEADO AL CENTRO VERTICALMENTE */
-    .navbar-menu-section {
-        width: {$menuWidth} !important;
-        height: 100% !important;
-        display: flex !important;
-        align-items: center !important; /* Esto centra verticalmente */
-        justify-content: center !important;
-    }
-    
-    .navbar-menu-section .section-container {
-        width: 100% !important;
-        height: 100% !important;
-        display: flex !important;
-        align-items: center !important; /* Centra verticalmente */
-        justify-content: center !important; /* Centra horizontalmente */
-    }
-    
-    .navbar-menu-section .navbar-nav {
-        width: 100% !important;
-        display: flex !important;
-        align-items: center !important; /* Asegura que los items estén centrados verticalmente */
-        justify-content: space-around !important; /* Distribuye los items horizontalmente */
-        margin: 0 !important;
-        padding: 0 !important;
-        height: auto !important;
-    }
-    
-    .navbar-menu-section .nav-item {
-        display: flex !important;
-        align-items: center !important;
-    }
-    
-    .navbar-menu-section .nav-link {
-        display: flex !important;
-        align-items: center !important;
-        justify-content: center !important;
-        height: auto !important;
-        padding: 10px 15px !important;
-    }
-    
-    .navbar-social-section {
-        width: {$socialWidth} !important;
-        height: 100% !important;
-        display: flex !important;
-        align-items: center !important;
-        justify-content: center !important;
-    }
-    
-    .navbar-control-section {
-        width: {$controlWidth} !important;
-        height: 100% !important;
-        display: flex !important;
-        flex-direction: column !important;
-        justify-content: center !important; /* Centra verticalmente todo el contenido */
-        padding: 10px 0 !important;
-    }
-    
-    .navbar-container {
-        display: flex !important;
-        width: 100% !important;
-        height: 100% !important;
-        align-items: center !important; /* Esto es clave: centra todas las secciones verticalmente */
-    }
-    
-    /* ✅ OPTIMIZACIÓN: Login y Registro en línea horizontal */
-    .session-controls .btn-group-horizontal {
-        display: flex !important;
-        gap: 8px !important;
-        justify-content: center !important;
-        margin-top: 8px !important;
-    }
-    
-    .session-controls .btn-group-horizontal .btn {
-        flex: 1 !important;
-        min-width: 80px !important;
-        padding: 6px 10px !important;
-        font-size: 0.85rem !important;
-    }
-    
-    /* ✅ Optimización del espacio de escuela */
-    .school-info {
-        padding: 5px 8px !important;
-        margin-bottom: 10px !important;
-        background: rgba(255,255,255,0.1) !important;
-        border-radius: 5px !important;
-        text-align: center !important;
-    }
-    
-    .school-info .escuela-activa-indicator {
-        padding: 3px 0 !important;
-        font-size: 0.9rem !important;
-    }
-    
-    .navbar-control-section .section-container {
-        display: flex !important;
-        flex-direction: column !important;
-        justify-content: center !important;
-        height: 100% !important;
-    }
-    
-    /* ✅ Asegurar que los dropdowns también estén alineados */
-    .dropdown-menu {
-        margin-top: 0 !important;
-    }
-}
-
-/* ESTILOS PARA REDES SOCIALES (AMBOS DISPOSITIVOS) */
-.social-icons-vertical {
-    display: flex !important;
-    justify-content: center !important;
-    gap: 10px !important;
-}
-
-.social-icon-circle {
-    display: inline-flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    width: 35px !important;
-    height: 35px !important;
-    border-radius: 50% !important;
-    background: rgba(255, 255, 255, 0.1) !important;
-    color: white !important;
-    text-decoration: none !important;
-    transition: all 0.3s ease !important;
-}
-
-.social-icon-circle:hover {
-    background: rgba(255, 255, 255, 0.2) !important;
-    transform: translateY(-2px) !important;
-}
-
-/* EN MÓVIL: DEJAR QUE BOOTSTRAP CONTROLE TODO */
-@media (max-width: 991.98px) {
-    /* Bootstrap manejará la visibilidad de .navbar-collapse */
-    /* No interferir con el comportamiento por defecto */
-}
-");
-
 // ✅ DETECCIÓN DE MÓVIL PARA EL MENÚ
 $mobileDetect = Yii::$app->has('mobileDetect') ? Yii::$app->mobileDetect->isMobile() : false;
 
 ?>
 
 <!-- ================================================== -->
-<!-- NAVBAR UNIFICADO - DEJAR QUE BOOTSTRAP CONTROLE TODO -->
+<!-- NAVBAR UNIFICADO - UN SOLO MENÚ PARA TODOS LOS DISPOSITIVOS -->
 <!-- ================================================== -->
 <nav class="<?= $navbarClasses ?>" aria-label="Navegación principal">
     <div class="<?= $containerClasses ?>">
@@ -217,8 +51,7 @@ $mobileDetect = Yii::$app->has('mobileDetect') ? Yii::$app->mobileDetect->isMobi
                     'class' => 'navbar-logo',
                     'alt' => 'GED Logo - Sistema de Gestión Deportiva',
                     'loading' => 'eager',
-                    'onerror' => "this.style.display='none'; this.nextElementSibling.style.display='block';",
-                    'style' => 'max-height: 70%; max-width: 90%; width: auto; height: auto; object-fit: contain;'
+                    'onerror' => "this.style.display='none'; this.nextElementSibling.style.display='block';"
                 ]) ?>
                 <div style="display: none; background: #6c3483; color: white; padding: 10px; border-radius: 5px; text-align: center;">
                     <strong>GED</strong><br>
@@ -227,7 +60,7 @@ $mobileDetect = Yii::$app->has('mobileDetect') ? Yii::$app->mobileDetect->isMobi
             </a>
         </div>
 
-        <!-- Toggler para móviles - Bootstrap lo manejará -->
+        <!-- Toggler para móviles -->
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" 
                 data-bs-target="#navbarGedCollapse" 
                 aria-controls="navbarGedCollapse" aria-expanded="false" 
@@ -235,7 +68,7 @@ $mobileDetect = Yii::$app->has('mobileDetect') ? Yii::$app->mobileDetect->isMobi
             <span class="navbar-toggler-icon"></span>
         </button>
 
-        <!-- CONTENIDO COLAPSABLE - Aquí van TODAS las secciones -->
+        <!-- ✅ CONTENIDO COLAPSABLE - TODO EN UN SOLO MENÚ -->
         <div class="collapse navbar-collapse" id="navbarGedCollapse">
             <div class="navbar-container">
                 
@@ -251,8 +84,8 @@ $mobileDetect = Yii::$app->has('mobileDetect') ? Yii::$app->mobileDetect->isMobi
                     </div>
                 </div>
                 
-                <!-- ✅ SECCIÓN 2: Redes Sociales - 15% -->
-                <div class="navbar-social-section">
+                <!-- ✅ SECCIÓN 2: Redes Sociales - 15% (OCULTO EN MÓVIL) -->
+                <div class="navbar-social-section d-none d-lg-block">
                     <div class="section-container">
                         <div class="social-icons-vertical" aria-label="Redes sociales">
                             <a href="#" class="social-icon-circle" title="Facebook" aria-label="Facebook">
@@ -274,8 +107,8 @@ $mobileDetect = Yii::$app->has('mobileDetect') ? Yii::$app->mobileDetect->isMobi
                 <!-- ✅ SECCIÓN 3: Control de Usuario y Escuela - 20% -->
                 <div class="navbar-control-section">
                     <div class="section-container">
-                        <!-- Información de Escuela -->
-                        <div class="school-info mb-2">
+                        <!-- Información de Escuela (OCULTO EN MÓVIL) -->
+                        <div class="school-info mb-2 d-none d-lg-block">
                             <div class="school-search-container mb-2">
                                 <?php if ($idEscuela && $idEscuela > 0): ?>
                                     <div class="escuela-activa-indicator">
@@ -288,7 +121,7 @@ $mobileDetect = Yii::$app->has('mobileDetect') ? Yii::$app->mobileDetect->isMobi
                                         </small>
                                     </div>
                                 <?php else: ?>
-                                    <div class="alert alert-warning py-1 mb-2" role="alert" style="padding: 4px 8px !important; font-size: 0.8rem !important;">
+                                    <div class="alert alert-warning py-1 mb-2" role="alert">
                                         <small>
                                             <i class="bi bi-exclamation-triangle" aria-hidden="true"></i>
                                             <strong>Sin escuela</strong>
@@ -339,17 +172,18 @@ $mobileDetect = Yii::$app->has('mobileDetect') ? Yii::$app->mobileDetect->isMobi
                             <?php endif; ?>
                         </div>                        
                         
-                        <!-- ✅ Control de Sesión OPTIMIZADO - Login/Registro en línea -->
+                        <!-- ✅ Control de Sesión - VISIBLE EN TODOS LOS DISPOSITIVOS -->
                         <div class="session-controls">
                             <?php if (Yii::$app->user->isGuest): ?>
-                                <!-- Usuario no autenticado - Botones en línea horizontal -->
-                                <div class="btn-group-horizontal">
+                                <!-- Usuario no autenticado -->
+                                <div class="d-flex flex-column flex-lg-row gap-2">
                                     <?php if ($showLoginButton): ?>
                                     <a class="btn btn-sm btn-outline-light" 
                                        href="<?= Yii::$app->urlManager->createUrl(['/site/login']) ?>" 
                                        title="Iniciar sesión"
                                        aria-label="Iniciar sesión">
-                                        <i class="bi bi-box-arrow-in-right me-1" aria-hidden="true"></i>Login
+                                        <i class="bi bi-box-arrow-in-right me-1" aria-hidden="true"></i>
+                                        <span class="d-none d-lg-inline">Login</span>
                                     </a>
                                     <?php endif; ?>
                                     
@@ -358,7 +192,8 @@ $mobileDetect = Yii::$app->has('mobileDetect') ? Yii::$app->mobileDetect->isMobi
                                        href="<?= Yii::$app->urlManager->createUrl(['/site/signup']) ?>" 
                                        title="Registrarse"
                                        aria-label="Crear cuenta">
-                                        <i class="bi bi-person-plus me-1" aria-hidden="true"></i>Registro
+                                        <i class="bi bi-person-plus me-1" aria-hidden="true"></i>
+                                        <span class="d-none d-lg-inline">Registro</span>
                                     </a>
                                     <?php endif; ?>
                                 </div>
@@ -372,7 +207,7 @@ $mobileDetect = Yii::$app->has('mobileDetect') ? Yii::$app->mobileDetect->isMobi
                                 </div>
                                 <?= Html::beginForm(['/site/logout'], 'post', ['class' => 'd-inline w-100']) ?>
                                     <?= Html::submitButton(
-                                        '<i class="bi bi-box-arrow-right me-1"></i>Cerrar Sesión',
+                                        '<i class="bi bi-box-arrow-right me-1"></i><span class="d-none d-lg-inline">Cerrar Sesión</span>',
                                         [
                                             'class' => 'btn btn-sm btn-outline-light w-100',
                                             'title' => 'Cerrar sesión',
@@ -389,79 +224,4 @@ $mobileDetect = Yii::$app->has('mobileDetect') ? Yii::$app->mobileDetect->isMobi
     </div>
 </nav>
 
-<!-- Script para asegurar el comportamiento correcto -->
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    console.log('✅ Navbar con menú centrado inicializado');
-    
-    // Verificar que Bootstrap está funcionando
-    const navbarToggler = document.querySelector('.navbar-toggler');
-    const navbarCollapse = document.getElementById('navbarGedCollapse');
-    
-    if (navbarToggler && navbarCollapse) {
-        // Verificar el estado inicial
-        console.log('📱 Bootstrap toggler encontrado');
-        console.log('🔄 Estado inicial del menú:', navbarCollapse.classList.contains('show') ? 'ABIERTO' : 'CERRADO');
-        
-        // Agregar listener para debugging
-        navbarToggler.addEventListener('click', function() {
-            console.log('🎯 Toggler clickeado');
-            setTimeout(() => {
-                console.log('📊 Estado del menú después del click:', navbarCollapse.classList.contains('show') ? 'ABIERTO' : 'CERRADO');
-            }, 100);
-        });
-    }
-    
-    // Detectar si estamos en móvil
-    const isMobile = window.innerWidth < 992;
-    if (isMobile) {
-        console.log('📱 Dispositivo móvil detectado, aplicando ajustes...');
-        
-        // Asegurar que el menú esté cerrado inicialmente
-        if (navbarCollapse && !navbarCollapse.classList.contains('show')) {
-            navbarCollapse.style.display = 'none';
-        }
-        
-        // En móvil, cambiar los botones a vertical
-        const btnGroup = document.querySelector('.btn-group-horizontal');
-        if (btnGroup) {
-            btnGroup.classList.remove('btn-group-horizontal');
-            btnGroup.classList.add('d-flex', 'flex-column', 'gap-2');
-            btnGroup.querySelectorAll('.btn').forEach(btn => {
-                btn.classList.add('w-100');
-            });
-        }
-    } else {
-        // En escritorio, centrar el menú verticalmente
-        console.log('💻 Modo escritorio: Centrando menú verticalmente...');
-        
-        // Forzar el cálculo de altura y centrado
-        setTimeout(() => {
-            const navbar = document.querySelector('.navbar-contextual');
-            const menuSection = document.querySelector('.navbar-menu-section');
-            const navItems = document.querySelectorAll('.navbar-menu-section .nav-item');
-            
-            if (navbar && menuSection) {
-                const navbarHeight = navbar.offsetHeight;
-                const menuHeight = menuSection.offsetHeight;
-                
-                console.log('📐 Alturas - Navbar:', navbarHeight, 'px, Menú:', menuHeight, 'px');
-                
-                // Si el menú no está centrado, aplicar corrección
-                if (menuHeight < navbarHeight) {
-                    menuSection.style.alignItems = 'center';
-                    menuSection.style.justifyContent = 'center';
-                    
-                    // También centrar los items individualmente
-                    navItems.forEach(item => {
-                        item.style.display = 'flex';
-                        item.style.alignItems = 'center';
-                    });
-                    
-                    console.log('🎯 Menú centrado verticalmente');
-                }
-            }
-        }, 300);
-    }
-});
-</script>
+<!-- ✅ NO HAY SIDEBAR DUPLICADO - TODO ESTÁ EN EL NAVBAR -->

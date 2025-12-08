@@ -11,7 +11,6 @@ $config = [
     'basePath' => dirname(__DIR__),
     'bootstrap' => ['log'],
     'layout' => 'main',
-    //'defaultRoute' =>'site/login',  // Default controller when no specific one is set in the URL
     'aliases' => [
         '@bower' => '@vendor/bower-asset',
         '@npm'   => '@vendor/npm-asset',
@@ -20,7 +19,6 @@ $config = [
    'components' => [
 
         'request' => [
-            // !!! insert a secret key in the following (if it is empty) - this is required by cookie validation
             'cookieValidationKey' => 'mjbvsistemas-ged-voleibol-06012025',
         ],
         'mobileDetect' => [
@@ -42,7 +40,6 @@ $config = [
         'mailer' => [
             'class' => \yii\symfonymailer\Mailer::class,
             'viewPath' => '@app/mail',
-            // send all mails to a file by default.
             'useFileTransport' => true,
         ],
         'authManager' => [
@@ -62,6 +59,28 @@ $config = [
             ],
         ],
         'db' => $db,
+        
+        // ✅ IMPORTANTE: Configuración de AssetManager para Bootstrap 5
+        'assetManager' => [
+            'bundles' => [
+                'yii\bootstrap5\BootstrapAsset' => [
+                    'css' => [
+                        'https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css',
+                    ],
+                    'js' => [
+                        'https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js',
+                    ],
+                    'depends' => ['yii\web\YiiAsset']
+                ],
+                'yii\web\JqueryAsset' => [
+                    'jsOptions' => [
+                        'position' => \yii\web\View::POS_HEAD
+                    ],
+                ],
+            ],
+            'appendTimestamp' => true,
+        ],
+        
         'urlManager' => [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
@@ -134,25 +153,12 @@ $config = [
                 'reportes/exportar-excel/<reporte>' => 'reportes/reportes/exportar-excel',
             ],
         ],
-        'assetManager' => [
-            'bundles' => [
-                'yii\web\JqueryAsset' => [
-                    'jsOptions' => [
-                        'position' => \yii\web\View::POS_HEAD
-                    ],
-                ],
-                //'dmstr\web\AdminLteAsset' => [
-                //'skin' => 'skin-black',
-                //],
-            ],
-        ],
     ],
 
     'modules' => [
         //rbac security
         'admin' => [
             'class' => 'mdm\admin\Module',
-            //'layout' => 'left-menu',
             'mainLayout' => '@app/views/layouts/mainAdminlte.php',
         ],
         //modulo de acceso al sistema
@@ -184,21 +190,12 @@ $config = [
         
     ],
 
-    // ⭐⭐⭐ CORRECCIÓN: COMPORTAMIENTO GLOBAL DEBE ESTAR EN NIVEL SUPERIOR ⭐⭐⭐
-    //'as escuelaRequired' => [
-    //'class' => 'app\components\EscuelaRequiredFilter',
-    //],
-    /** 
-     * ACTIVAR ERRORES PARA DIAGNOSTICAR
-    */
-        'on beforeRequest' => function () {
-            error_reporting(E_ALL);
-            ini_set('display_errors', 1);
-            ini_set('display_startup_errors', 1);
-        },
-    /** 
-     * aqui termina el codigo de prueba
-    */
+    'on beforeRequest' => function () {
+        error_reporting(E_ALL);
+        ini_set('display_errors', 1);
+        ini_set('display_startup_errors', 1);
+    },
+    
     'params' => array_merge($params, [
         'tienda' => [
             'maxProductosPorTienda' => 100,
@@ -206,15 +203,11 @@ $config = [
             'monedaPredeterminada' => 'USD',
         ]
     ]),
-        'as access' => [
+    
+    'as access' => [
         'class' => 'mdm\admin\components\AccessControl',
         'allowActions' => [
             'site/logout',
-            //'site/index',
-            //'site/error',
-            //'site/sidebar',
-            //'site/contact',
-            //'site/about',
             'ged/*',
             'site/*',
             'tienda/*',
@@ -224,7 +217,6 @@ $config = [
             'admin/user/signup',
             'admin/user/request-password-reset',
             'admin/user/reset-password',
-            //'*',
         ]
     ],
 
@@ -235,7 +227,6 @@ if (YII_ENV_DEV) {
     $config['bootstrap'][] = 'debug';
     $config['modules']['debug'] = [
         'class' => 'yii\debug\Module',
-        // ✅ CONFIGURACIÓN CORREGIDA - AGREGAR DOMINIO planealo.sytes.net
         'allowedIPs' => [
             '201.209.14.141', 
             '127.0.0.1', 
@@ -244,7 +235,6 @@ if (YII_ENV_DEV) {
             'localhost',
             'planealo.sytes.net',
             '*.sytes.net',
-            // Agregar rangos de red local adicionales
             '192.168.1.*',
             '10.0.*.*',
         ],
@@ -253,7 +243,6 @@ if (YII_ENV_DEV) {
     $config['bootstrap'][] = 'gii';
     $config['modules']['gii'] = [
         'class' => 'yii\gii\Module',
-        // ✅ MISMAS IPs PARA GII
         'allowedIPs' => [
             '201.209.14.141', 
             '127.0.0.1', 

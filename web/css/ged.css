@@ -5,6 +5,7 @@
  * ================================================================= */
 
 /* ===== VARIABLES CSS UNIFICADAS ===== */
+
 :root {
   /* Colores Principales GED */
   --ged-primary: #2c5aa0;
@@ -58,13 +59,31 @@
   --navbar-height-tablet: 70px;
   --navbar-height-mobile: 60px;
   --navbar-height-small: 55px;
+
+
+  /* ✅ NUEVAS VARIABLES PARA OFF-CANVAS */
+  --sidebar-width-desktop: 280px;
+  --sidebar-width-compact: 70px;
+  --sidebar-bg-gradient: linear-gradient(135deg, #2c3e50, #34495e);
+  --sidebar-text-color: rgba(255,255,255,0.9);
+  --sidebar-hover-bg: rgba(255,255,255,0.1);
+  --sidebar-active-color: #3498db;
+  
+  /* ✅ ACTUALIZAR Z-INDEX */
+    --z-index-offcanvas: 1055; /* Mayor que navbar (1030) y backdrop (1049) */
 }
 
 /* ===== RESET Y ESTILOS BASE ===== */
 html, body {
-  overflow-x: hidden;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
   height: 100%;
+  padding-top: var(--navbar-height-desktop) !important;
+  padding-left: 0; /* Temporal, se ajustará con JS */
+  position: relative;
+  z-index: 1;
+  overflow-y: auto;
+  overflow-x: hidden !important;
+  transition: padding-left 0.3s ease; /* Agregar transición */
 }
 
 .container-fluid {
@@ -1013,6 +1032,7 @@ main#main {
   position: relative;
   z-index: 1;
   min-height: calc(100vh - var(--navbar-height-desktop)) !important;
+  transition: margin-left 0.3s ease; /* Agregar transición */
 }
 
 /* ===== ESTILOS PARA OFF-CANVAS SIDEBAR - Z-INDEX CORREGIDO ===== */

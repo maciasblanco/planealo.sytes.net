@@ -46,11 +46,9 @@ class MenuWidget extends Widget
             
             echo '<!-- MenuWidget - Items encontrados: ' . count($menuItems) . ' -->' . "\n";
             
-            if ($this->mobileMode) {
-                return $this->renderMenuForMobile($menuItems);
-            }
+            // ✅ SIEMPRE USAR EL NUEVO MÉTODO OFF-CANVAS UNIFICADO
+            return $this->renderOffcanvasMenu($menuItems);
             
-            return $this->renderMenuForDesktop($menuItems);
         } catch (\Exception $e) {
             echo '<!-- MenuWidget ERROR: ' . htmlspecialchars($e->getMessage()) . ' -->' . "\n";
             return $this->renderFallbackMenu();
@@ -106,6 +104,7 @@ class MenuWidget extends Widget
                 $childItems = $this->getMenuItems($item['id']);
                 
                 $menuItem = [
+                    'id' => $item['id'],
                     'label' => $item['name'],
                     'url' => $item['route'] ? [$item['route']] : '#',
                     'items' => $childItems,
@@ -133,6 +132,7 @@ class MenuWidget extends Widget
             $childItems = $this->getMenuItems($item['id']);
             
             $menuItem = [
+                'id' => $item['id'],
                 'label' => $item['name'],
                 'url' => $item['route'] ? [$item['route']] : '#',
                 'items' => $childItems,
@@ -326,153 +326,222 @@ class MenuWidget extends Widget
         return false;
     }
 
-    protected function renderFallbackMenu()
+    /**
+     * ✅ NUEVO MÉTODO: RENDERIZAR MENÚ PARA OFF-CANVAS UNIFICADO
+     * Soporta hasta 3 niveles usando Bootstrap Collapse
+     */
+    protected function renderOffcanvasMenu($items, $level = 0)
     {
-        $menuClass = $this->mobileMode ? 'sidebar-menu' : $this->menuClass;
-        
-        $menuItems = '
-        <ul class="' . $menuClass . '">
-            <li class="' . ($this->mobileMode ? 'menu-item' : 'nav-item') . '">
-                <a class="' . ($this->mobileMode ? 'menu-link' : 'nav-link text-white') . '" href="' . Url::to(['/']) . '">Inicio</a>
-            </li>';
-            
-        // ✅ SIEMPRE MOSTRAR MARKETPLACE EN EL FALLBACK
-        $menuItems .= '
-            <li class="' . ($this->mobileMode ? 'menu-item' : 'nav-item') . '">
-                <a class="' . ($this->mobileMode ? 'menu-link' : 'nav-link text-white') . '" href="' . Url::to(['/tienda/marketplace']) . '">Marketplace</a>
-            </li>';
-            
-        if (Yii::$app->user->isGuest) {
-            $menuItems .= '
-            <li class="' . ($this->mobileMode ? 'menu-item' : 'nav-item') . '">
-                <a class="' . ($this->mobileMode ? 'menu-link' : 'nav-link text-white') . '" href="' . Url::to(['/site/login']) . '">Iniciar Sesión</a>
-            </li>';
+        if (empty($items)) {
+            return '<div class="text-muted p-3">No hay elementos en el menú</div>';
         }
         
-        $menuItems .= '</ul>';
-        
-        return $menuItems;
-    }
-
-    // ✅ RENDERIZAR PARA MÓVIL
-    protected function renderMenuForMobile($menuItems)
-    {
-        $content = $this->renderMobileMenuItems($menuItems);
-        return '<ul class="sidebar-menu mobile-menu">' . $content . '</ul>';
-    }
-
-    // ✅ RENDERIZAR PARA ESCRITORIO
-    protected function renderMenuForDesktop($menuItems)
-    {
-        $content = $this->renderDesktopMenuItems($menuItems);
-        return '<ul class="' . $this->menuClass . ' desktop-menu">' . $content . '</ul>';
-    }
-
-    // ✅ RENDERIZAR ITEMS PARA MÓVIL
-    protected function renderMobileMenuItems($items, $level = 0)
-    {
-        $html = '';
+        $html = '<ul class="nav flex-column offcanvas-menu level-' . $level . '">';
         
         foreach ($items as $item) {
             $hasChildren = !empty($item['items']);
             $url = $item['url'] == '#' ? '#' : Url::to($item['url']);
             $label = Html::encode($item['label']);
+            $itemId = $item['id'] ?? uniqid('menu_', true);
+            
+            // Determinar si el item está activo (ruta actual)
+            $isActive = $this->isMenuItemActive($item);
+            $activeClass = $isActive ? ' active' : '';
+            
+            $html .= '<li class="nav-item menu-item level-' . $level . $activeClass . '">';
             
             if ($hasChildren) {
-                $childrenHtml = $this->renderMobileMenuItems($item['items'], $level + 1);
+                // ✅ Elemento con hijos - Niveles 0, 1 y 2 (máximo 3 niveles)
                 $html .= '
-                <li class="menu-item has-children level-' . $level . '">
-                    <a href="#" class="menu-link mobile-menu-link">
-                        ' . $label . '
-                        <span class="submenu-indicator">›</span>
+                    <a href="#" class="nav-link menu-link has-children' . $activeClass . '" 
+                       data-level="' . $level . '" 
+                       data-bs-toggle="collapse" 
+                       data-bs-target="#submenu-' . $itemId . '"
+                       aria-expanded="' . ($isActive ? 'true' : 'false') . '"
+                       aria-controls="submenu-' . $itemId . '">
+                        <span class="menu-icon">' . $this->getMenuItemIcon($item, $level) . '</span>
+                        <span class="menu-text">' . $label . '</span>
+                        <span class="submenu-indicator ms-auto">
+                            <i class="fas fa-chevron-right"></i>
+                        </span>
                     </a>
-                    <ul class="submenu submenu-level-' . $level . '" style="display: none;">
-                        ' . $childrenHtml . '
-                    </ul>
-                </li>';
+                    <div class="collapse' . ($isActive ? ' show' : '') . '" id="submenu-' . $itemId . '">
+                        ' . $this->renderOffcanvasMenu($item['items'], $level + 1) . '
+                    </div>';
             } else {
+                // ✅ Elemento sin hijos
                 $html .= '
-                <li class="menu-item level-' . $level . '">
-                    <a href="' . $url . '" class="menu-link mobile-menu-link">' . $label . '</a>
-                </li>';
+                    <a href="' . $url . '" class="nav-link menu-link' . $activeClass . '" data-level="' . $level . '">
+                        <span class="menu-icon">' . $this->getMenuItemIcon($item, $level) . '</span>
+                        <span class="menu-text">' . $label . '</span>
+                    </a>';
             }
-        }
-        
-        return $html;
-    }
-
-    // ✅ RENDERIZAR ITEMS PARA ESCRITORIO
-    protected function renderDesktopMenuItems($items, $level = 0)
-    {
-        $html = '';
-        
-        foreach ($items as $item) {
-            $hasChildren = !empty($item['items']);
             
-            if ($hasChildren) {
-                $html .= $this->renderDropdownItem($item, $level);
-            } else {
-                $html .= $this->renderSimpleItem($item, $level);
-            }
+            $html .= '</li>';
         }
         
+        $html .= '</ul>';
         return $html;
     }
 
-    protected function renderSimpleItem($item, $level)
+    /**
+     * ✅ VERIFICAR SI UN ITEM DEL MENÚ ESTÁ ACTIVO (PÁGINA ACTUAL)
+     */
+    protected function isMenuItemActive($item)
     {
-        $url = $item['url'] == '#' ? '#' : Url::to($item['url']);
-        $label = Html::encode($item['label']);
+        $currentRoute = Yii::$app->controller->route;
         
-        if ($level === 0) {
-            return '<li class="nav-item">
-                <a class="nav-link text-white desktop-nav-link" href="' . $url . '">' . $label . '</a>
-            </li>';
-        } else {
-            return '<li>
-                <a class="dropdown-item text-white" href="' . $url . '">' . $label . '</a>
-            </li>';
+        // Si el item tiene una ruta específica
+        if (!empty($item['route']) && $item['route'] !== '#') {
+            // Comparar rutas exactas
+            if ($currentRoute === $item['route']) {
+                return true;
+            }
+            
+            // Comparar por patrón (ej: "ged/*")
+            $routeParts = explode('/', $item['route']);
+            if (count($routeParts) >= 2) {
+                // Patrón de módulo/controlador
+                $pattern = $routeParts[0] . '/' . $routeParts[1] . '/*';
+                if (fnmatch($pattern, $currentRoute)) {
+                    return true;
+                }
+            }
         }
+        
+        // Verificar recursivamente en hijos
+        if (!empty($item['items'])) {
+            foreach ($item['items'] as $child) {
+                if ($this->isMenuItemActive($child)) {
+                    return true;
+                }
+            }
+        }
+        
+        return false;
     }
 
-    protected function renderDropdownItem($item, $level)
+    /**
+     * ✅ OBTENER ICONO DEL ITEM DEL MENÚ POR NIVEL
+     */
+    protected function getMenuItemIcon($item, $level)
     {
-        $label = Html::encode($item['label']);
-        $childrenHtml = $this->renderDesktopMenuItems($item['items'], $level + 1);
+        // Iconos por nivel y tipo de menú
+        $defaultIcons = [
+            0 => 'fa-home',           // Nivel 0 - Principal
+            1 => 'fa-folder',         // Nivel 1 - Categoría
+            2 => 'fa-file-alt',       // Nivel 2 - Subcategoría
+            3 => 'fa-circle',         // Nivel 3 - Item final
+        ];
         
-        if ($level === 0) {
-            return '<li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle text-white desktop-nav-link" href="#" role="button" 
-                   data-bs-toggle="dropdown" aria-expanded="false" data-level="' . $level . '">
-                    ' . $label . '
+        // Iconos específicos por palabras clave
+        $iconMap = [
+            'marketplace' => 'fa-store',
+            'tienda' => 'fa-store',
+            'shop' => 'fa-store',
+            'comercio' => 'fa-store',
+            'dashboard' => 'fa-tachometer-alt',
+            'usuarios' => 'fa-users',
+            'user' => 'fa-users',
+            'perfil' => 'fa-user',
+            'cuenta' => 'fa-user-cog',
+            'config' => 'fa-cog',
+            'settings' => 'fa-cog',
+            'report' => 'fa-chart-bar',
+            'estadística' => 'fa-chart-bar',
+            'help' => 'fa-question-circle',
+            'ayuda' => 'fa-question-circle',
+            'logout' => 'fa-sign-out-alt',
+            'salir' => 'fa-sign-out-alt',
+            'login' => 'fa-sign-in-alt',
+            'ingresar' => 'fa-sign-in-alt',
+            'registro' => 'fa-user-plus',
+            'signup' => 'fa-user-plus',
+            'escuela' => 'fa-school',
+            'deporte' => 'fa-running',
+            'sports' => 'fa-running',
+            'atleta' => 'fa-running',
+            'calendar' => 'fa-calendar',
+            'horario' => 'fa-calendar-alt',
+            'schedule' => 'fa-calendar-alt',
+            'pago' => 'fa-credit-card',
+            'payment' => 'fa-credit-card',
+            'finanza' => 'fa-money-bill-wave',
+            'finance' => 'fa-money-bill-wave',
+        ];
+        
+        $itemName = strtolower($item['label'] ?? '');
+        $itemRoute = $item['route'] ?? '';
+        
+        // Buscar icono por palabra clave en el nombre
+        foreach ($iconMap as $keyword => $icon) {
+            if (strpos($itemName, $keyword) !== false) {
+                return '<i class="fas fa-fw ' . $icon . '"></i>';
+            }
+        }
+        
+        // Buscar icono por palabra clave en la ruta
+        foreach ($iconMap as $keyword => $icon) {
+            if (strpos($itemRoute, $keyword) !== false) {
+                return '<i class="fas fa-fw ' . $icon . '"></i>';
+            }
+        }
+        
+        // Icono por defecto según nivel
+        $iconClass = $defaultIcons[$level] ?? 'fa-circle';
+        return '<i class="fas fa-fw ' . $iconClass . '"></i>';
+    }
+
+    /**
+     * ✅ MENÚ DE RESPALDO (FALLBACK)
+     */
+    protected function renderFallbackMenu()
+    {
+        $html = '
+        <ul class="nav flex-column offcanvas-menu">
+            <li class="nav-item">
+                <a class="nav-link menu-link active" href="' . Url::to(['/']) . '">
+                    <i class="fas fa-fw fa-home"></i>
+                    <span class="menu-text">Inicio</span>
                 </a>
-                <ul class="dropdown-menu" data-level="' . $level . '">
-                    ' . $childrenHtml . '
-                </ul>
             </li>';
-        } elseif ($level === 1) {
-            return '<li class="dropdown-submenu position-relative" data-level="' . $level . '">
-                <a class="dropdown-item dropdown-toggle text-white d-flex justify-content-between align-items-center" 
-                   href="#" role="button" data-level="' . $level . '">
-                    ' . $label . '
-                    <span class="submenu-arrow">›</span>
+            
+        // ✅ SIEMPRE MOSTRAR MARKETPLACE EN EL FALLBACK
+        $html .= '
+            <li class="nav-item">
+                <a class="nav-link menu-link" href="' . Url::to(['/tienda/marketplace']) . '">
+                    <i class="fas fa-fw fa-store"></i>
+                    <span class="menu-text">Marketplace</span>
                 </a>
-                <ul class="dropdown-menu submenu-level-1" data-level="' . $level . '">
-                    ' . $childrenHtml . '
-                </ul>
+            </li>';
+            
+        if (Yii::$app->user->isGuest) {
+            $html .= '
+            <li class="nav-item">
+                <a class="nav-link menu-link" href="' . Url::to(['/site/login']) . '">
+                    <i class="fas fa-fw fa-sign-in-alt"></i>
+                    <span class="menu-text">Iniciar Sesión</span>
+                </a>
             </li>';
         } else {
-            return '<li class="dropdown-submenu position-relative" data-level="' . $level . '">
-                <a class="dropdown-item dropdown-toggle text-white d-flex justify-content-between align-items-center" 
-                   href="#" role="button" data-level="' . $level . '">
-                    ' . $label . '
-                    <span class="submenu-arrow">›</span>
+            $html .= '
+            <li class="nav-item">
+                <a class="nav-link menu-link" href="' . Url::to(['/site/mi-cuenta']) . '">
+                    <i class="fas fa-fw fa-user-cog"></i>
+                    <span class="menu-text">Mi Cuenta</span>
                 </a>
-                <ul class="dropdown-menu submenu-level-' . $level . ' deep-level" data-level="' . $level . '">
-                    ' . $childrenHtml . '
-                </ul>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link menu-link" href="' . Url::to(['/site/logout']) . '" data-method="post">
+                    <i class="fas fa-fw fa-sign-out-alt"></i>
+                    <span class="menu-text">Cerrar Sesión</span>
+                </a>
             </li>';
         }
+        
+        $html .= '</ul>';
+        
+        return $html;
     }
     
     /**
@@ -532,6 +601,39 @@ class MenuWidget extends Widget
         } catch (\Exception $e) {
             echo '<!-- ERROR obteniendo menús: ' . htmlspecialchars($e->getMessage()) . ' -->' . "\n";
             return [];
+        }
+    }
+
+    /**
+     * ✅ MÉTODO PARA GENERAR MENÚ SIMPLIFICADO (para uso en otras partes)
+     */
+    public static function getSimpleMenu($parentId = null, $maxDepth = 3)
+    {
+        $instance = new self();
+        $items = $instance->getMenuItems($parentId);
+        
+        // Limitar profundidad
+        $instance->limitMenuDepth($items, 0, $maxDepth);
+        
+        return $items;
+    }
+    
+    /**
+     * ✅ LIMITAR PROFUNDIDAD DEL MENÚ
+     */
+    protected function limitMenuDepth(&$items, $currentDepth, $maxDepth)
+    {
+        if ($currentDepth >= $maxDepth) {
+            foreach ($items as &$item) {
+                $item['items'] = []; // Eliminar hijos si superamos la profundidad máxima
+            }
+            return;
+        }
+        
+        foreach ($items as &$item) {
+            if (!empty($item['items'])) {
+                $this->limitMenuDepth($item['items'], $currentDepth + 1, $maxDepth);
+            }
         }
     }
 }
