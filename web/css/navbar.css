@@ -1,5 +1,4 @@
-/* navbar.css - Estilos optimizados sin duplicados */
-/* NOTA: Los estilos principales del navbar están en ged.css */
+/* navbar.css - VERSIÓN CON PADDING REDUCIDO */
 
 /* Variables específicas para navbar */
 :root {
@@ -9,141 +8,271 @@
   --primary-color: #6c3483;
   --text-color-light: #ffffff;
   --bg-dark: #343a40;
+  --min-padding: max(1vh, 10px); /* PADDING MÁXIMO 1vh */
 }
 
-/* Dropdown de selección de escuela - ESTILOS ÚNICOS */
-.escuela-selector-dropdown {
-  min-width: 250px;
-  max-height: 300px;
-  overflow-y: auto;
-  background: white;
-  border-radius: 8px;
-  box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-  border: 1px solid #dee2e6;
+/* ✅ NAVBAR PRINCIPAL - PADDING MÍNIMO */
+.navbar-contextual {
+  width: 100vw !important;
+  max-width: 100vw !important;
+  min-width: 100vw !important;
+  background: linear-gradient(135deg, var(--primary-color), #8e44ad) !important;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1) !important;
+  transition: all var(--navbar-transition-speed) ease !important;
+  z-index: 1030 !important;
+  padding-left: var(--min-padding) !important;
+  padding-right: var(--min-padding) !important;
 }
 
-/* Resultados de búsqueda de escuela */
+/* ✅ CONTENEDOR INTERNO */
+.navbar-container {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  padding: 0 var(--min-padding) !important;
+  margin: 0 auto !important;
+}
+
+/* ✅ SECCIONES DEL NAVBAR CON PADDING MÍNIMO */
+.navbar-brand-section {
+  flex: 0 0 15% !important;
+  max-width: 15% !important;
+  min-width: 180px !important; /* Reducido */
+  display: flex !important;
+  align-items: center !important;
+  padding: 8px 0 !important; /* Reducido */
+}
+
+.navbar-menu-section {
+  flex: 0 0 50% !important;
+  max-width: 50% !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 0 var(--min-padding) !important;
+}
+
+.navbar-social-section {
+  flex: 0 0 15% !important;
+  max-width: 15% !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 0 var(--min-padding) !important;
+}
+
+.navbar-control-section {
+  flex: 0 0 20% !important;
+  max-width: 20% !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: flex-end !important;
+  padding: 0 var(--min-padding) !important;
+}
+
+/* ✅ LOGO REDUCIDO */
+.navbar-logo {
+  height: 45px !important; /* Reducido */
+  max-height: 45px !important;
+  width: auto !important;
+  transition: transform 0.3s ease !important;
+}
+
+.navbar-logo:hover {
+  transform: scale(1.05) !important;
+}
+
+/* ✅ MENÚ PRINCIPAL - COMPACTO */
+.main-navigation {
+  width: 100% !important;
+  justify-content: center !important;
+}
+
+.main-navigation .nav-link {
+  color: var(--text-color-light) !important;
+  font-weight: 500 !important;
+  padding: 8px 12px !important; /* Reducido */
+  transition: all 0.3s ease !important;
+  white-space: nowrap !important;
+  font-size: 0.9rem !important; /* Reducido */
+}
+
+.main-navigation .nav-link:hover,
+.main-navigation .nav-link.active {
+  background: rgba(255, 255, 255, 0.1) !important;
+  border-radius: 4px !important;
+  transform: translateY(-1px) !important; /* Reducido */
+}
+
+/* ✅ ICONOS SOCIALES COMPACTOS */
+.social-icons-vertical {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 8px !important; /* Reducido */
+}
+
+.social-icon-circle {
+  width: 30px !important; /* Reducido */
+  height: 30px !important; /* Reducido */
+  border-radius: 50% !important;
+  background: rgba(255, 255, 255, 0.1) !important;
+  color: white !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  transition: all 0.3s ease !important;
+  text-decoration: none !important;
+  font-size: 0.8rem !important; /* Reducido */
+}
+
+.social-icon-circle:hover {
+  background: rgba(255, 255, 255, 0.2) !important;
+  transform: translateY(-2px) scale(1.1) !important; /* Reducido */
+}
+
+/* ✅ CONTROL DE SESIÓN COMPACTO */
+.session-controls {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 8px !important; /* Reducido */
+  width: 100% !important;
+}
+
+.session-controls .btn {
+  min-width: 100px !important; /* Reducido */
+  transition: all 0.3s ease !important;
+  padding: 5px 10px !important; /* Reducido */
+  font-size: 0.85rem !important; /* Reducido */
+}
+
+.session-controls .btn:hover {
+  transform: translateY(-1px) !important; /* Reducido */
+  box-shadow: 0 3px 6px rgba(0,0,0,0.2) !important; /* Reducido */
+}
+
+/* ✅ INFORMACIÓN DE ESCUELA COMPACTA */
+.school-info {
+  background: rgba(0, 0, 0, 0.2) !important;
+  padding: 8px !important; /* Reducido */
+  border-radius: 6px !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  font-size: 0.85rem !important; /* Reducido */
+}
+
+.escuela-activa-indicator {
+  background: rgba(52, 152, 219, 0.2) !important;
+  padding: 6px !important; /* Reducido */
+  border-radius: 4px !important;
+  border-left: 2px solid #3498db !important; /* Reducido */
+}
+
+/* ✅ BUSCADOR DE ESCUELAS COMPACTO */
+.school-search-container {
+  position: relative !important;
+}
+
 .search-results-dropdown {
-  position: absolute;
-  top: 100%;
-  left: 0;
-  right: 0;
-  background: white;
-  border: 1px solid #dee2e6;
-  border-radius: 4px;
-  max-height: 200px;
-  overflow-y: auto;
-  z-index: 1000;
-  display: none;
-}
-
-.search-results-dropdown.show {
-  display: block;
+  position: absolute !important;
+  top: 100% !important;
+  left: 0 !important;
+  right: 0 !important;
+  background: white !important;
+  border: 1px solid #dee2e6 !important;
+  border-radius: 4px !important;
+  max-height: 180px !important; /* Reducido */
+  overflow-y: auto !important;
+  z-index: 1000 !important;
+  box-shadow: 0 3px 8px rgba(0,0,0,0.1) !important; /* Reducido */
 }
 
 .search-results-item {
-  padding: 8px 12px;
-  cursor: pointer;
-  border-bottom: 1px solid #f8f9fa;
+  padding: 6px 10px !important; /* Reducido */
+  cursor: pointer !important;
+  border-bottom: 1px solid #f8f9fa !important;
+  transition: background 0.2s ease !important;
+  font-size: 0.85rem !important; /* Reducido */
 }
 
 .search-results-item:hover {
-  background: #f8f9fa;
+  background: #f8f9fa !important;
 }
 
-/* Íconos sociales - versión alternativa */
-.social-icon-circle-alt {
-  width: 35px;
-  height: 35px;
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.1);
-  color: white;
-  text-decoration: none;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  transition: all 0.3s ease;
+/* ✅ DROPDOWN DE SELECCIÓN COMPACTO */
+.escuela-selector-dropdown {
+  min-width: 200px !important; /* Reducido */
+  max-height: 250px !important; /* Reducido */
+  overflow-y: auto !important;
+  background: white !important;
+  border-radius: 6px !important; /* Reducido */
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2) !important; /* Reducido */
+  border: 1px solid #dee2e6 !important;
 }
 
-.social-icon-circle-alt:hover {
-  background: rgba(255, 255, 255, 0.2);
-  transform: translateY(-2px);
-}
-
-/* Estados del toggler icon - específicos */
-.navbar-toggler.collapsed .navbar-toggler-icon {
-  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%28255, 255, 255, 0.8%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
-}
-
-.navbar-toggler:not(.collapsed) .navbar-toggler-icon {
-  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%28255, 255, 255, 0.8%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M6 6L24 24M6 24L24 6'/%3e%3c/svg%3e");
-}
-
-/* Estados de foco para accesibilidad - específicos */
-.navbar-toggler:focus {
-  box-shadow: 0 0 0 0.2rem rgba(255, 255, 255, 0.25) !important;
-  outline: none;
-}
-
-/* Animación fadeIn - específica */
-@keyframes navbarFadeIn {
-  from { opacity: 0; transform: translateY(-10px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-/* Preferencia de movimiento reducido */
-@media (prefers-reduced-motion: reduce) {
-  .navbar-contextual,
-  .nav-link,
-  .social-icon-circle-alt,
-  .navbar-collapse {
-      transition: none !important;
-  }
-}
-
-/* Modo oscuro del sistema */
-@media (prefers-color-scheme: dark) {
-  .navbar-contextual {
-      background: linear-gradient(135deg, #4a235a, #6c3483);
+/* ✅ RESPONSIVE COMPACTO */
+@media (max-width: 1199.98px) {
+  .navbar-brand-section {
+    min-width: 150px !important; /* Reducido */
   }
   
-  .navbar-menu-section .nav-link {
-      color: #f8f9fa !important;
+  .navbar-logo {
+    height: 40px !important; /* Reducido */
   }
 }
 
-/* Soporte para navegadores antiguos */
-@supports not (display: flex) {
+@media (max-width: 991.98px) {
   .navbar-contextual {
-      display: block;
+    min-height: var(--navbar-mobile-height) !important;
+    padding-left: 10px !important; /* Reducido */
+    padding-right: 10px !important; /* Reducido */
   }
   
   .navbar-container {
-      display: block;
+    padding: 0 8px !important; /* Reducido */
   }
   
-  .navbar-brand-section,
-  .navbar-menu-section,
-  .navbar-social-section,
-  .navbar-control-section {
-      float: left;
-      display: block;
+  .navbar-brand-section {
+    min-width: 120px !important; /* Reducido */
+  }
+  
+  .navbar-logo {
+    height: 35px !important; /* Reducido */
   }
 }
 
-/* Responsive adicional específico */
-@media (max-width: 576px) {
+@media (max-width: 767.98px) {
   .navbar-contextual {
-      min-height: 56px;
+    padding-left: 8px !important; /* Reducido */
+    padding-right: 8px !important; /* Reducido */
   }
   
-  .navbar-toggler {
-      padding: 0.2rem 0.4rem;
-      font-size: 0.9rem;
+  .navbar-logo {
+    height: 30px !important; /* Reducido */
   }
   
-  .school-info {
-      padding: 8px;
-      font-size: 0.9rem;
+  .main-navigation .nav-link {
+    padding: 6px 8px !important; /* Reducido */
+    font-size: 0.8rem !important; /* Reducido */
+  }
+  
+  .session-controls .btn {
+    min-width: 80px !important; /* Reducido */
+    padding: 4px 8px !important; /* Reducido */
+    font-size: 0.8rem !important; /* Reducido */
+  }
+}
+
+@media (max-width: 575.98px) {
+  .navbar-contextual {
+    padding-left: 5px !important; /* Reducido */
+    padding-right: 5px !important; /* Reducido */
+  }
+  
+  .navbar-logo {
+    height: 25px !important; /* Reducido */
+  }
+  
+  .navbar-brand-section {
+    min-width: 100px !important; /* Reducido */
   }
 }

@@ -158498,3 +158498,772 @@ $_SERVER = [
     'REQUEST_TIME_FLOAT' => 1765214656.7768
     'REQUEST_TIME' => 1765214656
 ]
+2025-12-08 13:55:08 [::1][-][p4mikddosei3u68mkkk8bav5mi][error][yii\web\HttpException:404] yii\base\InvalidRouteException: Unable to resolve the request "js/ged-offcanvas.js". in C:\xampp\htdocs\planealo.sytes.net\vendor\yiisoft\yii2\base\Module.php:564
+Stack trace:
+#0 C:\xampp\htdocs\planealo.sytes.net\vendor\yiisoft\yii2\web\Application.php(103): yii\base\Module->runAction('js/ged-offcanva...', Array)
+#1 C:\xampp\htdocs\planealo.sytes.net\vendor\yiisoft\yii2\base\Application.php(387): yii\web\Application->handleRequest(Object(yii\web\Request))
+#2 C:\xampp\htdocs\planealo.sytes.net\web\index.php(12): yii\base\Application->run()
+#3 {main}
+
+Next yii\web\NotFoundHttpException: Página no encontrada. in C:\xampp\htdocs\planealo.sytes.net\vendor\yiisoft\yii2\web\Application.php:115
+Stack trace:
+#0 C:\xampp\htdocs\planealo.sytes.net\vendor\yiisoft\yii2\base\Application.php(387): yii\web\Application->handleRequest(Object(yii\web\Request))
+#1 C:\xampp\htdocs\planealo.sytes.net\web\index.php(12): yii\base\Application->run()
+#2 {main}
+2025-12-08 13:55:07 [::1][-][p4mikddosei3u68mkkk8bav5mi][info][application] $_GET = []
+
+$_POST = []
+
+$_FILES = []
+
+$_COOKIE = [
+    '_ga' => 'GA1.1.1679908835.1749223008'
+    '_csrf' => 'f8773bd65b264c51d7fd5a6caa631f775014b198abeabe748ed30e11f4621339a:2:{i:0;s:5:\"_csrf\";i:1;s:32:\"7Vm0cmngm-bRSVwvLMukDWUl3nkYb5oZ\";}'
+    'PHPSESSID' => 'p4mikddosei3u68mkkk8bav5mi'
+]
+
+$_SESSION = [
+    '__flash' => []
+]
+
+$_SERVER = [
+    'REDIRECT_MIBDIRS' => 'C:/xampp/php/extras/mibs'
+    'REDIRECT_MYSQL_HOME' => '\\xampp\\mysql\\bin'
+    'REDIRECT_OPENSSL_CONF' => 'C:/xampp/apache/bin/openssl.cnf'
+    'REDIRECT_PHP_PEAR_SYSCONF_DIR' => '\\xampp\\php'
+    'REDIRECT_PHPRC' => '\\xampp\\php'
+    'REDIRECT_TMP' => '\\xampp\\tmp'
+    'REDIRECT_STATUS' => '200'
+    'MIBDIRS' => 'C:/xampp/php/extras/mibs'
+    'MYSQL_HOME' => '\\xampp\\mysql\\bin'
+    'OPENSSL_CONF' => 'C:/xampp/apache/bin/openssl.cnf'
+    'PHP_PEAR_SYSCONF_DIR' => '\\xampp\\php'
+    'PHPRC' => '\\xampp\\php'
+    'TMP' => '\\xampp\\tmp'
+    'HTTP_HOST' => 'localhost'
+    'HTTP_CONNECTION' => 'keep-alive'
+    'HTTP_SEC_CH_UA_PLATFORM' => '\"Windows\"'
+    'HTTP_USER_AGENT' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36 OPR/122.0.0.0'
+    'HTTP_SEC_CH_UA' => '\"Not)A;Brand\";v=\"8\", \"Chromium\";v=\"138\", \"Opera GX\";v=\"122\"'
+    'HTTP_SEC_CH_UA_MOBILE' => '?0'
+    'HTTP_ACCEPT' => '*/*'
+    'HTTP_SEC_FETCH_SITE' => 'same-origin'
+    'HTTP_SEC_FETCH_MODE' => 'no-cors'
+    'HTTP_SEC_FETCH_DEST' => 'script'
+    'HTTP_REFERER' => 'http://localhost/planealo.sytes.net/web/tienda/marketplace'
+    'HTTP_ACCEPT_ENCODING' => 'gzip, deflate, br, zstd'
+    'HTTP_ACCEPT_LANGUAGE' => 'en,id;q=0.9,tr;q=0.8,ru;q=0.7'
+    'HTTP_COOKIE' => '_ga=GA1.1.1679908835.1749223008; _csrf=f8773bd65b264c51d7fd5a6caa631f775014b198abeabe748ed30e11f4621339a%3A2%3A%7Bi%3A0%3Bs%3A5%3A%22_csrf%22%3Bi%3A1%3Bs%3A32%3A%227Vm0cmngm-bRSVwvLMukDWUl3nkYb5oZ%22%3B%7D; PHPSESSID=p4mikddosei3u68mkkk8bav5mi'
+    'PATH' => 'C:\\WINDOWS\\system32;C:\\WINDOWS;C:\\WINDOWS\\System32\\Wbem;C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\;C:\\WINDOWS\\System32\\OpenSSH\\;C:\\xampp\\php;C:\\ProgramData\\ComposerSetup\\bin;C:\\Program Files\\PuTTY\\;C:\\Program Files\\Git\\cmd;C:\\Program Files\\nodejs\\;C:\\Program Files (x86)\\Microsoft SQL Server\\160\\Tools\\Binn\\;C:\\Program Files\\Microsoft SQL Server\\160\\Tools\\Binn\\;C:\\Program Files\\Microsoft SQL Server\\Client SDK\\ODBC\\170\\Tools\\Binn\\;C:\\Program Files\\Microsoft SQL Server\\160\\DTS\\Binn\\;C:\\Program Files (x86)\\Microsoft SQL Server\\160\\DTS\\Binn\\;C:\\Users\\Otic-Sistemas\\AppData\\Local\\Microsoft\\WindowsApps;;C:\\Users\\Otic-Sistemas\\AppData\\Local\\Programs\\Microsoft VS Code\\bin;C:\\Users\\Otic-Sistemas\\AppData\\Roaming\\Composer\\vendor\\bin;C:\\Users\\Otic-Sistemas\\AppData\\Roaming\\npm'
+    'SystemRoot' => 'C:\\WINDOWS'
+    'COMSPEC' => 'C:\\WINDOWS\\system32\\cmd.exe'
+    'PATHEXT' => '.COM;.EXE;.BAT;.CMD;.VBS;.VBE;.JS;.JSE;.WSF;.WSH;.MSC'
+    'WINDIR' => 'C:\\WINDOWS'
+    'SERVER_SIGNATURE' => '<address>Apache/2.4.54 (Win64) OpenSSL/1.1.1p PHP/8.2.0 Server at localhost Port 80</address>
+'
+    'SERVER_SOFTWARE' => 'Apache/2.4.54 (Win64) OpenSSL/1.1.1p PHP/8.2.0'
+    'SERVER_NAME' => 'localhost'
+    'SERVER_ADDR' => '::1'
+    'SERVER_PORT' => '80'
+    'REMOTE_ADDR' => '::1'
+    'DOCUMENT_ROOT' => 'C:/xampp/htdocs'
+    'REQUEST_SCHEME' => 'http'
+    'CONTEXT_PREFIX' => ''
+    'CONTEXT_DOCUMENT_ROOT' => 'C:/xampp/htdocs'
+    'SERVER_ADMIN' => 'postmaster@localhost'
+    'SCRIPT_FILENAME' => 'C:/xampp/htdocs/planealo.sytes.net/web/index.php'
+    'REMOTE_PORT' => '55908'
+    'REDIRECT_URL' => '/planealo.sytes.net/web/js/ged-offcanvas.js'
+    'GATEWAY_INTERFACE' => 'CGI/1.1'
+    'SERVER_PROTOCOL' => 'HTTP/1.1'
+    'REQUEST_METHOD' => 'GET'
+    'QUERY_STRING' => ''
+    'REQUEST_URI' => '/planealo.sytes.net/web/js/ged-offcanvas.js'
+    'SCRIPT_NAME' => '/planealo.sytes.net/web/index.php'
+    'PHP_SELF' => '/planealo.sytes.net/web/index.php'
+    'REQUEST_TIME_FLOAT' => 1765216507.7531
+    'REQUEST_TIME' => 1765216507
+]
+2025-12-08 13:55:19 [::1][-][p4mikddosei3u68mkkk8bav5mi][error][yii\web\HttpException:404] yii\base\InvalidRouteException: Unable to resolve the request "js/ged-offcanvas.js". in C:\xampp\htdocs\planealo.sytes.net\vendor\yiisoft\yii2\base\Module.php:564
+Stack trace:
+#0 C:\xampp\htdocs\planealo.sytes.net\vendor\yiisoft\yii2\web\Application.php(103): yii\base\Module->runAction('js/ged-offcanva...', Array)
+#1 C:\xampp\htdocs\planealo.sytes.net\vendor\yiisoft\yii2\base\Application.php(387): yii\web\Application->handleRequest(Object(yii\web\Request))
+#2 C:\xampp\htdocs\planealo.sytes.net\web\index.php(12): yii\base\Application->run()
+#3 {main}
+
+Next yii\web\NotFoundHttpException: Página no encontrada. in C:\xampp\htdocs\planealo.sytes.net\vendor\yiisoft\yii2\web\Application.php:115
+Stack trace:
+#0 C:\xampp\htdocs\planealo.sytes.net\vendor\yiisoft\yii2\base\Application.php(387): yii\web\Application->handleRequest(Object(yii\web\Request))
+#1 C:\xampp\htdocs\planealo.sytes.net\web\index.php(12): yii\base\Application->run()
+#2 {main}
+2025-12-08 13:55:19 [::1][-][p4mikddosei3u68mkkk8bav5mi][info][application] $_GET = []
+
+$_POST = []
+
+$_FILES = []
+
+$_COOKIE = [
+    '_ga' => 'GA1.1.1679908835.1749223008'
+    '_csrf' => 'f8773bd65b264c51d7fd5a6caa631f775014b198abeabe748ed30e11f4621339a:2:{i:0;s:5:\"_csrf\";i:1;s:32:\"7Vm0cmngm-bRSVwvLMukDWUl3nkYb5oZ\";}'
+    'PHPSESSID' => 'p4mikddosei3u68mkkk8bav5mi'
+]
+
+$_SESSION = [
+    '__flash' => []
+]
+
+$_SERVER = [
+    'REDIRECT_MIBDIRS' => 'C:/xampp/php/extras/mibs'
+    'REDIRECT_MYSQL_HOME' => '\\xampp\\mysql\\bin'
+    'REDIRECT_OPENSSL_CONF' => 'C:/xampp/apache/bin/openssl.cnf'
+    'REDIRECT_PHP_PEAR_SYSCONF_DIR' => '\\xampp\\php'
+    'REDIRECT_PHPRC' => '\\xampp\\php'
+    'REDIRECT_TMP' => '\\xampp\\tmp'
+    'REDIRECT_STATUS' => '200'
+    'MIBDIRS' => 'C:/xampp/php/extras/mibs'
+    'MYSQL_HOME' => '\\xampp\\mysql\\bin'
+    'OPENSSL_CONF' => 'C:/xampp/apache/bin/openssl.cnf'
+    'PHP_PEAR_SYSCONF_DIR' => '\\xampp\\php'
+    'PHPRC' => '\\xampp\\php'
+    'TMP' => '\\xampp\\tmp'
+    'HTTP_HOST' => 'localhost'
+    'HTTP_CONNECTION' => 'keep-alive'
+    'HTTP_SEC_CH_UA_PLATFORM' => '\"Windows\"'
+    'HTTP_USER_AGENT' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36 OPR/122.0.0.0'
+    'HTTP_SEC_CH_UA' => '\"Not)A;Brand\";v=\"8\", \"Chromium\";v=\"138\", \"Opera GX\";v=\"122\"'
+    'HTTP_SEC_CH_UA_MOBILE' => '?0'
+    'HTTP_ACCEPT' => '*/*'
+    'HTTP_SEC_FETCH_SITE' => 'same-origin'
+    'HTTP_SEC_FETCH_MODE' => 'no-cors'
+    'HTTP_SEC_FETCH_DEST' => 'script'
+    'HTTP_REFERER' => 'http://localhost/planealo.sytes.net/web/'
+    'HTTP_ACCEPT_ENCODING' => 'gzip, deflate, br, zstd'
+    'HTTP_ACCEPT_LANGUAGE' => 'en,id;q=0.9,tr;q=0.8,ru;q=0.7'
+    'HTTP_COOKIE' => '_ga=GA1.1.1679908835.1749223008; _csrf=f8773bd65b264c51d7fd5a6caa631f775014b198abeabe748ed30e11f4621339a%3A2%3A%7Bi%3A0%3Bs%3A5%3A%22_csrf%22%3Bi%3A1%3Bs%3A32%3A%227Vm0cmngm-bRSVwvLMukDWUl3nkYb5oZ%22%3B%7D; PHPSESSID=p4mikddosei3u68mkkk8bav5mi'
+    'PATH' => 'C:\\WINDOWS\\system32;C:\\WINDOWS;C:\\WINDOWS\\System32\\Wbem;C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\;C:\\WINDOWS\\System32\\OpenSSH\\;C:\\xampp\\php;C:\\ProgramData\\ComposerSetup\\bin;C:\\Program Files\\PuTTY\\;C:\\Program Files\\Git\\cmd;C:\\Program Files\\nodejs\\;C:\\Program Files (x86)\\Microsoft SQL Server\\160\\Tools\\Binn\\;C:\\Program Files\\Microsoft SQL Server\\160\\Tools\\Binn\\;C:\\Program Files\\Microsoft SQL Server\\Client SDK\\ODBC\\170\\Tools\\Binn\\;C:\\Program Files\\Microsoft SQL Server\\160\\DTS\\Binn\\;C:\\Program Files (x86)\\Microsoft SQL Server\\160\\DTS\\Binn\\;C:\\Users\\Otic-Sistemas\\AppData\\Local\\Microsoft\\WindowsApps;;C:\\Users\\Otic-Sistemas\\AppData\\Local\\Programs\\Microsoft VS Code\\bin;C:\\Users\\Otic-Sistemas\\AppData\\Roaming\\Composer\\vendor\\bin;C:\\Users\\Otic-Sistemas\\AppData\\Roaming\\npm'
+    'SystemRoot' => 'C:\\WINDOWS'
+    'COMSPEC' => 'C:\\WINDOWS\\system32\\cmd.exe'
+    'PATHEXT' => '.COM;.EXE;.BAT;.CMD;.VBS;.VBE;.JS;.JSE;.WSF;.WSH;.MSC'
+    'WINDIR' => 'C:\\WINDOWS'
+    'SERVER_SIGNATURE' => '<address>Apache/2.4.54 (Win64) OpenSSL/1.1.1p PHP/8.2.0 Server at localhost Port 80</address>
+'
+    'SERVER_SOFTWARE' => 'Apache/2.4.54 (Win64) OpenSSL/1.1.1p PHP/8.2.0'
+    'SERVER_NAME' => 'localhost'
+    'SERVER_ADDR' => '::1'
+    'SERVER_PORT' => '80'
+    'REMOTE_ADDR' => '::1'
+    'DOCUMENT_ROOT' => 'C:/xampp/htdocs'
+    'REQUEST_SCHEME' => 'http'
+    'CONTEXT_PREFIX' => ''
+    'CONTEXT_DOCUMENT_ROOT' => 'C:/xampp/htdocs'
+    'SERVER_ADMIN' => 'postmaster@localhost'
+    'SCRIPT_FILENAME' => 'C:/xampp/htdocs/planealo.sytes.net/web/index.php'
+    'REMOTE_PORT' => '55916'
+    'REDIRECT_URL' => '/planealo.sytes.net/web/js/ged-offcanvas.js'
+    'GATEWAY_INTERFACE' => 'CGI/1.1'
+    'SERVER_PROTOCOL' => 'HTTP/1.1'
+    'REQUEST_METHOD' => 'GET'
+    'QUERY_STRING' => ''
+    'REQUEST_URI' => '/planealo.sytes.net/web/js/ged-offcanvas.js'
+    'SCRIPT_NAME' => '/planealo.sytes.net/web/index.php'
+    'PHP_SELF' => '/planealo.sytes.net/web/index.php'
+    'REQUEST_TIME_FLOAT' => 1765216519.4023
+    'REQUEST_TIME' => 1765216519
+]
+2025-12-08 13:56:58 [::1][-][p4mikddosei3u68mkkk8bav5mi][error][yii\web\HttpException:404] yii\base\InvalidRouteException: Unable to resolve the request "js/ged-offcanvas.js". in C:\xampp\htdocs\planealo.sytes.net\vendor\yiisoft\yii2\base\Module.php:564
+Stack trace:
+#0 C:\xampp\htdocs\planealo.sytes.net\vendor\yiisoft\yii2\web\Application.php(103): yii\base\Module->runAction('js/ged-offcanva...', Array)
+#1 C:\xampp\htdocs\planealo.sytes.net\vendor\yiisoft\yii2\base\Application.php(387): yii\web\Application->handleRequest(Object(yii\web\Request))
+#2 C:\xampp\htdocs\planealo.sytes.net\web\index.php(12): yii\base\Application->run()
+#3 {main}
+
+Next yii\web\NotFoundHttpException: Página no encontrada. in C:\xampp\htdocs\planealo.sytes.net\vendor\yiisoft\yii2\web\Application.php:115
+Stack trace:
+#0 C:\xampp\htdocs\planealo.sytes.net\vendor\yiisoft\yii2\base\Application.php(387): yii\web\Application->handleRequest(Object(yii\web\Request))
+#1 C:\xampp\htdocs\planealo.sytes.net\web\index.php(12): yii\base\Application->run()
+#2 {main}
+2025-12-08 13:56:58 [::1][-][p4mikddosei3u68mkkk8bav5mi][info][application] $_GET = []
+
+$_POST = []
+
+$_FILES = []
+
+$_COOKIE = [
+    '_ga' => 'GA1.1.1679908835.1749223008'
+    '_csrf' => 'f8773bd65b264c51d7fd5a6caa631f775014b198abeabe748ed30e11f4621339a:2:{i:0;s:5:\"_csrf\";i:1;s:32:\"7Vm0cmngm-bRSVwvLMukDWUl3nkYb5oZ\";}'
+    'PHPSESSID' => 'p4mikddosei3u68mkkk8bav5mi'
+]
+
+$_SESSION = [
+    '__flash' => []
+]
+
+$_SERVER = [
+    'REDIRECT_MIBDIRS' => 'C:/xampp/php/extras/mibs'
+    'REDIRECT_MYSQL_HOME' => '\\xampp\\mysql\\bin'
+    'REDIRECT_OPENSSL_CONF' => 'C:/xampp/apache/bin/openssl.cnf'
+    'REDIRECT_PHP_PEAR_SYSCONF_DIR' => '\\xampp\\php'
+    'REDIRECT_PHPRC' => '\\xampp\\php'
+    'REDIRECT_TMP' => '\\xampp\\tmp'
+    'REDIRECT_STATUS' => '200'
+    'MIBDIRS' => 'C:/xampp/php/extras/mibs'
+    'MYSQL_HOME' => '\\xampp\\mysql\\bin'
+    'OPENSSL_CONF' => 'C:/xampp/apache/bin/openssl.cnf'
+    'PHP_PEAR_SYSCONF_DIR' => '\\xampp\\php'
+    'PHPRC' => '\\xampp\\php'
+    'TMP' => '\\xampp\\tmp'
+    'HTTP_HOST' => 'localhost'
+    'HTTP_CONNECTION' => 'keep-alive'
+    'HTTP_SEC_CH_UA_PLATFORM' => '\"Windows\"'
+    'HTTP_USER_AGENT' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36 OPR/122.0.0.0'
+    'HTTP_SEC_CH_UA' => '\"Not)A;Brand\";v=\"8\", \"Chromium\";v=\"138\", \"Opera GX\";v=\"122\"'
+    'HTTP_SEC_CH_UA_MOBILE' => '?0'
+    'HTTP_ACCEPT' => '*/*'
+    'HTTP_SEC_FETCH_SITE' => 'same-origin'
+    'HTTP_SEC_FETCH_MODE' => 'no-cors'
+    'HTTP_SEC_FETCH_DEST' => 'script'
+    'HTTP_REFERER' => 'http://localhost/planealo.sytes.net/web/'
+    'HTTP_ACCEPT_ENCODING' => 'gzip, deflate, br, zstd'
+    'HTTP_ACCEPT_LANGUAGE' => 'en,id;q=0.9,tr;q=0.8,ru;q=0.7'
+    'HTTP_COOKIE' => '_ga=GA1.1.1679908835.1749223008; _csrf=f8773bd65b264c51d7fd5a6caa631f775014b198abeabe748ed30e11f4621339a%3A2%3A%7Bi%3A0%3Bs%3A5%3A%22_csrf%22%3Bi%3A1%3Bs%3A32%3A%227Vm0cmngm-bRSVwvLMukDWUl3nkYb5oZ%22%3B%7D; PHPSESSID=p4mikddosei3u68mkkk8bav5mi'
+    'PATH' => 'C:\\WINDOWS\\system32;C:\\WINDOWS;C:\\WINDOWS\\System32\\Wbem;C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\;C:\\WINDOWS\\System32\\OpenSSH\\;C:\\xampp\\php;C:\\ProgramData\\ComposerSetup\\bin;C:\\Program Files\\PuTTY\\;C:\\Program Files\\Git\\cmd;C:\\Program Files\\nodejs\\;C:\\Program Files (x86)\\Microsoft SQL Server\\160\\Tools\\Binn\\;C:\\Program Files\\Microsoft SQL Server\\160\\Tools\\Binn\\;C:\\Program Files\\Microsoft SQL Server\\Client SDK\\ODBC\\170\\Tools\\Binn\\;C:\\Program Files\\Microsoft SQL Server\\160\\DTS\\Binn\\;C:\\Program Files (x86)\\Microsoft SQL Server\\160\\DTS\\Binn\\;C:\\Users\\Otic-Sistemas\\AppData\\Local\\Microsoft\\WindowsApps;;C:\\Users\\Otic-Sistemas\\AppData\\Local\\Programs\\Microsoft VS Code\\bin;C:\\Users\\Otic-Sistemas\\AppData\\Roaming\\Composer\\vendor\\bin;C:\\Users\\Otic-Sistemas\\AppData\\Roaming\\npm'
+    'SystemRoot' => 'C:\\WINDOWS'
+    'COMSPEC' => 'C:\\WINDOWS\\system32\\cmd.exe'
+    'PATHEXT' => '.COM;.EXE;.BAT;.CMD;.VBS;.VBE;.JS;.JSE;.WSF;.WSH;.MSC'
+    'WINDIR' => 'C:\\WINDOWS'
+    'SERVER_SIGNATURE' => '<address>Apache/2.4.54 (Win64) OpenSSL/1.1.1p PHP/8.2.0 Server at localhost Port 80</address>
+'
+    'SERVER_SOFTWARE' => 'Apache/2.4.54 (Win64) OpenSSL/1.1.1p PHP/8.2.0'
+    'SERVER_NAME' => 'localhost'
+    'SERVER_ADDR' => '::1'
+    'SERVER_PORT' => '80'
+    'REMOTE_ADDR' => '::1'
+    'DOCUMENT_ROOT' => 'C:/xampp/htdocs'
+    'REQUEST_SCHEME' => 'http'
+    'CONTEXT_PREFIX' => ''
+    'CONTEXT_DOCUMENT_ROOT' => 'C:/xampp/htdocs'
+    'SERVER_ADMIN' => 'postmaster@localhost'
+    'SCRIPT_FILENAME' => 'C:/xampp/htdocs/planealo.sytes.net/web/index.php'
+    'REMOTE_PORT' => '55954'
+    'REDIRECT_URL' => '/planealo.sytes.net/web/js/ged-offcanvas.js'
+    'GATEWAY_INTERFACE' => 'CGI/1.1'
+    'SERVER_PROTOCOL' => 'HTTP/1.1'
+    'REQUEST_METHOD' => 'GET'
+    'QUERY_STRING' => ''
+    'REQUEST_URI' => '/planealo.sytes.net/web/js/ged-offcanvas.js'
+    'SCRIPT_NAME' => '/planealo.sytes.net/web/index.php'
+    'PHP_SELF' => '/planealo.sytes.net/web/index.php'
+    'REQUEST_TIME_FLOAT' => 1765216618.3132
+    'REQUEST_TIME' => 1765216618
+]
+2025-12-10 10:24:42 [::1][-][p4mikddosei3u68mkkk8bav5mi][error][yii\web\HttpException:404] yii\base\InvalidRouteException: Unable to resolve the request "js/ged-offcanvas.js". in C:\xampp\htdocs\planealo.sytes.net\vendor\yiisoft\yii2\base\Module.php:564
+Stack trace:
+#0 C:\xampp\htdocs\planealo.sytes.net\vendor\yiisoft\yii2\web\Application.php(103): yii\base\Module->runAction('js/ged-offcanva...', Array)
+#1 C:\xampp\htdocs\planealo.sytes.net\vendor\yiisoft\yii2\base\Application.php(387): yii\web\Application->handleRequest(Object(yii\web\Request))
+#2 C:\xampp\htdocs\planealo.sytes.net\web\index.php(12): yii\base\Application->run()
+#3 {main}
+
+Next yii\web\NotFoundHttpException: Página no encontrada. in C:\xampp\htdocs\planealo.sytes.net\vendor\yiisoft\yii2\web\Application.php:115
+Stack trace:
+#0 C:\xampp\htdocs\planealo.sytes.net\vendor\yiisoft\yii2\base\Application.php(387): yii\web\Application->handleRequest(Object(yii\web\Request))
+#1 C:\xampp\htdocs\planealo.sytes.net\web\index.php(12): yii\base\Application->run()
+#2 {main}
+2025-12-10 10:24:42 [::1][-][p4mikddosei3u68mkkk8bav5mi][info][application] $_GET = []
+
+$_POST = []
+
+$_FILES = []
+
+$_COOKIE = [
+    '_ga' => 'GA1.1.1679908835.1749223008'
+    '_csrf' => 'f8773bd65b264c51d7fd5a6caa631f775014b198abeabe748ed30e11f4621339a:2:{i:0;s:5:\"_csrf\";i:1;s:32:\"7Vm0cmngm-bRSVwvLMukDWUl3nkYb5oZ\";}'
+    'PHPSESSID' => 'p4mikddosei3u68mkkk8bav5mi'
+]
+
+$_SESSION = [
+    '__flash' => []
+]
+
+$_SERVER = [
+    'REDIRECT_MIBDIRS' => 'C:/xampp/php/extras/mibs'
+    'REDIRECT_MYSQL_HOME' => '\\xampp\\mysql\\bin'
+    'REDIRECT_OPENSSL_CONF' => 'C:/xampp/apache/bin/openssl.cnf'
+    'REDIRECT_PHP_PEAR_SYSCONF_DIR' => '\\xampp\\php'
+    'REDIRECT_PHPRC' => '\\xampp\\php'
+    'REDIRECT_TMP' => '\\xampp\\tmp'
+    'REDIRECT_STATUS' => '200'
+    'MIBDIRS' => 'C:/xampp/php/extras/mibs'
+    'MYSQL_HOME' => '\\xampp\\mysql\\bin'
+    'OPENSSL_CONF' => 'C:/xampp/apache/bin/openssl.cnf'
+    'PHP_PEAR_SYSCONF_DIR' => '\\xampp\\php'
+    'PHPRC' => '\\xampp\\php'
+    'TMP' => '\\xampp\\tmp'
+    'HTTP_HOST' => 'localhost'
+    'HTTP_CONNECTION' => 'keep-alive'
+    'HTTP_SEC_CH_UA_PLATFORM' => '\"Windows\"'
+    'HTTP_USER_AGENT' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36 OPR/122.0.0.0'
+    'HTTP_SEC_CH_UA' => '\"Not)A;Brand\";v=\"8\", \"Chromium\";v=\"138\", \"Opera GX\";v=\"122\"'
+    'HTTP_SEC_CH_UA_MOBILE' => '?0'
+    'HTTP_ACCEPT' => '*/*'
+    'HTTP_SEC_FETCH_SITE' => 'same-origin'
+    'HTTP_SEC_FETCH_MODE' => 'no-cors'
+    'HTTP_SEC_FETCH_DEST' => 'script'
+    'HTTP_REFERER' => 'http://localhost/planealo.sytes.net/web/'
+    'HTTP_ACCEPT_ENCODING' => 'gzip, deflate, br, zstd'
+    'HTTP_ACCEPT_LANGUAGE' => 'en,id;q=0.9,tr;q=0.8,ru;q=0.7'
+    'HTTP_COOKIE' => '_ga=GA1.1.1679908835.1749223008; _csrf=f8773bd65b264c51d7fd5a6caa631f775014b198abeabe748ed30e11f4621339a%3A2%3A%7Bi%3A0%3Bs%3A5%3A%22_csrf%22%3Bi%3A1%3Bs%3A32%3A%227Vm0cmngm-bRSVwvLMukDWUl3nkYb5oZ%22%3B%7D; PHPSESSID=p4mikddosei3u68mkkk8bav5mi'
+    'PATH' => 'C:\\WINDOWS\\system32;C:\\WINDOWS;C:\\WINDOWS\\System32\\Wbem;C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\;C:\\WINDOWS\\System32\\OpenSSH\\;C:\\xampp\\php;C:\\ProgramData\\ComposerSetup\\bin;C:\\Program Files\\PuTTY\\;C:\\Program Files\\Git\\cmd;C:\\Program Files\\nodejs\\;C:\\Program Files (x86)\\Microsoft SQL Server\\160\\Tools\\Binn\\;C:\\Program Files\\Microsoft SQL Server\\160\\Tools\\Binn\\;C:\\Program Files\\Microsoft SQL Server\\Client SDK\\ODBC\\170\\Tools\\Binn\\;C:\\Program Files\\Microsoft SQL Server\\160\\DTS\\Binn\\;C:\\Program Files (x86)\\Microsoft SQL Server\\160\\DTS\\Binn\\;C:\\Users\\Otic-Sistemas\\AppData\\Local\\Microsoft\\WindowsApps;;C:\\Users\\Otic-Sistemas\\AppData\\Local\\Programs\\Microsoft VS Code\\bin;C:\\Users\\Otic-Sistemas\\AppData\\Roaming\\Composer\\vendor\\bin;C:\\Users\\Otic-Sistemas\\AppData\\Roaming\\npm'
+    'SystemRoot' => 'C:\\WINDOWS'
+    'COMSPEC' => 'C:\\WINDOWS\\system32\\cmd.exe'
+    'PATHEXT' => '.COM;.EXE;.BAT;.CMD;.VBS;.VBE;.JS;.JSE;.WSF;.WSH;.MSC'
+    'WINDIR' => 'C:\\WINDOWS'
+    'SERVER_SIGNATURE' => '<address>Apache/2.4.54 (Win64) OpenSSL/1.1.1p PHP/8.2.0 Server at localhost Port 80</address>
+'
+    'SERVER_SOFTWARE' => 'Apache/2.4.54 (Win64) OpenSSL/1.1.1p PHP/8.2.0'
+    'SERVER_NAME' => 'localhost'
+    'SERVER_ADDR' => '::1'
+    'SERVER_PORT' => '80'
+    'REMOTE_ADDR' => '::1'
+    'DOCUMENT_ROOT' => 'C:/xampp/htdocs'
+    'REQUEST_SCHEME' => 'http'
+    'CONTEXT_PREFIX' => ''
+    'CONTEXT_DOCUMENT_ROOT' => 'C:/xampp/htdocs'
+    'SERVER_ADMIN' => 'postmaster@localhost'
+    'SCRIPT_FILENAME' => 'C:/xampp/htdocs/planealo.sytes.net/web/index.php'
+    'REMOTE_PORT' => '58329'
+    'REDIRECT_URL' => '/planealo.sytes.net/web/js/ged-offcanvas.js'
+    'GATEWAY_INTERFACE' => 'CGI/1.1'
+    'SERVER_PROTOCOL' => 'HTTP/1.1'
+    'REQUEST_METHOD' => 'GET'
+    'QUERY_STRING' => ''
+    'REQUEST_URI' => '/planealo.sytes.net/web/js/ged-offcanvas.js'
+    'SCRIPT_NAME' => '/planealo.sytes.net/web/index.php'
+    'PHP_SELF' => '/planealo.sytes.net/web/index.php'
+    'REQUEST_TIME_FLOAT' => 1765376682.4056
+    'REQUEST_TIME' => 1765376682
+]
+2025-12-10 10:26:10 [::1][-][p4mikddosei3u68mkkk8bav5mi][error][yii\web\HttpException:404] yii\base\InvalidRouteException: Unable to resolve the request "js/ged-offcanvas.js". in C:\xampp\htdocs\planealo.sytes.net\vendor\yiisoft\yii2\base\Module.php:564
+Stack trace:
+#0 C:\xampp\htdocs\planealo.sytes.net\vendor\yiisoft\yii2\web\Application.php(103): yii\base\Module->runAction('js/ged-offcanva...', Array)
+#1 C:\xampp\htdocs\planealo.sytes.net\vendor\yiisoft\yii2\base\Application.php(387): yii\web\Application->handleRequest(Object(yii\web\Request))
+#2 C:\xampp\htdocs\planealo.sytes.net\web\index.php(12): yii\base\Application->run()
+#3 {main}
+
+Next yii\web\NotFoundHttpException: Página no encontrada. in C:\xampp\htdocs\planealo.sytes.net\vendor\yiisoft\yii2\web\Application.php:115
+Stack trace:
+#0 C:\xampp\htdocs\planealo.sytes.net\vendor\yiisoft\yii2\base\Application.php(387): yii\web\Application->handleRequest(Object(yii\web\Request))
+#1 C:\xampp\htdocs\planealo.sytes.net\web\index.php(12): yii\base\Application->run()
+#2 {main}
+2025-12-10 10:26:10 [::1][-][p4mikddosei3u68mkkk8bav5mi][info][application] $_GET = []
+
+$_POST = []
+
+$_FILES = []
+
+$_COOKIE = [
+    '_ga' => 'GA1.1.1679908835.1749223008'
+    '_csrf' => 'f8773bd65b264c51d7fd5a6caa631f775014b198abeabe748ed30e11f4621339a:2:{i:0;s:5:\"_csrf\";i:1;s:32:\"7Vm0cmngm-bRSVwvLMukDWUl3nkYb5oZ\";}'
+    'PHPSESSID' => 'p4mikddosei3u68mkkk8bav5mi'
+]
+
+$_SESSION = [
+    '__flash' => []
+]
+
+$_SERVER = [
+    'REDIRECT_MIBDIRS' => 'C:/xampp/php/extras/mibs'
+    'REDIRECT_MYSQL_HOME' => '\\xampp\\mysql\\bin'
+    'REDIRECT_OPENSSL_CONF' => 'C:/xampp/apache/bin/openssl.cnf'
+    'REDIRECT_PHP_PEAR_SYSCONF_DIR' => '\\xampp\\php'
+    'REDIRECT_PHPRC' => '\\xampp\\php'
+    'REDIRECT_TMP' => '\\xampp\\tmp'
+    'REDIRECT_STATUS' => '200'
+    'MIBDIRS' => 'C:/xampp/php/extras/mibs'
+    'MYSQL_HOME' => '\\xampp\\mysql\\bin'
+    'OPENSSL_CONF' => 'C:/xampp/apache/bin/openssl.cnf'
+    'PHP_PEAR_SYSCONF_DIR' => '\\xampp\\php'
+    'PHPRC' => '\\xampp\\php'
+    'TMP' => '\\xampp\\tmp'
+    'HTTP_HOST' => 'localhost'
+    'HTTP_CONNECTION' => 'keep-alive'
+    'HTTP_USER_AGENT' => 'Mozilla/5.0 (iPhone; CPU iPhone OS 16_6 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.6 Mobile/15E148 Safari/604.1'
+    'HTTP_ACCEPT' => '*/*'
+    'HTTP_SEC_FETCH_SITE' => 'same-origin'
+    'HTTP_SEC_FETCH_MODE' => 'no-cors'
+    'HTTP_SEC_FETCH_DEST' => 'script'
+    'HTTP_REFERER' => 'http://localhost/planealo.sytes.net/web/'
+    'HTTP_ACCEPT_ENCODING' => 'gzip, deflate, br, zstd'
+    'HTTP_ACCEPT_LANGUAGE' => 'en,id;q=0.9,tr;q=0.8,ru;q=0.7'
+    'HTTP_COOKIE' => '_ga=GA1.1.1679908835.1749223008; _csrf=f8773bd65b264c51d7fd5a6caa631f775014b198abeabe748ed30e11f4621339a%3A2%3A%7Bi%3A0%3Bs%3A5%3A%22_csrf%22%3Bi%3A1%3Bs%3A32%3A%227Vm0cmngm-bRSVwvLMukDWUl3nkYb5oZ%22%3B%7D; PHPSESSID=p4mikddosei3u68mkkk8bav5mi'
+    'PATH' => 'C:\\WINDOWS\\system32;C:\\WINDOWS;C:\\WINDOWS\\System32\\Wbem;C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\;C:\\WINDOWS\\System32\\OpenSSH\\;C:\\xampp\\php;C:\\ProgramData\\ComposerSetup\\bin;C:\\Program Files\\PuTTY\\;C:\\Program Files\\Git\\cmd;C:\\Program Files\\nodejs\\;C:\\Program Files (x86)\\Microsoft SQL Server\\160\\Tools\\Binn\\;C:\\Program Files\\Microsoft SQL Server\\160\\Tools\\Binn\\;C:\\Program Files\\Microsoft SQL Server\\Client SDK\\ODBC\\170\\Tools\\Binn\\;C:\\Program Files\\Microsoft SQL Server\\160\\DTS\\Binn\\;C:\\Program Files (x86)\\Microsoft SQL Server\\160\\DTS\\Binn\\;C:\\Users\\Otic-Sistemas\\AppData\\Local\\Microsoft\\WindowsApps;;C:\\Users\\Otic-Sistemas\\AppData\\Local\\Programs\\Microsoft VS Code\\bin;C:\\Users\\Otic-Sistemas\\AppData\\Roaming\\Composer\\vendor\\bin;C:\\Users\\Otic-Sistemas\\AppData\\Roaming\\npm'
+    'SystemRoot' => 'C:\\WINDOWS'
+    'COMSPEC' => 'C:\\WINDOWS\\system32\\cmd.exe'
+    'PATHEXT' => '.COM;.EXE;.BAT;.CMD;.VBS;.VBE;.JS;.JSE;.WSF;.WSH;.MSC'
+    'WINDIR' => 'C:\\WINDOWS'
+    'SERVER_SIGNATURE' => '<address>Apache/2.4.54 (Win64) OpenSSL/1.1.1p PHP/8.2.0 Server at localhost Port 80</address>
+'
+    'SERVER_SOFTWARE' => 'Apache/2.4.54 (Win64) OpenSSL/1.1.1p PHP/8.2.0'
+    'SERVER_NAME' => 'localhost'
+    'SERVER_ADDR' => '::1'
+    'SERVER_PORT' => '80'
+    'REMOTE_ADDR' => '::1'
+    'DOCUMENT_ROOT' => 'C:/xampp/htdocs'
+    'REQUEST_SCHEME' => 'http'
+    'CONTEXT_PREFIX' => ''
+    'CONTEXT_DOCUMENT_ROOT' => 'C:/xampp/htdocs'
+    'SERVER_ADMIN' => 'postmaster@localhost'
+    'SCRIPT_FILENAME' => 'C:/xampp/htdocs/planealo.sytes.net/web/index.php'
+    'REMOTE_PORT' => '58366'
+    'REDIRECT_URL' => '/planealo.sytes.net/web/js/ged-offcanvas.js'
+    'GATEWAY_INTERFACE' => 'CGI/1.1'
+    'SERVER_PROTOCOL' => 'HTTP/1.1'
+    'REQUEST_METHOD' => 'GET'
+    'QUERY_STRING' => ''
+    'REQUEST_URI' => '/planealo.sytes.net/web/js/ged-offcanvas.js'
+    'SCRIPT_NAME' => '/planealo.sytes.net/web/index.php'
+    'PHP_SELF' => '/planealo.sytes.net/web/index.php'
+    'REQUEST_TIME_FLOAT' => 1765376770.4493
+    'REQUEST_TIME' => 1765376770
+]
+2025-12-10 10:27:31 [::1][-][p4mikddosei3u68mkkk8bav5mi][error][yii\web\HttpException:404] yii\base\InvalidRouteException: Unable to resolve the request "js/ged-offcanvas.js". in C:\xampp\htdocs\planealo.sytes.net\vendor\yiisoft\yii2\base\Module.php:564
+Stack trace:
+#0 C:\xampp\htdocs\planealo.sytes.net\vendor\yiisoft\yii2\web\Application.php(103): yii\base\Module->runAction('js/ged-offcanva...', Array)
+#1 C:\xampp\htdocs\planealo.sytes.net\vendor\yiisoft\yii2\base\Application.php(387): yii\web\Application->handleRequest(Object(yii\web\Request))
+#2 C:\xampp\htdocs\planealo.sytes.net\web\index.php(12): yii\base\Application->run()
+#3 {main}
+
+Next yii\web\NotFoundHttpException: Página no encontrada. in C:\xampp\htdocs\planealo.sytes.net\vendor\yiisoft\yii2\web\Application.php:115
+Stack trace:
+#0 C:\xampp\htdocs\planealo.sytes.net\vendor\yiisoft\yii2\base\Application.php(387): yii\web\Application->handleRequest(Object(yii\web\Request))
+#1 C:\xampp\htdocs\planealo.sytes.net\web\index.php(12): yii\base\Application->run()
+#2 {main}
+2025-12-10 10:27:30 [::1][-][p4mikddosei3u68mkkk8bav5mi][info][application] $_GET = []
+
+$_POST = []
+
+$_FILES = []
+
+$_COOKIE = [
+    '_ga' => 'GA1.1.1679908835.1749223008'
+    '_csrf' => 'f8773bd65b264c51d7fd5a6caa631f775014b198abeabe748ed30e11f4621339a:2:{i:0;s:5:\"_csrf\";i:1;s:32:\"7Vm0cmngm-bRSVwvLMukDWUl3nkYb5oZ\";}'
+    'PHPSESSID' => 'p4mikddosei3u68mkkk8bav5mi'
+]
+
+$_SESSION = [
+    '__flash' => []
+]
+
+$_SERVER = [
+    'REDIRECT_MIBDIRS' => 'C:/xampp/php/extras/mibs'
+    'REDIRECT_MYSQL_HOME' => '\\xampp\\mysql\\bin'
+    'REDIRECT_OPENSSL_CONF' => 'C:/xampp/apache/bin/openssl.cnf'
+    'REDIRECT_PHP_PEAR_SYSCONF_DIR' => '\\xampp\\php'
+    'REDIRECT_PHPRC' => '\\xampp\\php'
+    'REDIRECT_TMP' => '\\xampp\\tmp'
+    'REDIRECT_STATUS' => '200'
+    'MIBDIRS' => 'C:/xampp/php/extras/mibs'
+    'MYSQL_HOME' => '\\xampp\\mysql\\bin'
+    'OPENSSL_CONF' => 'C:/xampp/apache/bin/openssl.cnf'
+    'PHP_PEAR_SYSCONF_DIR' => '\\xampp\\php'
+    'PHPRC' => '\\xampp\\php'
+    'TMP' => '\\xampp\\tmp'
+    'HTTP_HOST' => 'localhost'
+    'HTTP_CONNECTION' => 'keep-alive'
+    'HTTP_USER_AGENT' => 'Mozilla/5.0 (iPhone; CPU iPhone OS 16_6 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.6 Mobile/15E148 Safari/604.1'
+    'HTTP_ACCEPT' => '*/*'
+    'HTTP_SEC_FETCH_SITE' => 'same-origin'
+    'HTTP_SEC_FETCH_MODE' => 'no-cors'
+    'HTTP_SEC_FETCH_DEST' => 'script'
+    'HTTP_REFERER' => 'http://localhost/planealo.sytes.net/web/tienda/marketplace'
+    'HTTP_ACCEPT_ENCODING' => 'gzip, deflate, br, zstd'
+    'HTTP_ACCEPT_LANGUAGE' => 'en,id;q=0.9,tr;q=0.8,ru;q=0.7'
+    'HTTP_COOKIE' => '_ga=GA1.1.1679908835.1749223008; _csrf=f8773bd65b264c51d7fd5a6caa631f775014b198abeabe748ed30e11f4621339a%3A2%3A%7Bi%3A0%3Bs%3A5%3A%22_csrf%22%3Bi%3A1%3Bs%3A32%3A%227Vm0cmngm-bRSVwvLMukDWUl3nkYb5oZ%22%3B%7D; PHPSESSID=p4mikddosei3u68mkkk8bav5mi'
+    'PATH' => 'C:\\WINDOWS\\system32;C:\\WINDOWS;C:\\WINDOWS\\System32\\Wbem;C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\;C:\\WINDOWS\\System32\\OpenSSH\\;C:\\xampp\\php;C:\\ProgramData\\ComposerSetup\\bin;C:\\Program Files\\PuTTY\\;C:\\Program Files\\Git\\cmd;C:\\Program Files\\nodejs\\;C:\\Program Files (x86)\\Microsoft SQL Server\\160\\Tools\\Binn\\;C:\\Program Files\\Microsoft SQL Server\\160\\Tools\\Binn\\;C:\\Program Files\\Microsoft SQL Server\\Client SDK\\ODBC\\170\\Tools\\Binn\\;C:\\Program Files\\Microsoft SQL Server\\160\\DTS\\Binn\\;C:\\Program Files (x86)\\Microsoft SQL Server\\160\\DTS\\Binn\\;C:\\Users\\Otic-Sistemas\\AppData\\Local\\Microsoft\\WindowsApps;;C:\\Users\\Otic-Sistemas\\AppData\\Local\\Programs\\Microsoft VS Code\\bin;C:\\Users\\Otic-Sistemas\\AppData\\Roaming\\Composer\\vendor\\bin;C:\\Users\\Otic-Sistemas\\AppData\\Roaming\\npm'
+    'SystemRoot' => 'C:\\WINDOWS'
+    'COMSPEC' => 'C:\\WINDOWS\\system32\\cmd.exe'
+    'PATHEXT' => '.COM;.EXE;.BAT;.CMD;.VBS;.VBE;.JS;.JSE;.WSF;.WSH;.MSC'
+    'WINDIR' => 'C:\\WINDOWS'
+    'SERVER_SIGNATURE' => '<address>Apache/2.4.54 (Win64) OpenSSL/1.1.1p PHP/8.2.0 Server at localhost Port 80</address>
+'
+    'SERVER_SOFTWARE' => 'Apache/2.4.54 (Win64) OpenSSL/1.1.1p PHP/8.2.0'
+    'SERVER_NAME' => 'localhost'
+    'SERVER_ADDR' => '::1'
+    'SERVER_PORT' => '80'
+    'REMOTE_ADDR' => '::1'
+    'DOCUMENT_ROOT' => 'C:/xampp/htdocs'
+    'REQUEST_SCHEME' => 'http'
+    'CONTEXT_PREFIX' => ''
+    'CONTEXT_DOCUMENT_ROOT' => 'C:/xampp/htdocs'
+    'SERVER_ADMIN' => 'postmaster@localhost'
+    'SCRIPT_FILENAME' => 'C:/xampp/htdocs/planealo.sytes.net/web/index.php'
+    'REMOTE_PORT' => '58415'
+    'REDIRECT_URL' => '/planealo.sytes.net/web/js/ged-offcanvas.js'
+    'GATEWAY_INTERFACE' => 'CGI/1.1'
+    'SERVER_PROTOCOL' => 'HTTP/1.1'
+    'REQUEST_METHOD' => 'GET'
+    'QUERY_STRING' => ''
+    'REQUEST_URI' => '/planealo.sytes.net/web/js/ged-offcanvas.js'
+    'SCRIPT_NAME' => '/planealo.sytes.net/web/index.php'
+    'PHP_SELF' => '/planealo.sytes.net/web/index.php'
+    'REQUEST_TIME_FLOAT' => 1765376850.5758
+    'REQUEST_TIME' => 1765376850
+]
+2025-12-10 10:28:01 [::1][-][p4mikddosei3u68mkkk8bav5mi][error][yii\web\HttpException:404] yii\base\InvalidRouteException: Unable to resolve the request "js/ged-offcanvas.js". in C:\xampp\htdocs\planealo.sytes.net\vendor\yiisoft\yii2\base\Module.php:564
+Stack trace:
+#0 C:\xampp\htdocs\planealo.sytes.net\vendor\yiisoft\yii2\web\Application.php(103): yii\base\Module->runAction('js/ged-offcanva...', Array)
+#1 C:\xampp\htdocs\planealo.sytes.net\vendor\yiisoft\yii2\base\Application.php(387): yii\web\Application->handleRequest(Object(yii\web\Request))
+#2 C:\xampp\htdocs\planealo.sytes.net\web\index.php(12): yii\base\Application->run()
+#3 {main}
+
+Next yii\web\NotFoundHttpException: Página no encontrada. in C:\xampp\htdocs\planealo.sytes.net\vendor\yiisoft\yii2\web\Application.php:115
+Stack trace:
+#0 C:\xampp\htdocs\planealo.sytes.net\vendor\yiisoft\yii2\base\Application.php(387): yii\web\Application->handleRequest(Object(yii\web\Request))
+#1 C:\xampp\htdocs\planealo.sytes.net\web\index.php(12): yii\base\Application->run()
+#2 {main}
+2025-12-10 10:28:01 [::1][-][p4mikddosei3u68mkkk8bav5mi][info][application] $_GET = []
+
+$_POST = []
+
+$_FILES = []
+
+$_COOKIE = [
+    '_ga' => 'GA1.1.1679908835.1749223008'
+    '_csrf' => 'f8773bd65b264c51d7fd5a6caa631f775014b198abeabe748ed30e11f4621339a:2:{i:0;s:5:\"_csrf\";i:1;s:32:\"7Vm0cmngm-bRSVwvLMukDWUl3nkYb5oZ\";}'
+    'PHPSESSID' => 'p4mikddosei3u68mkkk8bav5mi'
+]
+
+$_SESSION = [
+    '__flash' => []
+]
+
+$_SERVER = [
+    'REDIRECT_MIBDIRS' => 'C:/xampp/php/extras/mibs'
+    'REDIRECT_MYSQL_HOME' => '\\xampp\\mysql\\bin'
+    'REDIRECT_OPENSSL_CONF' => 'C:/xampp/apache/bin/openssl.cnf'
+    'REDIRECT_PHP_PEAR_SYSCONF_DIR' => '\\xampp\\php'
+    'REDIRECT_PHPRC' => '\\xampp\\php'
+    'REDIRECT_TMP' => '\\xampp\\tmp'
+    'REDIRECT_STATUS' => '200'
+    'MIBDIRS' => 'C:/xampp/php/extras/mibs'
+    'MYSQL_HOME' => '\\xampp\\mysql\\bin'
+    'OPENSSL_CONF' => 'C:/xampp/apache/bin/openssl.cnf'
+    'PHP_PEAR_SYSCONF_DIR' => '\\xampp\\php'
+    'PHPRC' => '\\xampp\\php'
+    'TMP' => '\\xampp\\tmp'
+    'HTTP_HOST' => 'localhost'
+    'HTTP_CONNECTION' => 'keep-alive'
+    'HTTP_USER_AGENT' => 'Mozilla/5.0 (iPhone; CPU iPhone OS 16_6 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.6 Mobile/15E148 Safari/604.1'
+    'HTTP_ACCEPT' => '*/*'
+    'HTTP_SEC_FETCH_SITE' => 'same-origin'
+    'HTTP_SEC_FETCH_MODE' => 'no-cors'
+    'HTTP_SEC_FETCH_DEST' => 'script'
+    'HTTP_REFERER' => 'http://localhost/planealo.sytes.net/web/'
+    'HTTP_ACCEPT_ENCODING' => 'gzip, deflate, br, zstd'
+    'HTTP_ACCEPT_LANGUAGE' => 'en,id;q=0.9,tr;q=0.8,ru;q=0.7'
+    'HTTP_COOKIE' => '_ga=GA1.1.1679908835.1749223008; _csrf=f8773bd65b264c51d7fd5a6caa631f775014b198abeabe748ed30e11f4621339a%3A2%3A%7Bi%3A0%3Bs%3A5%3A%22_csrf%22%3Bi%3A1%3Bs%3A32%3A%227Vm0cmngm-bRSVwvLMukDWUl3nkYb5oZ%22%3B%7D; PHPSESSID=p4mikddosei3u68mkkk8bav5mi'
+    'PATH' => 'C:\\WINDOWS\\system32;C:\\WINDOWS;C:\\WINDOWS\\System32\\Wbem;C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\;C:\\WINDOWS\\System32\\OpenSSH\\;C:\\xampp\\php;C:\\ProgramData\\ComposerSetup\\bin;C:\\Program Files\\PuTTY\\;C:\\Program Files\\Git\\cmd;C:\\Program Files\\nodejs\\;C:\\Program Files (x86)\\Microsoft SQL Server\\160\\Tools\\Binn\\;C:\\Program Files\\Microsoft SQL Server\\160\\Tools\\Binn\\;C:\\Program Files\\Microsoft SQL Server\\Client SDK\\ODBC\\170\\Tools\\Binn\\;C:\\Program Files\\Microsoft SQL Server\\160\\DTS\\Binn\\;C:\\Program Files (x86)\\Microsoft SQL Server\\160\\DTS\\Binn\\;C:\\Users\\Otic-Sistemas\\AppData\\Local\\Microsoft\\WindowsApps;;C:\\Users\\Otic-Sistemas\\AppData\\Local\\Programs\\Microsoft VS Code\\bin;C:\\Users\\Otic-Sistemas\\AppData\\Roaming\\Composer\\vendor\\bin;C:\\Users\\Otic-Sistemas\\AppData\\Roaming\\npm'
+    'SystemRoot' => 'C:\\WINDOWS'
+    'COMSPEC' => 'C:\\WINDOWS\\system32\\cmd.exe'
+    'PATHEXT' => '.COM;.EXE;.BAT;.CMD;.VBS;.VBE;.JS;.JSE;.WSF;.WSH;.MSC'
+    'WINDIR' => 'C:\\WINDOWS'
+    'SERVER_SIGNATURE' => '<address>Apache/2.4.54 (Win64) OpenSSL/1.1.1p PHP/8.2.0 Server at localhost Port 80</address>
+'
+    'SERVER_SOFTWARE' => 'Apache/2.4.54 (Win64) OpenSSL/1.1.1p PHP/8.2.0'
+    'SERVER_NAME' => 'localhost'
+    'SERVER_ADDR' => '::1'
+    'SERVER_PORT' => '80'
+    'REMOTE_ADDR' => '::1'
+    'DOCUMENT_ROOT' => 'C:/xampp/htdocs'
+    'REQUEST_SCHEME' => 'http'
+    'CONTEXT_PREFIX' => ''
+    'CONTEXT_DOCUMENT_ROOT' => 'C:/xampp/htdocs'
+    'SERVER_ADMIN' => 'postmaster@localhost'
+    'SCRIPT_FILENAME' => 'C:/xampp/htdocs/planealo.sytes.net/web/index.php'
+    'REMOTE_PORT' => '58441'
+    'REDIRECT_URL' => '/planealo.sytes.net/web/js/ged-offcanvas.js'
+    'GATEWAY_INTERFACE' => 'CGI/1.1'
+    'SERVER_PROTOCOL' => 'HTTP/1.1'
+    'REQUEST_METHOD' => 'GET'
+    'QUERY_STRING' => ''
+    'REQUEST_URI' => '/planealo.sytes.net/web/js/ged-offcanvas.js'
+    'SCRIPT_NAME' => '/planealo.sytes.net/web/index.php'
+    'PHP_SELF' => '/planealo.sytes.net/web/index.php'
+    'REQUEST_TIME_FLOAT' => 1765376881.5237
+    'REQUEST_TIME' => 1765376881
+]
+2025-12-10 11:21:06 [::1][-][p4mikddosei3u68mkkk8bav5mi][error][yii\web\HttpException:404] yii\base\InvalidRouteException: Unable to resolve the request "js/ged-offcanvas.js". in C:\xampp\htdocs\planealo.sytes.net\vendor\yiisoft\yii2\base\Module.php:564
+Stack trace:
+#0 C:\xampp\htdocs\planealo.sytes.net\vendor\yiisoft\yii2\web\Application.php(103): yii\base\Module->runAction('js/ged-offcanva...', Array)
+#1 C:\xampp\htdocs\planealo.sytes.net\vendor\yiisoft\yii2\base\Application.php(387): yii\web\Application->handleRequest(Object(yii\web\Request))
+#2 C:\xampp\htdocs\planealo.sytes.net\web\index.php(12): yii\base\Application->run()
+#3 {main}
+
+Next yii\web\NotFoundHttpException: Página no encontrada. in C:\xampp\htdocs\planealo.sytes.net\vendor\yiisoft\yii2\web\Application.php:115
+Stack trace:
+#0 C:\xampp\htdocs\planealo.sytes.net\vendor\yiisoft\yii2\base\Application.php(387): yii\web\Application->handleRequest(Object(yii\web\Request))
+#1 C:\xampp\htdocs\planealo.sytes.net\web\index.php(12): yii\base\Application->run()
+#2 {main}
+2025-12-10 11:21:06 [::1][-][p4mikddosei3u68mkkk8bav5mi][info][application] $_GET = []
+
+$_POST = []
+
+$_FILES = []
+
+$_COOKIE = [
+    '_ga' => 'GA1.1.1679908835.1749223008'
+    '_csrf' => 'f8773bd65b264c51d7fd5a6caa631f775014b198abeabe748ed30e11f4621339a:2:{i:0;s:5:\"_csrf\";i:1;s:32:\"7Vm0cmngm-bRSVwvLMukDWUl3nkYb5oZ\";}'
+    'PHPSESSID' => 'p4mikddosei3u68mkkk8bav5mi'
+]
+
+$_SESSION = [
+    '__flash' => []
+]
+
+$_SERVER = [
+    'REDIRECT_MIBDIRS' => 'C:/xampp/php/extras/mibs'
+    'REDIRECT_MYSQL_HOME' => '\\xampp\\mysql\\bin'
+    'REDIRECT_OPENSSL_CONF' => 'C:/xampp/apache/bin/openssl.cnf'
+    'REDIRECT_PHP_PEAR_SYSCONF_DIR' => '\\xampp\\php'
+    'REDIRECT_PHPRC' => '\\xampp\\php'
+    'REDIRECT_TMP' => '\\xampp\\tmp'
+    'REDIRECT_STATUS' => '200'
+    'MIBDIRS' => 'C:/xampp/php/extras/mibs'
+    'MYSQL_HOME' => '\\xampp\\mysql\\bin'
+    'OPENSSL_CONF' => 'C:/xampp/apache/bin/openssl.cnf'
+    'PHP_PEAR_SYSCONF_DIR' => '\\xampp\\php'
+    'PHPRC' => '\\xampp\\php'
+    'TMP' => '\\xampp\\tmp'
+    'HTTP_HOST' => 'localhost'
+    'HTTP_CONNECTION' => 'keep-alive'
+    'HTTP_PRAGMA' => 'no-cache'
+    'HTTP_CACHE_CONTROL' => 'no-cache'
+    'HTTP_SEC_CH_UA_PLATFORM' => '\"Windows\"'
+    'HTTP_USER_AGENT' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36 OPR/122.0.0.0'
+    'HTTP_SEC_CH_UA' => '\"Not)A;Brand\";v=\"8\", \"Chromium\";v=\"138\", \"Opera GX\";v=\"122\"'
+    'HTTP_SEC_CH_UA_MOBILE' => '?0'
+    'HTTP_ACCEPT' => '*/*'
+    'HTTP_SEC_FETCH_SITE' => 'same-origin'
+    'HTTP_SEC_FETCH_MODE' => 'no-cors'
+    'HTTP_SEC_FETCH_DEST' => 'script'
+    'HTTP_REFERER' => 'http://localhost/planealo.sytes.net/web/'
+    'HTTP_ACCEPT_ENCODING' => 'gzip, deflate, br, zstd'
+    'HTTP_ACCEPT_LANGUAGE' => 'en,id;q=0.9,tr;q=0.8,ru;q=0.7'
+    'HTTP_COOKIE' => '_ga=GA1.1.1679908835.1749223008; _csrf=f8773bd65b264c51d7fd5a6caa631f775014b198abeabe748ed30e11f4621339a%3A2%3A%7Bi%3A0%3Bs%3A5%3A%22_csrf%22%3Bi%3A1%3Bs%3A32%3A%227Vm0cmngm-bRSVwvLMukDWUl3nkYb5oZ%22%3B%7D; PHPSESSID=p4mikddosei3u68mkkk8bav5mi'
+    'PATH' => 'C:\\WINDOWS\\system32;C:\\WINDOWS;C:\\WINDOWS\\System32\\Wbem;C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\;C:\\WINDOWS\\System32\\OpenSSH\\;C:\\xampp\\php;C:\\ProgramData\\ComposerSetup\\bin;C:\\Program Files\\PuTTY\\;C:\\Program Files\\Git\\cmd;C:\\Program Files\\nodejs\\;C:\\Program Files (x86)\\Microsoft SQL Server\\160\\Tools\\Binn\\;C:\\Program Files\\Microsoft SQL Server\\160\\Tools\\Binn\\;C:\\Program Files\\Microsoft SQL Server\\Client SDK\\ODBC\\170\\Tools\\Binn\\;C:\\Program Files\\Microsoft SQL Server\\160\\DTS\\Binn\\;C:\\Program Files (x86)\\Microsoft SQL Server\\160\\DTS\\Binn\\;C:\\Users\\Otic-Sistemas\\AppData\\Local\\Microsoft\\WindowsApps;;C:\\Users\\Otic-Sistemas\\AppData\\Local\\Programs\\Microsoft VS Code\\bin;C:\\Users\\Otic-Sistemas\\AppData\\Roaming\\Composer\\vendor\\bin;C:\\Users\\Otic-Sistemas\\AppData\\Roaming\\npm'
+    'SystemRoot' => 'C:\\WINDOWS'
+    'COMSPEC' => 'C:\\WINDOWS\\system32\\cmd.exe'
+    'PATHEXT' => '.COM;.EXE;.BAT;.CMD;.VBS;.VBE;.JS;.JSE;.WSF;.WSH;.MSC'
+    'WINDIR' => 'C:\\WINDOWS'
+    'SERVER_SIGNATURE' => '<address>Apache/2.4.54 (Win64) OpenSSL/1.1.1p PHP/8.2.0 Server at localhost Port 80</address>
+'
+    'SERVER_SOFTWARE' => 'Apache/2.4.54 (Win64) OpenSSL/1.1.1p PHP/8.2.0'
+    'SERVER_NAME' => 'localhost'
+    'SERVER_ADDR' => '::1'
+    'SERVER_PORT' => '80'
+    'REMOTE_ADDR' => '::1'
+    'DOCUMENT_ROOT' => 'C:/xampp/htdocs'
+    'REQUEST_SCHEME' => 'http'
+    'CONTEXT_PREFIX' => ''
+    'CONTEXT_DOCUMENT_ROOT' => 'C:/xampp/htdocs'
+    'SERVER_ADMIN' => 'postmaster@localhost'
+    'SCRIPT_FILENAME' => 'C:/xampp/htdocs/planealo.sytes.net/web/index.php'
+    'REMOTE_PORT' => '59935'
+    'REDIRECT_URL' => '/planealo.sytes.net/web/js/ged-offcanvas.js'
+    'GATEWAY_INTERFACE' => 'CGI/1.1'
+    'SERVER_PROTOCOL' => 'HTTP/1.1'
+    'REQUEST_METHOD' => 'GET'
+    'QUERY_STRING' => ''
+    'REQUEST_URI' => '/planealo.sytes.net/web/js/ged-offcanvas.js'
+    'SCRIPT_NAME' => '/planealo.sytes.net/web/index.php'
+    'PHP_SELF' => '/planealo.sytes.net/web/index.php'
+    'REQUEST_TIME_FLOAT' => 1765380066.3366
+    'REQUEST_TIME' => 1765380066
+]
+2025-12-10 12:08:35 [::1][-][p4mikddosei3u68mkkk8bav5mi][error][yii\web\HttpException:404] yii\base\InvalidRouteException: Unable to resolve the request "js/ged-offcanvas.js". in C:\xampp\htdocs\planealo.sytes.net\vendor\yiisoft\yii2\base\Module.php:564
+Stack trace:
+#0 C:\xampp\htdocs\planealo.sytes.net\vendor\yiisoft\yii2\web\Application.php(103): yii\base\Module->runAction('js/ged-offcanva...', Array)
+#1 C:\xampp\htdocs\planealo.sytes.net\vendor\yiisoft\yii2\base\Application.php(387): yii\web\Application->handleRequest(Object(yii\web\Request))
+#2 C:\xampp\htdocs\planealo.sytes.net\web\index.php(12): yii\base\Application->run()
+#3 {main}
+
+Next yii\web\NotFoundHttpException: Página no encontrada. in C:\xampp\htdocs\planealo.sytes.net\vendor\yiisoft\yii2\web\Application.php:115
+Stack trace:
+#0 C:\xampp\htdocs\planealo.sytes.net\vendor\yiisoft\yii2\base\Application.php(387): yii\web\Application->handleRequest(Object(yii\web\Request))
+#1 C:\xampp\htdocs\planealo.sytes.net\web\index.php(12): yii\base\Application->run()
+#2 {main}
+2025-12-10 12:08:34 [::1][-][p4mikddosei3u68mkkk8bav5mi][info][application] $_GET = []
+
+$_POST = []
+
+$_FILES = []
+
+$_COOKIE = [
+    '_ga' => 'GA1.1.1679908835.1749223008'
+    '_csrf' => 'f8773bd65b264c51d7fd5a6caa631f775014b198abeabe748ed30e11f4621339a:2:{i:0;s:5:\"_csrf\";i:1;s:32:\"7Vm0cmngm-bRSVwvLMukDWUl3nkYb5oZ\";}'
+    'PHPSESSID' => 'p4mikddosei3u68mkkk8bav5mi'
+]
+
+$_SESSION = [
+    '__flash' => []
+]
+
+$_SERVER = [
+    'REDIRECT_MIBDIRS' => 'C:/xampp/php/extras/mibs'
+    'REDIRECT_MYSQL_HOME' => '\\xampp\\mysql\\bin'
+    'REDIRECT_OPENSSL_CONF' => 'C:/xampp/apache/bin/openssl.cnf'
+    'REDIRECT_PHP_PEAR_SYSCONF_DIR' => '\\xampp\\php'
+    'REDIRECT_PHPRC' => '\\xampp\\php'
+    'REDIRECT_TMP' => '\\xampp\\tmp'
+    'REDIRECT_STATUS' => '200'
+    'MIBDIRS' => 'C:/xampp/php/extras/mibs'
+    'MYSQL_HOME' => '\\xampp\\mysql\\bin'
+    'OPENSSL_CONF' => 'C:/xampp/apache/bin/openssl.cnf'
+    'PHP_PEAR_SYSCONF_DIR' => '\\xampp\\php'
+    'PHPRC' => '\\xampp\\php'
+    'TMP' => '\\xampp\\tmp'
+    'HTTP_HOST' => 'localhost'
+    'HTTP_CONNECTION' => 'keep-alive'
+    'HTTP_PRAGMA' => 'no-cache'
+    'HTTP_CACHE_CONTROL' => 'no-cache'
+    'HTTP_SEC_CH_UA_PLATFORM' => '\"Windows\"'
+    'HTTP_USER_AGENT' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36 OPR/122.0.0.0'
+    'HTTP_SEC_CH_UA' => '\"Not)A;Brand\";v=\"8\", \"Chromium\";v=\"138\", \"Opera GX\";v=\"122\"'
+    'HTTP_SEC_CH_UA_MOBILE' => '?0'
+    'HTTP_ACCEPT' => '*/*'
+    'HTTP_SEC_FETCH_SITE' => 'same-origin'
+    'HTTP_SEC_FETCH_MODE' => 'no-cors'
+    'HTTP_SEC_FETCH_DEST' => 'script'
+    'HTTP_REFERER' => 'http://localhost/planealo.sytes.net/web/'
+    'HTTP_ACCEPT_ENCODING' => 'gzip, deflate, br, zstd'
+    'HTTP_ACCEPT_LANGUAGE' => 'en,id;q=0.9,tr;q=0.8,ru;q=0.7'
+    'HTTP_COOKIE' => '_ga=GA1.1.1679908835.1749223008; _csrf=f8773bd65b264c51d7fd5a6caa631f775014b198abeabe748ed30e11f4621339a%3A2%3A%7Bi%3A0%3Bs%3A5%3A%22_csrf%22%3Bi%3A1%3Bs%3A32%3A%227Vm0cmngm-bRSVwvLMukDWUl3nkYb5oZ%22%3B%7D; PHPSESSID=p4mikddosei3u68mkkk8bav5mi'
+    'PATH' => 'C:\\WINDOWS\\system32;C:\\WINDOWS;C:\\WINDOWS\\System32\\Wbem;C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\;C:\\WINDOWS\\System32\\OpenSSH\\;C:\\xampp\\php;C:\\ProgramData\\ComposerSetup\\bin;C:\\Program Files\\PuTTY\\;C:\\Program Files\\Git\\cmd;C:\\Program Files\\nodejs\\;C:\\Program Files (x86)\\Microsoft SQL Server\\160\\Tools\\Binn\\;C:\\Program Files\\Microsoft SQL Server\\160\\Tools\\Binn\\;C:\\Program Files\\Microsoft SQL Server\\Client SDK\\ODBC\\170\\Tools\\Binn\\;C:\\Program Files\\Microsoft SQL Server\\160\\DTS\\Binn\\;C:\\Program Files (x86)\\Microsoft SQL Server\\160\\DTS\\Binn\\;C:\\Users\\Otic-Sistemas\\AppData\\Local\\Microsoft\\WindowsApps;;C:\\Users\\Otic-Sistemas\\AppData\\Local\\Programs\\Microsoft VS Code\\bin;C:\\Users\\Otic-Sistemas\\AppData\\Roaming\\Composer\\vendor\\bin;C:\\Users\\Otic-Sistemas\\AppData\\Roaming\\npm'
+    'SystemRoot' => 'C:\\WINDOWS'
+    'COMSPEC' => 'C:\\WINDOWS\\system32\\cmd.exe'
+    'PATHEXT' => '.COM;.EXE;.BAT;.CMD;.VBS;.VBE;.JS;.JSE;.WSF;.WSH;.MSC'
+    'WINDIR' => 'C:\\WINDOWS'
+    'SERVER_SIGNATURE' => '<address>Apache/2.4.54 (Win64) OpenSSL/1.1.1p PHP/8.2.0 Server at localhost Port 80</address>
+'
+    'SERVER_SOFTWARE' => 'Apache/2.4.54 (Win64) OpenSSL/1.1.1p PHP/8.2.0'
+    'SERVER_NAME' => 'localhost'
+    'SERVER_ADDR' => '::1'
+    'SERVER_PORT' => '80'
+    'REMOTE_ADDR' => '::1'
+    'DOCUMENT_ROOT' => 'C:/xampp/htdocs'
+    'REQUEST_SCHEME' => 'http'
+    'CONTEXT_PREFIX' => ''
+    'CONTEXT_DOCUMENT_ROOT' => 'C:/xampp/htdocs'
+    'SERVER_ADMIN' => 'postmaster@localhost'
+    'SCRIPT_FILENAME' => 'C:/xampp/htdocs/planealo.sytes.net/web/index.php'
+    'REMOTE_PORT' => '60707'
+    'REDIRECT_URL' => '/planealo.sytes.net/web/js/ged-offcanvas.js'
+    'GATEWAY_INTERFACE' => 'CGI/1.1'
+    'SERVER_PROTOCOL' => 'HTTP/1.1'
+    'REQUEST_METHOD' => 'GET'
+    'QUERY_STRING' => ''
+    'REQUEST_URI' => '/planealo.sytes.net/web/js/ged-offcanvas.js'
+    'SCRIPT_NAME' => '/planealo.sytes.net/web/index.php'
+    'PHP_SELF' => '/planealo.sytes.net/web/index.php'
+    'REQUEST_TIME_FLOAT' => 1765382914.4556
+    'REQUEST_TIME' => 1765382914
+]

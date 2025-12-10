@@ -1,37 +1,81 @@
-// js/ged.js - Sistema GED - VERSIÓN OPTIMIZADA Y MEJORADA
-// Versión: 3.0.0 - Con todas las mejoras sugeridas implementadas
+// js/ged.js - Sistema GED - VERSIÓN 4.1 CON PADDING MÍNIMO
+// Versión: 4.1.0 - Padding máximo de 1vh en todos los elementos
+// Fecha: [Fecha actual]
 
 // ==================================================
-// MÓDULOS DEL SISTEMA
+// MÓDULOS DEL SISTEMA - CON PADDING MÍNIMO
 // ==================================================
 
 class GEDSystem {
     constructor() {
         this.isMobile = this.checkIsMobile();
-        this.menuOpen = false;
+        this.isDesktop = !this.isMobile;
         this.navbarHeight = this.getNavbarHeight();
+        this.sidebarWidth = this.isDesktop ? this.calculateSidebarWidth() : 0;
+        this.compactMode = false;
+        
+        // Variables de padding
+        this.minPadding = 10; // Mínimo 10px
+        this.maxPaddingVH = 0.01; // Máximo 1vh (1% de la altura de la ventana)
+        
+        // Elementos del DOM
+        this.navbar = null;
+        this.body = document.body;
+        this.html = document.documentElement;
+        this.mainContent = null;
+        this.sidebar = null;
+        
+        // Controladores
         this.debouncedResize = this.debounce(() => this.handleResize(), 250);
+        this.mutationObserver = null;
+        
         this.modules = {};
         this.init();
     }
     
+    // ✅ CALCULAR ANCHO DEL SIDEBAR BASADO EN PADDING MÍNIMO
+    calculateSidebarWidth() {
+        if (this.isMobile) return 0;
+        
+        // Calcular padding actual
+        const padding = this.calculatePadding();
+        
+        // Si está en modo compacto, reducirlo a la mitad
+        if (this.compactMode) {
+            return Math.max(padding * 0.5, 50); // Mínimo 50px en compacto
+        }
+        
+        // Máximo 220px, mínimo padding calculado
+        return Math.min(padding, 220);
+    }
+    
+    // ✅ CALCULAR PADDING BASADO EN 1vh MÁXIMO
+    calculatePadding() {
+        // 1vh de la altura de la ventana, pero mínimo 10px
+        const vhPadding = window.innerHeight * this.maxPaddingVH;
+        return Math.max(vhPadding, this.minPadding);
+    }
+    
+    // ✅ VERIFICAR SI ES MÓVIL
     checkIsMobile() {
         return window.innerWidth < 992;
     }
     
+    // ✅ OBTENER ALTURA DEL NAVBAR (REDUCIDA)
     getNavbarHeight() {
         const navbar = document.querySelector('.navbar-contextual');
-        if (!navbar) return this.isMobile ? 70 : 180;
+        if (!navbar) return this.isMobile ? 60 : 150; // Reducido
         
         if (this.isMobile) {
-            if (window.innerWidth < 576) return 55;
-            if (window.innerWidth < 768) return 60;
-            return 70;
+            if (window.innerWidth < 576) return 50; // Reducido
+            if (window.innerWidth < 768) return 55; // Reducido
+            return 60; // Reducido
         } else {
-            return window.innerHeight * 0.25;
+            return Math.min(window.innerHeight * 0.2, 150); // Reducido, máximo 150px
         }
     }
     
+    // ✅ INICIALIZACIÓN PRINCIPAL
     init() {
         if (document.readyState === 'loading') {
             document.addEventListener('DOMContentLoaded', () => this.setup());
@@ -40,10 +84,17 @@ class GEDSystem {
         }
     }
     
+    // ✅ CONFIGURACIÓN COMPLETA DEL SISTEMA
     setup() {
-        console.log('🚀 Sistema GED v3.0 inicializado - Modo:', this.isMobile ? 'Móvil' : 'Escritorio');
+        console.log(`🚀 Sistema GED v4.1 inicializando - Padding máximo: 1vh (${this.calculatePadding().toFixed(1)}px)`);
         
         try {
+            // Cachear elementos DOM
+            this.cacheElements();
+            
+            // Aplicar correcciones de padding inmediatamente
+            this.applyMinimalPadding();
+            
             // Inicializar todos los módulos
             this.modules = {
                 navbar: new NavbarManager(),
@@ -56,93 +107,256 @@ class GEDSystem {
             // Inicializar cada módulo
             Object.values(this.modules).forEach(module => module.init());
             
-            // Aplicar correcciones iniciales
-            this.applyBodyCorrections();
+            // Configurar observadores y eventos
+            this.setupObservers();
+            this.bindEvents();
             
-            // Manejar cambios de tamaño con debounce mejorado
-            window.addEventListener('resize', this.debouncedResize);
+            // Aplicar correcciones iniciales del body
+            this.applyBodyCorrections();
             
             // Forzar recálculo después de la carga completa
             setTimeout(() => {
-                this.forceNavbarRecalculation();
+                this.forceMinimalPaddingRecalculation();
                 this.applyBodyCorrections();
+                this.fixOverflowIssues();
             }, 500);
             
-            console.log('✅ Todos los módulos inicializados correctamente');
+            console.log('✅ Sistema GED v4.1 completamente inicializado con padding mínimo');
             
         } catch (error) {
             console.error('❌ Error crítico en inicialización del sistema:', error);
-            this.showCriticalError('Error al inicializar el sistema');
+            this.showCriticalError('Error al inicializar el sistema GED');
         }
     }
     
+    // ✅ CACHEAR ELEMENTOS DOM IMPORTANTES
+    cacheElements() {
+        this.navbar = document.querySelector('.navbar-contextual');
+        this.mainContent = document.querySelector('.main-content-wrapper');
+        this.sidebar = document.querySelector('.ged-offcanvas-sidebar');
+        this.offcanvasWrapper = document.querySelector('.ged-offcanvas-wrapper');
+    }
+    
+    // ✅ APLICAR PADDING MÍNIMO A TODOS LOS ELEMENTOS
+    applyMinimalPadding() {
+        console.log('🔧 Aplicando padding mínimo (máximo 1vh)...');
+        
+        const padding = this.calculatePadding();
+        const sidebarWidth = this.calculateSidebarWidth();
+        
+        // ✅ FIX 1: Body y HTML SIN PADDING LATERAL
+        this.html.style.paddingLeft = '0';
+        this.html.style.paddingRight = '0';
+        
+        this.body.style.paddingLeft = '0';
+        this.body.style.paddingRight = '0';
+        this.body.style.boxSizing = 'border-box';
+        
+        // ✅ FIX 2: Sidebar con ancho reducido
+        if (this.sidebar && this.isDesktop) {
+            this.sidebar.style.width = `${sidebarWidth}px`;
+            this.sidebar.style.transition = 'width 0.3s ease';
+        }
+        
+        // ✅ FIX 3: Navbar con padding mínimo lateral
+        if (this.navbar) {
+            this.navbar.style.paddingLeft = `${padding}px`;
+            this.navbar.style.paddingRight = `${padding}px`;
+            this.navbar.style.boxSizing = 'border-box';
+        }
+        
+        // ✅ FIX 4: Main content con padding mínimo
+        if (this.mainContent) {
+            this.mainContent.style.paddingLeft = `${padding}px`;
+            this.mainContent.style.paddingRight = `${padding}px`;
+            
+            // Solo en desktop, agregar padding extra para el sidebar
+            if (this.isDesktop) {
+                this.mainContent.style.paddingLeft = `${padding + sidebarWidth}px`;
+            }
+        }
+        
+        // ✅ FIX 5: Containers fluidos con padding mínimo
+        document.querySelectorAll('.container-fluid, .container').forEach(container => {
+            container.style.paddingLeft = `${padding}px`;
+            container.style.paddingRight = `${padding}px`;
+            container.style.boxSizing = 'border-box';
+        });
+        
+        // ✅ FIX 6: Aplicar padding mínimo a secciones principales
+        document.querySelectorAll('section, .section, .content-section, .main-section').forEach(section => {
+            section.style.paddingLeft = `${padding}px`;
+            section.style.paddingRight = `${padding}px`;
+        });
+        
+        console.log(`✅ Padding mínimo aplicado: ${padding}px (${(padding/window.innerHeight*100).toFixed(1)}vh)`);
+        console.log(`✅ Ancho sidebar: ${sidebarWidth}px (${this.compactMode ? 'compacto' : 'normal'})`);
+    }
+    
+    // ✅ FORZAR RECÁLCULO DE PADDING MÍNIMO
+    forceMinimalPaddingRecalculation() {
+        try {
+            // Recalcular valores
+            const padding = this.calculatePadding();
+            const sidebarWidth = this.calculateSidebarWidth();
+            
+            // Aplicar a todos los elementos
+            this.applyMinimalPadding();
+            
+            // Actualizar sidebar si existe
+            if (this.sidebar && this.isDesktop) {
+                this.sidebar.style.width = `${sidebarWidth}px`;
+            }
+            
+            console.log(`🔄 Padding mínimo recalculado: ${padding}px, Sidebar: ${sidebarWidth}px`);
+        } catch (error) {
+            console.error('Error en forceMinimalPaddingRecalculation:', error);
+        }
+    }
+    
+    // ✅ CONFIGURAR OBSERVADORES DE CAMBIOS
+    setupObservers() {
+        // Observar cambios en el sidebar (para modo compacto)
+        if (this.sidebar) {
+            this.mutationObserver = new MutationObserver((mutations) => {
+                mutations.forEach((mutation) => {
+                    if (mutation.type === 'attributes' && mutation.attributeName === 'class') {
+                        this.handleSidebarChange();
+                    }
+                });
+            });
+            
+            this.mutationObserver.observe(this.sidebar, {
+                attributes: true,
+                attributeFilter: ['class']
+            });
+        }
+        
+        // Observar cambios en el body para detectar overflow
+        const bodyObserver = new MutationObserver(() => {
+            setTimeout(() => this.fixOverflowIssues(), 100);
+        });
+        
+        bodyObserver.observe(this.body, {
+            childList: true,
+            subtree: true,
+            attributes: true
+        });
+    }
+    
+    // ✅ MANEJAR CAMBIOS EN EL SIDEBAR
+    handleSidebarChange() {
+        if (this.isDesktop) {
+            this.compactMode = this.sidebar.classList.contains('compact');
+            console.log(`🔄 Modo sidebar cambiado a: ${this.compactMode ? 'compacto' : 'normal'}`);
+            this.forceMinimalPaddingRecalculation();
+        }
+    }
+    
+    // ✅ VINCULAR EVENTOS
+    bindEvents() {
+        window.addEventListener('resize', this.debouncedResize);
+        
+        // Evento personalizado para cambios de padding
+        window.addEventListener('ged:paddingchange', () => {
+            this.forceMinimalPaddingRecalculation();
+        });
+    }
+    
+    // ✅ APLICAR CORRECCIONES AL BODY
     applyBodyCorrections() {
         try {
-            console.log('🔧 Aplicando correcciones de body y layout...');
-            
             this.navbarHeight = this.getNavbarHeight();
-            document.body.style.paddingTop = this.navbarHeight + 'px';
             
-            const mainElements = document.querySelectorAll('main#main');
+            // Ajustar padding-top del body para el navbar
+            this.body.style.paddingTop = `${this.navbarHeight}px`;
+            
+            // Ajustar altura mínima de elementos main
+            const mainElements = document.querySelectorAll('main#main, .main-container');
             mainElements.forEach(main => {
                 main.style.marginTop = '0';
                 main.style.minHeight = `calc(100vh - ${this.navbarHeight}px)`;
+                main.style.boxSizing = 'border-box';
             });
             
-            const mainContainers = document.querySelectorAll('.main-container');
-            mainContainers.forEach(container => {
-                container.style.marginTop = '0';
-                container.style.minHeight = `calc(100vh - ${this.navbarHeight}px)`;
-            });
-            
-            console.log('✅ Correcciones aplicadas - Navbar height:', this.navbarHeight);
+            console.log(`✅ Correcciones body aplicadas - Navbar height: ${this.navbarHeight}px`);
         } catch (error) {
             console.error('Error en applyBodyCorrections:', error);
         }
     }
     
-    forceNavbarRecalculation() {
-        try {
-            const navbar = document.querySelector('.navbar-contextual');
-            if (navbar) {
-                navbar.style.display = 'none';
-                void navbar.offsetHeight;
-                navbar.style.display = '';
-                console.log('🔄 Navbar recalculation forzado');
-            }
-        } catch (error) {
-            console.error('Error en forceNavbarRecalculation:', error);
-        }
-    }
-    
+    // ✅ MANEJAR CAMBIOS DE TAMAÑO
     handleResize() {
         try {
             const newIsMobile = this.checkIsMobile();
-            const oldNavbarHeight = this.navbarHeight;
             
             if (newIsMobile !== this.isMobile) {
                 this.isMobile = newIsMobile;
-                console.log('🔄 Cambio de modo:', this.isMobile ? 'Móvil' : 'Escritorio');
+                this.isDesktop = !newIsMobile;
+                console.log(`🔄 Cambio de modo: ${this.isMobile ? 'Móvil' : 'Escritorio'}`);
                 
+                // Reaplicar todas las correcciones
+                this.applyMinimalPadding();
+                this.applyBodyCorrections();
+                
+                // Notificar a los módulos del cambio
                 if (this.modules.sidebar) {
                     this.modules.sidebar.handleViewportChange(this.isMobile);
                 }
             }
             
+            // Recalcular alturas y padding
             this.navbarHeight = this.getNavbarHeight();
             
-            if (this.navbarHeight !== oldNavbarHeight) {
-                setTimeout(() => {
-                    if (this.modules.navbar) this.modules.navbar.forceFullWidth();
-                    this.applyBodyCorrections();
-                    this.forceNavbarRecalculation();
-                }, 100);
-            }
+            // Recalcular padding mínimo
+            this.forceMinimalPaddingRecalculation();
+            this.applyBodyCorrections();
+            
+            // Verificar overflow después de resize
+            setTimeout(() => this.fixOverflowIssues(), 100);
         } catch (error) {
             console.error('Error en handleResize:', error);
         }
     }
     
+    // ✅ ARREGLAR PROBLEMAS DE OVERFLOW
+    fixOverflowIssues() {
+        try {
+            const bodyWidth = this.body.offsetWidth;
+            const viewportWidth = window.innerWidth;
+            const difference = bodyWidth - viewportWidth;
+            
+            if (difference > 5) { // Tolerancia de 5px
+                console.warn(`⚠️ Overflow detectado: Body ${bodyWidth}px > Viewport ${viewportWidth}px (Diff: ${difference}px)`);
+                
+                // Reducir padding si hay overflow significativo
+                if (difference > 20) {
+                    const currentPadding = this.calculatePadding();
+                    const reduction = Math.min(difference * 0.5, currentPadding * 0.3);
+                    const newPadding = Math.max(currentPadding - reduction, 5);
+                    
+                    // Aplicar nuevo padding reducido
+                    document.querySelectorAll('.container-fluid, .container, .navbar-contextual, .main-content-wrapper')
+                        .forEach(el => {
+                            const currentLeft = parseInt(el.style.paddingLeft) || 0;
+                            if (currentLeft > newPadding) {
+                                el.style.paddingLeft = `${newPadding}px`;
+                            }
+                        });
+                    
+                    console.log(`✅ Padding reducido a ${newPadding}px para corregir overflow`);
+                }
+                
+                // Forzar hide de overflow horizontal
+                this.body.style.overflowX = 'hidden';
+                this.html.style.overflowX = 'hidden';
+            }
+        } catch (error) {
+            console.error('Error en fixOverflowIssues:', error);
+        }
+    }
+    
+    // ✅ DEBOUNCE PARA EVENTOS DE RESIZE
     debounce(func, wait) {
         let timeout;
         return function executedFunction(...args) {
@@ -155,6 +369,7 @@ class GEDSystem {
         };
     }
     
+    // ✅ MOSTRAR ERROR CRÍTICO
     showCriticalError(message) {
         const errorDiv = document.createElement('div');
         errorDiv.style.cssText = `
@@ -164,18 +379,69 @@ class GEDSystem {
             right: 0;
             background: #dc3545;
             color: white;
-            padding: 15px;
+            padding: 10px 15px;
             text-align: center;
             z-index: 9999;
             font-weight: bold;
+            font-size: 0.9rem;
         `;
         errorDiv.textContent = `⚠️ ${message}. Por favor, recarga la página.`;
         document.body.appendChild(errorDiv);
     }
+    
+    // ✅ MÉTODOS PÚBLICOS PARA CONTROL EXTERNO
+    forceWidthFix() {
+        this.forceMinimalPaddingRecalculation();
+        console.log('🔄 Full width fix aplicado manualmente');
+    }
+    
+    checkOverflow() {
+        const bodyWidth = this.body.offsetWidth;
+        const viewportWidth = window.innerWidth;
+        const difference = bodyWidth - viewportWidth;
+        
+        console.log(`📏 Análisis de ancho:
+          Body: ${bodyWidth}px
+          Viewport: ${viewportWidth}px
+          Diferencia: ${difference}px
+          ${difference > 5 ? '⚠️ HAY OVERFLOW' : '✅ SIN OVERFLOW'}
+          Padding actual: ${this.calculatePadding()}px
+        `);
+        
+        return {
+            bodyWidth,
+            viewportWidth,
+            difference,
+            hasOverflow: difference > 5,
+            currentPadding: this.calculatePadding()
+        };
+    }
+    
+    // ✅ ACTUALIZAR CONFIGURACIÓN DE PADDING
+    updatePaddingConfig(minPx = 10, maxVH = 0.01) {
+        this.minPadding = minPx;
+        this.maxPaddingVH = maxVH;
+        this.forceMinimalPaddingRecalculation();
+        console.log(`🔧 Configuración de padding actualizada: mínimo ${minPx}px, máximo ${maxVH*100}vh`);
+    }
+    
+    // ✅ OBTENER ESTADO ACTUAL
+    getCurrentState() {
+        return {
+            isMobile: this.isMobile,
+            isDesktop: this.isDesktop,
+            compactMode: this.compactMode,
+            navbarHeight: this.navbarHeight,
+            sidebarWidth: this.sidebarWidth,
+            currentPadding: this.calculatePadding(),
+            minPadding: this.minPadding,
+            maxPaddingVH: this.maxPaddingVH
+        };
+    }
 }
 
 // ==================================================
-// NAVBAR MANAGER - MODIFICADO PARA OCULTAR EN MÓVIL
+// NAVBAR MANAGER - OPTIMIZADO PARA PADDING MÍNIMO
 // ==================================================
 
 class NavbarManager {
@@ -193,7 +459,10 @@ class NavbarManager {
                 return;
             }
             
-            // ✅ CORRECCIÓN CRÍTICA: Ocultar navbar-collapse en móviles
+            // ✅ FORZAR ANCHO COMPLETO CON PADDING MÍNIMO
+            this.forceMinimalWidth();
+            
+            // ✅ Ocultar navbar-collapse en móviles si es necesario
             if (this.isMobile) {
                 this.hideNavbarCollapseOnMobile();
             }
@@ -204,6 +473,43 @@ class NavbarManager {
             console.log('✅ NavbarManager inicializado - Móvil:', this.isMobile);
         } catch (error) {
             console.error('Error en NavbarManager.init:', error);
+        }
+    }
+    
+    forceMinimalWidth() {
+        try {
+            const minimalStyle = `
+                width: 100vw !important;
+                max-width: 100vw !important;
+                min-width: 100vw !important;
+                left: 0 !important;
+                right: 0 !important;
+                box-sizing: border-box !important;
+                padding-left: 10px !important;
+                padding-right: 10px !important;
+            `;
+            
+            // Aplicar al navbar
+            if (this.navbar) {
+                this.navbar.style.cssText += minimalStyle;
+            }
+            
+            // Aplicar a elementos internos
+            const elements = [
+                '.navbar-collapse',
+                '.navbar-container',
+                '.navbar-menu-section',
+                '.navbar-brand-section'
+            ];
+            
+            elements.forEach(selector => {
+                const elements = document.querySelectorAll(selector);
+                elements.forEach(element => {
+                    element.style.cssText += 'width: 100% !important; max-width: 100% !important; box-sizing: border-box !important;';
+                });
+            });
+        } catch (error) {
+            console.error('Error en forceMinimalWidth:', error);
         }
     }
     
@@ -228,40 +534,12 @@ class NavbarManager {
                 left: 0 !important;
                 right: 0 !important;
                 z-index: 1030 !important;
-                width: 100% !important;
+                width: 100vw !important;
                 transform: none !important;
             `;
             this.navbar.style.cssText += criticalStyles;
         } catch (error) {
             console.error('Error en stabilizeNavbar:', error);
-        }
-    }
-    
-    forceFullWidth() {
-        try {
-            const fullWidthStyle = `
-                width: 100% !important;
-                max-width: 100% !important;
-                margin-left: 0 !important;
-                margin-right: 0 !important;
-                padding-left: 0 !important;
-                padding-right: 0 !important;
-            `;
-            
-            const elementsToFullWidth = [
-                '.navbar-contextual',
-                '.navbar-collapse',
-                '.container-fluid'
-            ];
-            
-            elementsToFullWidth.forEach(selector => {
-                const elements = document.querySelectorAll(selector);
-                elements.forEach(element => {
-                    element.style.cssText += fullWidthStyle;
-                });
-            });
-        } catch (error) {
-            console.error('Error en forceFullWidth:', error);
         }
     }
     
@@ -285,7 +563,7 @@ class NavbarManager {
 }
 
 // ==================================================
-// OFF-CANVAS SIDEBAR CON LAZY LOADING
+// OFF-CANVAS SIDEBAR CON PADDING MÍNIMO
 // ==================================================
 
 class OffCanvasSidebar {
@@ -325,7 +603,7 @@ class OffCanvasSidebar {
                     <span>Menú Principal</span>
                 </div>
                 <nav class="sidebar-nav" aria-label="Navegación principal">
-                    <div class="text-center py-4">
+                    <div class="text-center py-3">
                         <div class="spinner-border text-primary" role="status">
                             <span class="visually-hidden">Cargando menú...</span>
                         </div>
@@ -705,7 +983,7 @@ class OffCanvasSidebar {
 }
 
 // ==================================================
-// SCHOOL SEARCH MANAGER
+// SCHOOL SEARCH MANAGER (SIN CAMBIOS SIGNIFICATIVOS)
 // ==================================================
 
 class SchoolSearch {
@@ -935,7 +1213,7 @@ class SchoolSearch {
 }
 
 // ==================================================
-// COMPONENTS MANAGER
+// COMPONENTS MANAGER (SIN CAMBIOS SIGNIFICATIVOS)
 // ==================================================
 
 class ComponentsManager {
@@ -1005,7 +1283,7 @@ class ComponentsManager {
 }
 
 // ==================================================
-// LANDING PAGE MANAGER OPTIMIZADO
+// LANDING PAGE MANAGER (SIN CAMBIOS SIGNIFICATIVOS)
 // ==================================================
 
 class LandingPageManager {
@@ -1465,17 +1743,18 @@ class LandingPageManager {
 }
 
 // ==================================================
-// INICIALIZACIÓN GLOBAL MEJORADA
+// INICIALIZACIÓN GLOBAL DEL SISTEMA
 // ==================================================
 
 document.addEventListener('DOMContentLoaded', () => {
     setTimeout(() => {
         if (!window.gedSystem) {
             window.gedSystem = new GEDSystem();
-            console.log('🚀 Sistema GED v3.0 completamente inicializado');
+            console.log('🚀 Sistema GED v4.1 completamente inicializado');
         }
     }, 100);
     
+    // Inicializar Landing Page Manager si es necesario
     if (document.querySelector('.landing-page')) {
         setTimeout(() => {
             if (typeof window.landingPageManager !== 'undefined') {
@@ -1483,11 +1762,6 @@ document.addEventListener('DOMContentLoaded', () => {
             } else if (typeof LandingPageManager !== 'undefined') {
                 window.landingPageManager = new LandingPageManager();
                 console.log('✅ Landing Page Manager inicializado correctamente');
-                
-                ['vestimenta', 'alimentacion', 'implementos-deportivos', 'suplementos'].forEach(categoria => {
-                    const contenedor = document.getElementById(`productos-${categoria}`);
-                    console.log(`Contenedor productos-${categoria}:`, contenedor ? '✅ Encontrado' : '❌ No encontrado');
-                });
             } else {
                 console.error('❌ LandingPageManager no está definido');
             }
@@ -1500,22 +1774,57 @@ document.addEventListener('DOMContentLoaded', () => {
 // ==================================================
 
 function debugGEDSystem() {
-    console.group('🐛 DEBUG GED SYSTEM v3.0 - ESTADO COMPLETO');
+    console.group('🐛 DEBUG GED SYSTEM v4.1 - PADDING MÍNIMO');
     console.log('GED System:', window.gedSystem);
+    console.log('Estado:', window.gedSystem?.getCurrentState());
     console.log('Módulos cargados:', Object.keys(window.gedSystem?.modules || {}));
-    console.log('Navbar Height:', window.gedSystem?.navbarHeight);
-    console.log('Modo móvil:', window.gedSystem?.isMobile);
-    console.log('Body padding-top:', document.body.style.paddingTop);
-    console.log('jQuery cargado:', typeof $ !== 'undefined');
-    console.log('Bootstrap cargado:', typeof bootstrap !== 'undefined');
     
-    const main = document.querySelector('main#main');
-    console.log('Main min-height:', main?.style.minHeight);
+    const bodyWidth = document.body.offsetWidth;
+    const viewportWidth = window.innerWidth;
+    console.log(`📏 Body: ${bodyWidth}px, Viewport: ${viewportWidth}px, Diff: ${bodyWidth - viewportWidth}px`);
+    
+    // Verificar padding de elementos clave
+    const elements = ['.navbar-contextual', '.main-content-wrapper', '.container-fluid', 'body'];
+    elements.forEach(selector => {
+        const el = document.querySelector(selector);
+        if (el) {
+            const style = window.getComputedStyle(el);
+            console.log(`${selector}: padding-left=${style.paddingLeft}, width=${el.offsetWidth}px`);
+        }
+    });
     
     console.groupEnd();
 }
 
 window.debugGEDSystem = debugGEDSystem;
+
+// ✅ FUNCIONES GLOBALES DE CONTROL
+window.forceWidthFix = function() {
+    if (window.gedSystem) {
+        window.gedSystem.forceWidthFix();
+        console.log('🔄 Full width fix ejecutado manualmente');
+    }
+};
+
+window.checkOverflow = function() {
+    if (window.gedSystem) {
+        return window.gedSystem.checkOverflow();
+    }
+    return null;
+};
+
+window.updatePaddingConfig = function(minPx = 10, maxVH = 0.01) {
+    if (window.gedSystem) {
+        window.gedSystem.updatePaddingConfig(minPx, maxVH);
+    }
+};
+
+window.getSystemState = function() {
+    if (window.gedSystem) {
+        return window.gedSystem.getCurrentState();
+    }
+    return null;
+};
 
 window.reloadOffCanvasMenu = function() {
     if (window.gedSystem && window.gedSystem.modules.sidebar) {
@@ -1526,8 +1835,7 @@ window.reloadOffCanvasMenu = function() {
 
 window.forceNavbarRecalculation = function() {
     if (window.gedSystem) {
-        window.gedSystem.forceNavbarRecalculation();
-        window.gedSystem.applyBodyCorrections();
+        window.gedSystem.forceMinimalPaddingRecalculation();
     }
 };
 
@@ -1551,13 +1859,36 @@ function debugLandingPage() {
 
 window.debugLandingPage = debugLandingPage;
 
+// Modo desarrollo automático
 if (window.location.href.indexOf('localhost') > -1 || window.location.href.indexOf('debug') > -1) {
     setTimeout(() => {
         debugGEDSystem();
         console.log('🔧 Modo desarrollo activo - Debug functions disponibles');
+        console.log('ℹ️  Usa debugGEDSystem() para ver estado completo');
+        console.log('ℹ️  Usa updatePaddingConfig(minPx, maxVH) para ajustar padding');
     }, 2000);
 }
 
+// Evento personalizado para notificar que el sistema está listo
+window.dispatchEvent(new CustomEvent('ged:ready', { 
+    detail: { 
+        version: '4.1.0', 
+        features: ['minimal-padding', 'full-width-fix', 'responsive-sidebar'],
+        paddingConfig: {
+            minPx: 10,
+            maxVH: 0.01
+        }
+    } 
+}));
+
+// Export para Node.js (si es necesario)
 if (typeof module !== 'undefined' && module.exports) {
-    module.exports = { GEDSystem, LandingPageManager, OffCanvasSidebar, NavbarManager, SchoolSearch, ComponentsManager };
+    module.exports = { 
+        GEDSystem, 
+        LandingPageManager, 
+        OffCanvasSidebar, 
+        NavbarManager, 
+        SchoolSearch, 
+        ComponentsManager 
+    };
 }

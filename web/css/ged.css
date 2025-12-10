@@ -3668,3 +3668,138 @@ html, body {
   padding: 6px 10px !important;
   font-size: 0.85rem !important;
 }
+/* web/css/fullwidth-fix.css */
+/* ✅ CORRECCIONES CON PADDING MÍNIMO */
+
+/* Reset global */
+* {
+  box-sizing: border-box !important;
+}
+
+/* Body y HTML al 100% del viewport */
+html, body {
+  width: 100vw !important;
+  max-width: 100vw !important;
+  min-width: 100vw !important;
+  overflow-x: hidden !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  position: relative !important;
+}
+
+/* ✅ PADDING MÍNIMO GLOBAL: 1vh máximo */
+body {
+  --min-padding: max(1vh, 10px);
+}
+
+/* Navbar de ancho completo */
+.navbar-contextual {
+  width: 100vw !important;
+  max-width: 100vw !important;
+  min-width: 100vw !important;
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  z-index: 1030 !important;
+}
+
+/* ✅ AJUSTE PARA DESKTOP CON SIDEBAR - PADDING MÍNIMO */
+@media (min-width: 992px) {
+  .main-content-wrapper {
+      padding-left: var(--min-padding) !important;
+      width: 100vw !important;
+      transition: padding-left 0.3s ease !important;
+  }
+  
+  /* Sidebar fijo con ancho mínimo */
+  .ged-offcanvas-sidebar {
+      width: var(--min-padding) !important;
+      position: fixed !important;
+      left: 0 !important;
+      z-index: 1029 !important;
+      max-width: 220px !important; /* Máximo permitido */
+  }
+  
+  body.sidebar-compact .ged-offcanvas-sidebar {
+      width: calc(var(--min-padding) * 0.5) !important;
+      max-width: 50px !important;
+  }
+  
+  /* Navbar con ajuste para sidebar */
+  .navbar-contextual {
+      padding-left: var(--min-padding) !important;
+      width: 100vw !important;
+      transition: padding-left 0.3s ease !important;
+  }
+  
+  body.sidebar-compact .navbar-contextual {
+      padding-left: calc(var(--min-padding) * 0.5) !important;
+  }
+}
+
+/* ✅ CORRECCIÓN PARA MÓVIL */
+@media (max-width: 991.98px) {
+  .navbar-contextual {
+      padding-left: 0 !important;
+      width: 100vw !important;
+  }
+  
+  .main-content-wrapper {
+      padding-left: 0 !important;
+      width: 100vw !important;
+  }
+  
+  /* Sidebar oculto por defecto en móvil */
+  .ged-offcanvas-sidebar {
+      transform: translateX(-100%) !important;
+  }
+  
+  .ged-offcanvas-sidebar.open {
+      transform: translateX(0) !important;
+  }
+}
+
+/* ✅ ELIMINAR PADDING EXCESIVO DE CONTENEDORES */
+.container-fluid {
+  padding-left: var(--min-padding) !important;
+  padding-right: var(--min-padding) !important;
+}
+
+/* ✅ CONTENIDO PRINCIPAL SIN MÁRGENES EXCESIVOS */
+.ged-main-content,
+.main-container,
+.container {
+  padding-left: var(--min-padding) !important;
+  padding-right: var(--min-padding) !important;
+}
+
+/* ✅ PREVENIR DESBORDAMIENTO EN PANTALLAS PEQUEÑAS */
+@media (max-width: 576px) {
+  body {
+      --min-padding: 5px;
+  }
+  
+  .container-fluid {
+      padding-left: 5px !important;
+      padding-right: 5px !important;
+  }
+}
+
+/* ✅ CORRECCIÓN PARA LANDING PAGE */
+.landing-page .container,
+.landing-page .container-fluid {
+  padding-left: var(--min-padding) !important;
+  padding-right: var(--min-padding) !important;
+}
+
+/* ✅ PADDING CONSISTENTE PARA TODOS LOS ELEMENTOS */
+section, 
+.section,
+.content-section,
+.main-section {
+  padding-left: var(--min-padding) !important;
+  padding-right: var(--min-padding) !important;
+}

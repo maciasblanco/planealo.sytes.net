@@ -8,42 +8,42 @@
 
 use yii\bootstrap5\Html;
 
-// ✅ REGISTRAR ARCHIVOS CSS Y JS SEPARADOS
+// ✅ REGISTRAR ARCHIVOS CSS Y JS PARA ANCHO COMPLETO
 $this->registerCssFile('@web/css/navbar.css', ['depends' => [\yii\bootstrap5\BootstrapAsset::class]]);
-$this->registerJsFile('@web/js/navbar.js', ['depends' => [\yii\bootstrap5\BootstrapPluginAsset::class]]);
+$this->registerCssFile('@web/css/fullwidth-fix.css', ['depends' => [\yii\bootstrap5\BootstrapAsset::class]]);
+$this->registerJsFile('@web/js/fullwidth-fix.js', ['depends' => [\yii\bootstrap5\BootstrapPluginAsset::class]]);
 
-// ✅ CONFIGURACIÓN ACTUALIZADA SEGÚN REUNIÓN
+// ✅ CONFIGURACIÓN ACTUALIZADA
 $logoWidth = '15%';
 $menuWidth = '50%';
 $socialWidth = '15%';
 $controlWidth = '20%';
 
-// ✅ NUEVO: Evitar bucle verificando ruta actual
+// ✅ PREVENCIÓN DE BUCLE
 $currentRoute = Yii::$app->controller->route;
 $isIndexRoute = $currentRoute === 'site/index';
 $isLoginRoute = $currentRoute === 'site/login';
 $isSignupRoute = $currentRoute === 'site/signup';
 
-// ✅ VERIFICACIÓN PARA PREVENIR BUCLE
 $showLoginButton = !Yii::$app->user->isGuest ? false : !$isLoginRoute;
 $showSignupButton = !Yii::$app->user->isGuest ? false : (!$isSignupRoute && !$isLoginRoute);
 
-// Determinar clases CSS según el layout
-$navbarClasses = 'navbar navbar-expand-lg navbar-dark navbar-contextual fixed-top';
-$containerClasses = 'container-fluid';
+// ✅ CLASES PARA ANCHO COMPLETO
+$navbarClasses = 'navbar navbar-expand-lg navbar-dark navbar-contextual fixed-top w-100 vw-100';
+$containerClasses = 'container-fluid p-0 m-0 w-100 vw-100';
 
-// ✅ DETECCIÓN DE MÓVIL PARA EL MENÚ
+// ✅ DETECCIÓN DE MÓVIL
 $mobileDetect = Yii::$app->has('mobileDetect') ? Yii::$app->mobileDetect->isMobile() : false;
 
 ?>
 
 <!-- ================================================== -->
-<!-- NAVBAR UNIFICADO - UN SOLO MENÚ PARA TODOS LOS DISPOSITIVOS -->
+<!-- NAVBAR UNIFICADO - ANCHO COMPLETO 100% -->
 <!-- ================================================== -->
-<nav class="<?= $navbarClasses ?>" aria-label="Navegación principal">
+<nav class="<?= $navbarClasses ?>" aria-label="Navegación principal" style="width: 100vw !important; max-width: 100vw !important;">
     <div class="<?= $containerClasses ?>">
         <!-- ✅ LOGO - 15% -->
-        <div class="navbar-brand-section">
+        <div class="navbar-brand-section" style="width: 15%; min-width: 200px;">
             <a class="navbar-brand" href="<?= Yii::$app->homeUrl ?>" 
                title="Inicio - Sistema GED"
                onclick="return !<?= $isIndexRoute ? 'true' : 'false' ?>;">
@@ -69,15 +69,15 @@ $mobileDetect = Yii::$app->has('mobileDetect') ? Yii::$app->mobileDetect->isMobi
         </button>
 
         <!-- ✅ CONTENIDO COLAPSABLE - TODO EN UN SOLO MENÚ -->
-        <div class="collapse navbar-collapse" id="navbarGedCollapse">
-            <div class="navbar-container">
+        <div class="collapse navbar-collapse w-100 vw-100" id="navbarGedCollapse">
+            <div class="navbar-container w-100 vw-100">
                 
                 <!-- ✅ SECCIÓN 1: Menú de Navegación Principal - 50% -->
-                <div class="navbar-menu-section">
-                    <div class="section-container">
+                <div class="navbar-menu-section w-100">
+                    <div class="section-container w-100">
                         <?= \app\components\MenuWidget::widget([
                             'options' => [
-                                'class' => 'navbar-nav main-navigation',
+                                'class' => 'navbar-nav main-navigation w-100',
                                 'mobileMode' => $mobileDetect
                             ]
                         ]) ?>
@@ -224,4 +224,27 @@ $mobileDetect = Yii::$app->has('mobileDetect') ? Yii::$app->mobileDetect->isMobi
     </div>
 </nav>
 
-<!-- ✅ NO HAY SIDEBAR DUPLICADO - TODO ESTÁ EN EL NAVBAR -->
+<!-- ✅ SCRIPT INLINE PARA FORZAR ANCHO COMPLETO INMEDIATAMENTE -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Aplicar correcciones inmediatamente
+    setTimeout(() => {
+        // Forzar ancho completo del navbar
+        const navbar = document.querySelector('.navbar-contextual');
+        if (navbar) {
+            navbar.style.width = '100vw';
+            navbar.style.maxWidth = '100vw';
+            navbar.style.minWidth = '100vw';
+            navbar.style.left = '0';
+            navbar.style.right = '0';
+        }
+        
+        // Forzar ancho completo del body
+        document.body.style.width = '100vw';
+        document.body.style.maxWidth = '100vw';
+        document.body.style.overflowX = 'hidden';
+        
+        console.log('✅ Correcciones de ancho aplicadas inmediatamente');
+    }, 50);
+});
+</script>
