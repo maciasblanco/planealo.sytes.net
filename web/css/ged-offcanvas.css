@@ -1,4 +1,4 @@
-/* web/css/ged-offcanvas.css - VERSIÓN CON PADDING REDUCIDO */
+/* web/css/ged-offcanvas.css - VERSIÓN CON PADDING REDUCIDO Y CORREGIDO */
 
 /* ===== OFF-CANVAS UNIFICADO ===== */
 .ged-offcanvas-wrapper {
@@ -71,6 +71,16 @@
   
   body.sidebar-compact {
       padding-left: 50px !important; /* Reducido de 70px */
+  }
+  
+  /* ✅ NAVBAR CON PADDING CONSISTENTE - CORREGIDO */
+  .navbar-contextual {
+      padding-left: 220px !important;
+      transition: padding-left 0.3s ease;
+  }
+  
+  body.sidebar-compact .navbar-contextual {
+      padding-left: 50px !important;
   }
   
   /* ✅ Toggler para PC - AJUSTADO */
@@ -154,6 +164,12 @@
   body {
       padding-left: 0 !important;
       width: 100vw !important;
+  }
+  
+  /* ✅ Navbar sin padding lateral especial en móvil */
+  .navbar-contextual {
+      padding-left: 0 !important;
+      padding-right: 0 !important;
   }
 }
 
@@ -309,27 +325,4 @@
 .menu-link.active {
   background: linear-gradient(90deg, rgba(52, 152, 219, 0.3), transparent);
   border-left: 2px solid #3498db; /* Reducido */
-}
-
-/* ✅ NUEVO: PADDING MÍNIMO PARA TODO EL SISTEMA */
-body {
-  --sidebar-padding: max(1vh, 10px); /* No más de 1vh o 10px mínimo */
-}
-
-@media (min-width: 992px) {
-  body {
-      padding-left: var(--sidebar-padding) !important;
-  }
-  
-  .ged-offcanvas-sidebar {
-      width: var(--sidebar-padding) !important;
-  }
-  
-  .main-content-wrapper {
-      padding-left: var(--sidebar-padding) !important;
-  }
-  
-  .navbar-contextual {
-      padding-left: var(--sidebar-padding) !important;
-  }
 }
