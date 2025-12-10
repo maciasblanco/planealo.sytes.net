@@ -1,7 +1,6 @@
 /* =================================================================
  * ged.css - SISTEMA GED CSS UNIFICADO - VERSIÓN OPTIMIZADA
- * OPTIMIZACIONES: Código duplicado eliminado, selectores optimizados
- * MEJORAS: Archivo completo y listo para producción
+ * MODIFICACIONES: Carrusel al 70%, eliminación de sidebar fijo
  * ================================================================= */
 
 /* ===== VARIABLES CSS UNIFICADAS ===== */
@@ -60,7 +59,6 @@
   --navbar-height-mobile: 60px;
   --navbar-height-small: 55px;
 
-
   /* ✅ NUEVAS VARIABLES PARA OFF-CANVAS */
   --sidebar-width-desktop: 280px;
   --sidebar-width-compact: 70px;
@@ -70,7 +68,7 @@
   --sidebar-active-color: #3498db;
   
   /* ✅ ACTUALIZAR Z-INDEX */
-    --z-index-offcanvas: 1055; /* Mayor que navbar (1030) y backdrop (1049) */
+  --z-index-offcanvas: 1055;
 }
 
 /* ===== RESET Y ESTILOS BASE ===== */
@@ -78,12 +76,11 @@ html, body {
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
   height: 100%;
   padding-top: var(--navbar-height-desktop) !important;
-  padding-left: 0; /* Temporal, se ajustará con JS */
+  padding-left: 0 !important; /* ✅ NO PADDING LATERAL */
   position: relative;
   z-index: 1;
   overflow-y: auto;
   overflow-x: hidden !important;
-  transition: padding-left 0.3s ease; /* Agregar transición */
 }
 
 .container-fluid {
@@ -172,13 +169,12 @@ html, body {
   width: 100%;
   position: fixed;
   top: 0;
-  left: 0;
+  left: 0 !important; /* ✅ PEGADO A LA IZQUIERDA */
   z-index: var(--z-index-navbar);
   margin: 0;
-  padding: 0;
+  padding: 0 !important; /* ✅ SIN PADDING */
   border-bottom: 3px solid #7d3c98;
   transition: var(--ged-transition);
-  /* ✅ CORREGIDO: Prevenir overflow que causa scroll */
   overflow: visible !important;
 }
 
@@ -196,7 +192,6 @@ html, body {
   align-items: center !important;
   padding: 0 15px !important;
   margin: 0 !important;
-  /* ✅ CORREGIDO: Prevenir overflow */
   overflow: visible !important;
 }
 
@@ -206,7 +201,6 @@ html, body {
   height: 100% !important;
   align-items: center !important;
   position: relative;
-  /* ✅ CORREGIDO: Prevenir overflow */
   overflow: visible !important;
 }
 
@@ -221,7 +215,6 @@ html, body {
   z-index: calc(var(--z-index-navbar) + 1);
   margin: 0;
   margin-right: 0 !important;
-  /* ✅ CORREGIDO: Prevenir overflow */
   overflow: hidden;
 }
 
@@ -258,7 +251,6 @@ html, body {
   display: flex !important;
   align-items: center;
   padding: 0 10px;
-  /* ✅ CORREGIDO: Prevenir overflow */
   overflow: visible !important;
 }
 
@@ -271,7 +263,6 @@ html, body {
   align-items: center;
   position: relative;
   z-index: calc(var(--z-index-navbar) + 1);
-  /* ✅ CORREGIDO: Permitir que los dropdowns se muestren */
   overflow: visible !important;
 }
 
@@ -282,7 +273,6 @@ html, body {
   display: flex;
   align-items: center;
   justify-content: center;
-  /* ✅ CORREGIDO: Prevenir overflow */
   overflow: hidden;
 }
 
@@ -293,7 +283,6 @@ html, body {
   display: flex;
   align-items: center;
   justify-content: center;
-  /* ✅ CORREGIDO: Prevenir overflow */
   overflow: hidden;
 }
 
@@ -320,14 +309,12 @@ html, body {
   margin: 0;
   position: relative;
   z-index: calc(var(--z-index-navbar) + 1);
-  /* ✅ CORREGIDO: Permitir overflow para dropdowns */
   overflow: visible !important;
 }
 
 .nav-item {
   position: relative;
   z-index: calc(var(--z-index-navbar) + 2);
-  /* ✅ CORREGIDO: Permitir que dropdowns se muestren */
   overflow: visible !important;
 }
 
@@ -347,7 +334,6 @@ html, body {
 }
 
 /* ========== DROPDOWN MENUS - CORREGIDOS ========== */
-/* ✅ CORREGIDO: z-index aumentado y overflow permitido */
 .dropdown-menu {
   background: linear-gradient(135deg, #7d3c98, #6c3483);
   border: none;
@@ -358,7 +344,6 @@ html, body {
   position: absolute !important;
   border: 1px solid rgba(255,255,255,0.3) !important;
   box-shadow: 0 10px 30px rgba(0,0,0,0.3) !important;
-  /* ✅ CORREGIDO: Asegurar que se muestre por encima */
   overflow: visible !important;
 }
 
@@ -422,7 +407,6 @@ html, body {
   padding: 12px;
   margin-bottom: 12px;
   text-align: center;
-  /* ✅ CORREGIDO: Prevenir overflow */
   overflow: hidden;
 }
 
@@ -1021,7 +1005,6 @@ body {
   position: relative;
   z-index: 1;
   overflow-y: auto;
-  /* ✅ CORREGIDO: Prevenir scroll horizontal */
   overflow-x: hidden !important;
 }
 
@@ -1032,7 +1015,6 @@ main#main {
   position: relative;
   z-index: 1;
   min-height: calc(100vh - var(--navbar-height-desktop)) !important;
-  transition: margin-left 0.3s ease; /* Agregar transición */
 }
 
 /* ===== ESTILOS PARA OFF-CANVAS SIDEBAR - Z-INDEX CORREGIDO ===== */
@@ -1044,7 +1026,6 @@ main#main {
   max-width: 320px;
   height: 100vh;
   background: white;
-  /* ✅ CORREGIDO: z-index aumentado para estar sobre TODO */
   z-index: var(--z-index-offcanvas);
   transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   box-shadow: 2px 0 15px rgba(0,0,0,0.1);
@@ -1062,7 +1043,6 @@ main#main {
   width: 100%;
   height: 100%;
   background: rgba(0,0,0,0.5);
-  /* ✅ CORREGIDO: z-index entre navbar y offcanvas */
   z-index: var(--z-index-backdrop);
   opacity: 0;
   visibility: hidden;
@@ -2213,40 +2193,428 @@ main#main {
   margin-bottom: 1.5rem;
 }
 
-/* ===== CARRUSEL HERO ===== */
+/* ================================================== */
+/* CARRUSEL HERO - 70% DE ALTURA                      */
+/* ================================================== */
+
 .carousel-hero {
-  height: 70vh;
-  min-height: 500px;
-  overflow: hidden;
-  margin-top: 0 !important;
+    width: 100%;
+    position: relative;
+    overflow: hidden;
+    margin-bottom: 2rem;
+    height: 70vh !important; /* Cambiado de 60vh a 70vh */
+    min-height: 400px !important;
+    margin-top: 0 !important;
+    padding-top: 0 !important;
 }
 
-.carousel-hero .carousel-item {
-  height: 70vh;
-  min-height: 500px;
+#carouselHero {
+    width: 100%;
+    position: relative;
 }
 
-.carousel-hero img {
-  object-fit: cover;
-  height: 100%;
-  width: 100%;
+/* Contenedor principal con relación de aspecto mejorada */
+.carousel-inner {
+    width: 100%;
+    position: relative;
+    padding-bottom: 43.75%; /* Relación 16:9 (9/16 = 56.25%) ajustada para 70vh */
+    height: 0;
+    overflow: hidden;
 }
 
-.carousel-hero .carousel-caption {
-  background: rgba(0, 0, 0, 0.6);
-  padding: 2rem;
-  border-radius: 15px;
-  bottom: 20%;
+.carousel-item {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: none;
 }
 
-.carousel-hero .carousel-caption h2 {
-  font-size: 2.5rem;
-  margin-bottom: 1rem;
+.carousel-item.active {
+    display: block;
 }
 
-.carousel-hero .carousel-caption .lead {
-  font-size: 1.25rem;
-  margin-bottom: 1.5rem;
+/* Contenedor de imagen que ocupa todo el espacio disponible */
+.carousel-img-container {
+    width: 100%;
+    height: 100%;
+    position: relative;
+}
+
+/* Imágenes del carrusel - Se adaptan al contenedor */
+.carousel-img-container img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    display: block;
+}
+
+/* Placeholder cuando no hay imágenes */
+.carousel-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+/* Captiones del carrusel */
+.carousel-caption {
+    position: absolute;
+    top: 50% !important; /* Centrado vertical */
+    left: 50%;
+    transform: translate(-50%, -50%) !important;
+    right: auto;
+    width: 80%;
+    max-width: 800px;
+    background: rgba(0, 0, 0, 0.6);
+    padding: 2rem;
+    border-radius: 10px;
+    text-align: center;
+    bottom: auto !important; /* Eliminar bottom fijo */
+}
+
+.carousel-caption h2 {
+    font-size: 2.5rem;
+    font-weight: bold;
+    margin-bottom: 1rem;
+    color: white;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.carousel-caption p {
+    font-size: 1.2rem;
+    margin-bottom: 1.5rem;
+    color: #f8f9fa;
+}
+
+.carousel-caption .btn {
+    font-size: 1.1rem;
+    padding: 0.75rem 2rem;
+    border-radius: 50px;
+    transition: all 0.3s ease;
+}
+
+.carousel-caption .btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+/* Indicadores personalizados */
+.carousel-indicators {
+    bottom: 20px;
+    margin-bottom: 0;
+}
+
+.carousel-indicators button {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    margin: 0 5px;
+    border: 2px solid white;
+    background-color: transparent;
+}
+
+.carousel-indicators button.active {
+    background-color: white;
+}
+
+/* Controles de navegación */
+.carousel-control-prev,
+.carousel-control-next {
+    width: 60px;
+    height: 60px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(0, 0, 0, 0.5);
+    border-radius: 50%;
+    opacity: 0.7;
+    transition: all 0.3s ease;
+}
+
+.carousel-control-prev {
+    left: 20px;
+}
+
+.carousel-control-next {
+    right: 20px;
+}
+
+.carousel-control-prev:hover,
+.carousel-control-next:hover {
+    opacity: 1;
+    background: rgba(0, 0, 0, 0.8);
+}
+
+.carousel-control-prev-icon,
+.carousel-control-next-icon {
+    width: 30px;
+    height: 30px;
+}
+
+/* ================================================== */
+/* RESPONSIVE DESIGN - AJUSTES POR DISPOSITIVO        */
+/* ================================================== */
+
+/* Tablets (768px a 1024px) */
+@media (max-width: 1024px) {
+    .carousel-hero {
+        height: 70vh !important;
+        min-height: 350px !important;
+    }
+    
+    .carousel-inner {
+        padding-bottom: 50%; /* Ajuste para tablet */
+    }
+    
+    .carousel-caption {
+        width: 90%;
+        padding: 1.5rem;
+    }
+    
+    .carousel-caption h2 {
+        font-size: 2rem;
+    }
+    
+    .carousel-caption p {
+        font-size: 1.1rem;
+    }
+    
+    .carousel-caption .btn {
+        font-size: 1rem;
+        padding: 0.6rem 1.5rem;
+    }
+}
+
+/* Móviles grandes (576px a 768px) */
+@media (max-width: 768px) {
+    .carousel-hero {
+        height: 70vh !important;
+        min-height: 300px !important;
+    }
+    
+    .carousel-inner {
+        padding-bottom: 56.25%; /* 16:9 para móviles */
+    }
+    
+    .carousel-caption {
+        width: 95%;
+        padding: 1rem;
+    }
+    
+    .carousel-caption h2 {
+        font-size: 1.5rem;
+        margin-bottom: 0.5rem;
+    }
+    
+    .carousel-caption p {
+        font-size: 1rem;
+        margin-bottom: 1rem;
+    }
+    
+    .carousel-caption .btn {
+        font-size: 0.9rem;
+        padding: 0.5rem 1rem;
+    }
+    
+    .carousel-control-prev,
+    .carousel-control-next {
+        width: 50px;
+        height: 50px;
+    }
+    
+    .carousel-control-prev {
+        left: 10px;
+    }
+    
+    .carousel-control-next {
+        right: 10px;
+    }
+}
+
+/* Móviles pequeños (hasta 576px) */
+@media (max-width: 576px) {
+    .carousel-hero {
+        margin-bottom: 1rem;
+        height: 70vh !important;
+        min-height: 250px !important;
+    }
+    
+    .carousel-inner {
+        padding-bottom: 70%; /* Más alto para móviles pequeños */
+    }
+    
+    .carousel-caption {
+        padding: 0.75rem;
+    }
+    
+    .carousel-caption h2 {
+        font-size: 1.2rem;
+    }
+    
+    .carousel-caption p {
+        font-size: 0.9rem;
+        display: block !important; /* Mantener visible */
+    }
+    
+    .carousel-caption .btn {
+        font-size: 0.8rem;
+        padding: 0.4rem 0.8rem;
+    }
+    
+    .carousel-indicators {
+        bottom: 10px;
+    }
+    
+    .carousel-indicators button {
+        width: 8px;
+        height: 8px;
+        margin: 0 3px;
+    }
+}
+
+/* ================================================== */
+/* EFECTOS Y ANIMACIONES                              */
+/* ================================================== */
+
+/* Transición suave entre slides */
+.carousel-item {
+    transition: transform 0.6s ease-in-out;
+}
+
+/* Efecto de zoom sutil en hover */
+@media (min-width: 992px) {
+    .carousel-img-container {
+        overflow: hidden;
+    }
+    
+    .carousel-img-container img {
+        transition: transform 0.5s ease;
+    }
+    
+    .carousel-item:hover .carousel-img-container img {
+        transform: scale(1.05);
+    }
+}
+
+/* Animación de entrada para el texto */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.carousel-caption h2,
+.carousel-caption p,
+.carousel-caption .btn {
+    animation: fadeInUp 0.8s ease-out;
+}
+
+.carousel-caption p {
+    animation-delay: 0.2s;
+}
+
+.carousel-caption .btn {
+    animation-delay: 0.4s;
+}
+
+/* ================================================== */
+/* ACCESIBILIDAD Y MEJORES PRÁCTICAS                  */
+/* ================================================== */
+
+/* Asegurar contraste suficiente */
+.carousel-caption {
+    color: #fff;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+}
+
+/* Mejorar legibilidad en fondos claros */
+.carousel-img-container::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 50%;
+    background: linear-gradient(to top, rgba(0,0,0,0.5) 0%, transparent 100%);
+    pointer-events: none;
+}
+
+/* Asegurar que los botones sean fácilmente clickeables en móvil */
+@media (max-width: 768px) {
+    .carousel-control-prev,
+    .carousel-control-next {
+        min-width: 44px;
+        min-height: 44px;
+    }
+    
+    .carousel-caption .btn {
+        min-width: 120px;
+        min-height: 44px;
+    }
+}
+
+/* Optimización para carga */
+.carousel-img-container img {
+    background-color: #f5f5f5;
+}
+
+/* Prevenir layout shift */
+.carousel-hero {
+    aspect-ratio: 16/7; /* Aproximadamente 70% de altura */
+}
+
+/* Fallback para navegadores que no soportan aspect-ratio */
+@supports not (aspect-ratio: 16/7) {
+    .carousel-hero {
+        height: 70vh !important;
+    }
+    
+    @media (max-width: 768px) {
+        .carousel-hero {
+            height: 70vh !important;
+        }
+    }
+    
+    @media (max-width: 576px) {
+        .carousel-hero {
+            height: 70vh !important;
+        }
+    }
+}
+
+/* Asegurar que el carrusel se muestre completo */
+.carousel-img-container {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #f8f9fa;
+}
+
+.carousel-img-container img {
+    max-width: 100%;
+    max-height: 100%;
+    width: auto;
+    height: auto;
+    object-fit: cover;
+}
+
+/* Para pantallas grandes */
+@media (min-width: 1200px) {
+    .carousel-img-container img {
+        min-width: 100%;
+        min-height: 100%;
+    }
 }
 
 /* ===== MENÚ MARKETPLACE EN LANDING PAGE ===== */
@@ -2798,24 +3166,6 @@ main#main {
     background: rgba(255,255,255,0.1);
   }
   
-  .carousel-hero {
-    height: 50vh;
-    min-height: 300px;
-  }
-  
-  .carousel-hero .carousel-item {
-    height: 50vh;
-    min-height: 300px;
-  }
-  
-  .carousel-hero .carousel-caption h2 {
-    font-size: 1.5rem;
-  }
-  
-  .carousel-hero .carousel-caption .lead {
-    font-size: 1rem;
-  }
-  
   .ged-logo {
     max-height: 80px;
   }
@@ -3100,11 +3450,6 @@ main#main {
   transform: none !important;
 }
 
-/* PREVENIR COLAPSADO NO DESEADO */
-/*.navbar-collapse:not(.show) {
-  display: flex !important;
-}*/
-
 /* ELIMINAR CUALQUIER OVERFLOW QUE CAUSE PROBLEMAS */
 html, body {
   overflow-x: hidden !important;
@@ -3114,454 +3459,21 @@ html, body {
   overflow: visible !important;
 }
 
-/* ===== FIN DE GED.CSS OPTIMIZADO ===== */
-/* ================================================== */
-/* CARRUSEL HERO - RESPONSIVO Y ADAPTATIVO            */
-/* ================================================== */
-
-.carousel-hero {
-    width: 100%;
-    position: relative;
-    overflow: hidden;
-    margin-bottom: 2rem;
+.session-controls .btn-group-horizontal {
+  display: flex !important;
+  gap: 8px !important;
+  justify-content: center !important;
+  margin-top: 8px !important;
 }
 
-#carouselHero {
-    width: 100%;
-    position: relative;
+.session-controls .btn-group-horizontal .btn {
+  flex: 1 !important;
+  min-width: 80px !important;
+  padding: 6px 10px !important;
+  font-size: 0.85rem !important;
 }
 
-/* Contenedor principal con relación de aspecto 16:5 (1280x400) */
-.carousel-inner {
-    width: 100%;
-    position: relative;
-    padding-bottom: 31.25%; /* 400/1280 = 31.25% */
-    height: 0;
-    overflow: hidden;
-}
-
-.carousel-item {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    display: none;
-}
-
-.carousel-item.active {
-    display: block;
-}
-
-/* Contenedor de imagen que ocupa todo el espacio disponible */
-.carousel-img-container {
-    width: 100%;
-    height: 100%;
-    position: relative;
-}
-
-/* Imágenes del carrusel - Se adaptan al contenedor */
-.carousel-img-container img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover; /* Mantiene proporciones, cubre el contenedor */
-    object-position: center; /* Centra la imagen */
-    display: block;
-}
-
-/* Placeholder cuando no hay imágenes */
-.carousel-placeholder {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-}
-
-/* Captiones del carrusel */
-.carousel-caption {
-    position: absolute;
-    bottom: 20%;
-    left: 50%;
-    transform: translateX(-50%);
-    right: auto;
-    width: 80%;
-    max-width: 800px;
-    background: rgba(0, 0, 0, 0.6);
-    padding: 2rem;
-    border-radius: 10px;
-    text-align: center;
-}
-
-.carousel-caption h2 {
-    font-size: 2.5rem;
-    font-weight: bold;
-    margin-bottom: 1rem;
-    color: white;
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
-}
-
-.carousel-caption p {
-    font-size: 1.2rem;
-    margin-bottom: 1.5rem;
-    color: #f8f9fa;
-}
-
-.carousel-caption .btn {
-    font-size: 1.1rem;
-    padding: 0.75rem 2rem;
-    border-radius: 50px;
-    transition: all 0.3s ease;
-}
-
-.carousel-caption .btn:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-}
-
-/* Indicadores personalizados */
-.carousel-indicators {
-    bottom: 20px;
-    margin-bottom: 0;
-}
-
-.carousel-indicators button {
-    width: 12px;
-    height: 12px;
-    border-radius: 50%;
-    margin: 0 5px;
-    border: 2px solid white;
-    background-color: transparent;
-}
-
-.carousel-indicators button.active {
-    background-color: white;
-}
-
-/* Controles de navegación */
-.carousel-control-prev,
-.carousel-control-next {
-    width: 60px;
-    height: 60px;
-    top: 50%;
-    transform: translateY(-50%);
-    background: rgba(0, 0, 0, 0.5);
-    border-radius: 50%;
-    opacity: 0.7;
-    transition: all 0.3s ease;
-}
-
-.carousel-control-prev {
-    left: 20px;
-}
-
-.carousel-control-next {
-    right: 20px;
-}
-
-.carousel-control-prev:hover,
-.carousel-control-next:hover {
-    opacity: 1;
-    background: rgba(0, 0, 0, 0.8);
-}
-
-.carousel-control-prev-icon,
-.carousel-control-next-icon {
-    width: 30px;
-    height: 30px;
-}
-
-/* ================================================== */
-/* RESPONSIVE DESIGN - AJUSTES POR DISPOSITIVO        */
-/* ================================================== */
-
-/* Tablets (768px a 1024px) */
-@media (max-width: 1024px) {
-    .carousel-inner {
-        padding-bottom: 40%; /* Más alto para tablets */
-    }
-    
-    .carousel-caption {
-        bottom: 15%;
-        width: 90%;
-        padding: 1.5rem;
-    }
-    
-    .carousel-caption h2 {
-        font-size: 2rem;
-    }
-    
-    .carousel-caption p {
-        font-size: 1.1rem;
-    }
-    
-    .carousel-caption .btn {
-        font-size: 1rem;
-        padding: 0.6rem 1.5rem;
-    }
-}
-
-/* Móviles grandes (576px a 768px) */
-@media (max-width: 768px) {
-    .carousel-inner {
-        padding-bottom: 56.25%; /* 16:9 para móviles */
-    }
-    
-    .carousel-caption {
-        bottom: 10%;
-        width: 95%;
-        padding: 1rem;
-    }
-    
-    .carousel-caption h2 {
-        font-size: 1.5rem;
-        margin-bottom: 0.5rem;
-    }
-    
-    .carousel-caption p {
-        font-size: 1rem;
-        margin-bottom: 1rem;
-    }
-    
-    .carousel-caption .btn {
-        font-size: 0.9rem;
-        padding: 0.5rem 1rem;
-    }
-    
-    .carousel-control-prev,
-    .carousel-control-next {
-        width: 50px;
-        height: 50px;
-    }
-    
-    .carousel-control-prev {
-        left: 10px;
-    }
-    
-    .carousel-control-next {
-        right: 10px;
-    }
-}
-
-/* Móviles pequeños (hasta 576px) */
-@media (max-width: 576px) {
-    .carousel-hero {
-        margin-bottom: 1rem;
-    }
-    
-    .carousel-inner {
-        padding-bottom: 70%; /* Más alto para móviles pequeños */
-    }
-    
-    .carousel-caption {
-        bottom: 5%;
-        padding: 0.75rem;
-    }
-    
-    .carousel-caption h2 {
-        font-size: 1.2rem;
-    }
-    
-    .carousel-caption p {
-        font-size: 0.9rem;
-        display: none; /* Ocultar texto en móviles muy pequeños */
-    }
-    
-    .carousel-caption .btn {
-        font-size: 0.8rem;
-        padding: 0.4rem 0.8rem;
-    }
-    
-    .carousel-indicators {
-        bottom: 10px;
-    }
-    
-    .carousel-indicators button {
-        width: 8px;
-        height: 8px;
-        margin: 0 3px;
-    }
-}
-
-/* ================================================== */
-/* EFECTOS Y ANIMACIONES                              */
-/* ================================================== */
-
-/* Transición suave entre slides */
-.carousel-item {
-    transition: transform 0.6s ease-in-out;
-}
-
-/* Efecto de zoom sutil en hover */
-@media (min-width: 992px) {
-    .carousel-img-container {
-        overflow: hidden;
-    }
-    
-    .carousel-img-container img {
-        transition: transform 0.5s ease;
-    }
-    
-    .carousel-item:hover .carousel-img-container img {
-        transform: scale(1.05);
-    }
-}
-
-/* Animación de entrada para el texto */
-@keyframes fadeInUp {
-    from {
-        opacity: 0;
-        transform: translateY(20px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-.carousel-caption h2,
-.carousel-caption p,
-.carousel-caption .btn {
-    animation: fadeInUp 0.8s ease-out;
-}
-
-.carousel-caption p {
-    animation-delay: 0.2s;
-}
-
-.carousel-caption .btn {
-    animation-delay: 0.4s;
-}
-
-/* ================================================== */
-/* ACCESIBILIDAD Y MEJORES PRÁCTICAS                  */
-/* ================================================== */
-
-/* Asegurar contraste suficiente */
-.carousel-caption {
-    color: #fff;
-    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
-}
-
-/* Mejorar legibilidad en fondos claros */
-.carousel-img-container::after {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    height: 50%;
-    background: linear-gradient(to top, rgba(0,0,0,0.5) 0%, transparent 100%);
-    pointer-events: none;
-}
-
-/* Asegurar que los botones sean fácilmente clickeables en móvil */
-@media (max-width: 768px) {
-    .carousel-control-prev,
-    .carousel-control-next {
-        min-width: 44px;
-        min-height: 44px; /* Tamaño mínimo para dedos */
-    }
-    
-    .carousel-caption .btn {
-        min-width: 120px;
-        min-height: 44px;
-    }
-}
-
-/* Optimización para carga */
-.carousel-img-container img {
-    background-color: #f5f5f5; /* Color de fondo mientras carga */
-}
-
-/* Prevenir layout shift */
-.carousel-hero {
-    aspect-ratio: 1280/400; /* Relación de aspecto base */
-}
-
-/* Fallback para navegadores que no soportan aspect-ratio */
-@supports not (aspect-ratio: 1280/400) {
-    .carousel-hero {
-        height: 400px;
-    }
-    
-    @media (max-width: 768px) {
-        .carousel-hero {
-            height: 300px;
-        }
-    }
-    
-    @media (max-width: 576px) {
-        .carousel-hero {
-            height: 250px;
-        }
-    }
-}
-/* ged.css - Versión final sin cortes */
-.carousel-img-container {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background-color: #f8f9fa; /* Color de fondo si la imagen es más pequeña */
-}
-
-.carousel-img-container img {
-    max-width: 100%;
-    max-height: 100%;
-    width: auto;
-    height: auto;
-    object-fit: scale-down; /* Mejor que contain */
-}
-
-/* Para pantallas grandes */
-@media (min-width: 1200px) {
-    .carousel-img-container img {
-        min-width: 100%;
-        min-height: 100%;
-    }
-}
 /* ===== CORRECCIÓN DE EMERGENCIA PARA NAVBAR EN MÓVIL ===== */
-@media (max-width: 991.98px) {
-  .navbar-contextual .navbar-collapse {
-      display: none !important;
-      visibility: hidden !important;
-      opacity: 0 !important;
-      height: 0 !important;
-      overflow: hidden !important;
-      padding: 0 !important;
-      margin: 0 !important;
-      transition: none !important;
-  }
-  
-  .navbar-contextual .navbar-collapse.show {
-      display: block !important;
-      visibility: visible !important;
-      opacity: 1 !important;
-      height: auto !important;
-      overflow: visible !important;
-  }
-  
-  /* Forzar que el toggler funcione */
-  .navbar-toggler {
-      display: block !important;
-      position: relative !important;
-      margin-left: auto !important;
-  }
-  
-  /* Ocultar el menú completo en móvil por defecto */
-  .navbar-nav.desktop-menu {
-      display: none !important;
-  }
-  
-  /* Mostrar solo el off-canvas en móvil */
-  .navbar-nav.desktop-menu {
-      flex-direction: column !important;
-  }
-}
-/* ===== CORRECCIÓN CRÍTICA: FORZAR COMPORTAMIENTO CORRECTO DEL NAVBAR EN MÓVIL ===== */
 @media (max-width: 991.98px) {
   /* ✅ Asegurar que el navbar-collapse esté OCULTO por defecto */
   .navbar-contextual .navbar-collapse:not(.show) {
@@ -3655,151 +3567,5 @@ html, body {
 .navbar-collapse {
   transition: all 0.3s ease !important;
 }
-.session-controls .btn-group-horizontal {
-  display: flex !important;
-  gap: 8px !important;
-  justify-content: center !important;
-  margin-top: 8px !important;
-}
 
-.session-controls .btn-group-horizontal .btn {
-  flex: 1 !important;
-  min-width: 80px !important;
-  padding: 6px 10px !important;
-  font-size: 0.85rem !important;
-}
-/* web/css/fullwidth-fix.css */
-/* ✅ CORRECCIONES CON PADDING MÍNIMO */
-
-/* Reset global */
-* {
-  box-sizing: border-box !important;
-}
-
-/* Body y HTML al 100% del viewport */
-html, body {
-  width: 100vw !important;
-  max-width: 100vw !important;
-  min-width: 100vw !important;
-  overflow-x: hidden !important;
-  margin: 0 !important;
-  padding: 0 !important;
-  position: relative !important;
-}
-
-/* ✅ PADDING MÍNIMO GLOBAL: 1vh máximo */
-body {
-  --min-padding: max(1vh, 10px);
-}
-
-/* Navbar de ancho completo */
-.navbar-contextual {
-  width: 100vw !important;
-  max-width: 100vw !important;
-  min-width: 100vw !important;
-  position: fixed !important;
-  top: 0 !important;
-  left: 0 !important;
-  right: 0 !important;
-  margin: 0 !important;
-  padding: 0 !important;
-  z-index: 1030 !important;
-}
-
-/* ✅ AJUSTE PARA DESKTOP CON SIDEBAR - PADDING MÍNIMO */
-@media (min-width: 992px) {
-  .main-content-wrapper {
-      padding-left: var(--min-padding) !important;
-      width: 100vw !important;
-      transition: padding-left 0.3s ease !important;
-  }
-  
-  /* Sidebar fijo con ancho mínimo */
-  .ged-offcanvas-sidebar {
-      width: var(--min-padding) !important;
-      position: fixed !important;
-      left: 0 !important;
-      z-index: 1029 !important;
-      max-width: 220px !important; /* Máximo permitido */
-  }
-  
-  body.sidebar-compact .ged-offcanvas-sidebar {
-      width: calc(var(--min-padding) * 0.5) !important;
-      max-width: 50px !important;
-  }
-  
-  /* Navbar con ajuste para sidebar */
-  .navbar-contextual {
-      padding-left: var(--min-padding) !important;
-      width: 100vw !important;
-      transition: padding-left 0.3s ease !important;
-  }
-  
-  body.sidebar-compact .navbar-contextual {
-      padding-left: calc(var(--min-padding) * 0.5) !important;
-  }
-}
-
-/* ✅ CORRECCIÓN PARA MÓVIL */
-@media (max-width: 991.98px) {
-  .navbar-contextual {
-      padding-left: 0 !important;
-      width: 100vw !important;
-  }
-  
-  .main-content-wrapper {
-      padding-left: 0 !important;
-      width: 100vw !important;
-  }
-  
-  /* Sidebar oculto por defecto en móvil */
-  .ged-offcanvas-sidebar {
-      transform: translateX(-100%) !important;
-  }
-  
-  .ged-offcanvas-sidebar.open {
-      transform: translateX(0) !important;
-  }
-}
-
-/* ✅ ELIMINAR PADDING EXCESIVO DE CONTENEDORES */
-.container-fluid {
-  padding-left: var(--min-padding) !important;
-  padding-right: var(--min-padding) !important;
-}
-
-/* ✅ CONTENIDO PRINCIPAL SIN MÁRGENES EXCESIVOS */
-.ged-main-content,
-.main-container,
-.container {
-  padding-left: var(--min-padding) !important;
-  padding-right: var(--min-padding) !important;
-}
-
-/* ✅ PREVENIR DESBORDAMIENTO EN PANTALLAS PEQUEÑAS */
-@media (max-width: 576px) {
-  body {
-      --min-padding: 5px;
-  }
-  
-  .container-fluid {
-      padding-left: 5px !important;
-      padding-right: 5px !important;
-  }
-}
-
-/* ✅ CORRECCIÓN PARA LANDING PAGE */
-.landing-page .container,
-.landing-page .container-fluid {
-  padding-left: var(--min-padding) !important;
-  padding-right: var(--min-padding) !important;
-}
-
-/* ✅ PADDING CONSISTENTE PARA TODOS LOS ELEMENTOS */
-section, 
-.section,
-.content-section,
-.main-section {
-  padding-left: var(--min-padding) !important;
-  padding-right: var(--min-padding) !important;
-}
+/* ===== FIN DE GED.CSS OPTIMIZADO ===== */

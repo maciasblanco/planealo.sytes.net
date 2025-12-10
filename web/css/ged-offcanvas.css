@@ -1,4 +1,4 @@
-/* web/css/ged-offcanvas.css - VERSIÓN CON PADDING REDUCIDO Y CORREGIDO */
+/* web/css/ged-offcanvas.css - VERSIÓN SIN ESPACIO EXCESIVO */
 
 /* ===== OFF-CANVAS UNIFICADO ===== */
 .ged-offcanvas-wrapper {
@@ -6,127 +6,47 @@
   z-index: var(--z-index-offcanvas);
 }
 
-/* ✅ OFF-CANVAS PARA PC (SIDEBAR FIXED) - PADDING REDUCIDO */
+/* ✅ ELIMINAR SIDEBAR FIXED Y PADDING EXCESIVO EN PC */
 @media (min-width: 992px) {
+  /* ❌ COMPLETAMENTE ELIMINADO EL SIDEBAR FIXED */
   .ged-offcanvas-sidebar {
-      position: fixed;
-      top: var(--navbar-height-desktop);
-      left: 0;
-      width: 220px; /* Reducido de 280px */
-      height: calc(100vh - var(--navbar-height-desktop));
-      background: linear-gradient(135deg, #2c3e50, #34495e);
-      color: white;
-      z-index: var(--z-index-offcanvas);
-      box-shadow: 2px 0 10px rgba(0,0,0,0.2);
-      transform: translateX(0) !important;
-      visibility: visible !important;
-      overflow-y: auto;
-      transition: width 0.3s ease;
-      scrollbar-width: thin;
-      scrollbar-color: #3498db #2c3e50;
+      display: none !important; /* No mostrar sidebar fijo en desktop */
   }
   
-  /* Custom scrollbar */
-  .ged-offcanvas-sidebar::-webkit-scrollbar {
-      width: 6px;
-  }
-  
-  .ged-offcanvas-sidebar::-webkit-scrollbar-track {
-      background: #2c3e50;
-  }
-  
-  .ged-offcanvas-sidebar::-webkit-scrollbar-thumb {
-      background: #3498db;
-      border-radius: 3px;
-  }
-  
-  /* Compact mode - REDUCIDO */
-  .ged-offcanvas-sidebar.compact {
-      width: 50px; /* Reducido de 70px */
-  }
-  
-  .ged-offcanvas-sidebar.compact .menu-text {
-      display: none;
-  }
-  
-  .ged-offcanvas-sidebar.compact .submenu-indicator {
-      display: none !important;
-  }
-  
-  .ged-offcanvas-sidebar.compact .menu-link {
-      justify-content: center;
-      padding: 10px !important; /* Reducido */
-  }
-  
-  .ged-offcanvas-sidebar.compact .menu-icon {
-      margin-right: 0 !important;
-      font-size: 0.9rem; /* Reducido */
-  }
-  
-  /* ✅ PADDING DEL BODY REDUCIDO */
+  /* ✅ RESET COMPLETO DE PADDINGS IZQUIERDOS */
   body {
-      padding-left: 220px !important; /* Reducido de 280px */
+      padding-left: 0 !important;
+      padding-right: 0 !important;
       width: 100vw !important;
   }
   
-  body.sidebar-compact {
-      padding-left: 50px !important; /* Reducido de 70px */
-  }
-  
-  /* ✅ NAVBAR CON PADDING CONSISTENTE - CORREGIDO */
+  /* ✅ NAVBAR COMPLETAMENTE PEGADO A LA IZQUIERDA */
   .navbar-contextual {
-      padding-left: 220px !important;
-      transition: padding-left 0.3s ease;
+      left: 0 !important;
+      padding-left: 0 !important;
+      margin-left: 0 !important;
   }
   
-  body.sidebar-compact .navbar-contextual {
-      padding-left: 50px !important;
+  /* ✅ MAIN CONTENT SIN MARGEN IZQUIERDO */
+  .main-content-wrapper {
+      padding-left: 0 !important;
+      margin-left: 0 !important;
   }
   
-  /* ✅ Toggler para PC - AJUSTADO */
+  /* ✅ TOGGLER PARA PC - ELIMINADO */
   .sidebar-toggler-pc {
-      position: fixed;
-      bottom: 15px; /* Reducido */
-      left: 15px; /* Reducido */
-      z-index: calc(var(--z-index-offcanvas) + 1);
-      width: 35px; /* Reducido */
-      height: 35px; /* Reducido */
-      border-radius: 50%;
-      background: #3498db;
-      color: white;
-      border: none;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.2); /* Reducido */
-      transition: all 0.3s ease;
-      font-size: 0.9rem; /* Reducido */
-  }
-  
-  .sidebar-toggler-pc:hover {
-      transform: scale(1.1);
-      box-shadow: 0 3px 12px rgba(52, 152, 219, 0.4); /* Reducido */
-  }
-  
-  .sidebar-toggler-pc i {
-      transition: transform 0.3s ease;
-      font-size: 0.9rem; /* Reducido */
-  }
-  
-  .ged-offcanvas-sidebar.compact + .sidebar-toggler-pc i {
-      transform: rotate(180deg);
+      display: none !important;
   }
 }
 
-/* ✅ OFF-CANVAS PARA MÓVIL (MODAL) - SIN CAMBIOS */
+/* ✅ OFF-CANVAS PARA MÓVIL (MODAL) - SOLO EN MÓVIL */
 @media (max-width: 991.98px) {
   .ged-offcanvas-sidebar {
       position: fixed;
       top: var(--navbar-height-tablet);
       left: -100%;
       width: 85%;
-      max-width: 300px; /* Reducido de 320px */
+      max-width: 300px;
       height: calc(100vh - var(--navbar-height-tablet));
       background: linear-gradient(135deg, #2c3e50, #34495e);
       color: white;
@@ -159,23 +79,11 @@
       opacity: 1;
       visibility: visible;
   }
-  
-  /* ✅ Body sin padding en móvil */
-  body {
-      padding-left: 0 !important;
-      width: 100vw !important;
-  }
-  
-  /* ✅ Navbar sin padding lateral especial en móvil */
-  .navbar-contextual {
-      padding-left: 0 !important;
-      padding-right: 0 !important;
-  }
 }
 
 /* ===== ESTILOS COMUNES DEL MENÚ OFF-CANVAS ===== */
 .offcanvas-menu {
-  padding: 0.5rem 0; /* Reducido */
+  padding: 0.5rem 0;
   margin: 0;
   list-style: none;
 }
@@ -192,12 +100,12 @@
 .menu-link {
   display: flex;
   align-items: center;
-  padding: 10px 15px !important; /* Reducido */
+  padding: 10px 15px !important;
   color: rgba(255,255,255,0.9) !important;
   text-decoration: none !important;
   transition: all 0.3s ease;
   position: relative;
-  font-size: 0.9rem; /* Reducido */
+  font-size: 0.9rem;
   border-radius: 0 !important;
   white-space: nowrap;
   overflow: hidden;
@@ -208,15 +116,15 @@
 .menu-link.active {
   background: rgba(255,255,255,0.1);
   color: white !important;
-  padding-left: 20px !important; /* Reducido */
+  padding-left: 20px !important;
 }
 
-/* Iconos - REDUCIDOS */
+/* Iconos */
 .menu-icon {
-  width: 18px; /* Reducido */
-  margin-right: 8px; /* Reducido */
+  width: 18px;
+  margin-right: 8px;
   text-align: center;
-  font-size: 0.9rem; /* Reducido */
+  font-size: 0.9rem;
   flex-shrink: 0;
 }
 
@@ -224,14 +132,14 @@
   flex-grow: 1;
   overflow: hidden;
   text-overflow: ellipsis;
-  font-size: 0.9rem; /* Reducido */
+  font-size: 0.9rem;
 }
 
-/* ✅ INDICADOR DE SUBMENÚ - REDUCIDO */
+/* ✅ INDICADOR DE SUBMENÚ */
 .submenu-indicator {
   margin-left: auto;
   transition: transform 0.3s ease;
-  font-size: 0.7rem; /* Reducido */
+  font-size: 0.7rem;
   opacity: 0.7;
 }
 
@@ -239,54 +147,43 @@
   transform: rotate(90deg);
 }
 
-/* ✅ SUBMENÚS - REDUCIDOS */
+/* ✅ SUBMENÚS */
 .offcanvas-menu .offcanvas-menu {
   background: rgba(0,0,0,0.2);
   padding: 0;
   margin: 0;
-  border-left: 2px solid #3498db; /* Reducido */
+  border-left: 2px solid #3498db;
 }
 
 .offcanvas-menu .offcanvas-menu .menu-link {
-  padding-left: 30px !important; /* Reducido */
-  font-size: 0.85rem; /* Reducido */
+  padding-left: 30px !important;
+  font-size: 0.85rem;
 }
 
 .offcanvas-menu .offcanvas-menu .menu-link:hover {
-  padding-left: 35px !important; /* Reducido */
+  padding-left: 35px !important;
 }
 
 .offcanvas-menu .offcanvas-menu .offcanvas-menu .menu-link {
-  padding-left: 45px !important; /* Reducido */
-  font-size: 0.8rem; /* Reducido */
+  padding-left: 45px !important;
+  font-size: 0.8rem;
 }
 
 .offcanvas-menu .offcanvas-menu .offcanvas-menu .menu-link:hover {
-  padding-left: 50px !important; /* Reducido */
+  padding-left: 50px !important;
 }
 
-/* ✅ CONTENIDO PRINCIPAL - PADDING REDUCIDO */
+/* ✅ CONTENIDO PRINCIPAL - SIN PADDING LATERAL */
 .main-content-wrapper {
   width: 100vw !important;
   max-width: 100vw !important;
-  transition: padding-left 0.3s ease !important;
+  padding-left: 0 !important;
+  margin-left: 0 !important;
 }
 
-@media (min-width: 992px) {
-  .main-content-wrapper {
-      padding-left: 220px !important; /* Reducido de 280px */
-      margin-left: 0 !important;
-  }
-  
-  body.sidebar-compact .main-content-wrapper {
-      padding-left: 50px !important; /* Reducido de 70px */
-      margin-left: 0 !important;
-  }
-}
-
-/* Header del offcanvas - REDUCIDO */
+/* Header del offcanvas */
 .offcanvas-header {
-  padding: 1rem; /* Reducido */
+  padding: 1rem;
   border-bottom: 1px solid rgba(255,255,255,0.1);
   background: rgba(0,0,0,0.2);
   display: flex;
@@ -298,23 +195,23 @@
   color: white;
   font-weight: 600;
   margin: 0;
-  font-size: 1rem; /* Reducido */
+  font-size: 1rem;
 }
 
 .close-offcanvas {
   background: none;
   border: none;
   color: white;
-  font-size: 1rem; /* Reducido */
+  font-size: 1rem;
   cursor: pointer;
-  padding: 0.4rem; /* Reducido */
+  padding: 0.4rem;
   border-radius: 4px;
   transition: background 0.2s ease;
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 32px; /* Reducido */
-  height: 32px; /* Reducido */
+  width: 32px;
+  height: 32px;
 }
 
 .close-offcanvas:hover {
@@ -324,5 +221,137 @@
 /* Estado activo para menú */
 .menu-link.active {
   background: linear-gradient(90deg, rgba(52, 152, 219, 0.3), transparent);
-  border-left: 2px solid #3498db; /* Reducido */
+  border-left: 2px solid #3498db;
 }
+
+/* ===== CORRECCIÓN DE EMERGENCIA PARA NAVBAR Y BODY ===== */
+
+/* ✅ GLOBAL: RESET DE PADDING/MARGIN PARA TODO */
+*[style*="padding-left"],
+*[style*="margin-left"] {
+  max-width: 100vw !important;
+}
+
+/* ✅ EN PC: FORZAR PADDING MÁXIMO DE 1.5vh */
+@media (min-width: 992px) {
+  :root {
+    --max-side-padding: max(1.5vh, 15px);
+  }
+  
+  /* Body con padding mínimo */
+  body {
+    padding-left: var(--max-side-padding) !important;
+    padding-right: var(--max-side-padding) !important;
+    padding-top: var(--navbar-height-desktop) !important; /* Mantener padding-top para navbar */
+  }
+  
+  /* Navbar con padding consistente */
+  .navbar-contextual {
+    padding-left: var(--max-side-padding) !important;
+    padding-right: var(--max-side-padding) !important;
+    left: 0 !important;
+    margin-left: 0 !important;
+  }
+  
+  /* Main content con padding consistente */
+  .main-content-wrapper,
+  .ged-main-content,
+  .main-container,
+  main#main {
+    padding-left: var(--max-side-padding) !important;
+    padding-right: var(--max-side-padding) !important;
+  }
+  
+  /* Carousel sin margin adicional */
+  .carousel-hero {
+    margin-top: 0 !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
+}
+
+/* ✅ EN MÓVIL: RESET COMPLETO */
+@media (max-width: 991.98px) {
+  :root {
+    --max-side-padding: max(1vh, 10px);
+  }
+  
+  body {
+    padding-left: var(--max-side-padding) !important;
+    padding-right: var(--max-side-padding) !important;
+    padding-top: var(--navbar-height-tablet) !important;
+  }
+  
+  .navbar-contextual {
+    padding-left: var(--max-side-padding) !important;
+    padding-right: var(--max-side-padding) !important;
+  }
+  
+  .main-content-wrapper,
+  .ged-main-content,
+  .main-container {
+    padding-left: var(--max-side-padding) !important;
+    padding-right: var(--max-side-padding) !important;
+  }
+}
+
+/* ===== SOLUCIÓN ESPECÍFICA PARA EL CARRUSEL ===== */
+/* Esto asegura que el carrusel no pierda contenido debajo del navbar */
+
+.carousel-hero {
+  position: relative;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+@media (min-width: 992px) {
+  .carousel-hero {
+    margin-top: 0;
+    padding-top: 0;
+  }
+  
+  /* Ajuste específico para el carousel-inner */
+  .carousel-hero .carousel-inner {
+    margin-top: 0;
+    padding-top: 0;
+  }
+  
+  /* Asegurar que las imágenes del carrusel sean visibles */
+  .carousel-hero .carousel-item {
+    height: auto;
+    min-height: 400px;
+  }
+  
+  /* Ajustar caption para que no quede debajo del navbar */
+  .carousel-hero .carousel-caption {
+    top: 50%;
+    transform: translateY(-50%);
+    bottom: auto;
+  }
+}
+
+@media (max-width: 991.98px) {
+  .carousel-hero {
+    margin-top: 0;
+    padding-top: 0;
+  }
+}
+
+/* ===== VERIFICACIÓN VISUAL - DEBUG (puedes eliminar después) ===== */
+/*
+.navbar-contextual {
+  background-color: rgba(255, 0, 0, 0.3) !important;
+  outline: 2px solid red !important;
+}
+
+body {
+  background-color: rgba(0, 255, 0, 0.1) !important;
+  outline: 2px solid green !important;
+}
+
+.main-content-wrapper {
+  background-color: rgba(0, 0, 255, 0.1) !important;
+  outline: 2px solid blue !important;
+}
+*/
