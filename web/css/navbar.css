@@ -8,7 +8,8 @@
   --primary-color: #6c3483;
   --text-color-light: #ffffff;
   --bg-dark: #343a40;
-  --min-padding: max(1vh, 10px); /* PADDING MÁXIMO 1vh */
+  --min-padding: max(1.5vh, 15px); /* Aumentar a 15px mínimo */
+
 }
 
 /* ✅ NAVBAR PRINCIPAL - PADDING MÍNIMO */
@@ -274,5 +275,6 @@
   
   .navbar-brand-section {
     min-width: 100px !important; /* Reducido */
+    padding: 8px var(--min-padding) !important; /* Horizontal también */
   }
 }
