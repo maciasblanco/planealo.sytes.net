@@ -56,7 +56,7 @@ class MenuWidget extends Widget
     }
 
     /**
-     * ✅ OBTENER ITEMS DEL MENÚ - CORREGIDO PARA POSTGRESQL
+     * ✅ OBTENER ITEMS DEL MENÚ - CORREGIDO PARA USUARIOS INVITADOS
      */
     protected function getMenuItems($parentId = null)
     {
@@ -96,32 +96,59 @@ class MenuWidget extends Widget
         foreach ($items as $item) {
             echo '<!-- Procesando item: ID=' . $item['id'] . ', Nombre=' . $item['name'] . ', Ruta=' . ($item['route'] ?: 'null') . ' -->' . "\n";
             
-            // ✅ VERIFICAR SI ES UN MENÚ PÚBLICO (MARKETPLACE)
-            $isPublic = $this->isPublicMenuItem($item);
+            $route = $item['route'] ?? '';
             
-            if ($isPublic) {
-                echo '<!-- Item es PÚBLICO -->' . "\n";
-                $childItems = $this->getMenuItems($item['id']);
-                
-                $menuItem = [
-                    'id' => $item['id'],
-                    'label' => $item['name'],
-                    'url' => $item['route'] ? [$item['route']] : '#',
-                    'items' => $childItems,
-                    'visible' => true
-                ];
-
-                $menuItems[] = $menuItem;
-                continue;
+            // ✅ NUEVA LÓGICA: PRIMERO VERIFICAR SI ES RUTA PÚBLICA (PARA TODOS LOS USUARIOS)
+            if (!empty($route) && $route !== '#') {
+                if ($this->isPublicRoute($route)) {
+                    echo '<!-- Item es PÚBLICO por ruta -->' . "\n";
+                    $childItems = $this->getMenuItems($item['id']);
+                    
+                    $menuItem = [
+                        'id' => $item['id'],
+                        'label' => $item['name'],
+                        'url' => [$route],
+                        'items' => $childItems,
+                        'visible' => true,
+                        'route' => $route
+                    ];
+                    
+                    $menuItems[] = $menuItem;
+                    continue;
+                }
             }
             
-            // ✅ PARA USUARIOS NO REGISTRADOS, SOLO MOSTRAR MENÚS PÚBLICOS
+            // ✅ SI LLEGA AQUÍ, LA RUTA NO ES PÚBLICA O ES UN CONTENEDOR
+            // PARA USUARIOS GUEST, MOSTRAR SOLO SI ES CONTENEDOR CON HIJOS PÚBLICOS
             if (Yii::$app->user->isGuest) {
-                echo '<!-- Usuario es guest, omitiendo item no público -->' . "\n";
+                if (empty($route) || $route === '#') {
+                    echo '<!-- Guest: Es contenedor, verificar hijos -->' . "\n";
+                    $childItems = $this->getMenuItems($item['id']);
+                    // Solo mostrar contenedores que tengan al menos un hijo público
+                    $hasPublicChild = false;
+                    foreach ($childItems as $child) {
+                        if (!empty($child['route']) && $this->isPublicRoute($child['route'])) {
+                            $hasPublicChild = true;
+                            break;
+                        }
+                    }
+                    
+                    if ($hasPublicChild || !empty($childItems)) {
+                        $menuItem = [
+                            'id' => $item['id'],
+                            'label' => $item['name'],
+                            'url' => '#',
+                            'items' => $childItems,
+                            'visible' => true,
+                            'route' => $route
+                        ];
+                        $menuItems[] = $menuItem;
+                    }
+                }
                 continue;
             }
             
-            // ✅ VERIFICAR PERMISOS RBAC PARA MENÚS NO PÚBLICOS (solo usuarios logueados)
+            // ✅ PARA USUARIOS AUTENTICADOS: VERIFICAR PERMISOS RBAC
             $hasPermission = $this->checkMenuItemPermission($item);
             
             if (!$hasPermission) {
@@ -136,7 +163,8 @@ class MenuWidget extends Widget
                 'label' => $item['name'],
                 'url' => $item['route'] ? [$item['route']] : '#',
                 'items' => $childItems,
-                'visible' => true
+                'visible' => true,
+                'route' => $route
             ];
 
             $menuItems[] = $menuItem;
@@ -146,82 +174,35 @@ class MenuWidget extends Widget
     }
 
     /**
-     * ✅ VERIFICAR SI UN ITEM DEL MENÚ ES PÚBLICO - MEJORADO
-     */
-    protected function isPublicMenuItem($item)
-    {
-        // IDs de menús públicos conocidos
-        $publicMenuIds = [177];
-        
-        if (isset($item['id']) && in_array($item['id'], $publicMenuIds)) {
-            return true;
-        }
-        
-        // Verificar por nombre o ruta
-        $itemName = strtolower($item['name'] ?? '');
-        $itemRoute = $item['route'] ?? '';
-        
-        echo '<!-- isPublicMenuItem: Nombre="' . $itemName . '", Ruta="' . $itemRoute . '" -->' . "\n";
-        
-        // Si el nombre contiene palabras clave de marketplace
-        $marketplaceKeywords = ['market', 'tienda', 'comercio', 'shop', 'store', 'marketplace'];
-        foreach ($marketplaceKeywords as $keyword) {
-            if (strpos($itemName, $keyword) !== false) {
-                echo '<!-- Encontrada palabra clave marketplace: ' . $keyword . ' -->' . "\n";
-                return true;
-            }
-        }
-        
-        // Si la ruta pertenece al módulo tienda o marketplace
-        $publicRoutePatterns = ['tienda/', 'marketplace', 'shop/', 'store/', 'tienda/default', 'tienda/marketplace'];
-        foreach ($publicRoutePatterns as $pattern) {
-            if (strpos($itemRoute, $pattern) === 0 || strpos($itemRoute, $pattern) !== false) {
-                echo '<!-- Ruta pública detectada por patrón: ' . $pattern . ' -->' . "\n";
-                return true;
-            }
-        }
-        
-        // Verificar si la ruta es pública usando el método isPublicRoute
-        if (!empty($itemRoute) && $itemRoute !== '#' && $this->isPublicRoute($itemRoute)) {
-            echo '<!-- Ruta marcada como pública en isPublicRoute -->' . "\n";
-            return true;
-        }
-        
-        return false;
-    }
-
-    /**
-     * ✅ VERIFICAR PERMISOS RBAC - SIMPLIFICADO
+     * ✅ VERIFICAR PERMISOS RBAC - CORREGIDO PARA USUARIOS INVITADOS
      */
     protected function checkMenuItemPermission($item)
     {
-        // ✅ PRIMERO VERIFICAR SI ES UN MENÚ PÚBLICO
-        if ($this->isPublicMenuItem($item)) {
-            echo '<!-- checkMenuItemPermission: Item es público -->' . "\n";
-            return true;
+        $route = $item['route'] ?? '';
+        
+        // ✅ MODIFICACIÓN: SI ES GUEST Y LA RUTA ES PÚBLICA, PERMITIR
+        if (Yii::$app->user->isGuest) {
+            if (!empty($route) && $route !== '#' && $this->isPublicRoute($route)) {
+                echo '<!-- checkMenuItemPermission: Guest, ruta pública permitida -->' . "\n";
+                return true;
+            }
+            echo '<!-- checkMenuItemPermission: Usuario guest, ruta no pública -->' . "\n";
+            return false;
         }
         
         // Si no hay ruta definida, es un contenedor
-        if (empty($item['route']) || $item['route'] == '#') {
+        if (empty($route) || $route == '#') {
             echo '<!-- checkMenuItemPermission: Es contenedor sin ruta -->' . "\n";
             return true;
         }
 
         try {
-            $route = $item['route'];
-            
-            // ✅ VERIFICAR RUTAS PÚBLICAS
+            // ✅ VERIFICAR RUTAS PÚBLICAS (también para usuarios autenticados)
             if ($this->isPublicRoute($route)) {
                 echo '<!-- checkMenuItemPermission: Ruta pública -->' . "\n";
                 return true;
             }
             
-            // ✅ SI ES USUARIO GUEST, NO PUEDE ACCEDER A RUTAS NO PÚBLICAS
-            if (Yii::$app->user->isGuest) {
-                echo '<!-- checkMenuItemPermission: Usuario guest, ruta no pública -->' . "\n";
-                return false;
-            }
-
             // ✅ VERIFICAR PERMISO CON RBAC
             if (Yii::$app->user->can($route)) {
                 echo '<!-- checkMenuItemPermission: Tiene permiso RBAC -->' . "\n";
@@ -265,11 +246,12 @@ class MenuWidget extends Widget
     }
 
     /**
-     * ✅ VERIFICAR SI UNA RUTA ES PÚBLICA - EXPANDIDO
+     * ✅ VERIFICAR SI UNA RUTA ES PÚBLICA - EXPANDIDO PARA USUARIOS INVITADOS
      */
     protected function isPublicRoute($route)
     {
         $publicRoutes = [
+            // ✅ SITIO PÚBLICO
             'site/index',
             'site/login',
             'site/logout',
@@ -279,13 +261,12 @@ class MenuWidget extends Widget
             'site/signup',
             'site/request-password-reset',
             'site/reset-password',
-            'admin/user/signup',
-            'admin/user/request-password-reset', 
-            'admin/user/reset-password',
-            'ged/*',
+            'site/cambiar-password',
+            'site/mi-cuenta',
+            'site/acceder-sistema',
             'site/*',
             
-            // ✅ TODAS LAS RUTAS DEL MARKETPLACE Y TIENDA
+            // ✅ MARKETPLACE Y TIENDA (PÚBLICO)
             'tienda/*',
             'tienda/marketplace/*',
             'tienda/marketplace/index',
@@ -303,26 +284,83 @@ class MenuWidget extends Widget
             'shop/*',
             'store/*',
             
-            // Otras rutas públicas
+            // ✅ GED - RUTAS PÚBLICAS (VISUALIZACIÓN)
+            'ged/default/index',
+            'ged/escuela/*',
+            'ged/escuela/ver',
+            'ged/escuela/listar',
+            'ged/escuela/buscar',
+            'ged/deporte/*',
+            'ged/deporte/ver',
+            'ged/deporte/listar',
+            'ged/categoria/*',
+            'ged/categoria/ver',
+            'ged/*',
+            
+            // ✅ ADMIN - RUTAS PÚBLICAS DE USUARIO
+            'admin/user/signup',
+            'admin/user/request-password-reset', 
+            'admin/user/reset-password',
+            
+            // ✅ API Y CONSULTAS PÚBLICAS
             'municipio/get-by-edo',
             'parroquia/get-by-muni',
             'parroquia/get-by-muni-cod',
+            'api/*',
+            
+            // ✅ PÁGINAS DE INFORMACIÓN
+            'informacion/*',
+            'catalogo/*',
+            'galeria/*',
+            'noticia/*',
+            'evento/*',
+            
+            // ✅ RUTAS ESPECÍFICAS PARA INVITADOS
+            'escuela/ver',
+            'escuela/listar',
+            'deporte/ver',
+            'deporte/listar',
+            'categoria/ver',
+            'categoria/listar',
+            'horario/ver',
+            'horario/listar',
         ];
 
+        // Verificación exacta
         if (in_array($route, $publicRoutes)) {
+            echo '<!-- isPublicRoute: Ruta exacta encontrada en lista pública -->' . "\n";
             return true;
         }
 
+        // Verificación por patrón con comodines
         foreach ($publicRoutes as $publicRoute) {
             if (strpos($publicRoute, '*') !== false) {
                 $pattern = preg_quote($publicRoute, '/');
                 $pattern = str_replace('\*', '.*', $pattern);
-                if (preg_match('/^' . $pattern . '$/', $route)) {
+                $pattern = '/^' . $pattern . '$/';
+                
+                if (preg_match($pattern, $route)) {
+                    echo '<!-- isPublicRoute: Coincide con patrón: ' . $publicRoute . ' -->' . "\n";
                     return true;
                 }
             }
         }
 
+        // Verificación por palabras clave públicas
+        $publicKeywords = [
+            'ver', 'listar', 'buscar', 'index', 'catalogo', 'galeria',
+            'informacion', 'noticia', 'evento', 'publico', 'marketplace'
+        ];
+        
+        $routeLower = strtolower($route);
+        foreach ($publicKeywords as $keyword) {
+            if (strpos($routeLower, $keyword) !== false) {
+                echo '<!-- isPublicRoute: Contiene palabra clave pública: ' . $keyword . ' -->' . "\n";
+                return true;
+            }
+        }
+
+        echo '<!-- isPublicRoute: Ruta NO es pública: ' . $route . ' -->' . "\n";
         return false;
     }
 
@@ -468,6 +506,14 @@ class MenuWidget extends Widget
             'payment' => 'fa-credit-card',
             'finanza' => 'fa-money-bill-wave',
             'finance' => 'fa-money-bill-wave',
+            'categoria' => 'fa-tags',
+            'categoría' => 'fa-tags',
+            'informacion' => 'fa-info-circle',
+            'información' => 'fa-info-circle',
+            'noticia' => 'fa-newspaper',
+            'evento' => 'fa-calendar-check',
+            'galeria' => 'fa-images',
+            'galería' => 'fa-images',
         ];
         
         $itemName = strtolower($item['label'] ?? '');
@@ -515,12 +561,39 @@ class MenuWidget extends Widget
                 </a>
             </li>';
             
+        // ✅ MOSTRAR MÁS OPCIONES PÚBLICAS EN FALLBACK
+        $html .= '
+            <li class="nav-item">
+                <a class="nav-link menu-link" href="' . Url::to(['/ged/escuela/listar']) . '">
+                    <i class="fas fa-fw fa-school"></i>
+                    <span class="menu-text">Escuelas</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link menu-link" href="' . Url::to(['/ged/deporte/listar']) . '">
+                    <i class="fas fa-fw fa-running"></i>
+                    <span class="menu-text">Deportes</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link menu-link" href="' . Url::to(['/site/about']) . '">
+                    <i class="fas fa-fw fa-info-circle"></i>
+                    <span class="menu-text">Acerca de</span>
+                </a>
+            </li>';
+            
         if (Yii::$app->user->isGuest) {
             $html .= '
             <li class="nav-item">
                 <a class="nav-link menu-link" href="' . Url::to(['/site/login']) . '">
                     <i class="fas fa-fw fa-sign-in-alt"></i>
                     <span class="menu-text">Iniciar Sesión</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link menu-link" href="' . Url::to(['/site/signup']) . '">
+                    <i class="fas fa-fw fa-user-plus"></i>
+                    <span class="menu-text">Registrarse</span>
                 </a>
             </li>';
         } else {

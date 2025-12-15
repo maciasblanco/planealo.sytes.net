@@ -19,103 +19,91 @@ if ($currentRoute === 'site/login' && $isUserAuthenticated) {
 // ✅ URL BASE PARA MARKETPLACE - VERIFICAR QUE EXISTA
 $marketplaceUrl = Yii::$app->urlManager->createUrl(['/tienda/marketplace/index']);
 $hasMarketplace = true; // Asumir que existe, se puede verificar mejor
-
-// ✅ MENÚ MARKETPLACE - SOLO MOSTRAR SI EXISTE EL MÓDULO
-try {
-    $testMenu = \app\components\MenuWidget::widget([
-        'parentId' => 177,
-        'options' => ['class' => 'nav justify-content-center marketplace-nav']
-    ]);
-    $showMarketplaceMenu = !empty($testMenu);
-} catch (\Exception $e) {
-    $showMarketplaceMenu = false;
-    Yii::warning('MenuWidget error: ' . $e->getMessage());
-}
 ?>
 
 <div class="site-index landing-page">
-    <!-- Carrusel Hero -->
+    <!-- Carrusel Hero - VERSIÓN CORREGIDA -->
     <section id="hero-carousel" class="carousel-hero">
-        <div id="carouselHero" class="carousel slide" data-bs-ride="carousel">
+        <div id="carouselHero" class="carousel slide carousel-hero-container" data-bs-ride="carousel">
             <div class="carousel-indicators">
-                <button type="button" data-bs-target="#carouselHero" data-bs-slide-to="0" class="active"></button>
-                <button type="button" data-bs-target="#carouselHero" data-bs-slide-to="1"></button>
-                <button type="button" data-bs-target="#carouselHero" data-bs-slide-to="2"></button>
+                <button type="button" data-bs-target="#carouselHero" data-bs-slide-to="0" class="active" 
+                        aria-current="true" aria-label="Slide 1"></button>
+                <button type="button" data-bs-target="#carouselHero" data-bs-slide-to="1" 
+                        aria-label="Slide 2"></button>
+                <button type="button" data-bs-target="#carouselHero" data-bs-slide-to="2" 
+                        aria-label="Slide 3"></button>
             </div>
             
             <div class="carousel-inner">
                 <div class="carousel-item active">
+                    <!-- Imagen con clases corregidas y atributos de accesibilidad -->
                     <img src="<?= Yii::getAlias('@web') ?>/img/Carrusel/slide1.jpg" 
-                         alt="Gestión Escuelas Deportivas"
-                         onerror="this.src='https://images.unsplash.com/photo-1552674605-db6ffd8facb5?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80'">
-                    <div class="carousel-caption d-none d-md-block">
+                         class="d-block w-100 img-fluid carousel-hero-img"
+                         alt="Gestión Escuelas Deportivas - Sistema GED"
+                         title="Sistema de Gestión para Escuelas Deportivas"
+                         loading="eager"
+                         onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1552674605-db6ffd8facb5?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80';">
+                    <div class="carousel-caption carousel-hero-caption">
                         <h2 class="display-4">Sistema GED</h2>
                         <p class="lead">Gestión integral de escuelas deportivas</p>
-                        <a href="#productos-mas-vendidos" class="btn btn-primary btn-lg mt-3">Ver Productos</a>
+                        <a href="#productos-mas-vendidos" class="btn btn-primary btn-lg mt-3">
+                            Ver Productos
+                        </a>
                     </div>
                 </div>
                 
                 <div class="carousel-item">
                     <img src="<?= Yii::getAlias('@web') ?>/img/Carrusel/slide2.png" 
-                         alt="Marketplace Deportivo"
-                         onerror="this.src='https://images.unsplash.com/photo-1519861531473-920034658307?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80'">
-                    <div class="carousel-caption d-none d-md-block">
+                         class="d-block w-100 img-fluid carousel-hero-img"
+                         alt="Marketplace Deportivo - Productos para atletas"
+                         title="Marketplace Deportivo con los mejores productos"
+                         loading="lazy"
+                         onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1519861531473-920034658307?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80';">
+                    <div class="carousel-caption carousel-hero-caption">
                         <h2 class="display-4">Marketplace Deportivo</h2>
                         <p class="lead">Los mejores productos para atletas</p>
-                        <a href="#tiendas-patrocinadas" class="btn btn-success btn-lg mt-3">Tiendas Destacadas</a>
+                        <a href="#tiendas-patrocinadas" class="btn btn-success btn-lg mt-3">
+                            Tiendas Destacadas
+                        </a>
                     </div>
                 </div>
                 
                 <div class="carousel-item">
                     <img src="<?= Yii::getAlias('@web') ?>/img/Carrusel/slide3.png" 
-                         alt="Productos Más Vendidos"
-                         onerror="this.src='https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80'">
-                    <div class="carousel-caption d-none d-md-block">
+                         class="d-block w-100 img-fluid carousel-hero-img"
+                         alt="Productos Destacados - Lo más vendido"
+                         title="Productos más vendidos en nuestra comunidad"
+                         loading="lazy"
+                         onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80';">
+                    <div class="carousel-caption carousel-hero-caption">
                         <h2 class="display-4">Productos Destacados</h2>
                         <p class="lead">Lo más vendido en nuestra comunidad</p>
-                        <a href="#productos-mas-vendidos" class="btn btn-warning btn-lg mt-3">Más Vendidos</a>
+                        <a href="#productos-mas-vendidos" class="btn btn-warning btn-lg mt-3">
+                            Más Vendidos
+                        </a>
                     </div>
                 </div>
             </div>
             
-            <button class="carousel-control-prev" type="button" data-bs-target="#carouselHero" data-bs-slide="prev">
-                <span class="carousel-control-prev-icon"></span>
+            <button class="carousel-control-prev carousel-hero-control" type="button" data-bs-target="#carouselHero" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
                 <span class="visually-hidden">Anterior</span>
             </button>
-            <button class="carousel-control-next" type="button" data-bs-target="#carouselHero" data-bs-slide="next">
-                <span class="carousel-control-next-icon"></span>
+            <button class="carousel-control-next carousel-hero-control" type="button" data-bs-target="#carouselHero" data-bs-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
                 <span class="visually-hidden">Siguiente</span>
             </button>
         </div>
     </section>
-
-    <!-- ✅ MENÚ MARKETPLACE SOLO SI EXISTE -->
-    <?php if ($showMarketplaceMenu && $hasMarketplace): ?>
-    <section id="marketplace-menu-landing" class="marketplace-menu-section py-3 bg-light">
-        <div class="container">
-            <h3 class="text-center mb-3">Marketplace Deportivo</h3>
-            <div class="row justify-content-center">
-                <div class="col-md-8">
-                    <?= \app\components\MenuWidget::widget([
-                        'parentId' => 177,
-                        'options' => [
-                            'class' => 'nav justify-content-center marketplace-nav',
-                            'mobileMode' => false
-                        ]
-                    ]) ?>
-                </div>
-            </div>
-        </div>
-    </section>
-    <?php endif; ?>
 
     <!-- Hero Section -->
     <div class="hero-section text-center py-5">
         <div class="container">
             <img src="<?= Yii::getAlias('@web') ?>/img/logos/logoGed.png" 
                  alt="GED Logo" 
-                 class="mb-4 ged-logo"
-                 id="ged-main-logo">
+                 class="mb-4 ged-logo img-fluid"
+                 id="ged-main-logo"
+                 style="max-height: 120px;">
             
             <h1 class="display-4">Gestión Escuelas Deportivas</h1>
             <p class="lead">Plataforma tecnológica para la administración deportiva</p>
@@ -387,7 +375,7 @@ try {
     </div>
 </div>
 
-<!-- ✅ SCRIPT DE VERIFICACIÓN Y PREVENCIÓN DE BUCLE -->
+<!-- ✅ SCRIPT ADICIONAL PARA EL CARRUSEL -->
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     console.log('🔍 GED System - Página Index cargada correctamente');
@@ -427,5 +415,40 @@ document.addEventListener('DOMContentLoaded', function() {
                 });
         });
     }
+    
+    // ✅ AJUSTES PARA EL CARRUSEL
+    const carousel = document.getElementById('carouselHero');
+    if (carousel) {
+        // Forzar repintado para asegurar que las imágenes se ajusten
+        setTimeout(() => {
+            carousel.dispatchEvent(new Event('resize'));
+        }, 100);
+        
+        // Ajustar altura del carrusel según el viewport
+        function adjustCarouselHeight() {
+            const viewportHeight = window.innerHeight;
+            const carouselElement = document.querySelector('#carouselHero');
+            
+            if (carouselElement && viewportHeight) {
+                // 80% del viewport height, con límites
+                const newHeight = Math.min(Math.max(viewportHeight * 0.8, 400), 800);
+                carouselElement.style.height = newHeight + 'px';
+            }
+        }
+        
+        // Ajustar al cargar y al redimensionar
+        adjustCarouselHeight();
+        window.addEventListener('resize', adjustCarouselHeight);
+    }
+    
+    // ✅ VERIFICAR Y CORREGIR IMÁGENES ROTAS EN EL CARRUSEL
+    const carouselImages = document.querySelectorAll('#carouselHero img');
+    carouselImages.forEach(img => {
+        // Verificar si la imagen se cargó correctamente
+        if (img.complete && img.naturalHeight === 0) {
+            console.warn('⚠️ Imagen del carrusel no cargada:', img.src);
+            // El atributo onerror ya maneja el fallback
+        }
+    });
 });
 </script>
