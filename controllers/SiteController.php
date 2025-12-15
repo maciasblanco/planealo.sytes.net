@@ -314,7 +314,16 @@ class SiteController extends Controller
         // ✅ SIEMPRE REDIRIGIR AL INDEX, NUNCA AL LOGIN
         return $this->redirect(['site/index']);
     }
-    
+        /**
+     * ✅ MÉTODO ADICIONAL: goHome personalizado para prevenir bucle
+     * Sobrescribe el método goHome() para asegurar que siempre redirija al index
+     */
+    public function actionTestcss()
+    {
+        // ✅ SIEMPRE REDIRIGIR AL INDEX, NUNCA AL LOGIN
+        // Para debug: var_dump("entre a test"); die();
+        return $this->render('test-css');
+    }
     /**
      * ✅ MÉTODO ADICIONAL: Verificar si hay bucle de redirección
      * Se puede llamar desde JavaScript para debug

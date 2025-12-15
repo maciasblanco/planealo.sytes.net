@@ -1,0 +1,301 @@
+.tasa-dolar-widget .additional-info {
+    background-color: #e9ecef;
+    padding: 6px 8px;
+    border-radius: 4px;
+    font-size: 0.8rem;
+  }
+  
+  .tasa-dolar-widget .mini-calculadora {
+    background-color: #f8f9fa;
+    padding: 10px;
+    border-radius: 6px;
+  }
+  
+  .tasa-dolar-widget .mini-calculadora .input-group {
+    margin-bottom: 8px;
+  }
+  
+  .tasa-dolar-widget .mini-calculadora .resultado {
+    background-color: #fff;
+    padding: 6px;
+    border-radius: 4px;
+    border: 1px solid #dee2e6;
+  }
+  
+  .tasa-dolar-widget.compact {
+    max-width: 200px;
+  }
+  
+  .tasa-dolar-widget.compact .card-body {
+    padding: 10px;
+  }
+  
+  /* ===== PÁGINA SELECCIÓN ESCUELA ===== */
+  .ged-default-select-escuela {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+    padding: 20px 0;
+  }
+  
+  .ged-default-select-escuela .card {
+    border: none;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    margin-bottom: 20px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  
+  .ged-default-select-escuela .card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+  }
+  
+  /* Headers de tarjetas */
+  .ged-card-header-primary {
+    background: linear-gradient(135deg, #2c5aa0 0%, #1e3a8a 100%);
+    color: white;
+    border-radius: 15px 15px 0 0 !important;
+    padding: 20px;
+  }
+  
+  .ged-card-header-info {
+    background: linear-gradient(135deg, #2c5aa0 0%, #1e3a8a 100%);
+    color: white;
+    border-radius: 15px 15px 0 0 !important;
+    padding: 15px;
+  }
+  
+  .ged-card-header-success {
+    background: linear-gradient(135deg, #28a745 0%, #1e7e34 100%);
+    color: white;
+    border-radius: 15px 15px 0 0 !important;
+    padding: 15px;
+  }
+  
+  .ged-card-header-warning {
+    background: linear-gradient(135deg, #ffc107 0%, #e0a800 100%);
+    color: white;
+    border-radius: 15px 15px 0 0 !important;
+    padding: 15px;
+  }
+  
+  /* Componentes específicos select-escuela */
+  .ged-list-item {
+    border: none;
+    padding: 8px 0;
+    font-size: 0.9rem;
+    background: transparent;
+  }
+  
+  .ged-stat-card {
+    padding: 15px;
+    text-align: center;
+    background: rgba(255,255,255,0.1);
+    border-radius: 10px;
+    margin: 5px;
+  }
+  
+  .ged-stat-card h3 {
+    margin: 0;
+    font-weight: bold;
+    font-size: 2rem;
+  }
+  
+  .current-school-status {
+    background: rgba(255,255,255,0.1);
+    border-radius: 10px;
+    padding: 15px;
+    margin-bottom: 20px;
+    border-left: 4px solid var(--ged-secondary);
+  }
+  
+  .quick-actions-grid {
+    display: grid;
+    gap: 10px;
+  }
+  
+  .quick-action-btn {
+    background: rgba(255,255,255,0.1);
+    border: 1px solid rgba(255,255,255,0.2);
+    color: white;
+    border-radius: 8px;
+    padding: 10px;
+    text-align: center;
+    text-decoration: none;
+    transition: var(--ged-transition);
+  }
+  
+  .quick-action-btn:hover {
+    background: rgba(255,255,255,0.2);
+    color: white;
+    transform: translateY(-2px);
+  }
+  
+  /* Lista de escuelas */
+  .school-list-container {
+    max-height: 400px;
+    overflow-y: auto;
+  }
+  
+  .school-option {
+    padding: 12px 15px;
+    border-bottom: 1px solid #e9ecef;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .school-option:hover {
+    background-color: #f8f9fa;
+  }
+  
+  .school-option:last-child {
+    border-bottom: none;
+  }
+  
+  .school-name {
+    font-weight: 600;
+    color: var(--ged-primary);
+    margin-bottom: 2px;
+  }
+  
+  .school-details {
+    font-size: 0.875rem;
+    color: #6c757d;
+  }
+  
+  /* ===== BÚSQUEDA POR ENCARGADO - NUEVO ===== */
+  .encargado-search-section {
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 12px;
+    padding: 25px;
+    margin-bottom: 25px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+    border-left: 5px solid var(--ged-info);
+  }
+  
+  .encargado-search-form {
+    display: flex;
+    gap: 12px;
+    align-items: flex-end;
+  }
+  
+  .encargado-search-input {
+    flex: 1;
+  }
+  
+  .encargado-search-input .form-label {
+    font-weight: 600;
+    color: var(--ged-dark);
+    margin-bottom: 8px;
+  }
+  
+  .encargado-search-input .form-control {
+    border: 2px solid #e9ecef;
+    border-radius: 8px;
+    padding: 12px 15px;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+  }
+  
+  .encargado-search-input .form-control:focus {
+    border-color: var(--ged-info);
+    box-shadow: 0 0 0 0.2rem rgba(23, 162, 184, 0.25);
+  }
+  
+  .encargado-search-btn {
+    background: linear-gradient(135deg, var(--ged-info) 0%, #138496 100%);
+    border: none;
+    border-radius: 8px;
+    padding: 12px 25px;
+    color: white;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    white-space: nowrap;
+  }
+  
+  .encargado-search-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(23, 162, 184, 0.3);
+  }
+  
+  /* ===== SECCIÓN ESCUELAS PRE-REGISTRO - NUEVO ===== */
+  .pre-registro-section {
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 12px;
+    padding: 25px;
+    margin-bottom: 25px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+    border-left: 5px solid var(--ged-warning);
+  }
+  
+  .pre-registro-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 2px solid #f0f0f0;
+  }
+  
+  .pre-registro-title {
+    color: var(--ged-dark);
+    font-weight: 700;
+    margin: 0;
+    font-size: 1.4rem;
+  }
+  
+  .pre-registro-badge {
+    background: linear-gradient(135deg, var(--ged-warning) 0%, #e0a800 100%);
+    color: white;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 600;
+  }
+  
+  .pre-registro-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+    margin-bottom: 20px;
+  }
+  
+  .pre-registro-card {
+    background: white;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 3px 15px rgba(0,0,0,0.08);
+    border: 1px solid #e9ecef;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .pre-registro-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 5px;
+    height: 100%;
+    background: linear-gradient(135deg, var(--ged-warning) 0%, #e0a800 100%);
+  }
+  
+  .pre-registro-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+  }
+  
+  .pre-registro-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 15px;
+  }
+  
+  .pre-registro-school-name {
+    font-weight: 700;
+    color: var(--ged-dark);
+    margin: 0 0 5px 0;
+    font-size: 1.2rem;
+  }

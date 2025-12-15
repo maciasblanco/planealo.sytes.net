@@ -22,6 +22,14 @@ class AppAsset extends AssetBundle
     
     public $css = [
         'css/ged.css', // ÚNICO ARCHIVO CSS UNIFICADO
+        // OPCIONAL: Cargar módulos individualmente si prefieres
+        //'css/modules/core/ged-core.css',
+        //'css/modules/core/ged-utilities.css',
+        //'css/modules/modules/ged-modulo-escuelas.css',
+        //'css/modules/modules/ged-modulo-tienda.css',
+        //'css/modules/modules/ged-modulo-landing.css',
+        //'css/modules/modules/ged-modulo-dashboard.css',
+        //'css/modules/responsive/ged-responsive.css',
         'font_ico/bootstrap-icons.css',
         'css/mapa-escuelas.css',
         'css/reportes.css',

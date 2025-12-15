@@ -1,0 +1,207 @@
+
+.sidebar-nav .dropdown-item {
+    color: #333 !important;
+    padding: 10px 20px !important;
+    border-bottom: 1px solid #e9ecef;
+  }
+  
+  .sidebar-nav .dropdown-item:hover {
+    background: #e9ecef !important;
+  }
+  
+  /* Submenús en off-canvas */
+  .sidebar-nav .dropdown-submenu {
+    position: relative;
+  }
+  
+  .sidebar-nav .dropdown-submenu .dropdown-menu {
+    margin-left: 15px;
+    background: #f0f0f0 !important;
+  }
+  
+  .submenu-arrow {
+    font-size: 0.8rem;
+    transition: transform 0.3s ease;
+  }
+  
+  .dropdown-submenu.open .submenu-arrow {
+    transform: rotate(90deg);
+  }
+  
+  /* ===== CORRECCIÓN PARA TERCER NIVEL DEL MENÚ ===== */
+  .dropdown-submenu .dropdown-submenu .dropdown-menu {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    position: absolute !important;
+    z-index: calc(var(--z-index-dropdown) + 2) !important;
+  }
+  
+  .dropdown-submenu > .dropdown-menu {
+    top: 0 !important;
+    left: 100% !important;
+    margin-top: -6px !important;
+    margin-left: -1px !important;
+    z-index: calc(var(--z-index-dropdown) + 1) !important;
+  }
+  
+  .dropdown-submenu .dropdown-submenu > .dropdown-menu {
+    z-index: calc(var(--z-index-dropdown) + 2) !important;
+  }
+  
+  .dropdown-submenu .dropdown-submenu .dropdown-submenu > .dropdown-menu {
+    z-index: calc(var(--z-index-dropdown) + 3) !important;
+  }
+  
+  /* ===== ESTILOS ESPECÍFICOS PARA TIENDA ===== */
+  .ged-card-header-tienda {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+    border-bottom: none !important;
+  }
+  
+  .ged-btn-tienda {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+    border: none !important;
+    color: white !important;
+    font-weight: 600 !important;
+    transition: all 0.3s ease !important;
+  }
+  
+  .ged-btn-tienda:hover {
+    transform: translateY(-2px) !important;
+    box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4) !important;
+    color: white !important;
+  }
+  
+  .store-promo-content {
+    text-align: center;
+  }
+  
+  .store-icon-large {
+    font-size: 3rem;
+    opacity: 0.8;
+  }
+  
+  .store-title {
+    font-weight: 700;
+    color: #2c3e50;
+    margin-bottom: 0.5rem;
+  }
+  
+  .store-description {
+    color: #6c757d;
+    font-size: 0.9rem;
+    line-height: 1.4;
+  }
+  
+  .store-features {
+    text-align: left;
+    margin-top: 1rem;
+  }
+  
+  .store-feature-item {
+    padding: 0.25rem 0;
+    font-size: 0.85rem;
+    color: #495057;
+  }
+  
+  .ged-card:hover .ged-card-header-tienda {
+    background: linear-gradient(135deg, #5a6fd8 0%, #6a4190 100%) !important;
+  }
+  
+  .tienda-badge {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 0.25rem 0.5rem;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-weight: 600;
+  }
+  
+  .tienda-price {
+    font-weight: 700;
+    color: #28a745;
+    font-size: 1.1rem;
+  }
+  
+  .tienda-discount {
+    color: #dc3545;
+    text-decoration: line-through;
+    font-size: 0.9rem;
+    margin-left: 0.5rem;
+  }
+  
+  .tienda-loading {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    border: 3px solid #f3f3f3;
+    border-top: 3px solid #667eea;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+  }
+  
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+  
+  /* ===== ESTILOS PARA LANDING PAGE ===== */
+  .landing-page {
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    min-height: 100vh;
+  }
+  
+  /* Hero Section */
+  .landing-page .hero-section {
+    background: linear-gradient(135deg, #2c5aa0 0%, #1e3a8a 100%);
+    color: white;
+    padding: 60px 0;
+    margin-bottom: 40px;
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .landing-page .hero-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="none"><path d="M0,0 L100,0 L100,100 Z" fill="rgba(255,255,255,0.05)"/></svg>');
+    background-size: cover;
+    opacity: 0.1;
+  }
+  
+  .landing-page .hero-section .container {
+    position: relative;
+    z-index: 1;
+  }
+  
+  .landing-page .ged-logo {
+    max-height: 150px;
+    max-width: 200px;
+    width: auto;
+    height: auto;
+    filter: drop-shadow(0 4px 8px rgba(0,0,0,0.3));
+    transition: transform 0.3s ease;
+  }
+  
+  .landing-page .ged-logo:hover {
+    transform: scale(1.05);
+  }
+  
+  .landing-page .display-4 {
+    font-weight: 700;
+    margin-bottom: 1rem;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+  }
+  
+  .landing-page .lead {
+    font-size: 1.25rem;
+    opacity: 0.9;
+    max-width: 800px;
+    margin: 0 auto;
+  }
+  

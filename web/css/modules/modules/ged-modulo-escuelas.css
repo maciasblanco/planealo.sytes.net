@@ -1,0 +1,200 @@
+
+.pre-registro-status {
+    background: var(--ged-warning);
+    color: white;
+    padding: 4px 10px;
+    border-radius: 15px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+  
+  .pre-registro-details {
+    margin-bottom: 15px;
+  }
+  
+  .pre-registro-detail {
+    display: flex;
+    align-items: center;
+    margin-bottom: 8px;
+    font-size: 0.9rem;
+    color: #6c757d;
+  }
+  
+  .pre-registro-detail i {
+    margin-right: 8px;
+    color: var(--ged-info);
+    width: 16px;
+    text-align: center;
+  }
+  
+  .pre-registro-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 15px;
+  }
+  
+  .pre-registro-btn {
+    flex: 1;
+    padding: 8px 15px;
+    border: none;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    text-align: center;
+    text-decoration: none;
+  }
+  
+  .pre-registro-btn-primary {
+    background: linear-gradient(135deg, var(--ged-primary) 0%, var(--ged-primary-dark) 100%);
+    color: white;
+  }
+  
+  .pre-registro-btn-secondary {
+    background: #f8f9fa;
+    color: var(--ged-dark);
+    border: 1px solid #dee2e6;
+  }
+  
+  .pre-registro-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+  }
+  
+  .pre-registro-empty {
+    text-align: center;
+    padding: 40px 20px;
+    color: #6c757d;
+  }
+  
+  .pre-registro-empty i {
+    font-size: 3rem;
+    color: #dee2e6;
+    margin-bottom: 15px;
+  }
+  
+  .pre-registro-empty h4 {
+    color: #6c757d;
+    margin-bottom: 10px;
+  }
+  
+  /* ===== LANDING PAGE GED ===== */
+  .site-index .hero-section {
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 40px 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+  }
+  
+  .site-index .schools-section {
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 40px 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+  }
+  
+  .site-index .container {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+    padding: 0 15px !important;
+  }
+  
+  /* Tarjetas de escuelas */
+  .site-index .school-card {
+    margin: 10px 5px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  
+  .site-index .school-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.15) !important;
+  }
+  
+  .site-index .card-body {
+    flex: 1 !important;
+    display: flex !important;
+    flex-direction: column !important;
+  }
+  
+  .site-index .school-description {
+    flex-grow: 1 !important;
+  }
+  
+  .site-index .card-footer {
+    flex-shrink: 0 !important;
+  }
+  
+  /* Imágenes de escuelas */
+  .site-index .school-logo-container {
+    position: relative;
+    height: 200px;
+    overflow: hidden;
+  }
+  
+  .site-index .school-logo {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
+    transition: transform 0.3s ease;
+  }
+  
+  .site-index .school-card:hover .school-logo {
+    transform: scale(1.05);
+  }
+  
+  /* Badge responsivo */
+  .site-index .school-badge {
+    background: rgba(40, 167, 69, 0.9);
+    color: white;
+    padding: 4px 8px;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-weight: 500;
+  }
+  
+  /* ===== BOTONES UNIFICADOS ===== */
+  .ged-btn {
+    border: none;
+    border-radius: 8px;
+    padding: 12px 20px;
+    font-weight: 600;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: var(--ged-transition);
+    text-align: center;
+  }
+  
+  .ged-btn-success {
+    background: linear-gradient(135deg, #28a745 0%, #1e7e34 100%);
+    color: white;
+  }
+  
+  .ged-btn-primary {
+    background: linear-gradient(135deg, #2c5aa0 0%, #1e3a8a 100%);
+    color: white;
+  }
+  
+  .ged-btn-warning {
+    background: linear-gradient(135deg, #ffc107 0%, #e0a800 100%);
+    color: white;
+  }
+  
+  .ged-btn-secondary {
+    background: #6c757d;
+    color: white;
+  }
+  
+  .ged-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    color: white;
+  }
+  
