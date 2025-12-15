@@ -23,7 +23,7 @@ class SiteController extends Controller
                 'only' => ['logout', 'acceder-sistema', 'mi-cuenta'],
                 'rules' => [
                     [
-                        'actions' => ['logout', 'mi-cuenta'],
+                        'actions' => ['logout', 'mi-cuenta', 'testcss'],
                         'allow' => true,
                         'roles' => ['@'],
                     ],
