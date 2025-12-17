@@ -22,9 +22,9 @@ $hasMarketplace = true; // Asumir que existe, se puede verificar mejor
 ?>
 
 <div class="site-index landing-page">
-    <!-- Carrusel Hero - VERSIÓN CORREGIDA -->
+    <!-- Carrusel Hero - VERSIÓN SIMPLIFICADA Y FUNCIONAL -->
     <section id="hero-carousel" class="carousel-hero">
-        <div id="carouselHero" class="carousel slide carousel-hero-container" data-bs-ride="carousel">
+        <div id="carouselHero" class="carousel slide">
             <div class="carousel-indicators">
                 <button type="button" data-bs-target="#carouselHero" data-bs-slide-to="0" class="active" 
                         aria-current="true" aria-label="Slide 1"></button>
@@ -36,14 +36,14 @@ $hasMarketplace = true; // Asumir que existe, se puede verificar mejor
             
             <div class="carousel-inner">
                 <div class="carousel-item active">
-                    <!-- Imagen con clases corregidas y atributos de accesibilidad -->
+                    <!-- Imagen con clases simples -->
                     <img src="<?= Yii::getAlias('@web') ?>/img/Carrusel/slide1.jpg" 
-                         class="d-block w-100 img-fluid carousel-hero-img"
+                         class="d-block w-100 carousel-image"
                          alt="Gestión Escuelas Deportivas - Sistema GED"
                          title="Sistema de Gestión para Escuelas Deportivas"
                          loading="eager"
                          onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1552674605-db6ffd8facb5?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80';">
-                    <div class="carousel-caption carousel-hero-caption">
+                    <div class="carousel-caption">
                         <h2 class="display-4">Sistema GED</h2>
                         <p class="lead">Gestión integral de escuelas deportivas</p>
                         <a href="#productos-mas-vendidos" class="btn btn-primary btn-lg mt-3">
@@ -54,12 +54,12 @@ $hasMarketplace = true; // Asumir que existe, se puede verificar mejor
                 
                 <div class="carousel-item">
                     <img src="<?= Yii::getAlias('@web') ?>/img/Carrusel/slide2.png" 
-                         class="d-block w-100 img-fluid carousel-hero-img"
+                         class="d-block w-100 carousel-image"
                          alt="Marketplace Deportivo - Productos para atletas"
                          title="Marketplace Deportivo con los mejores productos"
                          loading="lazy"
                          onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1519861531473-920034658307?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80';">
-                    <div class="carousel-caption carousel-hero-caption">
+                    <div class="carousel-caption">
                         <h2 class="display-4">Marketplace Deportivo</h2>
                         <p class="lead">Los mejores productos para atletas</p>
                         <a href="#tiendas-patrocinadas" class="btn btn-success btn-lg mt-3">
@@ -70,12 +70,12 @@ $hasMarketplace = true; // Asumir que existe, se puede verificar mejor
                 
                 <div class="carousel-item">
                     <img src="<?= Yii::getAlias('@web') ?>/img/Carrusel/slide3.png" 
-                         class="d-block w-100 img-fluid carousel-hero-img"
+                         class="d-block w-100 carousel-image"
                          alt="Productos Destacados - Lo más vendido"
                          title="Productos más vendidos en nuestra comunidad"
                          loading="lazy"
                          onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80';">
-                    <div class="carousel-caption carousel-hero-caption">
+                    <div class="carousel-caption">
                         <h2 class="display-4">Productos Destacados</h2>
                         <p class="lead">Lo más vendido en nuestra comunidad</p>
                         <a href="#productos-mas-vendidos" class="btn btn-warning btn-lg mt-3">
@@ -85,11 +85,11 @@ $hasMarketplace = true; // Asumir que existe, se puede verificar mejor
                 </div>
             </div>
             
-            <button class="carousel-control-prev carousel-hero-control" type="button" data-bs-target="#carouselHero" data-bs-slide="prev">
+            <button class="carousel-control-prev" type="button" data-bs-target="#carouselHero" data-bs-slide="prev">
                 <span class="carousel-control-prev-icon" aria-hidden="true"></span>
                 <span class="visually-hidden">Anterior</span>
             </button>
-            <button class="carousel-control-next carousel-hero-control" type="button" data-bs-target="#carouselHero" data-bs-slide="next">
+            <button class="carousel-control-next" type="button" data-bs-target="#carouselHero" data-bs-slide="next">
                 <span class="carousel-control-next-icon" aria-hidden="true"></span>
                 <span class="visually-hidden">Siguiente</span>
             </button>
@@ -375,80 +375,11 @@ $hasMarketplace = true; // Asumir que existe, se puede verificar mejor
     </div>
 </div>
 
-<!-- ✅ SCRIPT ADICIONAL PARA EL CARRUSEL -->
+<!-- ✅ MARCADOR PARA JS EXTERNO -->
 <script>
+// Marcador para que ged.js detecte la página de inicio
 document.addEventListener('DOMContentLoaded', function() {
-    console.log('🔍 GED System - Página Index cargada correctamente');
-    console.log('Usuario autenticado: <?= $isUserAuthenticated ? "Sí" : "No" ?>');
-    console.log('Ruta actual: <?= $currentRoute ?>');
-    
-    // ✅ PREVENIR CLIC REPETIDO EN LOGIN SI YA ESTAMOS EN ESA PÁGINA
-    const loginButtons = document.querySelectorAll('a[href*="login"]');
-    loginButtons.forEach(button => {
-        button.addEventListener('click', function(e) {
-            if (window.location.href.indexOf('login') > -1) {
-                console.warn('⚠️ Ya estás en la página de login');
-                e.preventDefault();
-                return false;
-            }
-        });
-    });
-    
-    // ✅ VERIFICAR MARKETPLACE
-    const marketplaceBtn = document.getElementById('btn-marketplace');
-    if (marketplaceBtn) {
-        marketplaceBtn.addEventListener('click', function(e) {
-            console.log('🛒 Intentando acceder al marketplace...');
-            // Verificar si la URL existe
-            fetch(this.href, { method: 'HEAD' })
-                .then(response => {
-                    if (!response.ok) {
-                        console.error('❌ Marketplace no disponible');
-                        e.preventDefault();
-                        alert('El marketplace no está disponible en este momento.');
-                    }
-                })
-                .catch(() => {
-                    console.error('❌ Error de conexión al marketplace');
-                    e.preventDefault();
-                    alert('Error al acceder al marketplace.');
-                });
-        });
-    }
-    
-    // ✅ AJUSTES PARA EL CARRUSEL
-    const carousel = document.getElementById('carouselHero');
-    if (carousel) {
-        // Forzar repintado para asegurar que las imágenes se ajusten
-        setTimeout(() => {
-            carousel.dispatchEvent(new Event('resize'));
-        }, 100);
-        
-        // Ajustar altura del carrusel según el viewport
-        function adjustCarouselHeight() {
-            const viewportHeight = window.innerHeight;
-            const carouselElement = document.querySelector('#carouselHero');
-            
-            if (carouselElement && viewportHeight) {
-                // 80% del viewport height, con límites
-                const newHeight = Math.min(Math.max(viewportHeight * 0.8, 400), 800);
-                carouselElement.style.height = newHeight + 'px';
-            }
-        }
-        
-        // Ajustar al cargar y al redimensionar
-        adjustCarouselHeight();
-        window.addEventListener('resize', adjustCarouselHeight);
-    }
-    
-    // ✅ VERIFICAR Y CORREGIR IMÁGENES ROTAS EN EL CARRUSEL
-    const carouselImages = document.querySelectorAll('#carouselHero img');
-    carouselImages.forEach(img => {
-        // Verificar si la imagen se cargó correctamente
-        if (img.complete && img.naturalHeight === 0) {
-            console.warn('⚠️ Imagen del carrusel no cargada:', img.src);
-            // El atributo onerror ya maneja el fallback
-        }
-    });
+    // Esta variable será leída por ged.js
+    window.gedCurrentPage = 'index';
 });
 </script>

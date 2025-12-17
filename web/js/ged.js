@@ -1892,3 +1892,406 @@ if (typeof module !== 'undefined' && module.exports) {
         ComponentsManager 
     };
 }
+// ===== SCRIPTS PARA LA PÁGINA DE INICIO (INDEX) =====
+
+// Función para inicializar el carrusel de la landing page
+function initLandingCarousel() {
+    const carousel = document.getElementById('carouselHero');
+    if (!carousel) return; // Si no hay carrusel, salir
+    
+    console.log('🔍 GED System - Carrusel de landing detectado, inicializando...');
+    
+    // Forzar repintado para asegurar que las imágenes se ajusten
+    setTimeout(() => {
+        carousel.dispatchEvent(new Event('resize'));
+    }, 100);
+    
+    // Ajustar altura del carrusel según el viewport
+    function adjustCarouselHeight() {
+        const viewportHeight = window.innerHeight;
+        const carouselSection = document.querySelector('#hero-carousel');
+        
+        if (carouselSection && viewportHeight) {
+            // 70% del viewport height, con límites (como está en CSS)
+            const newHeight = Math.min(Math.max(viewportHeight * 0.7, 400), 800);
+            carouselSection.style.height = newHeight + 'px';
+        }
+    }
+    
+    // Ajustar al cargar y al redimensionar
+    adjustCarouselHeight();
+    window.addEventListener('resize', adjustCarouselHeight);
+    
+    // VERIFICAR Y CORREGIR IMÁGENES ROTAS EN EL CARRUSEL
+    const carouselImages = carousel.querySelectorAll('img');
+    carouselImages.forEach(img => {
+        // Verificar si la imagen se cargó correctamente
+        if (img.complete && img.naturalHeight === 0) {
+            console.warn('⚠️ Imagen del carrusel no cargada:', img.src);
+            // El atributo onerror ya maneja el fallback
+        }
+    });
+}
+
+// Función para prevenir clic repetido en login
+function preventLoginLoop() {
+    const loginButtons = document.querySelectorAll('a[href*="login"]');
+    loginButtons.forEach(button => {
+        button.addEventListener('click', function(e) {
+            if (window.location.href.indexOf('login') > -1) {
+                console.warn('⚠️ Ya estás en la página de login');
+                e.preventDefault();
+                return false;
+            }
+        });
+    });
+}
+
+// Función para verificar el marketplace
+function initMarketplaceCheck() {
+    const marketplaceBtn = document.getElementById('btn-marketplace');
+    if (!marketplaceBtn) return;
+    
+    marketplaceBtn.addEventListener('click', function(e) {
+        console.log('🛒 Intentando acceder al marketplace...');
+        // Verificar si la URL existe
+        fetch(this.href, { method: 'HEAD' })
+            .then(response => {
+                if (!response.ok) {
+                    console.error('❌ Marketplace no disponible');
+                    e.preventDefault();
+                    alert('El marketplace no está disponible en este momento.');
+                }
+            })
+            .catch(() => {
+                console.error('❌ Error de conexión al marketplace');
+                e.preventDefault();
+                alert('Error al acceder al marketplace.');
+            });
+    });
+}
+
+// Inicializar todo cuando el DOM esté listo
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('🔍 GED System - Scripts de landing page cargados');
+    
+    // Verificar si estamos en la página de inicio (index)
+    const isIndexPage = document.body.classList.contains('site-index') || 
+                        window.location.pathname === '/' || 
+                        window.location.pathname.includes('site/index');
+    
+    if (isIndexPage) {
+        console.log('🏠 Página de inicio detectada, inicializando componentes...');
+        
+        // Inicializar el carrusel
+        initLandingCarousel();
+        
+        // Verificar el marketplace
+        initMarketplaceCheck();
+        
+        // Prevenir bucle de login
+        preventLoginLoop();
+    }
+});
+// ===== FUNCIONES PARA OPTIMIZAR IMÁGENES DEL CARRUSEL =====
+
+function optimizarImagenesCarrusel() {
+    const carousel = document.getElementById('carouselHero');
+    if (!carousel) return;
+    
+    const imagenes = carousel.querySelectorAll('.carousel-img');
+    
+    imagenes.forEach((img, index) => {
+        // Detectar tipo de imagen (landscape/portrait)
+        img.addEventListener('load', function() {
+            this.classList.add('loaded');
+            
+            // Agregar clase según orientación
+            if (this.naturalWidth > this.naturalHeight) {
+                this.closest('.carousel-item').classList.add('landscape');
+            } else {
+                this.closest('.carousel-item').classList.add('portrait');
+            }
+            
+            console.log(`✅ Imagen ${index + 1} cargada: ${this.naturalWidth}x${this.naturalHeight}`);
+        });
+        
+        // Manejar errores de carga
+        img.addEventListener('error', function() {
+            console.warn(`❌ Error cargando imagen: ${this.src}`);
+            // Usar imagen de respaldo
+            this.src = 'https://images.unsplash.com/photo-1552674605-db6ffd8facb5?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80';
+        });
+        
+        // Precargar imágenes
+        if (img.complete) {
+            img.dispatchEvent(new Event('load'));
+        }
+    });
+}
+
+// Función para detectar y aplicar mejor ajuste automáticamente
+function ajusteAutomaticoImagenes() {
+    const carousel = document.getElementById('carouselHero');
+    if (!carousel) return;
+    
+    const items = carousel.querySelectorAll('.carousel-item');
+    
+    items.forEach((item, index) => {
+        const img = item.querySelector('.carousel-img');
+        if (!img) return;
+        
+        // Esperar a que cargue la imagen
+        if (img.complete) {
+            aplicarMejorAjuste(img);
+        } else {
+            img.addEventListener('load', () => aplicarMejorAjuste(img));
+        }
+    });
+}
+
+function aplicarMejorAjuste(img) {
+    const container = img.closest('.carousel-item');
+    const containerWidth = container.clientWidth;
+    const containerHeight = container.clientHeight;
+    const imgRatio = img.naturalWidth / img.naturalHeight;
+    const containerRatio = containerWidth / containerHeight;
+    
+    // Decidir el mejor ajuste basado en la relación de aspecto
+    if (Math.abs(imgRatio - containerRatio) < 0.1) {
+        // Relaciones similares - usar cover
+        img.style.objectFit = 'cover';
+    } else if (imgRatio > containerRatio) {
+        // Imagen más ancha - ajustar para evitar cortes verticales
+        img.style.objectFit = 'contain';
+    } else {
+        // Imagen más alta - ajustar para evitar cortes horizontales
+        img.style.objectFit = 'cover';
+        img.style.objectPosition = 'center top';
+    }
+}
+
+// Actualizar ajustes al redimensionar
+let resizeTimeout;
+function manejarRedimension() {
+    clearTimeout(resizeTimeout);
+    resizeTimeout = setTimeout(() => {
+        ajusteAutomaticoImagenes();
+    }, 250);
+}
+
+// Modificar la función initLandingCarousel para incluir estas mejoras
+function initLandingCarousel() {
+    const carousel = document.getElementById('carouselHero');
+    if (!carousel) return;
+    
+    console.log('🔍 GED System - Carrusel de landing detectado, inicializando...');
+    
+    // Forzar repintado
+    setTimeout(() => {
+        carousel.dispatchEvent(new Event('resize'));
+    }, 100);
+    
+    // Optimizar imágenes
+    optimizarImagenesCarrusel();
+    
+    // Ajuste automático
+    ajusteAutomaticoImagenes();
+    
+    // Escuchar redimensionamiento
+    window.addEventListener('resize', manejarRedimension);
+    
+    // VERIFICAR Y CORREGIR IMÁGENES ROTAS EN EL CARRUSEL
+    const carouselImages = carousel.querySelectorAll('img');
+    carouselImages.forEach(img => {
+        if (img.complete && img.naturalHeight === 0) {
+            console.warn('⚠️ Imagen del carrusel no cargada:', img.src);
+        }
+    });
+    
+    // Ajustar automáticamente al cambiar de slide
+    carousel.addEventListener('slid.bs.carousel', function() {
+        setTimeout(ajusteAutomaticoImagenes, 100);
+    });
+}
+// ===== FUNCIONALIDADES PARA LA PÁGINA DE INICIO =====
+
+function initIndexPage() {
+    console.log('🔍 GED System - Inicializando página de inicio...');
+    
+    // 1. CONFIGURAR CARRUSEL
+    const carousel = document.getElementById('carouselHero');
+    if (carousel) {
+        console.log('✅ Carrusel detectado, configurando...');
+        
+        // Asegurar altura de 70vh
+        const carouselSection = document.getElementById('hero-carousel');
+        if (carouselSection) {
+            carouselSection.style.height = '70vh';
+            carouselSection.style.minHeight = '400px';
+            carouselSection.style.maxHeight = '800px';
+            carouselSection.style.overflow = 'hidden';
+            carouselSection.style.position = 'relative';
+            carouselSection.style.backgroundColor = '#f8f9fa';
+            carouselSection.style.marginBottom = '2rem';
+        }
+        
+        // Configurar imágenes
+        const images = carousel.querySelectorAll('.carousel-image');
+        images.forEach(img => {
+            img.style.objectFit = 'cover';
+            img.style.objectPosition = 'center center';
+            img.style.width = '100%';
+            img.style.height = '100%';
+            img.style.display = 'block';
+            img.style.backgroundColor = '#f8f9fa';
+            
+            // Mejorar calidad de imagen
+            img.style.imageRendering = 'auto';
+            img.style.WebkitFontSmoothing = 'antialiased';
+            img.style.MozOsxFontSmoothing = 'grayscale';
+        });
+        
+        // Configurar controles
+        const prevBtn = carousel.querySelector('.carousel-control-prev');
+        const nextBtn = carousel.querySelector('.carousel-control-next');
+        if (prevBtn && nextBtn) {
+            prevBtn.style.width = '60px';
+            prevBtn.style.height = '60px';
+            prevBtn.style.top = '50%';
+            prevBtn.style.transform = 'translateY(-50%)';
+            prevBtn.style.background = 'rgba(0, 0, 0, 0.5)';
+            prevBtn.style.borderRadius = '50%';
+            
+            nextBtn.style.width = '60px';
+            nextBtn.style.height = '60px';
+            nextBtn.style.top = '50%';
+            nextBtn.style.transform = 'translateY(-50%)';
+            nextBtn.style.background = 'rgba(0, 0, 0, 0.5)';
+            nextBtn.style.borderRadius = '50%';
+        }
+        
+        // Configurar indicadores
+        const indicators = carousel.querySelectorAll('.carousel-indicators button');
+        indicators.forEach(indicator => {
+            indicator.style.width = '12px';
+            indicator.style.height = '12px';
+            indicator.style.borderRadius = '50%';
+            indicator.style.margin = '0 5px';
+            indicator.style.border = '2px solid white';
+            indicator.style.backgroundColor = 'transparent';
+        });
+        
+        // Configurar caption
+        const captions = carousel.querySelectorAll('.carousel-caption');
+        captions.forEach(caption => {
+            caption.style.position = 'absolute';
+            caption.style.top = '50%';
+            caption.style.left = '50%';
+            caption.style.transform = 'translate(-50%, -50%)';
+            caption.style.right = 'auto';
+            caption.style.bottom = 'auto';
+            caption.style.width = '90%';
+            caption.style.maxWidth = '800px';
+            caption.style.background = 'rgba(0, 0, 0, 0.7)';
+            caption.style.padding = '2rem';
+            caption.style.borderRadius = '10px';
+            caption.style.textAlign = 'center';
+            caption.style.zIndex = '2';
+        });
+        
+        // Ajustar responsive
+        function adjustCarouselResponsive() {
+            const viewportWidth = window.innerWidth;
+            
+            if (carouselSection) {
+                if (viewportWidth <= 1024) {
+                    carouselSection.style.height = '60vh';
+                    carouselSection.style.minHeight = '350px';
+                    
+                    captions.forEach(caption => {
+                        caption.style.padding = '1.5rem';
+                        caption.style.width = '85%';
+                    });
+                }
+                
+                if (viewportWidth <= 768) {
+                    carouselSection.style.height = '50vh';
+                    carouselSection.style.minHeight = '300px';
+                    
+                    captions.forEach(caption => {
+                        caption.style.padding = '1rem';
+                        caption.style.width = '90%';
+                        caption.style.background = 'rgba(0, 0, 0, 0.8)';
+                    });
+                }
+                
+                if (viewportWidth <= 576) {
+                    carouselSection.style.height = '40vh';
+                    carouselSection.style.minHeight = '250px';
+                    carouselSection.style.marginBottom = '1rem';
+                    
+                    captions.forEach(caption => {
+                        caption.style.padding = '0.75rem';
+                    });
+                }
+            }
+        }
+        
+        // Aplicar responsive inicial y en redimensionamiento
+        adjustCarouselResponsive();
+        window.addEventListener('resize', adjustCarouselResponsive);
+    }
+    
+    // 2. CONFIGURAR MARKETPLACE
+    const marketplaceBtn = document.getElementById('btn-marketplace');
+    if (marketplaceBtn) {
+        marketplaceBtn.addEventListener('click', function(e) {
+            console.log('🛒 Accediendo al marketplace...');
+            // Aquí puedes agregar lógica adicional si es necesario
+        });
+    }
+    
+    // 3. CONFIGURAR BOTONES DE ACCESO
+    const accesoBtn = document.getElementById('btn-acceder-sistema');
+    if (accesoBtn) {
+        accesoBtn.addEventListener('click', function() {
+            console.log('🚀 Accediendo al sistema...');
+        });
+    }
+}
+
+// ===== DETECCIÓN DE PÁGINA Y EJECUCIÓN =====
+
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('📄 GED System - Documento cargado');
+    
+    // Detectar si estamos en la página de inicio
+    const isIndexPage = document.body.classList.contains('site-index') || 
+                        document.body.classList.contains('landing-page') ||
+                        window.location.pathname === '/' || 
+                        window.location.pathname.includes('site/index') ||
+                        window.gedCurrentPage === 'index';
+    
+    if (isIndexPage) {
+        console.log('🏠 Página de inicio detectada');
+        initIndexPage();
+    }
+});
+
+// ===== FUNCIONES DE UTILIDAD =====
+
+// Función para verificar imágenes rotas
+function checkBrokenImages() {
+    const images = document.querySelectorAll('img');
+    images.forEach(img => {
+        if (img.complete && img.naturalHeight === 0) {
+            console.warn('⚠️ Imagen rota detectada:', img.src);
+        }
+    });
+}
+
+// Ejecutar chequeo de imágenes después de la carga
+window.addEventListener('load', function() {
+    setTimeout(checkBrokenImages, 1000);
+});

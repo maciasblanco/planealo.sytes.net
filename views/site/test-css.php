@@ -1,49 +1,41 @@
 <?php
 /**
- * Test CSS Directo con Verificación de Archivos Parciales
- * Este archivo verifica la carga de todos los CSS parciales al cargar ged.css
+ * Test CSS - Verificación específica de archivos importados por ged.css
+ * Este archivo verifica los archivos CSS parciales que realmente importa ged.css
  */
+
 use yii\helpers\Html;
 
-// Definir rutas base
-$cssDir = Yii::getAlias('@app/web/css/'); // Corregir ruta para Yii2
+// Definir rutas base - CORREGIDO para Yii2
+$cssDir = Yii::getAlias('@webroot') . '/css/';
 $gedCssPath = $cssDir . 'ged.css';
 
-// Lista de archivos CSS parciales esperados
+// Lista EXACTA de archivos que importa ged.css (según el contenido proporcionado)
 $cssPartialFiles = [
-    // Archivos base
-    'variables.css',
-    'reset.css',
-    'typography.css',
-    
-    // Componentes principales
-    'layout.css',
-    'navbar.css',
-    'sidebar.css',
-    'footer.css',
-    
-    // Componentes UI
-    'buttons.css',
-    'forms.css',
-    'tables.css',
-    'cards.css',
-    'modals.css',
-    
-    // Páginas específicas
-    'dashboard.css',
-    'escuelas.css',
-    'usuarios.css',
-    'reportes.css',
-    
-    // Utilidades
-    'utilities.css',
-    'responsive.css',
-    'animations.css'
+    'modules/core/ged-core.css',
+    'modules/core/ged-utilities.css',
+    'modules/modules/ged-modulo-escuelas.css',
+    'modules/modules/ged-modulo-tienda.css',
+    'modules/modules/ged-modulo-landing.css',
+    'modules/modules/ged-modulo-dashboard.css',
+    'modules/responsive/ged-responsive.css'
 ];
 
 // Verificar si ged.css existe
 $gedCssExists = file_exists($gedCssPath);
 $gedCssContent = $gedCssExists ? file_get_contents($gedCssPath) : '';
+
+// Extraer importaciones reales de ged.css
+$importsInGed = [];
+$importsFound = 0;
+if ($gedCssExists) {
+    // Buscar @import url('...') en el contenido
+    preg_match_all('/@import\s+url\([\'"]([^\'"]+\.css)[\'"]\)/', $gedCssContent, $matches);
+    if (!empty($matches[1])) {
+        $importsInGed = $matches[1];
+        $importsFound = count($importsInGed);
+    }
+}
 
 // Verificar archivos parciales
 $partialStatus = [];
@@ -54,43 +46,34 @@ foreach ($cssPartialFiles as $file) {
     // Verificar si está referenciado en ged.css
     $referenced = false;
     if ($gedCssExists && $exists) {
-        $referenced = strpos($gedCssContent, $file) !== false || 
-                      strpos($gedCssContent, str_replace('.css', '', $file)) !== false;
+        // Verificar si este archivo está en las importaciones reales
+        $referenced = in_array($file, $importsInGed);
     }
     
     $partialStatus[$file] = [
         'exists' => $exists,
         'referenced' => $referenced,
-        'path' => $filePath
+        'path' => $filePath,
+        'expected_in_ged' => in_array($file, $cssPartialFiles)
     ];
 }
 
-// Función para mostrar icono de estado
-function getStatusIcon($status, $referenced = false) {
-    if (!$status) return '❌ No existe';
-    if (!$referenced) return '⚠️ Existe pero no referenciado';
-    return '✅ Cargado correctamente';
-}
+// Contar estadísticas
+$totalFiles = count($cssPartialFiles);
+$existingFiles = count(array_filter($partialStatus, fn($s) => $s['exists']));
+$referencedFiles = count(array_filter($partialStatus, fn($s) => $s['exists'] && $s['referenced']));
 
-// Verificar si ged.css importa otros archivos
-$importsInGed = [];
-if ($gedCssExists) {
-    // Buscar imports en el contenido
-    preg_match_all('/@import\s+[\'"]([^\'"]+\.css)[\'"]/', $gedCssContent, $matches);
-    if (!empty($matches[1])) {
-        $importsInGed = $matches[1];
-    }
-    
-    // Buscar comentarios sobre archivos incluidos
-    preg_match_all('/\/\*\s*Incluye:\s*([^*]+)\s*\*\//', $gedCssContent, $commentMatches);
-}
+// Calcular porcentajes
+$completenessPercent = $totalFiles > 0 ? round(($existingFiles / $totalFiles) * 100) : 0;
+$referencedPercent = $existingFiles > 0 ? round(($referencedFiles / $existingFiles) * 100) : 0;
 ?>
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Test CSS - Verificación de Archivos Parciales</title>
+    <title>Test CSS - Verificación de archivos importados por ged.css</title>
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -124,6 +107,11 @@ if ($gedCssExists) {
             border-bottom: 2px solid #ecf0f1;
         }
         
+        h3 {
+            color: #2c3e50;
+            margin-top: 20px;
+        }
+        
         .status-box {
             padding: 20px;
             border-radius: 8px;
@@ -149,9 +137,49 @@ if ($gedCssExists) {
             color: #721c24;
         }
         
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+        
+        .summary-card {
+            background: #e8f4fc;
+            border: 1px solid #b3e0ff;
+            border-radius: 8px;
+            padding: 15px;
+            text-align: center;
+        }
+        
+        .summary-number {
+            font-size: 28px;
+            font-weight: bold;
+            color: #2980b9;
+            display: block;
+            margin-bottom: 5px;
+        }
+        
+        .summary-label {
+            font-size: 14px;
+            color: #7f8c8d;
+        }
+        
+        .summary-good {
+            color: #28a745;
+        }
+        
+        .summary-medium {
+            color: #ffc107;
+        }
+        
+        .summary-bad {
+            color: #dc3545;
+        }
+        
         .file-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
             gap: 15px;
             margin-top: 20px;
         }
@@ -185,35 +213,38 @@ if ($gedCssExists) {
             font-weight: bold;
             color: #2c3e50;
             margin-bottom: 5px;
+            word-break: break-all;
+        }
+        
+        .file-path {
+            font-size: 12px;
+            color: #6c757d;
+            margin: 5px 0;
+            word-break: break-all;
         }
         
         .file-status {
             font-size: 14px;
+            font-weight: 500;
+            margin: 8px 0;
         }
         
-        .summary {
-            display: flex;
-            justify-content: space-between;
-            margin: 20px 0;
-            padding: 15px;
-            background: #e8f4fc;
-            border-radius: 6px;
-            border: 1px solid #b3e0ff;
+        .status-success-text {
+            color: #28a745;
         }
         
-        .summary-item {
-            text-align: center;
+        .status-warning-text {
+            color: #ffc107;
         }
         
-        .summary-number {
-            font-size: 24px;
-            font-weight: bold;
-            color: #2980b9;
+        .status-error-text {
+            color: #dc3545;
         }
         
-        .summary-label {
-            font-size: 14px;
-            color: #7f8c8d;
+        .file-details {
+            font-size: 12px;
+            color: #6c757d;
+            margin-top: 8px;
         }
         
         pre {
@@ -224,6 +255,8 @@ if ($gedCssExists) {
             overflow-x: auto;
             font-size: 12px;
             margin-top: 20px;
+            max-height: 400px;
+            overflow-y: auto;
         }
         
         .recommendations {
@@ -247,67 +280,138 @@ if ($gedCssExists) {
             margin-bottom: 8px;
         }
         
+        .structure {
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+            padding: 15px;
+            border-radius: 6px;
+            margin: 20px 0;
+            font-family: monospace;
+        }
+        
+        .structure-item {
+            margin: 5px 0;
+            padding-left: 20px;
+        }
+        
+        .folder {
+            color: #007bff;
+            font-weight: bold;
+        }
+        
+        .file {
+            color: #28a745;
+        }
+        
         @media (max-width: 768px) {
             .file-grid {
                 grid-template-columns: 1fr;
             }
             
-            .summary {
-                flex-direction: column;
-                gap: 15px;
+            .summary-grid {
+                grid-template-columns: 1fr;
             }
+            
+            pre {
+                font-size: 10px;
+                padding: 10px;
+            }
+        }
+        
+        .debug-info {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            padding: 10px;
+            border-radius: 4px;
+            margin-top: 20px;
+            font-size: 12px;
+            color: #6c757d;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>🔍 Test CSS - Verificación de Archivos Parciales</h1>
+        <h1>🔍 Test CSS - Verificación de archivos importados por ged.css</h1>
         
         <!-- Estado principal de ged.css -->
-        <div class="status-box <?php echo $gedCssExists ? 'status-success' : 'status-error'; ?>">
-            <h2>Archivo Principal: ged.css</h2>
-            <p><strong>Ruta:</strong> <?php echo htmlspecialchars($gedCssPath); ?></p>
-            <p><strong>Estado:</strong> <?php echo $gedCssExists ? '✅ EXISTE' : '❌ NO EXISTE'; ?></p>
-            <p><strong>Tamaño:</strong> <?php echo $gedCssExists ? filesize($gedCssPath) . ' bytes' : 'N/A'; ?></p>
+        <div class="status-box <?= $gedCssExists ? 'status-success' : 'status-error' ?>">
+            <h2>📄 Archivo Principal: ged.css</h2>
+            <p><strong>Ruta absoluta:</strong> <?= Html::encode($gedCssPath) ?></p>
+            <p><strong>Estado:</strong> 
+                <span class="<?= $gedCssExists ? 'status-success-text' : 'status-error-text' ?>">
+                    <?= $gedCssExists ? '✅ EXISTE' : '❌ NO EXISTE' ?>
+                </span>
+            </p>
             
-            <?php if ($gedCssExists && !empty($importsInGed)): ?>
-                <p><strong>Importa:</strong> <?php echo count($importsInGed); ?> archivo(s)</p>
-                <ul>
-                    <?php foreach ($importsInGed as $import): ?>
-                        <li><?php echo htmlspecialchars($import); ?></li>
-                    <?php endforeach; ?>
-                </ul>
+            <?php if ($gedCssExists): ?>
+                <p><strong>Tamaño:</strong> <?= number_format(filesize($gedCssPath)) ?> bytes</p>
+                <p><strong>Última modificación:</strong> <?= date('Y-m-d H:i:s', filemtime($gedCssPath)) ?></p>
+                <p><strong>Importaciones encontradas:</strong> <?= $importsFound ?> archivo(s)</p>
+                
+                <?php if (!empty($importsInGed)): ?>
+                    <h3>Importaciones detectadas en ged.css:</h3>
+                    <ul>
+                        <?php foreach ($importsInGed as $import): ?>
+                            <li><code><?= Html::encode($import) ?></code></li>
+                        <?php endforeach; ?>
+                    </ul>
+                <?php endif; ?>
+            <?php else: ?>
+                <p><strong>Error:</strong> El archivo ged.css no existe en la ruta especificada.</p>
+                <p>Verifica que la ruta sea correcta y que el archivo esté en: <code>web/css/ged.css</code></p>
             <?php endif; ?>
         </div>
         
-        <!-- Resumen de archivos parciales -->
-        <?php
-        $totalFiles = count($partialStatus);
-        $existingFiles = count(array_filter($partialStatus, fn($s) => $s['exists']));
-        $referencedFiles = count(array_filter($partialStatus, fn($s) => $s['exists'] && $s['referenced']));
-        ?>
-        
-        <div class="summary">
-            <div class="summary-item">
-                <div class="summary-number"><?php echo $totalFiles; ?></div>
-                <div class="summary-label">Archivos Parciales</div>
+        <!-- Resumen de estadísticas -->
+        <h2>📊 Resumen de archivos importados</h2>
+        <div class="summary-grid">
+            <div class="summary-card">
+                <span class="summary-number"><?= $totalFiles ?></span>
+                <span class="summary-label">Archivos esperados</span>
             </div>
-            <div class="summary-item">
-                <div class="summary-number"><?php echo $existingFiles; ?></div>
-                <div class="summary-label">Existen</div>
+            
+            <div class="summary-card">
+                <span class="summary-number <?= $existingFiles == $totalFiles ? 'summary-good' : ($existingFiles > 0 ? 'summary-medium' : 'summary-bad') ?>">
+                    <?= $existingFiles ?>
+                </span>
+                <span class="summary-label">Archivos existentes</span>
             </div>
-            <div class="summary-item">
-                <div class="summary-number"><?php echo $referencedFiles; ?></div>
-                <div class="summary-label">Referenciados</div>
+            
+            <div class="summary-card">
+                <span class="summary-number <?= $referencedFiles == $existingFiles ? 'summary-good' : ($referencedFiles > 0 ? 'summary-medium' : 'summary-bad') ?>">
+                    <?= $referencedFiles ?>
+                </span>
+                <span class="summary-label">Referenciados en ged.css</span>
             </div>
-            <div class="summary-item">
-                <div class="summary-number"><?php echo $existingFiles > 0 ? round(($referencedFiles / $existingFiles) * 100) : 0; ?>%</div>
-                <div class="summary-label">Completitud</div>
+            
+            <div class="summary-card">
+                <span class="summary-number <?= $completenessPercent == 100 ? 'summary-good' : ($completenessPercent > 50 ? 'summary-medium' : 'summary-bad') ?>">
+                    <?= $completenessPercent ?>%
+                </span>
+                <span class="summary-label">Completitud</span>
             </div>
         </div>
         
-        <!-- Lista detallada de archivos parciales -->
-        <h2>📁 Archivos CSS Parciales</h2>
+        <!-- Estructura esperada -->
+        <div class="structure">
+            <h3>📁 Estructura de archivos CSS esperada:</h3>
+            <div class="structure-item folder">css/</div>
+            <div class="structure-item file">├── ged.css</div>
+            <div class="structure-item folder">├── modules/</div>
+            <div class="structure-item folder">│   ├── core/</div>
+            <div class="structure-item file">│   │   ├── ged-core.css</div>
+            <div class="structure-item file">│   │   └── ged-utilities.css</div>
+            <div class="structure-item folder">│   ├── modules/</div>
+            <div class="structure-item file">│   │   ├── ged-modulo-escuelas.css</div>
+            <div class="structure-item file">│   │   ├── ged-modulo-tienda.css</div>
+            <div class="structure-item file">│   │   ├── ged-modulo-landing.css</div>
+            <div class="structure-item file">│   │   └── ged-modulo-dashboard.css</div>
+            <div class="structure-item folder">│   └── responsive/</div>
+            <div class="structure-item file">│       └── ged-responsive.css</div>
+        </div>
+        
+        <!-- Lista detallada de archivos -->
+        <h2>📁 Archivos CSS Parciales Importados</h2>
         <div class="file-grid">
             <?php foreach ($partialStatus as $file => $status): ?>
                 <?php 
@@ -320,30 +424,48 @@ if ($gedCssExists) {
                     $cardClass .= 'success';
                 }
                 ?>
-                <div class="<?php echo $cardClass; ?>">
-                    <div class="file-name"><?php echo htmlspecialchars($file); ?></div>
-                    <div class="file-status"><?php echo getStatusIcon($status['exists'], $status['referenced']); ?></div>
+                <div class="<?= $cardClass ?>">
+                    <div class="file-name"><?= Html::encode($file) ?></div>
+                    <div class="file-path"><?= Html::encode($status['path']) ?></div>
+                    
+                    <div class="file-status">
+                        <?php if (!$status['exists']): ?>
+                            <span class="status-error-text">❌ NO EXISTE</span>
+                        <?php elseif (!$status['referenced']): ?>
+                            <span class="status-warning-text">⚠️ EXISTE pero NO REFERENCIADO</span>
+                        <?php else: ?>
+                            <span class="status-success-text">✅ EXISTE y REFERENCIADO</span>
+                        <?php endif; ?>
+                    </div>
+                    
                     <?php if ($status['exists']): ?>
-                        <div><small>Tamaño: <?php echo filesize($status['path']); ?> bytes</small></div>
-                        <div><small>Modificado: <?php echo date('Y-m-d H:i:s', filemtime($status['path'])); ?></small></div>
+                        <div class="file-details">
+                            <div>Tamaño: <?= number_format(filesize($status['path'])) ?> bytes</div>
+                            <div>Modificado: <?= date('Y-m-d H:i:s', filemtime($status['path'])) ?></div>
+                        </div>
                     <?php else: ?>
-                        <div><small>Ruta: <?php echo htmlspecialchars($status['path']); ?></small></div>
+                        <div class="file-details">
+                            <div>Archivo no encontrado en la ruta especificada</div>
+                        </div>
                     <?php endif; ?>
                 </div>
             <?php endforeach; ?>
         </div>
         
-        <!-- Contenido de ged.css (si existe) -->
+        <!-- Contenido de ged.css -->
         <?php if ($gedCssExists): ?>
-            <h2>📄 Contenido de ged.css (primeras 50 líneas)</h2>
+            <h2>📄 Contenido de ged.css</h2>
             <pre><?php 
             $lines = explode("\n", $gedCssContent);
-            $firstLines = array_slice($lines, 0, 50);
-            foreach ($firstLines as $i => $line) {
-                echo ($i + 1) . ': ' . htmlspecialchars($line) . "\n";
+            $lineCount = count($lines);
+            $showLines = min(30, $lineCount);
+            
+            for ($i = 0; $i < $showLines; $i++) {
+                echo ($i + 1) . ': ' . Html::encode($lines[$i]) . "\n";
             }
-            if (count($lines) > 50) {
-                echo "\n... (" . (count($lines) - 50) . " líneas más)";
+            
+            if ($lineCount > $showLines) {
+                echo "\n... (" . ($lineCount - $showLines) . " líneas más)";
             }
             ?></pre>
         <?php endif; ?>
@@ -352,28 +474,40 @@ if ($gedCssExists) {
         <div class="recommendations">
             <h3>💡 Recomendaciones</h3>
             <ul>
-                <li><strong>Para archivos existentes pero no referenciados:</strong> Agrega @import o referencia en ged.css</li>
-                <li><strong>Para archivos que no existen:</strong> Verifica la ruta o crea el archivo CSS</li>
-                <li><strong>Optimización:</strong> Considera combinar archivos CSS pequeños en uno solo</li>
-                <li><strong>Cache:</strong> Configura cabeceras de cache apropiadas para CSS</li>
-                <li><strong>Minificación:</strong> Minifica los archivos CSS en producción</li>
+                <?php if ($existingFiles < $totalFiles): ?>
+                    <li><strong>Archivos faltantes:</strong> Crea los archivos CSS que no existen en la estructura esperada.</li>
+                <?php endif; ?>
+                
+                <?php if ($referencedFiles < $existingFiles): ?>
+                    <li><strong>Archivos no referenciados:</strong> Verifica que todos los archivos existentes estén correctamente importados en ged.css con @import.</li>
+                <?php endif; ?>
+                
+                <?php if ($gedCssExists && empty($importsInGed)): ?>
+                    <li><strong>Sin importaciones:</strong> ged.css no contiene importaciones @import. Verifica que el formato sea correcto.</li>
+                <?php endif; ?>
+                
+                <li><strong>Orden de importación:</strong> Asegúrate de que los estilos responsive siempre sean los últimos.</li>
+                <li><strong>Cache:</strong> Limpia el cache del navegador después de hacer cambios en los archivos CSS.</li>
+                <li><strong>Validación:</strong> Valida los archivos CSS con herramientas como <a href="https://jigsaw.w3.org/css-validator/" target="_blank">W3C CSS Validator</a>.</li>
             </ul>
-            
-            <p><strong>Ejemplo de cómo referenciar en ged.css:</strong></p>
-            <pre>/* ged.css - Archivo principal */
-@import 'variables.css';
-@import 'reset.css';
-@import 'layout.css';
-/* ... otros imports ... */</pre>
         </div>
         
         <!-- Información del servidor -->
         <h2>🖥️ Información del Entorno</h2>
         <div class="status-box">
-            <p><strong>Directorio CSS:</strong> <?php echo htmlspecialchars($cssDir); ?></p>
-            <p><strong>PHP Version:</strong> <?php echo phpversion(); ?></p>
-            <p><strong>Servidor Web:</strong> <?php echo $_SERVER['SERVER_SOFTWARE'] ?? 'N/A'; ?></p>
-            <p><strong>Tiempo de Ejecución:</strong> <?php echo round(microtime(true) - $_SERVER['REQUEST_TIME_FLOAT'], 4); ?> segundos</p>
+            <p><strong>Directorio CSS:</strong> <?= Html::encode($cssDir) ?></p>
+            <p><strong>ged.css existe:</strong> <?= $gedCssExists ? 'Sí' : 'No' ?></p>
+            <p><strong>PHP Version:</strong> <?= phpversion() ?></p>
+            <p><strong>Servidor Web:</strong> <?= $_SERVER['SERVER_SOFTWARE'] ?? 'N/A' ?></p>
+            <p><strong>Tiempo de Ejecución:</strong> <?= round(microtime(true) - ($_SERVER['REQUEST_TIME_FLOAT'] ?? microtime(true)), 4) ?> segundos</p>
+        </div>
+        
+        <!-- Debug info -->
+        <div class="debug-info">
+            <p><strong>Debug Info:</strong></p>
+            <p>URL Accedida: <?= Yii::$app->request->url ?></p>
+            <p>Ruta Base: <?= Yii::getAlias('@webroot') ?></p>
+            <p>Ruta Web: <?= Yii::getAlias('@web') ?></p>
         </div>
     </div>
 </body>
