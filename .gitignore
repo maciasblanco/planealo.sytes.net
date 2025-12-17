@@ -83,4 +83,6 @@ docker-compose.override.yml
 # views/                 ✅ DEBE estar en repo
 # controllers/           ✅ DEBE estar en repo
 # web/                   ✅ DEBE estar en repo (excepto assets)
-# =============================================
+# =============================================runtime/debug/*
+runtime/logs/*
+runtime/cache/*
