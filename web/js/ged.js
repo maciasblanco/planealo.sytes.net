@@ -2295,3 +2295,101 @@ function checkBrokenImages() {
 window.addEventListener('load', function() {
     setTimeout(checkBrokenImages, 1000);
 });
+// ===== CORRECCIÓN DE EMERGENCIA PARA CARRUSEL =====
+function corregirCarruselUrgente() {
+    console.log('🚨 Aplicando corrección urgente al carrusel...');
+    
+    const carrusel = document.getElementById('carouselHero');
+    if (!carrusel) return;
+    
+    // 1. Forzar altura del carrusel
+    const seccionCarrusel = document.getElementById('hero-carousel');
+    if (seccionCarrusel) {
+        const vh = window.innerHeight * 0.7;
+        seccionCarrusel.style.height = vh + 'px';
+        seccionCarrusel.style.minHeight = '400px';
+        seccionCarrusel.style.backgroundColor = '#2c5aa0';
+    }
+    
+    // 2. Forzar dimensiones de TODAS las imágenes
+    const imagenes = document.querySelectorAll('#carouselHero .carousel-item img');
+    
+    imagenes.forEach((img, index) => {
+        console.log(`Corrigiendo imagen ${index + 1}: ${img.src}`);
+        
+        // Forzar dimensiones absolutas
+        img.style.width = '100%';
+        img.style.height = '100%';
+        img.style.objectFit = 'cover';
+        img.style.objectPosition = 'center center';
+        img.style.display = 'block';
+        img.style.position = 'absolute';
+        img.style.top = '0';
+        img.style.left = '0';
+        
+        // Configuración específica según cada imagen
+        if (index === 0) {
+            // Imagen 1: 2560x1920 (4:3)
+            img.style.objectPosition = 'center 30%';
+        } else if (index === 1) {
+            // Imagen 2: 1280x400 (muy panorámica)
+            img.style.objectPosition = 'center 25%';
+            img.style.objectFit = 'cover';
+        } else if (index === 2) {
+            // Imagen 3: 1024x712 (casi cuadrada)
+            img.style.objectPosition = 'center center';
+        }
+        
+        // Forzar que Bootstrap muestre la imagen
+        img.style.opacity = '1';
+        img.style.visibility = 'visible';
+        
+        // Verificar carga
+        if (img.complete) {
+            console.log(`✅ Imagen ${index + 1} cargada: ${img.naturalWidth}x${img.naturalHeight}`);
+        } else {
+            img.onload = function() {
+                console.log(`✅ Imagen ${index + 1} cargada: ${this.naturalWidth}x${this.naturalHeight}`);
+                // Reforzar dimensiones después de carga
+                this.style.width = '100%';
+                this.style.height = '100%';
+            };
+        }
+    });
+    
+    // 3. Forzar que los slides inactivos también tengan dimensiones
+    const slides = document.querySelectorAll('#carouselHero .carousel-item');
+    slides.forEach((slide, index) => {
+        slide.style.position = 'absolute';
+        slide.style.width = '100%';
+        slide.style.height = '100%';
+        slide.style.top = '0';
+        slide.style.left = '0';
+        
+        // Si no es el slide activo, aún debe tener dimensiones
+        if (!slide.classList.contains('active')) {
+            slide.style.display = 'block'; // Bootstrap usa none
+            slide.style.opacity = '0';
+            slide.style.transition = 'opacity 0.6s ease';
+        }
+    });
+    
+    console.log('✅ Corrección urgente aplicada');
+}
+
+// Ejecutar inmediatamente y en varios momentos
+document.addEventListener('DOMContentLoaded', corregirCarruselUrgente);
+window.addEventListener('load', corregirCarruselUrgente);
+
+// También cuando Bootstrap cambie de slide
+document.addEventListener('DOMContentLoaded', function() {
+    const carrusel = document.getElementById('carouselHero');
+    if (carrusel) {
+        carrusel.addEventListener('slid.bs.carousel', function() {
+            setTimeout(corregirCarruselUrgente, 50);
+        });
+    }
+});
+
+// Y en redimensionamiento
+window.addEventListener('resize', corregirCarruselUrgente);

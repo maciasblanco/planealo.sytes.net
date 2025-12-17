@@ -22,7 +22,7 @@ $hasMarketplace = true; // Asumir que existe, se puede verificar mejor
 ?>
 
 <div class="site-index landing-page">
-    <!-- Carrusel Hero - VERSIÓN SIMPLIFICADA Y FUNCIONAL -->
+    <!-- Carrusel Hero - VERSIÓN CORREGIDA SIN ESTILOS INLINE -->
     <section id="hero-carousel" class="carousel-hero">
         <div id="carouselHero" class="carousel slide">
             <div class="carousel-indicators">
@@ -36,7 +36,7 @@ $hasMarketplace = true; // Asumir que existe, se puede verificar mejor
             
             <div class="carousel-inner">
                 <div class="carousel-item active">
-                    <!-- Imagen con clases simples -->
+                    <div class="carousel-image-overlay"></div>
                     <img src="<?= Yii::getAlias('@web') ?>/img/Carrusel/slide1.jpg" 
                          class="d-block w-100 carousel-image"
                          alt="Gestión Escuelas Deportivas - Sistema GED"
@@ -53,6 +53,7 @@ $hasMarketplace = true; // Asumir que existe, se puede verificar mejor
                 </div>
                 
                 <div class="carousel-item">
+                    <div class="carousel-image-overlay"></div>
                     <img src="<?= Yii::getAlias('@web') ?>/img/Carrusel/slide2.png" 
                          class="d-block w-100 carousel-image"
                          alt="Marketplace Deportivo - Productos para atletas"
@@ -69,6 +70,7 @@ $hasMarketplace = true; // Asumir que existe, se puede verificar mejor
                 </div>
                 
                 <div class="carousel-item">
+                    <div class="carousel-image-overlay"></div>
                     <img src="<?= Yii::getAlias('@web') ?>/img/Carrusel/slide3.png" 
                          class="d-block w-100 carousel-image"
                          alt="Productos Destacados - Lo más vendido"
@@ -374,12 +376,3 @@ $hasMarketplace = true; // Asumir que existe, se puede verificar mejor
         </div>
     </div>
 </div>
-
-<!-- ✅ MARCADOR PARA JS EXTERNO -->
-<script>
-// Marcador para que ged.js detecte la página de inicio
-document.addEventListener('DOMContentLoaded', function() {
-    // Esta variable será leída por ged.js
-    window.gedCurrentPage = 'index';
-});
-</script>

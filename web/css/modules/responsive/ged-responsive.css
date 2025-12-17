@@ -2106,3 +2106,98 @@ html, body {
       margin-bottom: 1rem;
   }
 }
+/* ===== CORRECCIÓN URGENTE PARA CARRUSEL ===== */
+
+/* 1. Forzar altura del carrusel a 70vh */
+.carousel-hero {
+  height: 70vh !important;
+  min-height: 400px !important;
+  max-height: 800px !important;
+  width: 100% !important;
+  position: relative !important;
+  overflow: hidden !important;
+  margin-bottom: 2rem !important;
+  background: linear-gradient(135deg, #2c5aa0, #1e3a8a) !important;
+}
+
+/* 2. Asegurar que carousel-inner ocupe todo el espacio */
+.carousel-hero .carousel-inner {
+  height: 100% !important;
+  width: 100% !important;
+  position: relative !important;
+}
+
+/* 3. Cada slide debe ocupar TODO el espacio disponible */
+.carousel-hero .carousel-item {
+  height: 100% !important;
+  width: 100% !important;
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  background: #2c5aa0 !important; /* Fondo mientras carga */
+}
+
+/* 4. CORRECCIÓN CRÍTICA: Imágenes siempre visibles y con dimensiones */
+.carousel-hero .carousel-item img {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
+  object-position: center center !important;
+  display: block !important;
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  
+  /* Calidad mejorada - ELIMINAR blur */
+  image-rendering: auto !important;
+  -webkit-font-smoothing: antialiased !important;
+  -moz-osx-font-smoothing: grayscale !important;
+  
+  /* Forzar que Bootstrap no la oculte */
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+/* 5. Overlay para mejorar contraste */
+.carousel-hero .carousel-item::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+      to bottom,
+      rgba(0, 0, 0, 0.3) 0%,
+      rgba(0, 0, 0, 0.5) 50%,
+      rgba(0, 0, 0, 0.7) 100%
+  );
+  z-index: 1;
+  pointer-events: none;
+}
+
+/* 6. El caption debe estar SOBRE el overlay */
+.carousel-hero .carousel-caption {
+  z-index: 2 !important;
+  position: absolute !important;
+  top: 50% !important;
+  left: 50% !important;
+  transform: translate(-50%, -50%) !important;
+  width: 90% !important;
+  max-width: 800px !important;
+}
+
+/* 7. Asegurar que Bootstrap no oculte slides inactivos */
+.carousel-hero .carousel-item:not(.active) {
+  display: block !important; /* Bootstrap usa display: none */
+  visibility: visible !important;
+  opacity: 0 !important;
+  transition: opacity 0.6s ease !important;
+}
+
+.carousel-hero .carousel-item.active {
+  opacity: 1 !important;
+}
