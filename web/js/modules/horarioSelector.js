@@ -1,5 +1,5 @@
-// web/js/horarioSelector.js
-class HorarioSelector {
+// web/js/modules/horario-selector.js
+class HorarioModule {
     constructor() {
         this.horariosSeleccionados = {};
         this.dias = ['lunes', 'martes', 'miercoles', 'jueves', 'viernes', 'sabado', 'domingo'];
@@ -206,22 +206,22 @@ class HorarioSelector {
 }
 
 // Inicialización global
-let horarioSelectorInstance = null;
+let horarioModuleInstance = null;
 
-function initHorarioSelector() {
+function initHorarioModule() {
     if ($('#horario-grid').length > 0) {
-        horarioSelectorInstance = new HorarioSelector();
+        horarioModuleInstance = new HorarioModule();
     }
 }
 
 // Inicializar cuando el documento esté listo
 $(document).ready(function() {
-    initHorarioSelector();
+    initHorarioModule();
 });
 
 // Para compatibilidad con Yii2 y inicialización manual
-window.HorarioSelector = HorarioSelector;
-window.initHorarioSelector = initHorarioSelector;
-window.getHorarioSelectorInstance = function() {
-    return horarioSelectorInstance;
+window.HorarioModule = HorarioModule;
+window.initHorarioModule = initHorarioModule;
+window.getHorarioModuleInstance = function() {
+    return horarioModuleInstance;
 };

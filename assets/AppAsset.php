@@ -38,14 +38,19 @@ class AppAsset extends AssetBundle
     ];
     
     public $js = [
-        'js/ged.js', // JS ya unificado
-        'js/dropdowns-dependientes.js',
-        'js/mapa-escuela.js',
-        'js/horarioSelector.js',
-        'js/mapa-escuelas-show.js',
-        'js/tienda.js',
-        'js/reportes.js',
-        'js/ged-offcanvas.js', // ✅ NUEVO: Offcanvas JS
+        // Sistema principal GED (incluye NavbarManager, OffCanvasSidebar, etc.)
+        'js/ged.js',
+        
+        // Módulos adicionales específicos
+        'js/modules/horario-selector.js',
+        'js/modules/mapa-module.js',
+        'js/modules/reportes-module.js',
+        'js/modules/tienda-module.js', // Opcional
+        // Utilidades de debug
+        'js/utils/debug-utils.js',
+        
+        // Inicialización global
+        'js/ged-init.js',
     ];
     
     public $depends = [

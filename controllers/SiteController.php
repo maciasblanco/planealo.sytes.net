@@ -324,11 +324,21 @@ class SiteController extends Controller
         // Para debug: var_dump("entre a test"); die();
         return $this->render('test-css');
     }
+
+    /**
+     * Acción para probar los módulos JavaScript
+     * @return string
+    */
+    public function actionTestJs()
+    {
+        return $this->render('test-js');
+    }
+    
     /**
      * ✅ MÉTODO ADICIONAL: Verificar si hay bucle de redirección
      * Se puede llamar desde JavaScript para debug
      */
-    public function actionCheckRedirectLoop()
+     public function actionCheckRedirectLoop()
     {
         Yii::info('Verificación de bucle de redirección solicitada', 'security');
         
