@@ -1,36 +1,68 @@
-// js/ged.js - Sistema GED - VERSIÓN 4.2 CON ANCHO COMPLETO EN PC
-// Versión: 4.2.0 - Ancho completo sin sidebar en PC
-// Fecha: [Fecha actual]
+// js/ged.js - Sistema GED - VERSIÓN 4.5 CORRECCIÓN FINAL
+// Versión: 4.5.0 - Corrección completa de OffCanvas
+// Fecha: 15/01/2024
 
 // ==================================================
-// MÓDULOS DEL SISTEMA - SIN ESPACIO LATERAL EN PC
+// MÓDULOS DEL SISTEMA - CON CONTROL DE INICIALIZACIÓN
 // ==================================================
 
 class GEDSystem {
     constructor() {
+        // Evitar inicialización múltiple
+        if (window.gedSystem) {
+            console.warn('⚠️ Sistema GED ya está inicializado');
+            return window.gedSystem;
+        }
+        
         this.isMobile = this.checkIsMobile();
         this.isDesktop = !this.isMobile;
         this.navbarHeight = this.getNavbarHeight();
-        this.sidebarWidth = 0; // Sin sidebar en PC
+        this.sidebarWidth = 0;
         this.compactMode = false;
         
         // Variables de padding optimizadas
-        this.minPadding = 10; // Mínimo 10px para contenido
-        this.maxPaddingVH = 0.015; // Máximo 1.5vh
+        this.minPadding = 10;
+        this.maxPaddingVH = 0.015;
         
         // Elementos del DOM
         this.navbar = null;
         this.body = document.body;
         this.html = document.documentElement;
         this.mainContent = null;
-        this.sidebar = null;
         
         // Controladores
         this.debouncedResize = this.debounce(() => this.handleResize(), 250);
         this.mutationObserver = null;
         
+        // Estado del sistema
+        this.currentPage = this.detectCurrentPage();
         this.modules = {};
+        this._widthConfigApplied = false;
+        this._initialized = false;
+        
+        // Marcar como inicializado globalmente
+        window.gedSystem = this;
+        
         this.init();
+    }
+    
+    // ✅ DETECTAR PÁGINA ACTUAL
+    detectCurrentPage() {
+        const path = window.location.pathname;
+        const bodyClasses = document.body.classList;
+        
+        if (path === '/' || path.includes('site/index') || 
+            bodyClasses.contains('site-index') || 
+            bodyClasses.contains('landing-page')) {
+            return 'index';
+        }
+        
+        if (path.includes('site/login')) return 'login';
+        if (path.includes('site/signup')) return 'signup';
+        if (path.includes('ged/default')) return 'ged';
+        if (path.includes('tienda')) return 'tienda';
+        
+        return 'other';
     }
     
     // ✅ VERIFICAR SI ES MÓVIL
@@ -38,20 +70,25 @@ class GEDSystem {
         return window.innerWidth < 992;
     }
     
-    // ✅ OBTENER ALTURA DEL NAVBAR (OPTIMIZADA)
+    // ✅ OBTENER ALTURA DEL NAVBAR (CORREGIDO)
     getNavbarHeight() {
         if (this.isMobile) {
-            if (window.innerWidth < 576) return 50;
-            if (window.innerWidth < 768) return 55;
-            return 60;
+            if (window.innerWidth < 576) return 60;
+            if (window.innerWidth < 768) return 70;
+            return 80;
         } else {
-            // En PC: navbar más compacto
-            return Math.min(window.innerHeight * 0.12, 120);
+            // En escritorio: altura fija más consistente
+            return 120;
         }
     }
     
     // ✅ INICIALIZACIÓN PRINCIPAL
     init() {
+        if (this._initialized) {
+            console.warn('⚠️ GEDSystem ya estaba inicializado');
+            return;
+        }
+        
         if (document.readyState === 'loading') {
             document.addEventListener('DOMContentLoaded', () => this.setup());
         } else {
@@ -61,30 +98,26 @@ class GEDSystem {
     
     // ✅ CONFIGURACIÓN COMPLETA DEL SISTEMA
     setup() {
-        console.log(`🚀 Sistema GED v4.2 inicializando - Modo: ${this.isMobile ? 'Móvil' : 'Escritorio'}`);
+        console.log(`🚀 Sistema GED v4.5 inicializando - Página: ${this.currentPage}, Modo: ${this.isMobile ? 'Móvil' : 'Escritorio'}`);
         
         try {
+            // Aplicar parche para OffCanvas ANTES de cualquier otra inicialización
+            this.applyOffCanvasPatch();
+            
             // Cachear elementos DOM
             this.cacheElements();
             
             // Aplicar configuración de ancho completo inmediatamente
             this.applyFullWidthConfiguration();
             
-            // Inicializar todos los módulos
+            // Inicializar módulos base (siempre necesarios)
             this.modules = {
                 navbar: new NavbarManager(),
-                sidebar: this.createSidebarInstance(),
-                landing: new LandingPageManager(),
-                search: new SchoolSearch(),
                 components: new ComponentsManager()
             };
             
-            // Inicializar cada módulo
-            Object.values(this.modules).forEach(module => {
-                if (module && typeof module.init === 'function') {
-                    module.init();
-                }
-            });
+            // ✅ INICIALIZAR MÓDULOS ESPECÍFICOS POR PÁGINA
+            this.initializePageSpecificModules();
             
             // Configurar observadores y eventos
             this.setupObservers();
@@ -93,14 +126,12 @@ class GEDSystem {
             // Aplicar correcciones iniciales
             this.applyBodyCorrections();
             
-            // Forzar recálculo después de la carga completa
+            // Verificación final
             setTimeout(() => {
-                this.applyFullWidthConfiguration();
-                this.fixOverflowIssues();
                 this.verifyWidth();
+                this._initialized = true;
+                this.logInitializationStatus();
             }, 300);
-            
-            console.log('✅ Sistema GED v4.2 completamente inicializado con ancho completo en PC');
             
         } catch (error) {
             console.error('❌ Error crítico en inicialización del sistema:', error);
@@ -108,40 +139,136 @@ class GEDSystem {
         }
     }
     
-    // ✅ CREAR INSTANCIA DEL SIDEBAR (SOLO PARA MÓVIL)
-    createSidebarInstance() {
-        // Solo crear sidebar en móvil
-        if (this.isMobile) {
-            if (typeof window.OffCanvasSidebar !== 'undefined') {
-                return new window.OffCanvasSidebar();
-            } 
-            else if (window.gedOffcanvas) {
-                return window.gedOffcanvas;
+    // ✅ APLICAR PARCHES PARA OFFCANVAS
+    applyOffCanvasPatch() {
+        console.log('🔧 Aplicando parches para OffCanvas...');
+        
+        // Parchear la clase OffCanvasSidebar si existe
+        if (typeof window.OffCanvasSidebar !== 'undefined') {
+            const OriginalOffCanvasSidebar = window.OffCanvasSidebar;
+            
+            // Crear clase parcheada
+            class PatchedOffCanvasSidebar extends OriginalOffCanvasSidebar {
+                constructor() {
+                    super();
+                    this._isMobile = window.innerWidth < 992;
+                    console.log(`ℹ️ OffCanvasSidebar parcheado - Modo: ${this._isMobile ? 'Móvil' : 'Escritorio'}`);
+                }
+                
+                loadMobileMenu() {
+                    if (!this._isMobile) {
+                        console.log('ℹ️ OffCanvas: loadMobileMenu deshabilitado en escritorio');
+                        return;
+                    }
+                    return super.loadMobileMenu();
+                }
+                
+                open() {
+                    if (!this._isMobile) {
+                        console.warn('⚠️ OffCanvas: open() deshabilitado en escritorio');
+                        return;
+                    }
+                    return super.open();
+                }
+                
+                init() {
+                    if (!this._isMobile) {
+                        console.log('ℹ️ OffCanvas: init() deshabilitado en escritorio');
+                        return;
+                    }
+                    return super.init();
+                }
+                
+                handleViewportChange(isMobile) {
+                    this._isMobile = isMobile;
+                    console.log(`ℹ️ OffCanvas cambió a modo: ${isMobile ? 'Móvil' : 'Escritorio'}`);
+                    return super.handleViewportChange(isMobile);
+                }
             }
+            
+            // Reemplazar la clase global
+            window.OffCanvasSidebar = PatchedOffCanvasSidebar;
+            console.log('✅ Clase OffCanvasSidebar parcheada globalmente');
+            
+            // Parchear instancia existente si existe
+            if (window.gedOffcanvas && window.gedOffcanvas instanceof OriginalOffCanvasSidebar) {
+                const originalProto = Object.getPrototypeOf(window.gedOffcanvas);
+                
+                // Crear nuevo prototipo con métodos parcheados
+                const patchedProto = Object.create(originalProto);
+                
+                patchedProto.loadMobileMenu = function() {
+                    if (!this._isMobile) {
+                        console.log('ℹ️ gedOffcanvas: loadMobileMenu deshabilitado en escritorio');
+                        return;
+                    }
+                    return originalProto.loadMobileMenu.call(this);
+                };
+                
+                patchedProto.open = function() {
+                    if (!this._isMobile) {
+                        console.warn('⚠️ gedOffcanvas: open() deshabilitado en escritorio');
+                        return;
+                    }
+                    return originalProto.open.call(this);
+                };
+                
+                patchedProto.init = function() {
+                    if (!this._isMobile) {
+                        console.log('ℹ️ gedOffcanvas: init() deshabilitado en escritorio');
+                        return;
+                    }
+                    return originalProto.init.call(this);
+                };
+                
+                Object.setPrototypeOf(window.gedOffcanvas, patchedProto);
+                window.gedOffcanvas._isMobile = window.innerWidth < 992;
+                console.log('✅ Instancia gedOffcanvas parcheada');
+            }
+        } else {
+            console.log('ℹ️ OffCanvasSidebar no encontrado, omitiendo parche');
+        }
+    }
+    
+    // ✅ INICIALIZAR MÓDULOS ESPECÍFICOS POR PÁGINA
+    initializePageSpecificModules() {
+        console.log(`📄 Inicializando módulos para página: ${this.currentPage}`);
+        
+        // Módulos que dependen de jQuery (solo si jQuery está disponible)
+        if (typeof window.jQuery !== 'undefined') {
+            this.modules.search = new SchoolSearch();
         }
         
-        // En PC o sin módulo: objeto dummy
-        return {
-            init: () => {},
-            handleViewportChange: () => {},
-            open: () => {},
-            close: () => {},
-            isOpen: false
-        };
+        // LandingPageManager SOLO en página de inicio
+        if (this.currentPage === 'index') {
+            this.modules.landing = new LandingPageManager();
+        }
+        
+        // Inicializar cada módulo
+        Object.values(this.modules).forEach(module => {
+            if (module && typeof module.init === 'function') {
+                try {
+                    module.init();
+                } catch (moduleError) {
+                    console.warn(`⚠️ Error al inicializar módulo ${module.constructor?.name || 'desconocido'}:`, moduleError);
+                }
+            }
+        });
     }
     
     // ✅ CACHEAR ELEMENTOS DOM IMPORTANTES
     cacheElements() {
         this.navbar = document.querySelector('.navbar-contextual');
         this.mainContent = document.querySelector('.main-content-wrapper');
-        this.sidebar = document.querySelector('.ged-offcanvas-sidebar');
     }
     
     // ✅ APLICAR CONFIGURACIÓN DE ANCHO COMPLETO
     applyFullWidthConfiguration() {
-        console.log('🔧 Aplicando configuración de ancho completo...');
+        // Evitar aplicaciones múltiples
+        if (this._widthConfigApplied && !this.isMobile) return;
         
         const padding = this.calculatePadding();
+        console.log('🔧 Aplicando configuración de ancho completo...');
         
         // ✅ EN PC: SIN PADDING LATERAL EN BODY/HTML
         if (this.isDesktop) {
@@ -177,36 +304,10 @@ class GEDSystem {
                 this.mainContent.style.width = '100%';
             }
             
-            // Contenedores Bootstrap reseteados
-            document.querySelectorAll('.container-fluid, .container').forEach(container => {
-                container.style.paddingLeft = '0';
-                container.style.paddingRight = '0';
-                container.style.marginLeft = '0';
-                container.style.marginRight = '0';
-                container.style.width = '100%';
-                
-                // Contenido interno SÍ puede tener padding
-                const children = container.children;
-                for (let child of children) {
-                    child.style.paddingLeft = `${padding}px`;
-                    child.style.paddingRight = `${padding}px`;
-                }
-            });
-            
-            // Carrusel hero al 100%
-            const carousel = document.getElementById('hero-carousel');
-            if (carousel) {
-                carousel.style.paddingLeft = '0';
-                carousel.style.paddingRight = '0';
-                carousel.style.marginLeft = '0';
-                carousel.style.marginRight = '0';
-                carousel.style.width = '100vw';
-            }
-            
+            this._widthConfigApplied = true;
         } 
         // ✅ EN MÓVIL: CONFIGURACIÓN NORMAL
         else {
-            // Aplicar padding normal en móvil
             if (this.navbar) {
                 this.navbar.style.paddingLeft = `${padding}px`;
                 this.navbar.style.paddingRight = `${padding}px`;
@@ -216,11 +317,6 @@ class GEDSystem {
                 this.mainContent.style.paddingLeft = `${padding}px`;
                 this.mainContent.style.paddingRight = `${padding}px`;
             }
-            
-            document.querySelectorAll('.container-fluid, .container').forEach(container => {
-                container.style.paddingLeft = `${padding}px`;
-                container.style.paddingRight = `${padding}px`;
-            });
         }
         
         console.log(`✅ Configuración aplicada: ${this.isDesktop ? 'PC (ancho completo)' : 'Móvil'} - Padding: ${padding}px`);
@@ -229,10 +325,8 @@ class GEDSystem {
     // ✅ CALCULAR PADDING DINÁMICO
     calculatePadding() {
         if (this.isDesktop) {
-            // En PC: padding mínimo fijo para contenido
             return Math.max(15, this.minPadding);
         } else {
-            // En móvil: responsive basado en vh
             const vhPadding = window.innerHeight * this.maxPaddingVH;
             return Math.max(vhPadding, this.minPadding);
         }
@@ -244,14 +338,22 @@ class GEDSystem {
         const viewportWidth = window.innerWidth;
         const difference = Math.abs(bodyWidth - viewportWidth);
         
-        console.log(`📏 Verificación de ancho:
-          Body: ${bodyWidth}px
-          Viewport: ${viewportWidth}px
-          Diferencia: ${difference}px
-          ${difference > 5 ? '⚠️ Posible desbordamiento' : '✅ Ancho correcto'}
-        `);
+        const isCorrect = difference < 5;
+        console.log(`📏 Verificación de ancho: Body ${bodyWidth}px, Viewport ${viewportWidth}px, Diferencia ${difference}px - ${isCorrect ? '✅ Correcto' : '⚠️ Desbordamiento'}`);
         
-        return difference < 5;
+        return isCorrect;
+    }
+    
+    // ✅ LOG DE ESTADO DE INICIALIZACIÓN
+    logInitializationStatus() {
+        console.log('📊 RESUMEN DE INICIALIZACIÓN:');
+        console.log(`  • Página: ${this.currentPage}`);
+        console.log(`  • Modo: ${this.isMobile ? 'Móvil' : 'Escritorio'}`);
+        console.log(`  • Módulos cargados: ${Object.keys(this.modules).join(', ')}`);
+        console.log(`  • Navbar height: ${this.navbarHeight}px`);
+        console.log(`  • Padding actual: ${this.calculatePadding()}px`);
+        console.log(`  • Sistema inicializado: ${this._initialized ? '✅ Sí' : '❌ No'}`);
+        console.log('✅ Sistema GED v4.5 completamente inicializado');
     }
     
     // ✅ CONFIGURAR OBSERVADORES DE CAMBIOS
@@ -259,7 +361,9 @@ class GEDSystem {
         // Observar cambios en el DOM para ajustar ancho
         const observer = new MutationObserver(() => {
             setTimeout(() => {
-                this.applyFullWidthConfiguration();
+                if (!this._widthConfigApplied || this.isMobile) {
+                    this.applyFullWidthConfiguration();
+                }
                 this.fixOverflowIssues();
             }, 100);
         });
@@ -314,6 +418,9 @@ class GEDSystem {
             if (changed) {
                 console.log(`🔄 Cambio de modo: ${this.isMobile ? 'Móvil' : 'Escritorio'}`);
                 
+                // Resetear configuración de ancho
+                this._widthConfigApplied = false;
+                
                 // Recalcular alturas
                 this.navbarHeight = this.getNavbarHeight();
                 
@@ -321,9 +428,9 @@ class GEDSystem {
                 this.applyFullWidthConfiguration();
                 this.applyBodyCorrections();
                 
-                // Notificar a los módulos del cambio
-                if (this.modules.sidebar && typeof this.modules.sidebar.handleViewportChange === 'function') {
-                    this.modules.sidebar.handleViewportChange(this.isMobile);
+                // Actualizar estado de OffCanvas si existe
+                if (window.gedOffcanvas && typeof window.gedOffcanvas.handleViewportChange === 'function') {
+                    window.gedOffcanvas.handleViewportChange(this.isMobile);
                 }
             }
             
@@ -396,7 +503,7 @@ class GEDSystem {
             max-width: 400px;
         `;
         errorDiv.textContent = `⚠️ ${message}. Por favor, recarga la página.`;
-        errorDiv.innerHTML += `<br><small style="opacity:0.8">Error en Sistema GED v4.2</small>`;
+        errorDiv.innerHTML += `<br><small style="opacity:0.8">Error en Sistema GED v4.5</small>`;
         document.body.appendChild(errorDiv);
         
         // Auto-eliminar después de 10 segundos
@@ -409,6 +516,7 @@ class GEDSystem {
     
     // ✅ MÉTODOS PÚBLICOS PARA CONTROL EXTERNO
     forceLayoutUpdate() {
+        this._widthConfigApplied = false;
         this.applyFullWidthConfiguration();
         this.applyBodyCorrections();
         this.fixOverflowIssues();
@@ -426,9 +534,12 @@ class GEDSystem {
             difference,
             hasOverflow: difference > 10,
             currentMode: this.isMobile ? 'Móvil' : 'Escritorio',
+            currentPage: this.currentPage,
             navbarHeight: this.navbarHeight,
             minPadding: this.minPadding,
-            maxPaddingVH: this.maxPaddingVH
+            maxPaddingVH: this.maxPaddingVH,
+            modulesLoaded: Object.keys(this.modules).filter(key => this.modules[key]),
+            initialized: this._initialized
         };
         
         console.table(report);
@@ -439,6 +550,7 @@ class GEDSystem {
     updatePaddingConfig(minPx = 10, maxVH = 0.015) {
         this.minPadding = minPx;
         this.maxPaddingVH = maxVH;
+        this._widthConfigApplied = false;
         this.applyFullWidthConfiguration();
         console.log(`🔧 Configuración actualizada: mínimo ${minPx}px, máximo ${maxVH*100}vh`);
     }
@@ -446,21 +558,23 @@ class GEDSystem {
     // ✅ OBTENER ESTADO ACTUAL
     getCurrentState() {
         return {
-            version: '4.2.0',
+            version: '4.5.0',
             isMobile: this.isMobile,
             isDesktop: this.isDesktop,
+            currentPage: this.currentPage,
             navbarHeight: this.navbarHeight,
-            sidebarWidth: this.sidebarWidth,
             minPadding: this.minPadding,
             maxPaddingVH: this.maxPaddingVH,
             viewportWidth: window.innerWidth,
-            bodyWidth: this.body.offsetWidth
+            bodyWidth: this.body.offsetWidth,
+            initialized: this._initialized,
+            offCanvasPatched: typeof window.OffCanvasSidebar !== 'undefined'
         };
     }
 }
 
 // ==================================================
-// NAVBAR MANAGER - OPTIMIZADO PARA ANCHO COMPLETO
+// NAVBAR MANAGER - CORREGIDO
 // ==================================================
 
 class NavbarManager {
@@ -506,29 +620,10 @@ class NavbarManager {
                 left: 0 !important;
                 right: 0 !important;
                 box-sizing: border-box !important;
-                position: fixed !important;
-                top: 0 !important;
-                z-index: 1030 !important;
             `;
             
             // Aplicar al navbar
             this.navbar.style.cssText += fullWidthStyles;
-            
-            // Asegurar que elementos internos también sean full width
-            const elements = [
-                '.navbar-collapse',
-                '.navbar-container',
-                '.navbar-menu-section',
-                '.navbar-brand-section',
-                '.navbar-control-section'
-            ];
-            
-            elements.forEach(selector => {
-                const elements = document.querySelectorAll(selector);
-                elements.forEach(element => {
-                    element.style.cssText += 'width: 100% !important; max-width: 100% !important; box-sizing: border-box !important;';
-                });
-            });
         } catch (error) {
             console.error('Error en forceFullWidth:', error);
         }
@@ -549,12 +644,6 @@ class NavbarManager {
                     element.style.display = 'none';
                 }
             });
-            
-            // Asegurar que el toggler sea funcional
-            const navbarToggler = this.navbar.querySelector('.navbar-toggler');
-            if (navbarToggler) {
-                navbarToggler.style.display = 'block';
-            }
             
             console.log('✅ Navbar configurado para móvil');
         } catch (error) {
@@ -577,19 +666,6 @@ class NavbarManager {
                     element.style.display = '';
                 }
             });
-            
-            // Ocultar toggler en desktop
-            const navbarToggler = this.navbar.querySelector('.navbar-toggler');
-            if (navbarToggler) {
-                navbarToggler.style.display = 'none';
-            }
-            
-            // Expandir menú collapse en desktop
-            const navbarCollapse = document.getElementById('navbarGedCollapse');
-            if (navbarCollapse) {
-                navbarCollapse.classList.add('show');
-                navbarCollapse.style.display = 'flex';
-            }
             
             console.log('✅ Navbar configurado para escritorio');
         } catch (error) {
@@ -617,7 +693,7 @@ class NavbarManager {
 }
 
 // ==================================================
-// SCHOOL SEARCH MANAGER (MANTENIDO SIN CAMBIOS)
+// SCHOOL SEARCH MANAGER - OPTIMIZADO
 // ==================================================
 
 class SchoolSearch {
@@ -640,11 +716,14 @@ class SchoolSearch {
     init() {
         try {
             if (typeof window.jQuery === 'undefined') {
-                console.error('jQuery no está cargado. SchoolSearch desactivado.');
+                console.warn('⚠️ jQuery no está cargado. SchoolSearch desactivado.');
                 return;
             }
             
-            if (!document.querySelector('#schoolSearch')) return;
+            if (!document.querySelector('#schoolSearch')) {
+                console.log('ℹ️ SchoolSearch: No se encontró campo de búsqueda, omitiendo');
+                return;
+            }
             
             this.cacheElements();
             this.bindEvents();
@@ -847,7 +926,7 @@ class SchoolSearch {
 }
 
 // ==================================================
-// COMPONENTS MANAGER (MANTENIDO SIN CAMBIOS)
+// COMPONENTS MANAGER - OPTIMIZADO
 // ==================================================
 
 class ComponentsManager {
@@ -917,7 +996,7 @@ class ComponentsManager {
 }
 
 // ==================================================
-// LANDING PAGE MANAGER (MANTENIDO SIN CAMBIOS)
+// LANDING PAGE MANAGER - OPTIMIZADO
 // ==================================================
 
 class LandingPageManager {
@@ -931,29 +1010,48 @@ class LandingPageManager {
 
     init() {
         try {
-            console.log('🚀 Landing Page Manager inicializado');
-            this.cargarProductos();
-            this.renderizarProductos();
-            this.actualizarTotalVendidos();
+            // Verificar que estamos en una página de landing
+            const hasLandingElements = document.querySelector('.landing-page, .site-index, #hero-carousel');
+            if (!hasLandingElements) {
+                console.log('ℹ️ LandingPageManager: No se detectó página de inicio, omitiendo inicialización');
+                return;
+            }
+            
+            console.log('🚀 Landing Page Manager inicializando...');
+            
+            // Solo cargar productos si hay contenedores
+            this.checkProductContainers();
+            
+            // Inicializar solo las funcionalidades necesarias
             this.setupEventListeners();
-            this.mostrarBannerTiendas();
             this.initAnimaciones();
             this.initMarketplace();
+            
             console.log('✅ LandingPageManager listo');
         } catch (error) {
             console.error('Error en LandingPageManager.init:', error);
         }
     }
 
-    getElement(id) {
-        try {
-            if (!this.cachedElements[id]) {
-                this.cachedElements[id] = document.getElementById(id);
+    // ✅ VERIFICAR CONTENEDORES DE PRODUCTOS
+    checkProductContainers() {
+        const categorias = ['vestimenta', 'alimentacion', 'implementos-deportivos', 'suplementos'];
+        let hasContainers = false;
+        
+        categorias.forEach(categoria => {
+            const contenedor = document.getElementById(`productos-${categoria}`);
+            if (contenedor) {
+                hasContainers = true;
             }
-            return this.cachedElements[id];
-        } catch (error) {
-            console.error(`Error obteniendo elemento ${id}:`, error);
-            return null;
+        });
+        
+        if (hasContainers) {
+            this.cargarProductos();
+            this.renderizarProductos();
+            this.actualizarTotalVendidos();
+            this.mostrarBannerTiendas();
+        } else {
+            console.log('ℹ️ LandingPageManager: No se encontraron contenedores de productos');
         }
     }
 
@@ -990,11 +1088,8 @@ class LandingPageManager {
     renderizarProductos() {
         try {
             for (const categoria in this.productos) {
-                const contenedor = this.getElement(`productos-${categoria}`);
-                if (!contenedor) {
-                    console.warn(`Contenedor no encontrado: productos-${categoria}`);
-                    continue;
-                }
+                const contenedor = document.getElementById(`productos-${categoria}`);
+                if (!contenedor) continue;
 
                 contenedor.innerHTML = '';
                 this.productos[categoria].forEach(producto => {
@@ -1029,7 +1124,7 @@ class LandingPageManager {
                 });
             }
             
-            const totalElement = this.getElement('total-productos-vendidos');
+            const totalElement = document.getElementById('total-productos-vendidos');
             if (totalElement) {
                 totalElement.textContent = this.totalVendidos.toLocaleString();
             }
@@ -1058,13 +1153,13 @@ class LandingPageManager {
                 }
             });
             
-            const accederBtn = this.getElement('btn-acceder-sistema');
+            const accederBtn = document.getElementById('btn-acceder-sistema');
             if (accederBtn) this.enhanceAccederButton(accederBtn);
             
-            const marketplaceBtn = this.getElement('btn-marketplace');
+            const marketplaceBtn = document.getElementById('btn-marketplace');
             if (marketplaceBtn) this.enhanceMarketplaceButton(marketplaceBtn);
             
-            const logo = this.getElement('ged-main-logo');
+            const logo = document.getElementById('ged-main-logo');
             if (logo) this.addLogoAnimation(logo);
             
             if (typeof $ !== 'undefined') {
@@ -1130,7 +1225,7 @@ class LandingPageManager {
 
     actualizarContadorCarrito() {
         try {
-            const contador = this.getElement('contador-carrito');
+            const contador = document.getElementById('contador-carrito');
             if (contador) {
                 const totalItems = this.carrito.reduce((sum, item) => sum + item.cantidad, 0);
                 contador.textContent = totalItems;
@@ -1143,7 +1238,7 @@ class LandingPageManager {
 
     mostrarNotificacion(mensaje) {
         try {
-            let notificacion = this.getElement('notificacion-carrito');
+            let notificacion = document.getElementById('notificacion-carrito');
             
             if (!notificacion) {
                 notificacion = document.createElement('div');
@@ -1161,7 +1256,6 @@ class LandingPageManager {
                     animation: slideIn 0.3s ease-out;
                 `;
                 document.body.appendChild(notificacion);
-                this.cachedElements['notificacion-carrito'] = notificacion;
             }
             
             notificacion.textContent = mensaje;
@@ -1177,7 +1271,7 @@ class LandingPageManager {
 
     mostrarBannerTiendas() {
         try {
-            const banner = this.getElement('banner-tiendas-patrocinadas');
+            const banner = document.getElementById('banner-tiendas-patrocinadas');
             if (banner) {
                 banner.style.cssText = `
                     width: 60%;
@@ -1377,23 +1471,42 @@ class LandingPageManager {
 }
 
 // ==================================================
-// INICIALIZACIÓN GLOBAL DEL SISTEMA
+// INICIALIZACIÓN GLOBAL CONTROLADA
 // ==================================================
 
-// Crear instancia global
-if (typeof window !== 'undefined') {
-    // Inicializar cuando el DOM esté listo
-    document.addEventListener('DOMContentLoaded', function() {
-        if (!window.gedSystem) {
-            window.gedSystem = new GEDSystem();
-            console.log('🌐 Sistema GED v4.2 cargado globalmente como window.gedSystem');
-        }
-    });
+// Control de inicialización única
+let gedSystemInitialized = false;
+
+document.addEventListener('DOMContentLoaded', function() {
+    // Verificar si ya está inicializado
+    if (gedSystemInitialized || window.gedSystem) {
+        console.log('ℹ️ Sistema GED ya estaba inicializado, omitiendo');
+        return;
+    }
     
+    // Inicializar con un pequeño delay para evitar conflictos
+    setTimeout(() => {
+        if (!gedSystemInitialized && !window.gedSystem) {
+            try {
+                new GEDSystem();
+                gedSystemInitialized = true;
+                console.log('🌐 Sistema GED v4.5 inicializado correctamente');
+            } catch (error) {
+                console.error('❌ Error al inicializar Sistema GED:', error);
+            }
+        }
+    }, 100);
+});
+
+// ==================================================
+// FUNCIONES DE DEBUG Y CONTROL
+// ==================================================
+
+if (typeof window !== 'undefined') {
     // Función de debug
     window.debugGED = function() {
         if (window.gedSystem) {
-            console.group('🐛 DEBUG SISTEMA GED 4.2');
+            console.group('🐛 DEBUG SISTEMA GED 4.5');
             console.log('Estado:', window.gedSystem.getCurrentState());
             console.log('Layout check:', window.gedSystem.checkLayout());
             console.groupEnd();
@@ -1408,92 +1521,55 @@ if (typeof window !== 'undefined') {
             window.gedSystem.forceLayoutUpdate();
         }
     };
-}
-
-// ==================================================
-// FUNCIONALIDADES ESPECÍFICAS PARA PÁGINAS
-// ==================================================
-
-// Inicialización de página de inicio
-function initIndexPage() {
-    console.log('🔍 GED System - Inicializando página de inicio...');
     
-    // Configurar carrusel
-    const carousel = document.getElementById('carouselHero');
-    if (carousel) {
-        console.log('✅ Carrusel detectado, configurando...');
-        
-        const carouselSection = document.getElementById('hero-carousel');
-        if (carouselSection) {
-            // Asegurar que el carrusel ocupe el ancho completo
-            carouselSection.style.width = '100vw';
-            carouselSection.style.maxWidth = '100vw';
-            carouselSection.style.paddingLeft = '0';
-            carouselSection.style.paddingRight = '0';
+    // Función para reiniciar el sistema (solo para desarrollo)
+    window.restartGED = function() {
+        if (window.gedSystem) {
+            window.gedSystem._initialized = false;
+            window.gedSystem._widthConfigApplied = false;
+            gedSystemInitialized = false;
+            window.gedSystem = null;
+            
+            setTimeout(() => {
+                new GEDSystem();
+                console.log('🔄 Sistema GED reiniciado manualmente');
+            }, 100);
         }
-    }
-    
-    // Configurar botones
-    const marketplaceBtn = document.getElementById('btn-marketplace');
-    if (marketplaceBtn) {
-        marketplaceBtn.addEventListener('click', function(e) {
-            console.log('🛒 Accediendo al marketplace...');
-        });
-    }
-    
-    const accesoBtn = document.getElementById('btn-acceder-sistema');
-    if (accesoBtn) {
-        accesoBtn.addEventListener('click', function() {
-            console.log('🚀 Accediendo al sistema...');
-        });
-    }
+    };
 }
-
-// Detectar página y ejecutar inicializaciones específicas
-document.addEventListener('DOMContentLoaded', function() {
-    // Detectar si estamos en la página de inicio
-    const isIndexPage = document.body.classList.contains('site-index') || 
-                        document.body.classList.contains('landing-page') ||
-                        window.location.pathname === '/' || 
-                        window.location.pathname.includes('site/index');
-    
-    if (isIndexPage) {
-        console.log('🏠 Página de inicio detectada');
-        initIndexPage();
-    }
-});
 
 // ==================================================
 // CORRECCIÓN DE EMERGENCIA PARA CARRUSEL
 // ==================================================
 
 function corregirCarruselUrgente() {
-    console.log('🚨 Aplicando corrección urgente al carrusel...');
-    
     const carrusel = document.getElementById('carouselHero');
     if (!carrusel) return;
     
-    // Forzar dimensiones de todas las imágenes
-    const imagenes = document.querySelectorAll('#carouselHero .carousel-item img');
+    console.log('🚨 Aplicando corrección urgente al carrusel...');
     
-    imagenes.forEach((img, index) => {
-        img.style.width = '100vw';
-        img.style.maxWidth = '100vw';
-        img.style.objectFit = 'cover';
-        img.style.objectPosition = 'center center';
-        img.style.display = 'block';
-        
-        if (img.complete) {
-            console.log(`✅ Imagen ${index + 1} cargada: ${img.naturalWidth}x${img.naturalHeight}`);
-        }
-    });
+    // Solo aplicar si estamos en escritorio
+    const isDesktop = window.innerWidth >= 992;
+    if (isDesktop) {
+        const imagenes = document.querySelectorAll('#carouselHero .carousel-item img');
+        imagenes.forEach(img => {
+            img.style.width = '100vw';
+            img.style.maxWidth = '100vw';
+            img.style.objectFit = 'cover';
+        });
+    }
     
     console.log('✅ Corrección urgente aplicada al carrusel');
 }
 
-// Ejecutar correcciones de carrusel
-document.addEventListener('DOMContentLoaded', corregirCarruselUrgente);
-window.addEventListener('load', corregirCarruselUrgente);
+// Ejecutar solo una vez después de carga completa
+let carruselCorregido = false;
+window.addEventListener('load', function() {
+    if (!carruselCorregido) {
+        setTimeout(corregirCarruselUrgente, 500);
+        carruselCorregido = true;
+    }
+});
 
 // ==================================================
 // FUNCIONES DE UTILIDAD
@@ -1516,6 +1592,17 @@ function checkBrokenImages() {
 window.addEventListener('load', function() {
     setTimeout(checkBrokenImages, 1000);
 });
+
+// ==================================================
+// COMPATIBILIDAD CON MÓDULOS EXISTENTES
+// ==================================================
+
+// Esto asegura compatibilidad con scripts antiguos que esperan gedSystem
+if (typeof window !== 'undefined') {
+    // Variable global para compatibilidad
+    window.GED_SYSTEM_LOADED = true;
+    window.GED_SYSTEM_VERSION = '4.5.0';
+}
 
 // Exportar para módulos (si es necesario)
 if (typeof module !== 'undefined' && module.exports) {

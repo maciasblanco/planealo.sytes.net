@@ -1,0 +1,119 @@
+/* ================================================== */
+/* SUBMENÚS PARA NAVBAR HORIZONTAL - 3 NIVELES */
+/* ================================================== */
+
+/* Submenús anidados */
+.dropdown-submenu {
+    position: relative;
+}
+
+.dropdown-submenu > .dropdown-menu {
+    top: 0;
+    left: 100%;
+    margin-top: -6px;
+    margin-left: 1px;
+    border-radius: 0 6px 6px 6px;
+    display: none;
+}
+
+/* Mostrar submenú al hover en desktop */
+@media (min-width: 992px) {
+    .dropdown-submenu:hover > .dropdown-menu {
+        display: block;
+    }
+    
+    .dropdown-submenu > .dropdown-toggle {
+        padding-right: 2.5rem !important;
+    }
+    
+    .dropdown-submenu > .dropdown-toggle::after {
+        content: "\f0da"; /* fa-chevron-right */
+        font-family: "Font Awesome 5 Free";
+        font-weight: 900;
+        border: none;
+        position: absolute;
+        right: 1rem;
+        top: 50%;
+        transform: translateY(-50%);
+    }
+}
+
+/* En móvil, los submenús se muestran con collapse de Bootstrap */
+@media (max-width: 991.98px) {
+    .dropdown-submenu > .dropdown-menu {
+        position: static;
+        float: none;
+        width: auto;
+        margin-top: 0;
+        background-color: transparent;
+        border: 0;
+        box-shadow: none;
+        padding-left: 30px;
+    }
+    
+    .dropdown-submenu .dropdown-toggle::after {
+        display: none;
+    }
+    
+    .navbar-nav .dropdown-menu {
+        padding-left: 20px;
+    }
+}
+
+/* Ajustes para los enlaces del menú */
+.navbar-nav .nav-link {
+    white-space: nowrap;
+}
+
+.dropdown-item {
+    white-space: nowrap;
+}
+
+/* Ajustes para el indicador de submenú en móvil (offcanvas) */
+.offcanvas-menu .has-children .submenu-indicator {
+    transition: transform 0.3s;
+}
+
+.offcanvas-menu .has-children[aria-expanded="true"] .submenu-indicator {
+    transform: rotate(90deg);
+}
+
+/* Asegurar que los submenús no se salgan de la pantalla en desktop */
+.dropdown-menu {
+    max-height: 70vh;
+    overflow-y: auto;
+}
+
+/* Estilos para el menú principal en navbar */
+.navbar-nav.main-navigation {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+.navbar-nav.main-navigation > .nav-item {
+    margin: 0 5px;
+}
+
+.navbar-nav.main-navigation .nav-link {
+    color: rgba(255, 255, 255, 0.85);
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    transition: all 0.3s;
+}
+
+.navbar-nav.main-navigation .nav-link:hover,
+.navbar-nav.main-navigation .nav-link.active {
+    color: #fff;
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+/* Para invitados - destacar Marketplace */
+.navbar-nav.main-navigation .nav-item.dropdown:first-child .nav-link {
+    color: #ffd700;
+    font-weight: 600;
+}
+
+.navbar-nav.main-navigation .nav-item.dropdown:first-child .nav-link:hover {
+    background-color: rgba(255, 215, 0, 0.1);
+}

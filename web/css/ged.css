@@ -12,6 +12,10 @@
 @import url('modules/modules/ged-modulo-tienda.css');
 @import url('modules/modules/ged-modulo-landing.css');
 @import url('modules/modules/ged-modulo-dashboard.css');
+@import url('modules/modules/ged-modulo-navbar-submenu.css');
+@import url('modules/modules/ged-modulo-navbar.css');
+@import url('modules/modules/ged-modulo-offcanvas.css');
+
 
 /* Importar responsive (SIEMPRE AL FINAL) */
 @import url('modules/responsive/ged-responsive.css');

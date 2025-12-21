@@ -25,8 +25,8 @@ class AppAsset extends AssetBundle
         'font_ico/bootstrap-icons.css',
         'css/mapa-escuelas.css',
         'css/reportes.css',
-        'css/navbar.css',
-        'css/ged-offcanvas.css',
+        //'css/navbar.css',
+        //'css/ged-offcanvas.css',
     ];
     
     public $js = [
