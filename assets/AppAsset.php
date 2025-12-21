@@ -21,45 +21,40 @@ class AppAsset extends AssetBundle
     public $baseUrl = '@web';
     
     public $css = [
-        'css/ged.css', // ÚNICO ARCHIVO CSS UNIFICADO
-        // OPCIONAL: Cargar módulos individualmente si prefieres
-        //'css/modules/core/ged-core.css',
-        //'css/modules/core/ged-utilities.css',
-        //'css/modules/modules/ged-modulo-escuelas.css',
-        //'css/modules/modules/ged-modulo-tienda.css',
-        //'css/modules/modules/ged-modulo-landing.css',
-        //'css/modules/modules/ged-modulo-dashboard.css',
-        //'css/modules/responsive/ged-responsive.css',
+        'css/ged.css',
         'font_ico/bootstrap-icons.css',
         'css/mapa-escuelas.css',
         'css/reportes.css',
         'css/navbar.css',
-        'css/ged-offcanvas.css', // ✅ NUEVO: Offcanvas CSS
+        'css/ged-offcanvas.css',
     ];
     
     public $js = [
-        // Sistema principal GED (incluye NavbarManager, OffCanvasSidebar, etc.)
+        // ✅ ORDEN CORRECTO: Primero módulo OffCanvas, luego sistema principal
+        'js/modules/gedOffCanvas-module.js',  // PRIMERO - Define window.OffCanvasSidebar
+        
+        // Sistema principal GED (depende del módulo OffCanvas)
         'js/ged.js',
         
-        // Módulos adicionales específicos
+        // Módulos adicionales
         'js/modules/horario-selector.js',
         'js/modules/mapa-module.js',
         'js/modules/reportes-module.js',
-        'js/modules/tienda-module.js', // Opcional
-        // Utilidades de debug
+        'js/modules/tienda-module.js',
+        
+        // Utilidades
         'js/utils/debug-utils.js',
         
-        // Inicialización global
+        // Inicialización global (DEBE SER EL ÚLTIMO)
         'js/ged-init.js',
     ];
     
     public $depends = [
         'yii\web\YiiAsset',
         'yii\bootstrap5\BootstrapAsset',
-        'yii\bootstrap5\BootstrapPluginAsset', // Para JS de Bootstrap
+        'yii\bootstrap5\BootstrapPluginAsset',
     ];
     
-    // Para cargar solo en páginas específicas
     public static function addMap($view)
     {
         $view->registerCssFile('@web/css/mapa-escuelas.css', ['depends' => [AppAsset::class]]);

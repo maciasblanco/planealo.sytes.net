@@ -1,178 +1,289 @@
-/* navbar.css - VERSIÓN CON PADDING REDUCIDO */
+/* navbar.css - VERSIÓN 4.1 COMPATIBLE CON SISTEMA GED */
 
-/* Variables específicas para navbar */
+/* Variables CSS optimizadas */
 :root {
-  --navbar-desktop-height: 180px;
+  --navbar-desktop-height: 150px;
   --navbar-mobile-height: 60px;
   --navbar-transition-speed: 0.3s;
-  --primary-color: #6c3483;
+  --primary-gradient: linear-gradient(135deg, #6c3483, #8e44ad);
+  --secondary-gradient: linear-gradient(135deg, #2c3e50, #34495e);
   --text-color-light: #ffffff;
   --bg-dark: #343a40;
-  --min-padding: max(1.5vh, 15px); /* Aumentar a 15px mínimo */
-
+  --shadow-light: 0 2px 10px rgba(0,0,0,0.1);
+  --shadow-medium: 0 4px 15px rgba(0,0,0,0.2);
+  --border-radius-sm: 4px;
+  --border-radius-md: 6px;
+  --border-radius-lg: 8px;
 }
 
-/* ✅ NAVBAR PRINCIPAL - PADDING MÍNIMO */
+/* ================================================== */
+/* NAVBAR PRINCIPAL - ANCHO COMPLETO SIN PADDING LATERAL */
+/* ================================================== */
+
 .navbar-contextual {
+  /* Dimensiones y posición */
   width: 100vw !important;
   max-width: 100vw !important;
   min-width: 100vw !important;
-  background: linear-gradient(135deg, var(--primary-color), #8e44ad) !important;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.1) !important;
-  transition: all var(--navbar-transition-speed) ease !important;
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
   z-index: 1030 !important;
-  padding-left: var(--min-padding) !important;
-  padding-right: var(--min-padding) !important;
+  
+  /* Apariencia */
+  background: var(--primary-gradient) !important;
+  box-shadow: var(--shadow-light) !important;
+  border: none !important;
+  border-radius: 0 !important;
+  
+  /* Transiciones */
+  transition: all var(--navbar-transition-speed) ease !important;
+  
+  /* Layout */
+  display: flex !important;
+  align-items: center !important;
+  
+  /* Padding lateral controlado por JS */
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+  box-sizing: border-box !important;
+  
+  /* Overflow */
+  overflow: hidden !important;
 }
 
-/* ✅ CONTENEDOR INTERNO */
+/* ✅ CONTENEDOR INTERNO - FLEXIBLE */
 .navbar-container {
   display: flex !important;
-  flex-wrap: wrap !important;
+  flex-wrap: nowrap !important;
   width: 100% !important;
   max-width: 100% !important;
-  padding: 0 var(--min-padding) !important;
+  height: 100% !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  padding: 0 !important;
   margin: 0 auto !important;
+  box-sizing: border-box !important;
 }
 
-/* ✅ SECCIONES DEL NAVBAR CON PADDING MÍNIMO */
+/* ✅ SECCIONES DEL NAVBAR - DISTRIBUCIÓN 15% | 50% | 15% | 20% */
+
+/* LOGO (15%) */
 .navbar-brand-section {
   flex: 0 0 15% !important;
   max-width: 15% !important;
-  min-width: 180px !important; /* Reducido */
+  min-width: 180px !important;
   display: flex !important;
   align-items: center !important;
-  padding: 8px 0 !important; /* Reducido */
+  justify-content: flex-start !important;
+  padding: 8px 0 !important;
+  height: 100% !important;
+  box-sizing: border-box !important;
 }
 
+/* MENÚ PRINCIPAL (50%) */
 .navbar-menu-section {
   flex: 0 0 50% !important;
   max-width: 50% !important;
   display: flex !important;
   align-items: center !important;
   justify-content: center !important;
-  padding: 0 var(--min-padding) !important;
+  height: 100% !important;
+  padding: 0 !important;
+  box-sizing: border-box !important;
 }
 
+/* REDES SOCIALES (15%) */
 .navbar-social-section {
   flex: 0 0 15% !important;
   max-width: 15% !important;
   display: flex !important;
   align-items: center !important;
   justify-content: center !important;
-  padding: 0 var(--min-padding) !important;
+  height: 100% !important;
+  padding: 0 !important;
+  box-sizing: border-box !important;
 }
 
+/* CONTROL DE USUARIO (20%) */
 .navbar-control-section {
   flex: 0 0 20% !important;
   max-width: 20% !important;
   display: flex !important;
   align-items: center !important;
   justify-content: flex-end !important;
-  padding: 0 var(--min-padding) !important;
+  height: 100% !important;
+  padding: 0 !important;
+  box-sizing: border-box !important;
 }
 
-/* ✅ LOGO REDUCIDO */
+/* ✅ LOGO RESPONSIVE */
 .navbar-logo {
-  height: 45px !important; /* Reducido */
+  height: 45px !important;
   max-height: 45px !important;
   width: auto !important;
-  transition: transform 0.3s ease !important;
+  transition: all 0.3s ease !important;
+  object-fit: contain !important;
+  display: block !important;
 }
 
 .navbar-logo:hover {
   transform: scale(1.05) !important;
+  filter: brightness(1.1) drop-shadow(0 2px 4px rgba(0,0,0,0.2)) !important;
 }
 
-/* ✅ MENÚ PRINCIPAL - COMPACTO */
+/* ✅ TOGGLER PARA MÓVIL */
+.navbar-toggler {
+  display: none !important; /* Oculto por defecto, se muestra en responsive */
+  border: 1px solid rgba(255,255,255,0.3) !important;
+  background: rgba(255,255,255,0.1) !important;
+  padding: 0.4rem 0.6rem !important;
+  border-radius: var(--border-radius-sm) !important;
+  transition: all 0.3s ease !important;
+}
+
+.navbar-toggler:hover {
+  background: rgba(255,255,255,0.2) !important;
+  transform: scale(1.05) !important;
+}
+
+.navbar-toggler-icon {
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%28255, 255, 255, 0.8%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e") !important;
+  width: 1.25em !important;
+  height: 1.25em !important;
+}
+
+/* ✅ MENÚ PRINCIPAL - ESTILOS BÁSICOS */
 .main-navigation {
   width: 100% !important;
+  display: flex !important;
   justify-content: center !important;
+  align-items: center !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  list-style: none !important;
 }
 
 .main-navigation .nav-link {
   color: var(--text-color-light) !important;
   font-weight: 500 !important;
-  padding: 8px 12px !important; /* Reducido */
+  padding: 10px 15px !important;
   transition: all 0.3s ease !important;
   white-space: nowrap !important;
-  font-size: 0.9rem !important; /* Reducido */
+  font-size: 0.95rem !important;
+  text-decoration: none !important;
+  border-radius: var(--border-radius-sm) !important;
+  position: relative !important;
 }
 
 .main-navigation .nav-link:hover,
+.main-navigation .nav-link:focus,
 .main-navigation .nav-link.active {
-  background: rgba(255, 255, 255, 0.1) !important;
-  border-radius: 4px !important;
-  transform: translateY(-1px) !important; /* Reducido */
+  background: rgba(255, 255, 255, 0.15) !important;
+  transform: translateY(-1px) !important;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1) !important;
 }
 
-/* ✅ ICONOS SOCIALES COMPACTOS */
+.main-navigation .nav-link.active::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 15px;
+  right: 15px;
+  height: 2px;
+  background: white;
+  border-radius: 1px;
+}
+
+/* ✅ ICONOS SOCIALES - DISPOSICIÓN VERTICAL */
 .social-icons-vertical {
   display: flex !important;
   flex-direction: column !important;
-  gap: 8px !important; /* Reducido */
+  gap: 10px !important;
+  align-items: center !important;
 }
 
 .social-icon-circle {
-  width: 30px !important; /* Reducido */
-  height: 30px !important; /* Reducido */
+  width: 32px !important;
+  height: 32px !important;
   border-radius: 50% !important;
-  background: rgba(255, 255, 255, 0.1) !important;
+  background: rgba(255, 255, 255, 0.12) !important;
   color: white !important;
   display: flex !important;
   align-items: center !important;
   justify-content: center !important;
   transition: all 0.3s ease !important;
   text-decoration: none !important;
-  font-size: 0.8rem !important; /* Reducido */
+  font-size: 0.9rem !important;
+  border: 1px solid rgba(255,255,255,0.2) !important;
 }
 
 .social-icon-circle:hover {
-  background: rgba(255, 255, 255, 0.2) !important;
-  transform: translateY(-2px) scale(1.1) !important; /* Reducido */
+  background: rgba(255, 255, 255, 0.25) !important;
+  transform: translateY(-2px) scale(1.1) !important;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.2) !important;
 }
 
-/* ✅ CONTROL DE SESIÓN COMPACTO */
-.session-controls {
-  display: flex !important;
-  flex-direction: column !important;
-  gap: 8px !important; /* Reducido */
-  width: 100% !important;
-}
-
-.session-controls .btn {
-  min-width: 100px !important; /* Reducido */
-  transition: all 0.3s ease !important;
-  padding: 5px 10px !important; /* Reducido */
-  font-size: 0.85rem !important; /* Reducido */
-}
-
-.session-controls .btn:hover {
-  transform: translateY(-1px) !important; /* Reducido */
-  box-shadow: 0 3px 6px rgba(0,0,0,0.2) !important; /* Reducido */
-}
-
-/* ✅ INFORMACIÓN DE ESCUELA COMPACTA */
+/* ✅ INFORMACIÓN DE ESCUELA */
 .school-info {
-  background: rgba(0, 0, 0, 0.2) !important;
-  padding: 8px !important; /* Reducido */
-  border-radius: 6px !important;
-  border: 1px solid rgba(255, 255, 255, 0.1) !important;
-  font-size: 0.85rem !important; /* Reducido */
+  background: rgba(0, 0, 0, 0.18) !important;
+  padding: 10px !important;
+  border-radius: var(--border-radius-md) !important;
+  border: 1px solid rgba(255, 255, 255, 0.15) !important;
+  font-size: 0.85rem !important;
+  width: 100% !important;
+  box-sizing: border-box !important;
 }
 
 .escuela-activa-indicator {
   background: rgba(52, 152, 219, 0.2) !important;
-  padding: 6px !important; /* Reducido */
-  border-radius: 4px !important;
-  border-left: 2px solid #3498db !important; /* Reducido */
+  padding: 8px !important;
+  border-radius: var(--border-radius-sm) !important;
+  border-left: 3px solid #3498db !important;
+  margin-bottom: 8px !important;
 }
 
-/* ✅ BUSCADOR DE ESCUELAS COMPACTO */
+.escuela-activa-indicator small {
+  display: block !important;
+  line-height: 1.4 !important;
+}
+
+/* ✅ BUSCADOR DE ESCUELAS */
 .school-search-container {
   position: relative !important;
+  width: 100% !important;
 }
 
+.school-search-container .input-group {
+  width: 100% !important;
+}
+
+.school-search-container .form-control {
+  background: rgba(255,255,255,0.1) !important;
+  border: 1px solid rgba(255,255,255,0.2) !important;
+  color: white !important;
+  font-size: 0.85rem !important;
+  height: 32px !important;
+}
+
+.school-search-container .form-control::placeholder {
+  color: rgba(255,255,255,0.6) !important;
+}
+
+.school-search-container .btn-outline-light {
+  border-color: rgba(255,255,255,0.3) !important;
+  color: white !important;
+  height: 32px !important;
+  padding: 0 12px !important;
+  font-size: 0.85rem !important;
+}
+
+.school-search-container .btn-outline-light:hover {
+  background: rgba(255,255,255,0.15) !important;
+}
+
+/* DROPDOWN DE RESULTADOS */
 .search-results-dropdown {
   position: absolute !important;
   top: 100% !important;
@@ -180,101 +291,382 @@
   right: 0 !important;
   background: white !important;
   border: 1px solid #dee2e6 !important;
-  border-radius: 4px !important;
-  max-height: 180px !important; /* Reducido */
+  border-radius: var(--border-radius-md) !important;
+  max-height: 200px !important;
   overflow-y: auto !important;
-  z-index: 1000 !important;
-  box-shadow: 0 3px 8px rgba(0,0,0,0.1) !important; /* Reducido */
+  z-index: 1050 !important;
+  box-shadow: var(--shadow-medium) !important;
+  margin-top: 2px !important;
 }
 
-.search-results-item {
-  padding: 6px 10px !important; /* Reducido */
+.search-result-item {
+  padding: 8px 12px !important;
   cursor: pointer !important;
   border-bottom: 1px solid #f8f9fa !important;
   transition: background 0.2s ease !important;
-  font-size: 0.85rem !important; /* Reducido */
+  font-size: 0.85rem !important;
+  color: #333 !important;
 }
 
-.search-results-item:hover {
+.search-result-item:hover {
   background: #f8f9fa !important;
 }
 
-/* ✅ DROPDOWN DE SELECCIÓN COMPACTO */
-.escuela-selector-dropdown {
-  min-width: 200px !important; /* Reducido */
-  max-height: 250px !important; /* Reducido */
-  overflow-y: auto !important;
-  background: white !important;
-  border-radius: 6px !important; /* Reducido */
-  box-shadow: 0 4px 12px rgba(0,0,0,0.2) !important; /* Reducido */
-  border: 1px solid #dee2e6 !important;
+.search-result-item:last-child {
+  border-bottom: none !important;
 }
 
-/* ✅ RESPONSIVE COMPACTO */
+.school-name {
+  font-weight: 600 !important;
+  color: #2c3e50 !important;
+}
+
+.school-id {
+  font-size: 0.8rem !important;
+  color: #7f8c8d !important;
+}
+
+.school-address {
+  font-size: 0.8rem !important;
+  color: #95a5a6 !important;
+  margin-top: 2px !important;
+}
+
+/* ✅ CONTROL DE SESIÓN */
+.session-controls {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 10px !important;
+  width: 100% !important;
+  align-items: flex-end !important;
+}
+
+.user-info {
+  width: 100% !important;
+  text-align: right !important;
+}
+
+.user-info small {
+  display: block !important;
+  line-height: 1.4 !important;
+}
+
+.session-controls .btn {
+  min-width: 120px !important;
+  transition: all 0.3s ease !important;
+  padding: 6px 12px !important;
+  font-size: 0.9rem !important;
+  border-radius: var(--border-radius-md) !important;
+  white-space: nowrap !important;
+}
+
+.session-controls .btn:hover {
+  transform: translateY(-2px) !important;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2) !important;
+}
+
+.session-controls .btn-outline-light {
+  border-color: rgba(255,255,255,0.4) !important;
+}
+
+.session-controls .btn-outline-light:hover {
+  background: rgba(255,255,255,0.1) !important;
+}
+
+/* ✅ DROPDOWN DE SELECCIÓN DE ESCUELA */
+.escuela-selector-dropdown {
+  min-width: 250px !important;
+  max-height: 300px !important;
+  overflow-y: auto !important;
+  background: white !important;
+  border-radius: var(--border-radius-lg) !important;
+  box-shadow: var(--shadow-medium) !important;
+  border: 1px solid #dee2e6 !important;
+  padding: 0 !important;
+}
+
+.escuela-selector-dropdown .dropdown-header {
+  font-weight: 600 !important;
+  color: #2c3e50 !important;
+  font-size: 0.9rem !important;
+  border-bottom: 1px solid #eee !important;
+  padding-bottom: 8px !important;
+}
+
+.escuela-selector-dropdown .form-select {
+  border: 1px solid #ddd !important;
+  font-size: 0.85rem !important;
+}
+
+.escuela-selector-dropdown .form-select:focus {
+  border-color: #6c3483 !important;
+  box-shadow: 0 0 0 0.2rem rgba(108, 52, 131, 0.25) !important;
+}
+
+/* ✅ RESPONSIVE: TABLET (768px - 991px) */
 @media (max-width: 1199.98px) {
   .navbar-brand-section {
-    min-width: 150px !important; /* Reducido */
+    min-width: 160px !important;
+    flex: 0 0 20% !important;
+    max-width: 20% !important;
+  }
+  
+  .navbar-menu-section {
+    flex: 0 0 45% !important;
+    max-width: 45% !important;
+  }
+  
+  .navbar-social-section {
+    flex: 0 0 15% !important;
+    max-width: 15% !important;
+  }
+  
+  .navbar-control-section {
+    flex: 0 0 20% !important;
+    max-width: 20% !important;
   }
   
   .navbar-logo {
-    height: 40px !important; /* Reducido */
+    height: 40px !important;
   }
 }
 
+/* ✅ RESPONSIVE: TABLET (768px - 991px) */
 @media (max-width: 991.98px) {
   .navbar-contextual {
     min-height: var(--navbar-mobile-height) !important;
-    padding-left: 10px !important; /* Reducido */
-    padding-right: 10px !important; /* Reducido */
+    padding-left: 0 !important;
+    padding-right: 0 !important;
   }
   
-  .navbar-container {
-    padding: 0 8px !important; /* Reducido */
+  /* Mostrar toggler en móvil */
+  .navbar-toggler {
+    display: block !important;
+    margin-left: 10px !important;
   }
   
+  /* Ocultar secciones no críticas en móvil */
+  .navbar-social-section {
+    display: none !important;
+  }
+  
+  .navbar-menu-section {
+    display: none !important; /* Se mostrará en el offcanvas */
+  }
+  
+  /* Ajustar distribución en móvil */
   .navbar-brand-section {
-    min-width: 120px !important; /* Reducido */
+    flex: 1 !important;
+    max-width: none !important;
+    min-width: auto !important;
+    justify-content: flex-start !important;
+    padding-left: 10px !important;
+  }
+  
+  .navbar-control-section {
+    flex: 0 0 auto !important;
+    max-width: none !important;
+    padding-right: 10px !important;
   }
   
   .navbar-logo {
-    height: 35px !important; /* Reducido */
-  }
-}
-
-@media (max-width: 767.98px) {
-  .navbar-contextual {
-    padding-left: 8px !important; /* Reducido */
-    padding-right: 8px !important; /* Reducido */
+    height: 35px !important;
   }
   
-  .navbar-logo {
-    height: 30px !important; /* Reducido */
-  }
-  
-  .main-navigation .nav-link {
-    padding: 6px 8px !important; /* Reducido */
-    font-size: 0.8rem !important; /* Reducido */
+  /* Ajustar controles de sesión para móvil */
+  .session-controls {
+    flex-direction: row !important;
+    gap: 8px !important;
+    align-items: center !important;
   }
   
   .session-controls .btn {
-    min-width: 80px !important; /* Reducido */
-    padding: 4px 8px !important; /* Reducido */
-    font-size: 0.8rem !important; /* Reducido */
+    min-width: auto !important;
+    padding: 5px 10px !important;
+  }
+  
+  .session-controls .btn span:not(.bi) {
+    display: none !important;
+  }
+  
+  .user-info {
+    display: none !important;
+  }
+  
+  .school-info {
+    display: none !important;
   }
 }
 
-@media (max-width: 575.98px) {
+/* ✅ RESPONSIVE: MÓVIL (576px - 767px) */
+@media (max-width: 767.98px) {
   .navbar-contextual {
-    padding-left: 5px !important; /* Reducido */
-    padding-right: 5px !important; /* Reducido */
-  }
-  
-  .navbar-logo {
-    height: 25px !important; /* Reducido */
+    padding-left: 0 !important;
+    padding-right: 0 !important;
   }
   
   .navbar-brand-section {
-    min-width: 100px !important; /* Reducido */
-    padding: 8px var(--min-padding) !important; /* Horizontal también */
+    padding-left: 8px !important;
+  }
+  
+  .navbar-control-section {
+    padding-right: 8px !important;
+  }
+  
+  .navbar-logo {
+    height: 32px !important;
+  }
+  
+  .session-controls {
+    gap: 6px !important;
+  }
+  
+  .session-controls .btn {
+    padding: 4px 8px !important;
+    font-size: 0.8rem !important;
+  }
+}
+
+/* ✅ RESPONSIVE: MÓVIL PEQUEÑO (< 576px) */
+@media (max-width: 575.98px) {
+  .navbar-contextual {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
+  
+  .navbar-brand-section {
+    min-width: 120px !important;
+    padding-left: 5px !important;
+  }
+  
+  .navbar-control-section {
+    padding-right: 5px !important;
+  }
+  
+  .navbar-logo {
+    height: 28px !important;
+  }
+  
+  .session-controls .btn {
+    padding: 3px 6px !important;
+    font-size: 0.75rem !important;
+  }
+  
+  .navbar-toggler {
+    padding: 0.3rem 0.5rem !important;
+    margin-left: 5px !important;
+  }
+}
+
+/* ✅ ANIMACIONES */
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.navbar-contextual {
+  animation: fadeInDown 0.5s ease-out;
+}
+
+/* ✅ ESTADOS ESPECIALES */
+.navbar-contextual.scrolled {
+  background: var(--secondary-gradient) !important;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.2) !important;
+  min-height: 70px !important;
+}
+
+.navbar-contextual.scrolled .navbar-logo {
+  height: 35px !important;
+}
+
+/* ✅ CORRECCIÓN PARA MENÚS DROPDOWN EN NAVBAR */
+.navbar-control-section .dropdown-menu {
+  margin-top: 8px !important;
+  border: 1px solid rgba(0,0,0,0.1) !important;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.15) !important;
+  border-radius: var(--border-radius-lg) !important;
+  animation: fadeInDown 0.3s ease-out !important;
+}
+
+/* ✅ UTILIDADES */
+.text-truncate-2 {
+  display: -webkit-box !important;
+  -webkit-line-clamp: 2 !important;
+  -webkit-box-orient: vertical !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+}
+
+/* ✅ FIX PARA BOOTSTRAP COLLAPSE */
+.navbar-collapse {
+  transition: none !important; /* Eliminar transiciones por defecto */
+}
+
+#navbarGedCollapse {
+  position: absolute !important;
+  top: 100% !important;
+  left: 0 !important;
+  right: 0 !important;
+  background: var(--secondary-gradient) !important;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.2) !important;
+  z-index: 1020 !important;
+  padding: 15px !important;
+  max-height: calc(100vh - var(--navbar-mobile-height)) !important;
+  overflow-y: auto !important;
+  border-top: 1px solid rgba(255,255,255,0.1) !important;
+}
+
+#navbarGedCollapse .main-navigation {
+  flex-direction: column !important;
+  align-items: flex-start !important;
+}
+
+#navbarGedCollapse .nav-link {
+  width: 100% !important;
+  padding: 12px 15px !important;
+  border-radius: var(--border-radius-sm) !important;
+  margin-bottom: 5px !important;
+}
+
+#navbarGedCollapse .nav-link:hover {
+  background: rgba(255,255,255,0.15) !important;
+}
+
+/* ✅ ACCESIBILIDAD */
+.navbar-contextual:focus-within {
+  outline: 2px solid rgba(255,255,255,0.5) !important;
+  outline-offset: -2px !important;
+}
+
+.navbar-toggler:focus,
+.navbar-toggler:active {
+  outline: 2px solid rgba(255,255,255,0.8) !important;
+  outline-offset: 2px !important;
+}
+
+/* ✅ PRINT STYLES */
+@media print {
+  .navbar-contextual {
+    position: static !important;
+    background: white !important;
+    color: black !important;
+    box-shadow: none !important;
+    border-bottom: 1px solid #ddd !important;
+  }
+  
+  .navbar-logo {
+    filter: grayscale(100%) brightness(0%) !important;
+  }
+  
+  .navbar-social-section,
+  .session-controls,
+  .navbar-toggler {
+    display: none !important;
   }
 }

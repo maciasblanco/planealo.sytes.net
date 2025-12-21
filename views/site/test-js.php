@@ -1,454 +1,213 @@
 <?php
+use yii\helpers\Html;
+
 /* @var $this yii\web\View */
 
-$this->title = 'Prueba de Módulos JavaScript';
+$this->title = 'Pruebas JavaScript Exhaustivas - Sistema GED v4.1';
 $this->params['breadcrumbs'][] = $this->title;
-
-// Cargar los assets necesarios
-use app\assets\AppAsset;
-AppAsset::register($this);
 ?>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><?= Html::encode($this->title) ?></title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <!-- Leaflet para MapaModule -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    
+    <style>
+        body { padding-top: 20px; background-color: #f8f9fa; }
+        .card { margin-bottom: 20px; }
+        .log-entry { padding: 2px 0; border-bottom: 1px solid #333; font-size: 13px; }
+        #consola-logs { height: 400px; overflow-y: auto; background: #1a1a1a; color: #00ff00; font-family: monospace; padding: 10px; }
+        .module-status { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 5px; }
+        .status-success { background-color: #28a745; }
+        .status-warning { background-color: #ffc107; }
+        .status-error { background-color: #dc3545; }
+        .status-default { background-color: #6c757d; }
+        #map, #mapa-escuelas { height: 300px; border: 1px solid #ddd; }
+        .horario-cell { width: 30px; height: 30px; display: inline-flex; align-items: center; justify-content: center; border: 1px solid #dee2e6; cursor: pointer; margin: 1px; }
+        .horario-cell.selected { background-color: #007bff; color: white; }
+        .horario-cell.morning { background-color: #fff3cd; }
+        .horario-cell.afternoon { background-color: #d1ecf1; }
+        .horario-cell.evening { background-color: #e2e3e5; }
+        .navbar-toggler { position: fixed; top: 10px; right: 10px; z-index: 1050; }
+    </style>
+</head>
+<body>
+<!-- Navbar Toggler de prueba -->
+<button class="navbar-toggler btn btn-primary">
+    <i class="fas fa-bars"></i>
+</button>
 
-<div class="site-test-js">
-    <div class="container-fluid">
-        <div class="row">
-            <div class="col-12">
-                <div class="card mb-4">
-                    <div class="card-header bg-primary text-white">
-                        <h2 class="mb-0">
-                            <i class="fas fa-vial"></i> Prueba de Módulos JavaScript - Sistema GED v4.1
-                        </h2>
+<div class="container-fluid">
+    <!-- HEADER -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <h1 class="text-center mb-3">
+                <i class="fas fa-vial"></i> Pruebas Exhaustivas JavaScript
+            </h1>
+            <div class="alert alert-info">
+                <i class="fas fa-info-circle"></i> 
+                <strong>Sistema GED v4.1</strong> - Prueba exhaustiva de los 5 módulos JavaScript principales
+            </div>
+        </div>
+    </div>
+
+    <!-- PANEL DE MÓDULOS -->
+    <div class="row mb-4">
+        <!-- MÓDULO 1: GED OFFCANVAS -->
+        <div class="col-lg-4 col-md-6 mb-4">
+            <div class="card shadow h-100">
+                <div class="card-header bg-success text-white">
+                    <h5 class="mb-0">
+                        <i class="fas fa-bars"></i> Módulo OffCanvas
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <p><strong>gedOffcanvas-module.js</strong></p>
+                    <p>Sidebar off-canvas responsive con lazy loading</p>
+                    <div class="mb-3">
+                        <span class="module-status status-default" id="status-offcanvas"></span>
+                        Estado: <span id="text-status-offcanvas">No probado</span>
                     </div>
-                    <div class="card-body">
-                        <div class="alert alert-info">
-                            <i class="fas fa-info-circle"></i> 
-                            <strong>Objetivo:</strong> Verificar que todos los módulos JavaScript estén funcionando correctamente.
-                            Abre la consola del navegador (F12) para ver los mensajes de log.
-                        </div>
+                    <div class="d-grid gap-2">
+                        <button class="btn btn-success" id="btn-test-offcanvas">
+                            <i class="fas fa-play"></i> Probar Módulo
+                        </button>
+                        <button class="btn btn-outline-success" id="btn-toggle-offcanvas">
+                            <i class="fas fa-exchange-alt"></i> Toggle Sidebar
+                        </button>
+                        <button class="btn btn-sm btn-outline-dark" id="btn-reload-offcanvas">
+                            <i class="fas fa-sync"></i> Recargar Menú
+                        </button>
                     </div>
                 </div>
             </div>
         </div>
-
-        <!-- SECCIÓN 1: SISTEMA GED BÁSICO -->
-        <div class="row mb-4">
-            <div class="col-md-6">
-                <div class="card h-100">
-                    <div class="card-header bg-success text-white">
-                        <h4 class="mb-0"><i class="fas fa-cogs"></i> Sistema GED Principal</h4>
-                    </div>
-                    <div class="card-body">
-                        <p>Verifica que el sistema principal esté funcionando:</p>
-                        
-                        <div class="mb-3">
-                            <button class="btn btn-primary btn-sm" onclick="testGEDSystem()">
-                                <i class="fas fa-play"></i> Probar Sistema GED
-                            </button>
-                            <button class="btn btn-secondary btn-sm" onclick="debugGEDSystem()">
-                                <i class="fas fa-bug"></i> Debug Sistema
-                            </button>
-                            <button class="btn btn-warning btn-sm" onclick="checkOverflow()">
-                                <i class="fas fa-ruler"></i> Verificar Overflow
-                            </button>
-                        </div>
-                        
-                        <div class="alert alert-light">
-                            <strong>Estado del sistema:</strong>
-                            <div id="system-status" class="mt-2">
-                                <span class="badge bg-secondary">No verificado</span>
-                            </div>
-                        </div>
-                        
-                        <div class="mt-3">
-                            <h6>Configuración de Padding:</h6>
-                            <div class="input-group input-group-sm mb-2">
-                                <span class="input-group-text">Mínimo (px)</span>
-                                <input type="number" id="min-padding" class="form-control" value="10">
-                            </div>
-                            <div class="input-group input-group-sm mb-2">
-                                <span class="input-group-text">Máximo (vh)</span>
-                                <input type="number" id="max-padding" class="form-control" value="0.01" step="0.01">
-                            </div>
-                            <button class="btn btn-outline-primary btn-sm" onclick="updatePadding()">
-                                <i class="fas fa-sliders-h"></i> Actualizar Padding
-                            </button>
-                        </div>
-                    </div>
+        
+        <!-- MÓDULO 2: REPORTES -->
+        <div class="col-lg-4 col-md-6 mb-4">
+            <div class="card shadow h-100">
+                <div class="card-header bg-info text-white">
+                    <h5 class="mb-0">
+                        <i class="fas fa-chart-pie"></i> Módulo Reportes
+                    </h5>
                 </div>
-            </div>
-            
-            <div class="col-md-6">
-                <div class="card h-100">
-                    <div class="card-header bg-info text-white">
-                        <h4 class="mb-0"><i class="fas fa-bars"></i> Navbar y Sidebar</h4>
+                <div class="card-body">
+                    <p><strong>reportes-module.js</strong></p>
+                    <p>Generación y análisis de reportes</p>
+                    <div class="mb-3">
+                        <span class="module-status status-default" id="status-reportes"></span>
+                        Estado: <span id="text-status-reportes">No probado</span>
                     </div>
-                    <div class="card-body">
-                        <p>Prueba los componentes de navegación:</p>
-                        
-                        <div class="mb-3">
-                            <button class="btn btn-primary btn-sm" onclick="testNavbar()">
-                                <i class="fas fa-bars"></i> Toggle Navbar (Móvil)
-                            </button>
-                            <button class="btn btn-secondary btn-sm" onclick="testSidebar()">
-                                <i class="fas fa-stream"></i> Toggle Sidebar
-                            </button>
-                            <button class="btn btn-warning btn-sm" onclick="reloadOffCanvasMenu()">
-                                <i class="fas fa-redo"></i> Recargar Menú
-                            </button>
-                        </div>
-                        
-                        <div class="alert alert-light">
-                            <strong>Estado de navegación:</strong>
-                            <div id="nav-status" class="mt-2">
-                                <span class="badge bg-secondary">No verificado</span>
-                            </div>
-                        </div>
+                    <div class="mb-3">
+                        <select class="form-select" id="select-estado-reporte">
+                            <option value="todos">Todos los estados</option>
+                            <option value="activo">Activo</option>
+                            <option value="inactivo">Inactivo</option>
+                            <option value="pendiente">Pendiente</option>
+                        </select>
+                    </div>
+                    <div class="d-grid gap-2">
+                        <button class="btn btn-info" id="btn-test-reportes">
+                            <i class="fas fa-play"></i> Probar Módulo
+                        </button>
+                        <button class="btn btn-outline-info" id="btn-filtrar-reportes">
+                            <i class="fas fa-filter"></i> Filtrar por Estado
+                        </button>
                     </div>
                 </div>
             </div>
         </div>
-
-        <!-- SECCIÓN 2: MÓDULO DE HORARIOS -->
-        <div class="row mb-4">
-            <div class="col-12">
-                <div class="card">
-                    <div class="card-header bg-warning text-dark">
-                        <h4 class="mb-0"><i class="fas fa-clock"></i> Módulo de Horarios</h4>
+        
+        <!-- MÓDULO 3: HORARIOS -->
+        <div class="col-lg-4 col-md-6 mb-4">
+            <div class="card shadow h-100">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">
+                        <i class="fas fa-clock"></i> Módulo Horarios
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <p><strong>horario-selector.js</strong></p>
+                    <p>Selector visual de horarios interactivo</p>
+                    <div class="mb-3">
+                        <span class="module-status status-default" id="status-horario"></span>
+                        Estado: <span id="text-status-horario">No probado</span>
                     </div>
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="col-md-6">
-                                <h5>Selector de Horarios</h5>
-                                <p>Simulación del selector de horarios:</p>
-                                
-                                <div class="mb-3">
-                                    <label class="form-label">Tipo de horario:</label>
-                                    <select id="tipo-horario" class="form-select form-select-sm">
-                                        <option value="">Seleccionar...</option>
-                                        <option value="manana">Mañana (6-11 AM)</option>
-                                        <option value="tarde">Tarde (12-5 PM)</option>
-                                        <option value="noche">Noche (6-10 PM)</option>
-                                        <option value="completo">Completo</option>
-                                        <option value="fin_semana">Fin de semana</option>
-                                    </select>
-                                </div>
-                                
-                                <div class="mb-3">
-                                    <button class="btn btn-primary btn-sm" onclick="initHorarioModule()">
-                                        <i class="fas fa-play"></i> Inicializar Módulo
-                                    </button>
-                                    <button class="btn btn-secondary btn-sm" onclick="testHorario()">
-                                        <i class="fas fa-check"></i> Probar Selección
-                                    </button>
-                                </div>
-                                
-                                <div class="alert alert-light">
-                                    <strong>Horarios seleccionados:</strong>
-                                    <div id="horario-preview" class="mt-2 small">
-                                        No se han seleccionado horarios
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <div class="col-md-6">
-                                <h5>Simulación de Grid</h5>
-                                <div class="table-responsive">
-                                    <table class="table table-sm table-bordered">
-                                        <thead>
-                                            <tr>
-                                                <th>Hora</th>
-                                                <th>Lun</th>
-                                                <th>Mar</th>
-                                                <th>Mié</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <?php for($h = 8; $h <= 12; $h++): ?>
-                                            <tr>
-                                                <td><?= $h ?>:00</td>
-                                                <td>
-                                                    <div class="horario-cell text-center" 
-                                                         data-dia="lunes" 
-                                                         data-hora="<?= $h ?>"
-                                                         style="cursor: pointer; padding: 5px; border: 1px solid #ddd;">
-                                                        <i class="fas fa-times text-muted"></i>
-                                                    </div>
-                                                </td>
-                                                <td>
-                                                    <div class="horario-cell text-center" 
-                                                         data-dia="martes" 
-                                                         data-hora="<?= $h ?>"
-                                                         style="cursor: pointer; padding: 5px; border: 1px solid #ddd;">
-                                                        <i class="fas fa-times text-muted"></i>
-                                                    </div>
-                                                </td>
-                                                <td>
-                                                    <div class="horario-cell text-center" 
-                                                         data-dia="miercoles" 
-                                                         data-hora="<?= $h ?>"
-                                                         style="cursor: pointer; padding: 5px; border: 1px solid #ddd;">
-                                                        <i class="fas fa-times text-muted"></i>
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                            <?php endfor; ?>
-                                        </tbody>
-                                    </table>
-                                </div>
-                                
-                                <input type="hidden" id="horario-data" value="">
-                            </div>
-                        </div>
+                    <div class="d-grid gap-2">
+                        <button class="btn btn-primary" id="btn-test-horario">
+                            <i class="fas fa-play"></i> Probar Módulo
+                        </button>
+                        <button class="btn btn-outline-primary" id="btn-crear-selector">
+                            <i class="fas fa-plus"></i> Crear Selector
+                        </button>
                     </div>
                 </div>
             </div>
         </div>
-
-        <!-- SECCIÓN 3: MÓDULO DE MAPAS -->
-        <div class="row mb-4">
-            <div class="col-12">
-                <div class="card">
-                    <div class="card-header bg-danger text-white">
-                        <h4 class="mb-0"><i class="fas fa-map"></i> Módulo de Mapas</h4>
+        
+        <!-- MÓDULO 4: TIENDA -->
+        <div class="col-lg-6 col-md-6 mb-4">
+            <div class="card shadow h-100">
+                <div class="card-header bg-warning text-dark">
+                    <h5 class="mb-0">
+                        <i class="fas fa-store"></i> Módulo Tienda
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <p><strong>tienda-module.js</strong></p>
+                    <p>Funcionalidades de tienda y marketplace</p>
+                    <div class="mb-3">
+                        <span class="module-status status-default" id="status-tienda"></span>
+                        Estado: <span id="text-status-tienda">No probado</span>
                     </div>
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="col-md-6">
-                                <h5>Mapa de Selección</h5>
-                                <p>Para pruebas de ubicación de escuelas:</p>
-                                
-                                <div class="mb-3">
-                                    <label class="form-label">Latitud:</label>
-                                    <input type="text" id="lat-input" class="form-control form-control-sm" value="10.480594">
-                                </div>
-                                
-                                <div class="mb-3">
-                                    <label class="form-label">Longitud:</label>
-                                    <input type="text" id="lng-input" class="form-control form-control-sm" value="-66.903600">
-                                </div>
-                                
-                                <div class="mb-3">
-                                    <button class="btn btn-primary btn-sm" onclick="initMapaSeleccion()">
-                                        <i class="fas fa-map-marker-alt"></i> Inicializar Mapa Selección
-                                    </button>
-                                    <button class="btn btn-secondary btn-sm" onclick="testMapaVisualizacion()">
-                                        <i class="fas fa-eye"></i> Probar Mapa Visualización
-                                    </button>
-                                </div>
-                                
-                                <div class="alert alert-light">
-                                    <div id="map" style="height: 200px; background-color: #f0f0f0; border: 1px solid #ddd;">
-                                        <div class="h-100 d-flex align-items-center justify-content-center text-muted">
-                                            <i class="fas fa-map fa-3x"></i>
-                                            <div class="ms-3">
-                                                <h6>Mapa de selección</h6>
-                                                <small>Haz clic en el botón para inicializar</small>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <div class="col-md-6">
-                                <h5>Mapa de Visualización</h5>
-                                <p>Para mostrar múltiples escuelas:</p>
-                                
-                                <div class="mb-3">
-                                    <button class="btn btn-primary btn-sm" onclick="testMapaEscuelas()">
-                                        <i class="fas fa-school"></i> Cargar Escuelas de Prueba
-                                    </button>
-                                </div>
-                                
-                                <div class="alert alert-light">
-                                    <div id="mapa-escuelas" style="height: 200px; background-color: #f0f0f0; border: 1px solid #ddd;">
-                                        <div class="h-100 d-flex align-items-center justify-content-center text-muted">
-                                            <i class="fas fa-map-marked-alt fa-3x"></i>
-                                            <div class="ms-3">
-                                                <h6>Mapa de visualización</h6>
-                                                <small>Haz clic en el botón para cargar datos</small>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                    <div class="d-grid gap-2">
+                        <button class="btn btn-warning" id="btn-test-tienda">
+                            <i class="fas fa-play"></i> Probar Módulo
+                        </button>
+                        <button class="btn btn-outline-warning" id="btn-simular-marketplace">
+                            <i class="fas fa-shopping-cart"></i> Simular Marketplace
+                        </button>
+                        <button class="btn btn-sm btn-outline-dark" id="btn-track-evento">
+                            <i class="fas fa-chart-line"></i> Track Event
+                        </button>
                     </div>
                 </div>
             </div>
         </div>
-
-        <!-- SECCIÓN 4: MÓDULO DE REPORTES -->
-        <div class="row mb-4">
-            <div class="col-12">
-                <div class="card">
-                    <div class="card-header bg-secondary text-white">
-                        <h4 class="mb-0"><i class="fas fa-chart-bar"></i> Módulo de Reportes</h4>
-                    </div>
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="col-md-6">
-                                <h5>Filtros de Reportes</h5>
-                                
-                                <div class="mb-3">
-                                    <label class="form-label">Filtrar por estado:</label>
-                                    <select id="filtro-estado" class="form-select form-select-sm" onchange="filtrarPorEstado(this.value)">
-                                        <option value="todos">Todos</option>
-                                        <option value="activo">Activos</option>
-                                        <option value="inactivo">Inactivos</option>
-                                        <option value="pendiente">Pendientes</option>
-                                    </select>
-                                </div>
-                                
-                                <div class="mb-3">
-                                    <button class="btn btn-primary btn-sm" onclick="initReportesModule()">
-                                        <i class="fas fa-play"></i> Inicializar Reportes
-                                    </button>
-                                    <button class="btn btn-secondary btn-sm" onclick="exportarTabla()">
-                                        <i class="fas fa-file-export"></i> Exportar Tabla
-                                    </button>
-                                </div>
-                            </div>
-                            
-                            <div class="col-md-6">
-                                <h5>Tabla de Prueba</h5>
-                                <div class="table-responsive">
-                                    <table class="table table-sm table-bordered" id="tabla-atletas">
-                                        <thead>
-                                            <tr>
-                                                <th>ID</th>
-                                                <th>Nombre</th>
-                                                <th>Estado</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr data-estado="activo">
-                                                <td>1</td>
-                                                <td>Juan Pérez</td>
-                                                <td><span class="badge bg-success">Activo</span></td>
-                                            </tr>
-                                            <tr data-estado="inactivo">
-                                                <td>2</td>
-                                                <td>María Gómez</td>
-                                                <td><span class="badge bg-danger">Inactivo</span></td>
-                                            </tr>
-                                            <tr data-estado="pendiente">
-                                                <td>3</td>
-                                                <td>Carlos López</td>
-                                                <td><span class="badge bg-warning">Pendiente</span></td>
-                                            </tr>
-                                            <tr data-estado="activo">
-                                                <td>4</td>
-                                                <td>Ana Rodríguez</td>
-                                                <td><span class="badge bg-success">Activo</span></td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+        
+        <!-- MÓDULO 5: MAPA -->
+        <div class="col-lg-6 col-md-6 mb-4">
+            <div class="card shadow h-100">
+                <div class="card-header bg-dark text-white">
+                    <h5 class="mb-0">
+                        <i class="fas fa-map"></i> Módulo Mapa
+                    </h5>
                 </div>
-            </div>
-        </div>
-
-        <!-- SECCIÓN 5: MÓDULO DE TIENDA -->
-        <div class="row mb-4">
-            <div class="col-12">
-                <div class="card">
-                    <div class="card-header bg-purple text-white">
-                        <h4 class="mb-0"><i class="fas fa-store"></i> Módulo de Tienda</h4>
+                <div class="card-body">
+                    <p><strong>mapa-module.js</strong></p>
+                    <p>Mapas interactivos para selección y visualización</p>
+                    <div class="mb-3">
+                        <span class="module-status status-default" id="status-mapa"></span>
+                        Estado: <span id="text-status-mapa">No probado</span>
                     </div>
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="col-md-6">
-                                <h5>Funcionalidades de Tienda</h5>
-                                
-                                <div class="mb-3">
-                                    <button class="btn btn-primary btn-sm" onclick="testTiendaModule()">
-                                        <i class="fas fa-play"></i> Inicializar Tienda
-                                    </button>
-                                    <button class="btn btn-success btn-sm" id="btn-marketplace">
-                                        <i class="fas fa-shopping-cart"></i> Ir al Marketplace
-                                    </button>
-                                    <a href="#" class="btn btn-info btn-sm">
-                                        <i class="fas fa-user-tie"></i> Registro Vendedor
-                                    </a>
-                                </div>
-                                
-                                <div class="mb-3">
-                                    <div class="alert alert-light">
-                                        <strong>Eventos de tienda:</strong>
-                                        <div id="tienda-events" class="mt-2 small">
-                                            <div class="text-muted">No hay eventos registrados</div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <div class="col-md-6">
-                                <h5>Productos de Prueba</h5>
-                                <div class="row">
-                                    <div class="col-6 mb-3">
-                                        <div class="card h-100">
-                                            <div class="card-body text-center">
-                                                <h6>Camiseta Deportiva</h6>
-                                                <p class="text-success">$25.00</p>
-                                                <button class="btn btn-outline-primary btn-sm btn-agregar-carrito"
-                                                        data-id="1"
-                                                        data-nombre="Camiseta Deportiva"
-                                                        data-precio="25">
-                                                    <i class="fas fa-cart-plus"></i> Agregar
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-6 mb-3">
-                                        <div class="card h-100">
-                                            <div class="card-body text-center">
-                                                <h6>Balón de Fútbol</h6>
-                                                <p class="text-success">$20.00</p>
-                                                <button class="btn btn-outline-primary btn-sm btn-agregar-carrito"
-                                                        data-id="2"
-                                                        data-nombre="Balón de Fútbol"
-                                                        data-precio="20">
-                                                    <i class="fas fa-cart-plus"></i> Agregar
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                
-                                <div class="alert alert-info">
-                                    <div class="d-flex justify-content-between align-items-center">
-                                        <span>Carrito de compras:</span>
-                                        <span id="contador-carrito" class="badge bg-primary" style="display: none;">0</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- SECCIÓN 6: CONSOLA DE LOGS -->
-        <div class="row">
-            <div class="col-12">
-                <div class="card">
-                    <div class="card-header bg-dark text-white">
-                        <h4 class="mb-0"><i class="fas fa-terminal"></i> Consola de Logs</h4>
-                    </div>
-                    <div class="card-body bg-dark text-white">
-                        <div id="console-log" style="height: 200px; overflow-y: auto; font-family: monospace; font-size: 12px;">
-                            <div class="text-success">> Sistema de prueba listo. Abre la consola del navegador (F12) para más detalles.</div>
-                        </div>
-                        
-                        <div class="mt-3">
-                            <button class="btn btn-light btn-sm" onclick="clearConsole()">
-                                <i class="fas fa-trash"></i> Limpiar Consola
+                    <div class="d-grid gap-2">
+                        <button class="btn btn-dark" id="btn-test-mapa">
+                            <i class="fas fa-play"></i> Probar Módulo
+                        </button>
+                        <div class="btn-group" role="group">
+                            <button class="btn btn-outline-dark" id="btn-mapa-seleccion">
+                                <i class="fas fa-map-marker-alt"></i> Mapa Selección
                             </button>
-                            <button class="btn btn-outline-light btn-sm" onclick="runAllTests()">
-                                <i class="fas fa-play-circle"></i> Ejecutar Todas las Pruebas
+                            <button class="btn btn-outline-dark" id="btn-mapa-visualizacion">
+                                <i class="fas fa-school"></i> Mapa Visualización
                             </button>
                         </div>
                     </div>
@@ -456,408 +215,630 @@ AppAsset::register($this);
             </div>
         </div>
     </div>
-</div>
 
-<?php
-// CSS adicional para esta vista
-$this->registerCss('
-.bg-purple {
-    background-color: #6f42c1 !important;
-}
-
-.horario-cell.selected {
-    background-color: #007bff !important;
-    color: white !important;
-}
-
-.horario-cell.morning {
-    background-color: #fff3cd !important;
-}
-
-.horario-cell.afternoon {
-    background-color: #d1ecf1 !important;
-}
-
-.horario-cell.evening {
-    background-color: #f8d7da !important;
-}
-
-#console-log div {
-    padding: 2px 5px;
-    border-bottom: 1px solid #333;
-}
-
-#console-log .text-success { color: #28a745 !important; }
-#console-log .text-warning { color: #ffc107 !important; }
-#console-log .text-danger { color: #dc3545 !important; }
-#console-log .text-info { color: #17a2b8 !important; }
-');
-?>
-
-<?php
-// JavaScript de prueba
-$this->registerJs('
-// Función para agregar logs a la consola visual
-function addLog(message, type = "info") {
-    const consoleDiv = document.getElementById("console-log");
-    const logEntry = document.createElement("div");
-    logEntry.className = "text-" + type;
-    logEntry.textContent = "> " + message;
-    consoleDiv.appendChild(logEntry);
-    consoleDiv.scrollTop = consoleDiv.scrollHeight;
-    
-    // También mostrar en consola real
-    const icon = type === "success" ? "✅" : type === "warning" ? "⚠️" : type === "danger" ? "❌" : "ℹ️";
-    console.log(icon + " " + message);
-}
-
-// Limpiar consola visual
-function clearConsole() {
-    document.getElementById("console-log").innerHTML = "";
-    addLog("Consola limpiada", "info");
-}
-
-// ===== PRUEBAS DEL SISTEMA GED =====
-function testGEDSystem() {
-    addLog("Probando sistema GED...", "info");
-    
-    if (typeof window.gedSystem !== "undefined") {
-        const state = gedSystem.getCurrentState();
-        document.getElementById("system-status").innerHTML = `
-            <span class="badge bg-success">Sistema Activo</span>
-            <div class="small mt-1">
-                Modo: ${state.isMobile ? "Móvil" : "Escritorio"} | 
-                Padding: ${state.currentPadding.toFixed(1)}px
-            </div>
-        `;
-        addLog("✅ Sistema GED funcionando correctamente", "success");
-    } else {
-        document.getElementById("system-status").innerHTML = `<span class="badge bg-danger">Sistema NO cargado</span>`;
-        addLog("❌ Sistema GED no está disponible", "danger");
-    }
-}
-
-function updatePadding() {
-    const minPx = parseFloat(document.getElementById("min-padding").value);
-    const maxVH = parseFloat(document.getElementById("max-padding").value);
-    
-    if (window.updatePaddingConfig) {
-        updatePaddingConfig(minPx, maxVH);
-        addLog(`Padding configurado: mínimo ${minPx}px, máximo ${maxVH*100}vh`, "success");
-    } else {
-        addLog("Función updatePaddingConfig no disponible", "warning");
-    }
-}
-
-// ===== PRUEBAS DE NAVBAR Y SIDEBAR =====
-function testNavbar() {
-    addLog("Probando navbar...", "info");
-    const status = document.getElementById("nav-status");
-    
-    if (window.gedSystem && gedSystem.modules.navbar) {
-        status.innerHTML = `<span class="badge bg-success">Navbar funcionando</span>`;
-        addLog("✅ NavbarManager disponible", "success");
-        
-        // Simular toggle en móvil
-        if (gedSystem.isMobile) {
-            addLog("Simulando toggle navbar en modo móvil", "info");
-        }
-    } else {
-        status.innerHTML = `<span class="badge bg-warning">Navbar no inicializado</span>`;
-        addLog("⚠️ NavbarManager no disponible", "warning");
-    }
-}
-
-function testSidebar() {
-    addLog("Probando sidebar...", "info");
-    
-    if (window.gedSystem && gedSystem.modules.sidebar) {
-        const sidebar = gedSystem.modules.sidebar;
-        if (sidebar.isOpen) {
-            sidebar.close();
-            addLog("✅ Sidebar cerrado", "success");
-        } else {
-            sidebar.open();
-            addLog("✅ Sidebar abierto", "success");
-        }
-    } else {
-        addLog("⚠️ Sidebar no disponible", "warning");
-    }
-}
-
-// ===== PRUEBAS DE HORARIOS =====
-function initHorarioModule() {
-    addLog("Inicializando módulo de horarios...", "info");
-    
-    if (typeof initHorarioModule === "function") {
-        window.initHorarioModule();
-        addLog("✅ Módulo de horarios inicializado", "success");
-        
-        // Configurar evento de cambio en selector
-        $("#tipo-horario").off("change").on("change", function() {
-            const tipo = $(this).val();
-            if (tipo) {
-                const instance = getHorarioModuleInstance();
-                if (instance) {
-                    instance.seleccionarRango(tipo);
-                    addLog(`Rango seleccionado: ${tipo}`, "info");
-                }
-            }
-        });
-    } else {
-        addLog("❌ Función initHorarioModule no disponible", "danger");
-    }
-}
-
-function testHorario() {
-    addLog("Probando selector de horarios...", "info");
-    
-    if (typeof getHorarioModuleInstance === "function") {
-        const instance = getHorarioModuleInstance();
-        if (instance) {
-            const horarios = instance.getHorariosSeleccionados();
-            addLog(`Horarios seleccionados: ${JSON.stringify(horarios)}`, "success");
-        } else {
-            addLog("⚠️ Instancia de horarios no disponible", "warning");
-        }
-    } else {
-        addLog("❌ Módulo de horarios no cargado", "danger");
-    }
-}
-
-// ===== PRUEBAS DE MAPAS =====
-function initMapaSeleccion() {
-    addLog("Inicializando mapa de selección...", "info");
-    
-    if (typeof inicializarMapaSeleccion === "function") {
-        // Primero cargar Leaflet
-        loadLeaflet().then(() => {
-            const mapa = window.inicializarMapaSeleccion();
-            if (mapa) {
-                addLog("✅ Mapa de selección inicializado", "success");
-            } else {
-                addLog("❌ Error al inicializar mapa", "danger");
-            }
-        }).catch(error => {
-            addLog("❌ Error cargando Leaflet: " + error.message, "danger");
-        });
-    } else {
-        addLog("❌ Función inicializarMapaSeleccion no disponible", "danger");
-    }
-}
-
-function testMapaVisualizacion() {
-    addLog("Probando mapa de visualización...", "info");
-    
-    if (typeof inicializarMapaVisualizacion === "function") {
-        const escuelasTest = [
-            { nombre: "Escuela Test 1", lat: 10.480594, lng: -66.903600, direccion: "Caracas", telefono: "0212-1234567" },
-            { nombre: "Escuela Test 2", lat: 10.500000, lng: -66.900000, direccion: "Caracas Centro", telefono: "0212-7654321" }
-        ];
-        
-        loadLeaflet().then(() => {
-            const mapa = window.inicializarMapaVisualizacion(escuelasTest);
-            if (mapa) {
-                addLog(`✅ Mapa de visualización con ${escuelasTest.length} escuelas`, "success");
-            }
-        }).catch(error => {
-            addLog("❌ Error cargando Leaflet: " + error.message, "danger");
-        });
-    } else {
-        addLog("❌ Función inicializarMapaVisualizacion no disponible", "danger");
-    }
-}
-
-function testMapaEscuelas() {
-    addLog("Cargando datos de prueba para mapa...", "info");
-    
-    // Datos de prueba para Venezuela
-    const escuelasData = [
-        { nombre: "Escuela Deportiva Caracas", lat: 10.480594, lng: -66.903600, direccion: "Caracas", telefono: "0212-1111111" },
-        { nombre: "Academia Deportiva Valencia", lat: 10.162105, lng: -68.007685, direccion: "Valencia", telefono: "0241-2222222" },
-        { nombre: "Club Deportivo Maracaibo", lat: 10.642707, lng: -71.612534, direccion: "Maracaibo", telefono: "0261-3333333" },
-        { nombre: "Escuela Deportiva Barcelona", lat: 10.136259, lng: -64.686188, direccion: "Barcelona", telefono: "0281-4444444" }
-    ];
-    
-    addLog(`Datos de prueba cargados: ${escuelasData.length} escuelas`, "success");
-    
-    // Actualizar UI
-    const mapaDiv = document.getElementById("mapa-escuelas");
-    mapaDiv.innerHTML = `
-        <div class="h-100 d-flex align-items-center justify-content-center">
-            <div class="text-center">
-                <i class="fas fa-check-circle fa-3x text-success"></i>
-                <div class="mt-2">
-                    <h6>Datos listos</h6>
-                    <small>${escuelasData.length} escuelas cargadas</small>
+    <!-- ÁREAS DE PRUEBA -->
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <div class="card shadow">
+                <div class="card-header bg-secondary text-white">
+                    <h5 class="mb-0">
+                        <i class="fas fa-map"></i> Área de Prueba - Mapas
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div id="map" class="mb-3"></div>
+                    <div id="mapa-escuelas"></div>
+                    <div class="mt-3">
+                        <input type="text" class="form-control mb-2" id="lat-input" placeholder="Latitud">
+                        <input type="text" class="form-control mb-2" id="lng-input" placeholder="Longitud">
+                    </div>
                 </div>
             </div>
         </div>
-    `;
+        
+        <div class="col-md-6">
+            <div class="card shadow">
+                <div class="card-header bg-secondary text-white">
+                    <h5 class="mb-0">
+                        <i class="fas fa-calendar-alt"></i> Área de Prueba - Horarios
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div id="horario-grid" class="mb-3"></div>
+                    <div id="horario-preview" class="alert alert-info"></div>
+                    <input type="hidden" id="horario-data">
+                    
+                    <div class="mb-3">
+                        <select class="form-select" id="tipo-horario">
+                            <option value="">Seleccionar tipo de horario</option>
+                            <option value="manana">Mañana (6am-12pm)</option>
+                            <option value="tarde">Tarde (12pm-6pm)</option>
+                            <option value="noche">Noche (6pm-10pm)</option>
+                            <option value="completo">Completo</option>
+                            <option value="fin_semana">Fin de semana</option>
+                        </select>
+                    </div>
+                    
+                    <div class="btn-group" role="group">
+                        <button class="btn btn-outline-primary" id="select-all">Seleccionar Todo</button>
+                        <button class="btn btn-outline-danger" id="clear-all">Limpiar Todo</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- TABLA DE PRUEBA PARA REPORTES -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card shadow">
+                <div class="card-header bg-info text-white">
+                    <h5 class="mb-0">
+                        <i class="fas fa-table"></i> Tabla de Prueba - Reportes
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <table class="table table-striped" id="tabla-atletas">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Nombre</th>
+                                <th>Estado</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr data-estado="activo">
+                                <td>1</td>
+                                <td>Juan Pérez</td>
+                                <td><span class="badge bg-success">Activo</span></td>
+                                <td><button class="btn btn-sm btn-info">Ver</button></td>
+                            </tr>
+                            <tr data-estado="inactivo">
+                                <td>2</td>
+                                <td>María Gómez</td>
+                                <td><span class="badge bg-secondary">Inactivo</span></td>
+                                <td><button class="btn btn-sm btn-info">Ver</button></td>
+                            </tr>
+                            <tr data-estado="pendiente">
+                                <td>3</td>
+                                <td>Carlos Ruiz</td>
+                                <td><span class="badge bg-warning">Pendiente</span></td>
+                                <td><button class="btn btn-sm btn-info">Ver</button></td>
+                            </tr>
+                            <tr data-estado="activo">
+                                <td>4</td>
+                                <td>Ana López</td>
+                                <td><span class="badge bg-success">Activo</span></td>
+                                <td><button class="btn btn-sm btn-info">Ver</button></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- CONSOLA DE LOGS -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card shadow">
+                <div class="card-header bg-dark text-white">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h4 class="mb-0">
+                            <i class="fas fa-terminal"></i> Consola de Logs
+                        </h4>
+                        <div>
+                            <button class="btn btn-sm btn-light" id="btn-iniciar-todas">
+                                <i class="fas fa-rocket"></i> Probar Todos los Módulos
+                            </button>
+                            <button class="btn btn-sm btn-light" id="btn-limpiar-logs">
+                                <i class="fas fa-trash"></i> Limpiar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body bg-dark text-light p-0">
+                    <div id="consola-logs" class="p-3">
+                        <div class="log-entry text-success">✅ Sistema de pruebas listo</div>
+                        <div class="log-entry text-info">ℹ️ Haz clic en "Probar Todos los Módulos" para comenzar</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- RESULTADOS DE PRUEBAS -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card shadow">
+                <div class="card-header bg-success text-white">
+                    <h5 class="mb-0">
+                        <i class="fas fa-clipboard-check"></i> Resultados de Pruebas
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Módulo</th>
+                                <th>Estado</th>
+                                <th>Funciones Probadas</th>
+                                <th>Errores</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>OffCanvas</td>
+                                <td><span id="result-offcanvas" class="badge bg-secondary">Pendiente</span></td>
+                                <td><span id="funciones-offcanvas">0/5</span></td>
+                                <td><span id="errores-offcanvas" class="badge bg-success">0</span></td>
+                            </tr>
+                            <tr>
+                                <td>Reportes</td>
+                                <td><span id="result-reportes" class="badge bg-secondary">Pendiente</span></td>
+                                <td><span id="funciones-reportes">0/3</span></td>
+                                <td><span id="errores-reportes" class="badge bg-success">0</span></td>
+                            </tr>
+                            <tr>
+                                <td>Horarios</td>
+                                <td><span id="result-horario" class="badge bg-secondary">Pendiente</span></td>
+                                <td><span id="funciones-horario">0/6</span></td>
+                                <td><span id="errores-horario" class="badge bg-success">0</span></td>
+                            </tr>
+                            <tr>
+                                <td>Tienda</td>
+                                <td><span id="result-tienda" class="badge bg-secondary">Pendiente</span></td>
+                                <td><span id="funciones-tienda">0/4</span></td>
+                                <td><span id="errores-tienda" class="badge bg-success">0</span></td>
+                            </tr>
+                            <tr>
+                                <td>Mapa</td>
+                                <td><span id="result-mapa" class="badge bg-secondary">Pendiente</span></td>
+                                <td><span id="funciones-mapa">0/4</span></td>
+                                <td><span id="errores-mapa" class="badge bg-success">0</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ============================================
+                 DEPENDENCIAS
+============================================ -->
+<!-- jQuery (requerido por horario-selector.js) -->
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<!-- Leaflet JS (requerido por mapa-module.js) -->
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+
+<!-- ============================================
+                 MÓDULOS A PROBAR
+============================================ -->
+<!-- NOTA: Asegúrate de que estas rutas sean correctas en tu servidor -->
+<script src="/web/js/gedOffcanvas-module.js"></script>
+<script src="/web/js/modules/reportes-module.js"></script>
+<script src="/web/js/modules/horario-selector.js"></script>
+<script src="/web/js/tienda-module.js"></script>
+<script src="/web/js/modules/mapa-module.js"></script>
+
+<!-- ============================================
+                 SISTEMA DE PRUEBAS
+============================================ -->
+<script>
+class TestSuite {
+    constructor() {
+        this.logger = new Logger();
+        this.results = {
+            offcanvas: { tested: false, functions: 0, totalFunctions: 5, errors: 0 },
+            reportes: { tested: false, functions: 0, totalFunctions: 3, errors: 0 },
+            horario: { tested: false, functions: 0, totalFunctions: 6, errors: 0 },
+            tienda: { tested: false, functions: 0, totalFunctions: 4, errors: 0 },
+            mapa: { tested: false, functions: 0, totalFunctions: 4, errors: 0 }
+        };
+        
+        this.modules = {
+            offcanvas: null,
+            reportes: null,
+            horario: null,
+            tienda: null,
+            mapa: null
+        };
+    }
+    
+    log(mensaje, tipo = 'info') {
+        this.logger.log(mensaje, tipo);
+    }
+    
+    updateResult(module, key, value) {
+        this.results[module][key] = value;
+        this.updateUI(module);
+    }
+    
+    updateUI(module) {
+        const result = this.results[module];
+        const estado = result.tested ? (result.errors === 0 ? 'success' : 'warning') : 'secondary';
+        const texto = result.tested ? (result.errors === 0 ? '✅ Pasó' : '⚠️ Con errores') : 'Pendiente';
+        
+        // Actualizar badges
+        document.getElementById(`result-${module}`).className = `badge bg-${estado}`;
+        document.getElementById(`result-${module}`).textContent = texto;
+        document.getElementById(`funciones-${module}`).textContent = `${result.functions}/${result.totalFunctions}`;
+        document.getElementById(`errores-${module}`).className = result.errors === 0 ? 'badge bg-success' : 'badge bg-danger';
+        document.getElementById(`errores-${module}`).textContent = result.errors;
+        
+        // Actualizar estado en tarjetas
+        const statusElement = document.getElementById(`status-${module}`);
+        const textElement = document.getElementById(`text-status-${module}`);
+        
+        if (statusElement && textElement) {
+            statusElement.className = `module-status status-${estado}`;
+            textElement.textContent = result.tested ? 
+                (result.errors === 0 ? 'Funciona correctamente' : `Tiene ${result.errors} error(es)`) :
+                'No probado';
+        }
+    }
+    
+    async testAllModules() {
+        this.log('🚀 Iniciando pruebas exhaustivas de todos los módulos...', 'success');
+        
+        try {
+            await this.testOffCanvas();
+            await this.testReportes();
+            await this.testHorario();
+            await this.testTienda();
+            await this.testMapa();
+            
+            // Resumen final
+            const totalTests = Object.values(this.results).reduce((sum, r) => sum + r.functions, 0);
+            const totalErrors = Object.values(this.results).reduce((sum, r) => sum + r.errors, 0);
+            
+            this.log(`📊 RESULTADOS FINALES: ${totalTests} funciones probadas, ${totalErrors} errores`, 
+                    totalErrors === 0 ? 'success' : 'warning');
+            
+        } catch (error) {
+            this.log(`❌ Error en pruebas: ${error.message}`, 'error');
+        }
+    }
+    
+    async testOffCanvas() {
+        this.log('🧪 Probando módulo OffCanvas...', 'info');
+        
+        try {
+            // Verificar que la clase existe
+            if (typeof OffCanvasSidebar === 'undefined') {
+                throw new Error('Clase OffCanvasSidebar no encontrada');
+            }
+            
+            // Crear instancia
+            this.modules.offcanvas = new OffCanvasSidebar();
+            this.updateResult('offcanvas', 'functions', 1);
+            
+            // Probar init()
+            this.modules.offcanvas.init();
+            this.updateResult('offcanvas', 'functions', 2);
+            
+            // Probar crear elementos DOM
+            const sidebarExists = document.querySelector('.ged-offcanvas-sidebar') !== null;
+            if (!sidebarExists) {
+                throw new Error('No se creó el sidebar en el DOM');
+            }
+            this.updateResult('offcanvas', 'functions', 3);
+            
+            // Probar open()
+            this.modules.offcanvas.open();
+            this.updateResult('offcanvas', 'functions', 4);
+            
+            // Probar close()
+            setTimeout(() => {
+                this.modules.offcanvas.close();
+                this.updateResult('offcanvas', 'functions', 5);
+                this.updateResult('offcanvas', 'tested', true);
+                this.log('✅ Módulo OffCanvas probado exitosamente', 'success');
+            }, 500);
+            
+        } catch (error) {
+            this.updateResult('offcanvas', 'errors', this.results.offcanvas.errors + 1);
+            this.updateResult('offcanvas', 'tested', true);
+            this.log(`❌ Error en OffCanvas: ${error.message}`, 'error');
+        }
+    }
+    
+    async testReportes() {
+        this.log('🧪 Probando módulo Reportes...', 'info');
+        
+        try {
+            // Verificar que la clase existe
+            if (typeof ReportesModule === 'undefined') {
+                throw new Error('Clase ReportesModule no encontrada');
+            }
+            
+            // Crear instancia
+            this.modules.reportes = new ReportesModule();
+            this.updateResult('reportes', 'functions', 1);
+            
+            // Verificar que se inicializó
+            if (!window.reportesModule) {
+                throw new Error('No se creó reportesModule global');
+            }
+            this.updateResult('reportes', 'functions', 2);
+            
+            // Probar filtrarPorEstado
+            this.modules.reportes.filtrarPorEstado('activo');
+            this.updateResult('reportes', 'functions', 3);
+            
+            this.updateResult('reportes', 'tested', true);
+            this.log('✅ Módulo Reportes probado exitosamente', 'success');
+            
+        } catch (error) {
+            this.updateResult('reportes', 'errors', this.results.reportes.errors + 1);
+            this.updateResult('reportes', 'tested', true);
+            this.log(`❌ Error en Reportes: ${error.message}`, 'error');
+        }
+    }
+    
+    async testHorario() {
+        this.log('🧪 Probando módulo Horario...', 'info');
+        
+        try {
+            // Verificar que la clase existe
+            if (typeof HorarioModule === 'undefined') {
+                throw new Error('Clase HorarioModule no encontrada');
+            }
+            
+            // Crear HTML para el selector
+            this.createHorarioGrid();
+            
+            // Crear instancia
+            this.modules.horario = new HorarioModule();
+            this.updateResult('horario', 'functions', 1);
+            
+            // Verificar inicialización
+            if (!window.horarioModuleInstance) {
+                throw new Error('No se creó horarioModuleInstance');
+            }
+            this.updateResult('horario', 'functions', 2);
+            
+            // Probar toggleHorario
+            this.modules.horario.toggleHorario('lunes', 8);
+            this.updateResult('horario', 'functions', 3);
+            
+            // Probar actualizarVistaPrevia
+            this.modules.horario.actualizarVistaPrevia();
+            this.updateResult('horario', 'functions', 4);
+            
+            // Probar seleccionarRango
+            this.modules.horario.seleccionarRango('manana');
+            this.updateResult('horario', 'functions', 5);
+            
+            // Probar limpiarTodo
+            this.modules.horario.limpiarTodo();
+            this.updateResult('horario', 'functions', 6);
+            
+            this.updateResult('horario', 'tested', true);
+            this.log('✅ Módulo Horario probado exitosamente', 'success');
+            
+        } catch (error) {
+            this.updateResult('horario', 'errors', this.results.horario.errors + 1);
+            this.updateResult('horario', 'tested', true);
+            this.log(`❌ Error en Horario: ${error.message}`, 'error');
+        }
+    }
+    
+    async testTienda() {
+        this.log('🧪 Probando módulo Tienda...', 'info');
+        
+        try {
+            // Verificar que la clase existe
+            if (typeof TiendaModule === 'undefined') {
+                throw new Error('Clase TiendaModule no encontrada');
+            }
+            
+            // Crear instancia
+            this.modules.tienda = new TiendaModule();
+            this.updateResult('tienda', 'functions', 1);
+            
+            // Verificar que se inicializó
+            if (!window.tiendaModule) {
+                throw new Error('No se creó tiendaModule global');
+            }
+            this.updateResult('tienda', 'functions', 2);
+            
+            // Probar checkTiendaAccess
+            this.modules.tienda.checkTiendaAccess();
+            this.updateResult('tienda', 'functions', 3);
+            
+            // Probar trackEvent
+            this.modules.tienda.trackEvent('test', 'test-location');
+            this.updateResult('tienda', 'functions', 4);
+            
+            this.updateResult('tienda', 'tested', true);
+            this.log('✅ Módulo Tienda probado exitosamente', 'success');
+            
+        } catch (error) {
+            this.updateResult('tienda', 'errors', this.results.tienda.errors + 1);
+            this.updateResult('tienda', 'tested', true);
+            this.log(`❌ Error en Tienda: ${error.message}`, 'error');
+        }
+    }
+    
+    async testMapa() {
+        this.log('🧪 Probando módulo Mapa...', 'info');
+        
+        try {
+            // Verificar que la clase existe
+            if (typeof MapaModule === 'undefined') {
+                throw new Error('Clase MapaModule no encontrada');
+            }
+            
+            // Crear instancia
+            this.modules.mapa = new MapaModule('seleccion');
+            this.updateResult('mapa', 'functions', 1);
+            
+            // Probar initMapaSeleccion
+            this.modules.mapa.initMapaSeleccion();
+            this.updateResult('mapa', 'functions', 2);
+            
+            // Probar agregarMarcador
+            this.modules.mapa.agregarMarcador(10.480594, -66.903600, 'Prueba');
+            this.updateResult('mapa', 'functions', 3);
+            
+            // Probar limpiarMapa
+            this.modules.mapa.limpiarMapa();
+            this.updateResult('mapa', 'functions', 4);
+            
+            this.updateResult('mapa', 'tested', true);
+            this.log('✅ Módulo Mapa probado exitosamente', 'success');
+            
+        } catch (error) {
+            this.updateResult('mapa', 'errors', this.results.mapa.errors + 1);
+            this.updateResult('mapa', 'tested', true);
+            this.log(`❌ Error en Mapa: ${error.message}`, 'error');
+        }
+    }
+    
+    createHorarioGrid() {
+        const grid = document.getElementById('horario-grid');
+        if (!grid) return;
+        
+        const dias = ['lunes', 'martes', 'miercoles', 'jueves', 'viernes', 'sabado', 'domingo'];
+        const horas = [6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20];
+        
+        let html = '<table class="table table-bordered table-sm"><thead><tr><th>Hora</th>';
+        
+        // Encabezados de días
+        dias.forEach(dia => {
+            html += `<th>${dia.charAt(0).toUpperCase() + dia.slice(1)}</th>`;
+        });
+        
+        html += '</tr></thead><tbody>';
+        
+        // Filas de horas
+        horas.forEach(hora => {
+            html += `<tr><td>${hora}:00</td>`;
+            
+            dias.forEach(dia => {
+                html += `<td>
+                    <div class="horario-cell" id="${dia}_${hora}" data-dia="${dia}" data-hora="${hora}">
+                        <i class="fas fa-times text-muted"></i>
+                    </div>
+                </td>`;
+            });
+            
+            html += '</tr>';
+        });
+        
+        html += '</tbody></table>';
+        grid.innerHTML = html;
+    }
 }
 
-// Función auxiliar para cargar Leaflet
-function loadLeaflet() {
-    return new Promise((resolve, reject) => {
-        if (typeof L !== "undefined") {
-            resolve();
-            return;
-        }
-        
-        addLog("Cargando biblioteca Leaflet...", "info");
-        
-        // Cargar CSS
-        if (!document.querySelector(\'link[href*="leaflet"]\')) {
-            const link = document.createElement("link");
-            link.rel = "stylesheet";
-            link.href = "https://unpkg.com/leaflet@1.9.4/dist/leaflet.css";
-            document.head.appendChild(link);
-        }
-        
-        // Cargar JS
-        const script = document.createElement("script");
-        script.src = "https://unpkg.com/leaflet@1.9.4/dist/leaflet.js";
-        script.onload = () => {
-            addLog("✅ Leaflet cargado correctamente", "success");
-            setTimeout(resolve, 500);
+class Logger {
+    constructor() {
+        this.consola = document.getElementById('consola-logs');
+        this.log('✅ Sistema de pruebas inicializado', 'success');
+    }
+    
+    log(mensaje, tipo = 'info') {
+        const timestamp = new Date().toLocaleTimeString();
+        const iconos = {
+            info: '🔵',
+            success: '✅',
+            warning: '⚠️',
+            error: '🚨',
+            debug: '🐛',
+            test: '🧪'
         };
-        script.onerror = () => {
-            addLog("❌ Error cargando Leaflet", "danger");
-            reject(new Error("Leaflet no se pudo cargar"));
-        };
-        document.head.appendChild(script);
+        
+        const logEntry = document.createElement('div');
+        logEntry.className = `log-entry text-${tipo === 'error' ? 'danger' : tipo === 'success' ? 'success' : tipo === 'warning' ? 'warning' : 'light'}`;
+        logEntry.innerHTML = `${iconos[tipo] || '🔵'} [${timestamp}] ${mensaje}`;
+        
+        this.consola.appendChild(logEntry);
+        this.consola.scrollTop = this.consola.scrollHeight;
+        
+        console.log(`[${tipo.toUpperCase()}] ${mensaje}`);
+    }
+    
+    limpiar() {
+        this.consola.innerHTML = '<div class="log-entry text-success">✅ Logs limpiados</div>';
+    }
+}
+
+// Inicialización
+document.addEventListener('DOMContentLoaded', function() {
+    const testSuite = new TestSuite();
+    
+    // Botón para probar todos los módulos
+    document.getElementById('btn-iniciar-todas').addEventListener('click', function() {
+        testSuite.testAllModules();
     });
-}
-
-// ===== PRUEBAS DE REPORTES =====
-function initReportesModule() {
-    addLog("Inicializando módulo de reportes...", "info");
     
-    if (document.querySelector(".reportes-container") || document.querySelector("#tabla-atletas")) {
-        if (typeof ReportesModule !== "undefined") {
-            window.reportesModule = new ReportesModule();
-            addLog("✅ Módulo de reportes inicializado", "success");
+    // Botones individuales
+    document.getElementById('btn-test-offcanvas').addEventListener('click', function() {
+        testSuite.testOffCanvas();
+    });
+    
+    document.getElementById('btn-test-reportes').addEventListener('click', function() {
+        testSuite.testReportes();
+    });
+    
+    document.getElementById('btn-test-horario').addEventListener('click', function() {
+        testSuite.testHorario();
+    });
+    
+    document.getElementById('btn-test-tienda').addEventListener('click', function() {
+        testSuite.testTienda();
+    });
+    
+    document.getElementById('btn-test-mapa').addEventListener('click', function() {
+        testSuite.testMapa();
+    });
+    
+    // Botones de funcionalidad específica
+    document.getElementById('btn-toggle-offcanvas').addEventListener('click', function() {
+        if (testSuite.modules.offcanvas) {
+            if (testSuite.modules.offcanvas.isOpen) {
+                testSuite.modules.offcanvas.close();
+                testSuite.log('🔒 Sidebar cerrado', 'info');
+            } else {
+                testSuite.modules.offcanvas.open();
+                testSuite.log('🔓 Sidebar abierto', 'info');
+            }
         } else {
-            addLog("❌ Clase ReportesModule no disponible", "danger");
+            testSuite.log('❌ OffCanvas no inicializado', 'error');
         }
-    } else {
-        addLog("⚠️ No hay elementos de reportes en la página", "warning");
-    }
-}
-
-function filtrarPorEstado(estado) {
-    addLog(`Filtrando por estado: ${estado}`, "info");
+    });
     
-    if (window.reportesModule && typeof reportesModule.filtrarPorEstado === "function") {
-        reportesModule.filtrarPorEstado(estado);
-        addLog(`✅ Tabla filtrada por: ${estado}`, "success");
-    } else {
-        addLog("⚠️ Módulo de reportes no inicializado", "warning");
-    }
-}
-
-function exportarTabla() {
-    addLog("Solicitando exportación de tabla...", "info");
-    
-    if (window.reportesModule && typeof reportesModule.exportarTabla === "function") {
-        reportesModule.exportarTabla();
-        addLog("✅ Función de exportación llamada", "success");
-    } else {
-        addLog("⚠️ Función de exportación no disponible", "warning");
-    }
-}
-
-// ===== PRUEBAS DE TIENDA =====
-function testTiendaModule() {
-    addLog("Inicializando módulo de tienda...", "info");
-    
-    if (typeof TiendaModule !== "undefined") {
-        window.tiendaModule = new TiendaModule();
-        addLog("✅ Módulo de tienda inicializado", "success");
-        
-        // Configurar eventos de botones
-        const btnMarketplace = document.getElementById("btn-marketplace");
-        if (btnMarketplace) {
-            btnMarketplace.onclick = function(e) {
-                addLog("Evento: Click en marketplace", "info");
-                e.preventDefault();
-            };
+    document.getElementById('btn-filtrar-reportes').addEventListener('click', function() {
+        const estado = document.getElementById('select-estado-reporte').value;
+        if (testSuite.modules.reportes) {
+            testSuite.modules.reportes.filtrarPorEstado(estado);
+            testSuite.log(`📊 Filtrando por estado: ${estado}`, 'info');
         }
-        
-        // Configurar eventos de productos
-        document.querySelectorAll(".btn-agregar-carrito").forEach(btn => {
-            btn.onclick = function() {
-                const nombre = this.getAttribute("data-nombre");
-                const precio = this.getAttribute("data-precio");
-                addLog(`Producto agregado: ${nombre} ($${precio})`, "success");
-                
-                // Actualizar contador
-                const contador = document.getElementById("contador-carrito");
-                let count = parseInt(contador.textContent) || 0;
-                contador.textContent = count + 1;
-                contador.style.display = "block";
-                
-                // Actualizar lista de eventos
-                const eventsDiv = document.getElementById("tienda-events");
-                const eventEntry = document.createElement("div");
-                eventEntry.textContent = `➕ ${nombre} agregado al carrito`;
-                eventEntry.className = "text-success";
-                eventsDiv.appendChild(eventEntry);
-            };
-        });
-    } else {
-        addLog("❌ Clase TiendaModule no disponible", "danger");
-    }
-}
-
-// ===== EJECUCIÓN DE TODAS LAS PRUEBAS =====
-function runAllTests() {
-    addLog("=== INICIANDO TODAS LAS PRUEBAS ===", "info");
+    });
     
-    // Ejecutar pruebas en secuencia
-    setTimeout(() => testGEDSystem(), 100);
-    setTimeout(() => testNavbar(), 300);
-    setTimeout(() => testSidebar(), 500);
-    setTimeout(() => initHorarioModule(), 700);
-    setTimeout(() => initReportesModule(), 900);
-    setTimeout(() => testTiendaModule(), 1100);
+    document.getElementById('btn-crear-selector').addEventListener('click', function() {
+        testSuite.createHorarioGrid();
+        testSuite.log('📅 Selector de horarios creado', 'success');
+    });
     
+    document.getElementById('btn-limpiar-logs').addEventListener('click', function() {
+        testSuite.logger.limpiar();
+    });
+    
+    // Iniciar pruebas automáticas después de 2 segundos
     setTimeout(() => {
-        addLog("=== PRUEBAS COMPLETADAS ===", "success");
-        addLog("Revisa la consola del navegador para detalles completos", "info");
-    }, 1500);
-}
-
-// Inicialización automática
-document.addEventListener("DOMContentLoaded", function() {
-    addLog("Página de prueba cargada", "success");
-    addLog("Haz clic en los botones para probar cada módulo", "info");
-    
-    // Configurar tooltips de Bootstrap si están disponibles
-    if (typeof bootstrap !== "undefined") {
-        var tooltipTriggerList = [].slice.call(document.querySelectorAll(\'[title]\'));
-        tooltipTriggerList.map(function (tooltipTriggerEl) {
-            return new bootstrap.Tooltip(tooltipTriggerEl);
-        });
-    }
+        testSuite.log('⏱️ Las pruebas automáticas comenzarán en 3 segundos...', 'info');
+        setTimeout(() => {
+            testSuite.testAllModules();
+        }, 3000);
+    }, 2000);
 });
-
-// Interceptar console.log para mostrar en la consola visual
-const originalLog = console.log;
-console.log = function(...args) {
-    originalLog.apply(console, args);
-    
-    // Solo mostrar mensajes importantes
-    const message = args.join(" ");
-    if (message.includes("✅") || message.includes("❌") || message.includes("⚠️")) {
-        const type = message.includes("✅") ? "success" : 
-                    message.includes("❌") ? "danger" : 
-                    message.includes("⚠️") ? "warning" : "info";
-        addLog(message, type);
-    }
-};
-');
-?>
-
-<!-- Incluir FontAwesome para íconos -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</script>
+</body>
+</html>

@@ -1,9 +1,9 @@
-// js/ged.js - Sistema GED - VERSIÓN 4.1 CON PADDING MÍNIMO
-// Versión: 4.1.0 - Padding máximo de 1vh en todos los elementos
+// js/ged.js - Sistema GED - VERSIÓN 4.2 CON ANCHO COMPLETO EN PC
+// Versión: 4.2.0 - Ancho completo sin sidebar en PC
 // Fecha: [Fecha actual]
 
 // ==================================================
-// MÓDULOS DEL SISTEMA - CON PADDING MÍNIMO
+// MÓDULOS DEL SISTEMA - SIN ESPACIO LATERAL EN PC
 // ==================================================
 
 class GEDSystem {
@@ -11,12 +11,12 @@ class GEDSystem {
         this.isMobile = this.checkIsMobile();
         this.isDesktop = !this.isMobile;
         this.navbarHeight = this.getNavbarHeight();
-        this.sidebarWidth = this.isDesktop ? this.calculateSidebarWidth() : 0;
+        this.sidebarWidth = 0; // Sin sidebar en PC
         this.compactMode = false;
         
-        // Variables de padding
-        this.minPadding = 10; // Mínimo 10px
-        this.maxPaddingVH = 0.01; // Máximo 1vh (1% de la altura de la ventana)
+        // Variables de padding optimizadas
+        this.minPadding = 10; // Mínimo 10px para contenido
+        this.maxPaddingVH = 0.015; // Máximo 1.5vh
         
         // Elementos del DOM
         this.navbar = null;
@@ -33,45 +33,20 @@ class GEDSystem {
         this.init();
     }
     
-    // ✅ CALCULAR ANCHO DEL SIDEBAR BASADO EN PADDING MÍNIMO
-    calculateSidebarWidth() {
-        if (this.isMobile) return 0;
-        
-        // Calcular padding actual
-        const padding = this.calculatePadding();
-        
-        // Si está en modo compacto, reducirlo a la mitad
-        if (this.compactMode) {
-            return Math.max(padding * 0.5, 50); // Mínimo 50px en compacto
-        }
-        
-        // Máximo 220px, mínimo padding calculado
-        return Math.min(padding, 220);
-    }
-    
-    // ✅ CALCULAR PADDING BASADO EN 1vh MÁXIMO
-    calculatePadding() {
-        // 1vh de la altura de la ventana, pero mínimo 10px
-        const vhPadding = window.innerHeight * this.maxPaddingVH;
-        return Math.max(vhPadding, this.minPadding);
-    }
-    
     // ✅ VERIFICAR SI ES MÓVIL
     checkIsMobile() {
         return window.innerWidth < 992;
     }
     
-    // ✅ OBTENER ALTURA DEL NAVBAR (REDUCIDA)
+    // ✅ OBTENER ALTURA DEL NAVBAR (OPTIMIZADA)
     getNavbarHeight() {
-        const navbar = document.querySelector('.navbar-contextual');
-        if (!navbar) return this.isMobile ? 60 : 150; // Reducido
-        
         if (this.isMobile) {
-            if (window.innerWidth < 576) return 50; // Reducido
-            if (window.innerWidth < 768) return 55; // Reducido
-            return 60; // Reducido
+            if (window.innerWidth < 576) return 50;
+            if (window.innerWidth < 768) return 55;
+            return 60;
         } else {
-            return Math.min(window.innerHeight * 0.2, 150); // Reducido, máximo 150px
+            // En PC: navbar más compacto
+            return Math.min(window.innerHeight * 0.12, 120);
         }
     }
     
@@ -86,42 +61,46 @@ class GEDSystem {
     
     // ✅ CONFIGURACIÓN COMPLETA DEL SISTEMA
     setup() {
-        console.log(`🚀 Sistema GED v4.1 inicializando - Padding máximo: 1vh (${this.calculatePadding().toFixed(1)}px)`);
+        console.log(`🚀 Sistema GED v4.2 inicializando - Modo: ${this.isMobile ? 'Móvil' : 'Escritorio'}`);
         
         try {
             // Cachear elementos DOM
             this.cacheElements();
             
-            // Aplicar correcciones de padding inmediatamente
-            this.applyMinimalPadding();
+            // Aplicar configuración de ancho completo inmediatamente
+            this.applyFullWidthConfiguration();
             
             // Inicializar todos los módulos
             this.modules = {
                 navbar: new NavbarManager(),
-                sidebar: new OffCanvasSidebar(),
+                sidebar: this.createSidebarInstance(),
                 landing: new LandingPageManager(),
                 search: new SchoolSearch(),
                 components: new ComponentsManager()
             };
             
             // Inicializar cada módulo
-            Object.values(this.modules).forEach(module => module.init());
+            Object.values(this.modules).forEach(module => {
+                if (module && typeof module.init === 'function') {
+                    module.init();
+                }
+            });
             
             // Configurar observadores y eventos
             this.setupObservers();
             this.bindEvents();
             
-            // Aplicar correcciones iniciales del body
+            // Aplicar correcciones iniciales
             this.applyBodyCorrections();
             
             // Forzar recálculo después de la carga completa
             setTimeout(() => {
-                this.forceMinimalPaddingRecalculation();
-                this.applyBodyCorrections();
+                this.applyFullWidthConfiguration();
                 this.fixOverflowIssues();
-            }, 500);
+                this.verifyWidth();
+            }, 300);
             
-            console.log('✅ Sistema GED v4.1 completamente inicializado con padding mínimo');
+            console.log('✅ Sistema GED v4.2 completamente inicializado con ancho completo en PC');
             
         } catch (error) {
             console.error('❌ Error crítico en inicialización del sistema:', error);
@@ -129,137 +108,176 @@ class GEDSystem {
         }
     }
     
+    // ✅ CREAR INSTANCIA DEL SIDEBAR (SOLO PARA MÓVIL)
+    createSidebarInstance() {
+        // Solo crear sidebar en móvil
+        if (this.isMobile) {
+            if (typeof window.OffCanvasSidebar !== 'undefined') {
+                return new window.OffCanvasSidebar();
+            } 
+            else if (window.gedOffcanvas) {
+                return window.gedOffcanvas;
+            }
+        }
+        
+        // En PC o sin módulo: objeto dummy
+        return {
+            init: () => {},
+            handleViewportChange: () => {},
+            open: () => {},
+            close: () => {},
+            isOpen: false
+        };
+    }
+    
     // ✅ CACHEAR ELEMENTOS DOM IMPORTANTES
     cacheElements() {
         this.navbar = document.querySelector('.navbar-contextual');
         this.mainContent = document.querySelector('.main-content-wrapper');
         this.sidebar = document.querySelector('.ged-offcanvas-sidebar');
-        this.offcanvasWrapper = document.querySelector('.ged-offcanvas-wrapper');
     }
     
-    // ✅ APLICAR PADDING MÍNIMO A TODOS LOS ELEMENTOS
-    applyMinimalPadding() {
-        console.log('🔧 Aplicando padding mínimo (máximo 1vh)...');
+    // ✅ APLICAR CONFIGURACIÓN DE ANCHO COMPLETO
+    applyFullWidthConfiguration() {
+        console.log('🔧 Aplicando configuración de ancho completo...');
         
         const padding = this.calculatePadding();
-        const sidebarWidth = this.calculateSidebarWidth();
         
-        // ✅ FIX 1: Body y HTML SIN PADDING LATERAL
-        this.html.style.paddingLeft = '0';
-        this.html.style.paddingRight = '0';
-        
-        this.body.style.paddingLeft = '0';
-        this.body.style.paddingRight = '0';
-        this.body.style.boxSizing = 'border-box';
-        
-        // ✅ FIX 2: Sidebar con ancho reducido
-        if (this.sidebar && this.isDesktop) {
-            this.sidebar.style.width = `${sidebarWidth}px`;
-            this.sidebar.style.transition = 'width 0.3s ease';
-        }
-        
-        // ✅ FIX 3: Navbar con padding mínimo lateral
-        if (this.navbar) {
-            this.navbar.style.paddingLeft = `${padding}px`;
-            this.navbar.style.paddingRight = `${padding}px`;
-            this.navbar.style.boxSizing = 'border-box';
-        }
-        
-        // ✅ FIX 4: Main content con padding mínimo
-        if (this.mainContent) {
-            this.mainContent.style.paddingLeft = `${padding}px`;
-            this.mainContent.style.paddingRight = `${padding}px`;
+        // ✅ EN PC: SIN PADDING LATERAL EN BODY/HTML
+        if (this.isDesktop) {
+            // Body y HTML al 100% sin padding lateral
+            this.html.style.paddingLeft = '0';
+            this.html.style.paddingRight = '0';
+            this.html.style.overflowX = 'hidden';
+            this.html.style.width = '100vw';
             
-            // Solo en desktop, agregar padding extra para el sidebar
-            if (this.isDesktop) {
-                this.mainContent.style.paddingLeft = `${padding + sidebarWidth}px`;
+            this.body.style.paddingLeft = '0';
+            this.body.style.paddingRight = '0';
+            this.body.style.marginLeft = '0';
+            this.body.style.marginRight = '0';
+            this.body.style.overflowX = 'hidden';
+            this.body.style.width = '100vw';
+            
+            // Navbar al 100% con padding mínimo
+            if (this.navbar) {
+                this.navbar.style.width = '100vw';
+                this.navbar.style.paddingLeft = `${padding}px`;
+                this.navbar.style.paddingRight = `${padding}px`;
+                this.navbar.style.boxSizing = 'border-box';
+                this.navbar.style.left = '0';
+                this.navbar.style.right = '0';
             }
+            
+            // Main content sin padding lateral forzado
+            if (this.mainContent) {
+                this.mainContent.style.paddingLeft = '0';
+                this.mainContent.style.paddingRight = '0';
+                this.mainContent.style.marginLeft = '0';
+                this.mainContent.style.marginRight = '0';
+                this.mainContent.style.width = '100%';
+            }
+            
+            // Contenedores Bootstrap reseteados
+            document.querySelectorAll('.container-fluid, .container').forEach(container => {
+                container.style.paddingLeft = '0';
+                container.style.paddingRight = '0';
+                container.style.marginLeft = '0';
+                container.style.marginRight = '0';
+                container.style.width = '100%';
+                
+                // Contenido interno SÍ puede tener padding
+                const children = container.children;
+                for (let child of children) {
+                    child.style.paddingLeft = `${padding}px`;
+                    child.style.paddingRight = `${padding}px`;
+                }
+            });
+            
+            // Carrusel hero al 100%
+            const carousel = document.getElementById('hero-carousel');
+            if (carousel) {
+                carousel.style.paddingLeft = '0';
+                carousel.style.paddingRight = '0';
+                carousel.style.marginLeft = '0';
+                carousel.style.marginRight = '0';
+                carousel.style.width = '100vw';
+            }
+            
+        } 
+        // ✅ EN MÓVIL: CONFIGURACIÓN NORMAL
+        else {
+            // Aplicar padding normal en móvil
+            if (this.navbar) {
+                this.navbar.style.paddingLeft = `${padding}px`;
+                this.navbar.style.paddingRight = `${padding}px`;
+            }
+            
+            if (this.mainContent) {
+                this.mainContent.style.paddingLeft = `${padding}px`;
+                this.mainContent.style.paddingRight = `${padding}px`;
+            }
+            
+            document.querySelectorAll('.container-fluid, .container').forEach(container => {
+                container.style.paddingLeft = `${padding}px`;
+                container.style.paddingRight = `${padding}px`;
+            });
         }
         
-        // ✅ FIX 5: Containers fluidos con padding mínimo
-        document.querySelectorAll('.container-fluid, .container').forEach(container => {
-            container.style.paddingLeft = `${padding}px`;
-            container.style.paddingRight = `${padding}px`;
-            container.style.boxSizing = 'border-box';
-        });
-        
-        // ✅ FIX 6: Aplicar padding mínimo a secciones principales
-        document.querySelectorAll('section, .section, .content-section, .main-section').forEach(section => {
-            section.style.paddingLeft = `${padding}px`;
-            section.style.paddingRight = `${padding}px`;
-        });
-        
-        console.log(`✅ Padding mínimo aplicado: ${padding}px (${(padding/window.innerHeight*100).toFixed(1)}vh)`);
-        console.log(`✅ Ancho sidebar: ${sidebarWidth}px (${this.compactMode ? 'compacto' : 'normal'})`);
+        console.log(`✅ Configuración aplicada: ${this.isDesktop ? 'PC (ancho completo)' : 'Móvil'} - Padding: ${padding}px`);
     }
     
-    // ✅ FORZAR RECÁLCULO DE PADDING MÍNIMO
-    forceMinimalPaddingRecalculation() {
-        try {
-            // Recalcular valores
-            const padding = this.calculatePadding();
-            const sidebarWidth = this.calculateSidebarWidth();
-            
-            // Aplicar a todos los elementos
-            this.applyMinimalPadding();
-            
-            // Actualizar sidebar si existe
-            if (this.sidebar && this.isDesktop) {
-                this.sidebar.style.width = `${sidebarWidth}px`;
-            }
-            
-            console.log(`🔄 Padding mínimo recalculado: ${padding}px, Sidebar: ${sidebarWidth}px`);
-        } catch (error) {
-            console.error('Error en forceMinimalPaddingRecalculation:', error);
+    // ✅ CALCULAR PADDING DINÁMICO
+    calculatePadding() {
+        if (this.isDesktop) {
+            // En PC: padding mínimo fijo para contenido
+            return Math.max(15, this.minPadding);
+        } else {
+            // En móvil: responsive basado en vh
+            const vhPadding = window.innerHeight * this.maxPaddingVH;
+            return Math.max(vhPadding, this.minPadding);
         }
+    }
+    
+    // ✅ VERIFICAR ANCHO DEL SISTEMA
+    verifyWidth() {
+        const bodyWidth = this.body.offsetWidth;
+        const viewportWidth = window.innerWidth;
+        const difference = Math.abs(bodyWidth - viewportWidth);
+        
+        console.log(`📏 Verificación de ancho:
+          Body: ${bodyWidth}px
+          Viewport: ${viewportWidth}px
+          Diferencia: ${difference}px
+          ${difference > 5 ? '⚠️ Posible desbordamiento' : '✅ Ancho correcto'}
+        `);
+        
+        return difference < 5;
     }
     
     // ✅ CONFIGURAR OBSERVADORES DE CAMBIOS
     setupObservers() {
-        // Observar cambios en el sidebar (para modo compacto)
-        if (this.sidebar) {
-            this.mutationObserver = new MutationObserver((mutations) => {
-                mutations.forEach((mutation) => {
-                    if (mutation.type === 'attributes' && mutation.attributeName === 'class') {
-                        this.handleSidebarChange();
-                    }
-                });
-            });
-            
-            this.mutationObserver.observe(this.sidebar, {
-                attributes: true,
-                attributeFilter: ['class']
-            });
-        }
-        
-        // Observar cambios en el body para detectar overflow
-        const bodyObserver = new MutationObserver(() => {
-            setTimeout(() => this.fixOverflowIssues(), 100);
+        // Observar cambios en el DOM para ajustar ancho
+        const observer = new MutationObserver(() => {
+            setTimeout(() => {
+                this.applyFullWidthConfiguration();
+                this.fixOverflowIssues();
+            }, 100);
         });
         
-        bodyObserver.observe(this.body, {
+        observer.observe(this.body, {
             childList: true,
             subtree: true,
-            attributes: true
+            attributes: false
         });
-    }
-    
-    // ✅ MANEJAR CAMBIOS EN EL SIDEBAR
-    handleSidebarChange() {
-        if (this.isDesktop) {
-            this.compactMode = this.sidebar.classList.contains('compact');
-            console.log(`🔄 Modo sidebar cambiado a: ${this.compactMode ? 'compacto' : 'normal'}`);
-            this.forceMinimalPaddingRecalculation();
-        }
     }
     
     // ✅ VINCULAR EVENTOS
     bindEvents() {
         window.addEventListener('resize', this.debouncedResize);
         
-        // Evento personalizado para cambios de padding
-        window.addEventListener('ged:paddingchange', () => {
-            this.forceMinimalPaddingRecalculation();
+        // Eventos personalizados
+        window.addEventListener('ged:updateLayout', () => {
+            this.applyFullWidthConfiguration();
         });
     }
     
@@ -268,13 +286,12 @@ class GEDSystem {
         try {
             this.navbarHeight = this.getNavbarHeight();
             
-            // Ajustar padding-top del body para el navbar
+            // Ajustar padding-top del body para el navbar fijo
             this.body.style.paddingTop = `${this.navbarHeight}px`;
             
             // Ajustar altura mínima de elementos main
             const mainElements = document.querySelectorAll('main#main, .main-container');
             mainElements.forEach(main => {
-                main.style.marginTop = '0';
                 main.style.minHeight = `calc(100vh - ${this.navbarHeight}px)`;
                 main.style.boxSizing = 'border-box';
             });
@@ -289,31 +306,34 @@ class GEDSystem {
     handleResize() {
         try {
             const newIsMobile = this.checkIsMobile();
+            const changed = newIsMobile !== this.isMobile;
             
-            if (newIsMobile !== this.isMobile) {
-                this.isMobile = newIsMobile;
-                this.isDesktop = !newIsMobile;
+            this.isMobile = newIsMobile;
+            this.isDesktop = !newIsMobile;
+            
+            if (changed) {
                 console.log(`🔄 Cambio de modo: ${this.isMobile ? 'Móvil' : 'Escritorio'}`);
                 
-                // Reaplicar todas las correcciones
-                this.applyMinimalPadding();
+                // Recalcular alturas
+                this.navbarHeight = this.getNavbarHeight();
+                
+                // Reaplicar configuración completa
+                this.applyFullWidthConfiguration();
                 this.applyBodyCorrections();
                 
                 // Notificar a los módulos del cambio
-                if (this.modules.sidebar) {
+                if (this.modules.sidebar && typeof this.modules.sidebar.handleViewportChange === 'function') {
                     this.modules.sidebar.handleViewportChange(this.isMobile);
                 }
             }
             
-            // Recalcular alturas y padding
-            this.navbarHeight = this.getNavbarHeight();
-            
-            // Recalcular padding mínimo
-            this.forceMinimalPaddingRecalculation();
+            // Recalcular y ajustar
+            this.applyFullWidthConfiguration();
             this.applyBodyCorrections();
             
             // Verificar overflow después de resize
-            setTimeout(() => this.fixOverflowIssues(), 100);
+            setTimeout(() => this.fixOverflowIssues(), 150);
+            
         } catch (error) {
             console.error('Error en handleResize:', error);
         }
@@ -326,30 +346,19 @@ class GEDSystem {
             const viewportWidth = window.innerWidth;
             const difference = bodyWidth - viewportWidth;
             
-            if (difference > 5) { // Tolerancia de 5px
+            if (difference > 10) { // Tolerancia de 10px
                 console.warn(`⚠️ Overflow detectado: Body ${bodyWidth}px > Viewport ${viewportWidth}px (Diff: ${difference}px)`);
-                
-                // Reducir padding si hay overflow significativo
-                if (difference > 20) {
-                    const currentPadding = this.calculatePadding();
-                    const reduction = Math.min(difference * 0.5, currentPadding * 0.3);
-                    const newPadding = Math.max(currentPadding - reduction, 5);
-                    
-                    // Aplicar nuevo padding reducido
-                    document.querySelectorAll('.container-fluid, .container, .navbar-contextual, .main-content-wrapper')
-                        .forEach(el => {
-                            const currentLeft = parseInt(el.style.paddingLeft) || 0;
-                            if (currentLeft > newPadding) {
-                                el.style.paddingLeft = `${newPadding}px`;
-                            }
-                        });
-                    
-                    console.log(`✅ Padding reducido a ${newPadding}px para corregir overflow`);
-                }
                 
                 // Forzar hide de overflow horizontal
                 this.body.style.overflowX = 'hidden';
                 this.html.style.overflowX = 'hidden';
+                
+                // Reducir padding si hay overflow significativo
+                if (difference > 30) {
+                    console.log('🔄 Reduciendo padding para corregir overflow...');
+                    this.minPadding = Math.max(5, this.minPadding - 5);
+                    this.applyFullWidthConfiguration();
+                }
             }
         } catch (error) {
             console.error('Error en fixOverflowIssues:', error);
@@ -374,74 +383,84 @@ class GEDSystem {
         const errorDiv = document.createElement('div');
         errorDiv.style.cssText = `
             position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
+            top: 20px;
+            right: 20px;
             background: #dc3545;
             color: white;
-            padding: 10px 15px;
-            text-align: center;
+            padding: 15px 20px;
+            border-radius: 6px;
             z-index: 9999;
             font-weight: bold;
             font-size: 0.9rem;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            max-width: 400px;
         `;
         errorDiv.textContent = `⚠️ ${message}. Por favor, recarga la página.`;
+        errorDiv.innerHTML += `<br><small style="opacity:0.8">Error en Sistema GED v4.2</small>`;
         document.body.appendChild(errorDiv);
+        
+        // Auto-eliminar después de 10 segundos
+        setTimeout(() => {
+            if (errorDiv.parentNode) {
+                errorDiv.parentNode.removeChild(errorDiv);
+            }
+        }, 10000);
     }
     
     // ✅ MÉTODOS PÚBLICOS PARA CONTROL EXTERNO
-    forceWidthFix() {
-        this.forceMinimalPaddingRecalculation();
-        console.log('🔄 Full width fix aplicado manualmente');
+    forceLayoutUpdate() {
+        this.applyFullWidthConfiguration();
+        this.applyBodyCorrections();
+        this.fixOverflowIssues();
+        console.log('🔄 Layout actualizado manualmente');
     }
     
-    checkOverflow() {
+    checkLayout() {
         const bodyWidth = this.body.offsetWidth;
         const viewportWidth = window.innerWidth;
         const difference = bodyWidth - viewportWidth;
         
-        console.log(`📏 Análisis de ancho:
-          Body: ${bodyWidth}px
-          Viewport: ${viewportWidth}px
-          Diferencia: ${difference}px
-          ${difference > 5 ? '⚠️ HAY OVERFLOW' : '✅ SIN OVERFLOW'}
-          Padding actual: ${this.calculatePadding()}px
-        `);
-        
-        return {
+        const report = {
             bodyWidth,
             viewportWidth,
             difference,
-            hasOverflow: difference > 5,
-            currentPadding: this.calculatePadding()
+            hasOverflow: difference > 10,
+            currentMode: this.isMobile ? 'Móvil' : 'Escritorio',
+            navbarHeight: this.navbarHeight,
+            minPadding: this.minPadding,
+            maxPaddingVH: this.maxPaddingVH
         };
+        
+        console.table(report);
+        return report;
     }
     
     // ✅ ACTUALIZAR CONFIGURACIÓN DE PADDING
-    updatePaddingConfig(minPx = 10, maxVH = 0.01) {
+    updatePaddingConfig(minPx = 10, maxVH = 0.015) {
         this.minPadding = minPx;
         this.maxPaddingVH = maxVH;
-        this.forceMinimalPaddingRecalculation();
-        console.log(`🔧 Configuración de padding actualizada: mínimo ${minPx}px, máximo ${maxVH*100}vh`);
+        this.applyFullWidthConfiguration();
+        console.log(`🔧 Configuración actualizada: mínimo ${minPx}px, máximo ${maxVH*100}vh`);
     }
     
     // ✅ OBTENER ESTADO ACTUAL
     getCurrentState() {
         return {
+            version: '4.2.0',
             isMobile: this.isMobile,
             isDesktop: this.isDesktop,
-            compactMode: this.compactMode,
             navbarHeight: this.navbarHeight,
             sidebarWidth: this.sidebarWidth,
-            currentPadding: this.calculatePadding(),
             minPadding: this.minPadding,
-            maxPaddingVH: this.maxPaddingVH
+            maxPaddingVH: this.maxPaddingVH,
+            viewportWidth: window.innerWidth,
+            bodyWidth: this.body.offsetWidth
         };
     }
 }
 
 // ==================================================
-// NAVBAR MANAGER - OPTIMIZADO PARA PADDING MÍNIMO
+// NAVBAR MANAGER - OPTIMIZADO PARA ANCHO COMPLETO
 // ==================================================
 
 class NavbarManager {
@@ -459,47 +478,49 @@ class NavbarManager {
                 return;
             }
             
-            // ✅ FORZAR ANCHO COMPLETO CON PADDING MÍNIMO
-            this.forceMinimalWidth();
+            // ✅ FORZAR ANCHO COMPLETO
+            this.forceFullWidth();
             
-            // ✅ Ocultar navbar-collapse en móviles si es necesario
+            // ✅ Configuración específica por dispositivo
             if (this.isMobile) {
-                this.hideNavbarCollapseOnMobile();
+                this.configureForMobile();
+            } else {
+                this.configureForDesktop();
             }
             
-            this.stabilizeNavbar();
             this.initNavbarEscuelaSelector();
             
-            console.log('✅ NavbarManager inicializado - Móvil:', this.isMobile);
+            console.log('✅ NavbarManager inicializado');
         } catch (error) {
             console.error('Error en NavbarManager.init:', error);
         }
     }
     
-    forceMinimalWidth() {
+    forceFullWidth() {
         try {
-            const minimalStyle = `
+            // Estilos críticos para ancho completo
+            const fullWidthStyles = `
                 width: 100vw !important;
                 max-width: 100vw !important;
                 min-width: 100vw !important;
                 left: 0 !important;
                 right: 0 !important;
                 box-sizing: border-box !important;
-                padding-left: 10px !important;
-                padding-right: 10px !important;
+                position: fixed !important;
+                top: 0 !important;
+                z-index: 1030 !important;
             `;
             
             // Aplicar al navbar
-            if (this.navbar) {
-                this.navbar.style.cssText += minimalStyle;
-            }
+            this.navbar.style.cssText += fullWidthStyles;
             
-            // Aplicar a elementos internos
+            // Asegurar que elementos internos también sean full width
             const elements = [
                 '.navbar-collapse',
                 '.navbar-container',
                 '.navbar-menu-section',
-                '.navbar-brand-section'
+                '.navbar-brand-section',
+                '.navbar-control-section'
             ];
             
             elements.forEach(selector => {
@@ -509,37 +530,70 @@ class NavbarManager {
                 });
             });
         } catch (error) {
-            console.error('Error en forceMinimalWidth:', error);
+            console.error('Error en forceFullWidth:', error);
         }
     }
     
-    hideNavbarCollapseOnMobile() {
+    configureForMobile() {
         try {
+            // Ocultar elementos no esenciales en móvil
+            const toHide = [
+                '.navbar-social-section',
+                '.school-info',
+                '.user-info'
+            ];
+            
+            toHide.forEach(selector => {
+                const element = this.navbar.querySelector(selector);
+                if (element) {
+                    element.style.display = 'none';
+                }
+            });
+            
+            // Asegurar que el toggler sea funcional
+            const navbarToggler = this.navbar.querySelector('.navbar-toggler');
+            if (navbarToggler) {
+                navbarToggler.style.display = 'block';
+            }
+            
+            console.log('✅ Navbar configurado para móvil');
+        } catch (error) {
+            console.error('Error en configureForMobile:', error);
+        }
+    }
+    
+    configureForDesktop() {
+        try {
+            // Mostrar elementos de desktop
+            const toShow = [
+                '.navbar-social-section',
+                '.school-info',
+                '.user-info'
+            ];
+            
+            toShow.forEach(selector => {
+                const element = this.navbar.querySelector(selector);
+                if (element) {
+                    element.style.display = '';
+                }
+            });
+            
+            // Ocultar toggler en desktop
+            const navbarToggler = this.navbar.querySelector('.navbar-toggler');
+            if (navbarToggler) {
+                navbarToggler.style.display = 'none';
+            }
+            
+            // Expandir menú collapse en desktop
             const navbarCollapse = document.getElementById('navbarGedCollapse');
             if (navbarCollapse) {
-                navbarCollapse.style.display = 'none';
-                navbarCollapse.classList.remove('show');
-                console.log('✅ Navbar-collapse ocultado en móvil');
+                navbarCollapse.classList.add('show');
+                navbarCollapse.style.display = 'flex';
             }
+            
+            console.log('✅ Navbar configurado para escritorio');
         } catch (error) {
-            console.error('Error en hideNavbarCollapseOnMobile:', error);
-        }
-    }
-    
-    stabilizeNavbar() {
-        try {
-            const criticalStyles = `
-                position: fixed !important;
-                top: 0 !important;
-                left: 0 !important;
-                right: 0 !important;
-                z-index: 1030 !important;
-                width: 100vw !important;
-                transform: none !important;
-            `;
-            this.navbar.style.cssText += criticalStyles;
-        } catch (error) {
-            console.error('Error en stabilizeNavbar:', error);
+            console.error('Error en configureForDesktop:', error);
         }
     }
     
@@ -563,427 +617,7 @@ class NavbarManager {
 }
 
 // ==================================================
-// OFF-CANVAS SIDEBAR CON PADDING MÍNIMO
-// ==================================================
-
-class OffCanvasSidebar {
-    constructor() {
-        this.isOpen = false;
-        this.isMobile = window.innerWidth < 992;
-        this.menuLoaded = false;
-        this.sidebar = null;
-        this.backdrop = null;
-        this.sidebarNav = null;
-    }
-    
-    init() {
-        try {
-            this.createOffCanvas();
-            this.bindEvents();
-            console.log('✅ Off-Canvas Sidebar inicializado - Móvil:', this.isMobile);
-        } catch (error) {
-            console.error('Error en OffCanvasSidebar.init:', error);
-        }
-    }
-    
-    createOffCanvas() {
-        try {
-            if (document.querySelector('.ged-offcanvas-sidebar')) {
-                this.sidebar = document.querySelector('.ged-offcanvas-sidebar');
-                this.backdrop = document.querySelector('.ged-sidebar-backdrop');
-                this.sidebarNav = this.sidebar.querySelector('.sidebar-nav');
-                return;
-            }
-
-            const sidebar = document.createElement('div');
-            sidebar.className = 'ged-offcanvas-sidebar';
-            sidebar.innerHTML = `
-                <div class="sidebar-header">
-                    <button class="close-sidebar" aria-label="Cerrar menú">✕</button>
-                    <span>Menú Principal</span>
-                </div>
-                <nav class="sidebar-nav" aria-label="Navegación principal">
-                    <div class="text-center py-3">
-                        <div class="spinner-border text-primary" role="status">
-                            <span class="visually-hidden">Cargando menú...</span>
-                        </div>
-                        <p class="text-muted mt-2">Cargando menú...</p>
-                    </div>
-                </nav>
-            `;
-            
-            const backdrop = document.createElement('div');
-            backdrop.className = 'ged-sidebar-backdrop';
-            
-            document.body.appendChild(sidebar);
-            document.body.appendChild(backdrop);
-            
-            this.sidebar = sidebar;
-            this.backdrop = backdrop;
-            this.sidebarNav = this.sidebar.querySelector('.sidebar-nav');
-        } catch (error) {
-            console.error('Error en createOffCanvas:', error);
-        }
-    }
-    
-    loadMobileMenu() {
-        try {
-            if (this.menuLoaded) return;
-            
-            console.log('📱 Cargando menú específico para móvil...');
-            
-            if (typeof $ !== 'undefined') {
-                this.loadMobileMenuViaAJAX();
-            } else {
-                setTimeout(() => {
-                    this.loadRealMenu();
-                }, 100);
-            }
-        } catch (error) {
-            console.error('Error en loadMobileMenu:', error);
-            this.loadFallbackMenu();
-        }
-    }
-    
-    loadMobileMenuViaAJAX() {
-        try {
-            $.ajax({
-                url: '/site/mobile-menu',
-                type: 'GET',
-                data: {
-                    _csrf: $('meta[name="csrf-token"]').attr('content')
-                },
-                success: (response) => {
-                    console.log('✅ Menú móvil cargado via AJAX');
-                    this.sidebarNav.innerHTML = response;
-                    this.adaptMenuForOffCanvas(this.sidebarNav);
-                    this.menuLoaded = true;
-                },
-                error: (xhr, status, error) => {
-                    console.error('❌ Error cargando menú móvil via AJAX:', error);
-                    console.log('🔄 Intentando cargar menú desde navbar...');
-                    this.loadRealMenu();
-                }
-            });
-        } catch (error) {
-            console.error('Error en loadMobileMenuViaAJAX:', error);
-            this.loadRealMenu();
-        }
-    }
-    
-    loadRealMenu() {
-        try {
-            console.log('🔄 Cargando menú real desde navbar...');
-            
-            const realMenu = document.querySelector('.navbar-nav');
-            
-            if (!realMenu) {
-                console.warn('❌ No se encontró el menú real en el navbar');
-                this.loadFallbackMenu();
-                return;
-            }
-            
-            const clonedMenu = realMenu.cloneNode(true);
-            this.sidebarNav.innerHTML = '';
-            this.sidebarNav.appendChild(clonedMenu);
-            this.adaptMenuForOffCanvas(this.sidebarNav);
-            this.menuLoaded = true;
-            
-            console.log('✅ Menú real cargado y adaptado correctamente');
-        } catch (error) {
-            console.error('Error en loadRealMenu:', error);
-            this.loadFallbackMenu();
-        }
-    }
-    
-    loadFallbackMenu() {
-        try {
-            console.log('🔄 Cargando menú de respaldo...');
-            
-            this.sidebarNav.innerHTML = `
-                <ul class="sidebar-menu">
-                    <li class="menu-item">
-                        <a href="/" class="menu-link">Inicio</a>
-                    </li>
-                    <li class="menu-item has-children">
-                        <a href="#" class="menu-link">
-                            Sistema
-                            <span class="submenu-indicator">›</span>
-                        </a>
-                        <ul class="submenu">
-                            <li class="menu-item">
-                                <a href="/ged/default/index" class="menu-link">Seleccionar Escuela</a>
-                            </li>
-                            <li class="menu-item">
-                                <a href="/site/login" class="menu-link">Iniciar Sesión</a>
-                            </li>
-                        </ul>
-                    </li>
-                    <li class="menu-divider"></li>
-                    <li class="menu-item">
-                        <a href="#" class="menu-link">Ayuda</a>
-                    </li>
-                </ul>
-            `;
-            
-            this.adaptMenuForOffCanvas(this.sidebarNav);
-            this.menuLoaded = true;
-            console.log('✅ Menú de respaldo cargado');
-        } catch (error) {
-            console.error('Error en loadFallbackMenu:', error);
-        }
-    }
-    
-    adaptMenuForOffCanvas(menuElement) {
-        try {
-            let mainMenu = menuElement.querySelector('.navbar-nav, .sidebar-menu');
-            if (!mainMenu) return;
-            
-            if (mainMenu.classList.contains('navbar-nav')) {
-                this.convertBootstrapToMobileMenu(mainMenu);
-            }
-            
-            this.addMobileMenuEvents(menuElement);
-            console.log('✅ Menú adaptado correctamente para móvil');
-        } catch (error) {
-            console.error('Error en adaptMenuForOffCanvas:', error);
-        }
-    }
-    
-    convertBootstrapToMobileMenu(menuElement) {
-        try {
-            const dropdowns = menuElement.querySelectorAll('.dropdown, .dropdown-submenu');
-            dropdowns.forEach(dropdown => {
-                dropdown.classList.remove('dropdown', 'dropdown-submenu');
-                dropdown.classList.add('has-children');
-                
-                const toggle = dropdown.querySelector('.dropdown-toggle');
-                if (toggle) {
-                    toggle.classList.remove('dropdown-toggle');
-                    toggle.removeAttribute('data-bs-toggle');
-                    toggle.removeAttribute('aria-expanded');
-                    
-                    if (!toggle.querySelector('.submenu-indicator')) {
-                        const indicator = document.createElement('span');
-                        indicator.className = 'submenu-indicator';
-                        indicator.textContent = '›';
-                        toggle.appendChild(indicator);
-                    }
-                }
-                
-                const menu = dropdown.querySelector('.dropdown-menu');
-                if (menu) {
-                    menu.classList.remove('dropdown-menu');
-                    menu.classList.add('submenu');
-                    menu.style.display = 'none';
-                }
-            });
-            
-            const navItems = menuElement.querySelectorAll('.nav-item');
-            navItems.forEach(item => {
-                item.classList.remove('nav-item');
-                item.classList.add('menu-item');
-            });
-            
-            const navLinks = menuElement.querySelectorAll('.nav-link, .dropdown-item');
-            navLinks.forEach(link => {
-                link.classList.remove('nav-link', 'dropdown-item');
-                link.classList.add('menu-link');
-                
-                if (link.getAttribute('href') === '#' && link.parentElement.classList.contains('has-children')) {
-                    link.style.cursor = 'pointer';
-                }
-            });
-            
-            menuElement.classList.remove('navbar-nav');
-            menuElement.classList.add('sidebar-menu');
-        } catch (error) {
-            console.error('Error en convertBootstrapToMobileMenu:', error);
-        }
-    }
-    
-    addMobileMenuEvents(menuElement) {
-        try {
-            const menuItems = menuElement.querySelectorAll('.has-children > .menu-link');
-            menuItems.forEach(menuItem => {
-                menuItem.replaceWith(menuItem.cloneNode(true));
-            });
-            
-            const refreshedMenuItems = menuElement.querySelectorAll('.has-children > .menu-link');
-            refreshedMenuItems.forEach(menuItem => {
-                menuItem.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    this.toggleSubmenu(menuItem.parentElement);
-                });
-            });
-            
-            const normalLinks = menuElement.querySelectorAll('.menu-item:not(.has-children) > .menu-link');
-            normalLinks.forEach(link => {
-                link.addEventListener('click', () => {
-                    if (this.isMobile) {
-                        setTimeout(() => this.close(), 300);
-                    }
-                });
-            });
-        } catch (error) {
-            console.error('Error en addMobileMenuEvents:', error);
-        }
-    }
-    
-    toggleSubmenu(parentItem) {
-        try {
-            const submenu = parentItem.querySelector('.submenu');
-            if (!submenu) return;
-            
-            const isCurrentlyOpen = submenu.style.display === 'block';
-            const indicator = parentItem.querySelector('.submenu-indicator');
-            
-            const siblings = parentItem.parentElement.querySelectorAll('.has-children');
-            siblings.forEach(sibling => {
-                if (sibling !== parentItem) {
-                    const siblingSubmenu = sibling.querySelector('.submenu');
-                    const siblingIndicator = sibling.querySelector('.submenu-indicator');
-                    if (siblingSubmenu) siblingSubmenu.style.display = 'none';
-                    if (siblingIndicator) siblingIndicator.style.transform = 'rotate(0deg)';
-                    sibling.classList.remove('open');
-                }
-            });
-            
-            if (isCurrentlyOpen) {
-                submenu.style.display = 'none';
-                if (indicator) indicator.style.transform = 'rotate(0deg)';
-                parentItem.classList.remove('open');
-            } else {
-                submenu.style.display = 'block';
-                if (indicator) indicator.style.transform = 'rotate(90deg)';
-                parentItem.classList.add('open');
-            }
-        } catch (error) {
-            console.error('Error en toggleSubmenu:', error);
-        }
-    }
-    
-    bindEvents() {
-        try {
-            this.interceptBootstrapToggler();
-            
-            const closeButton = this.sidebar.querySelector('.close-sidebar');
-            if (closeButton) {
-                closeButton.addEventListener('click', () => this.close());
-            }
-            
-            if (this.backdrop) {
-                this.backdrop.addEventListener('click', () => this.close());
-            }
-            
-            document.addEventListener('keydown', (e) => {
-                if (e.key === 'Escape' && this.isOpen) this.close();
-            });
-        } catch (error) {
-            console.error('Error en bindEvents:', error);
-        }
-    }
-    
-    interceptBootstrapToggler() {
-        try {
-            const navbarToggler = document.querySelector('.navbar-toggler');
-            if (!navbarToggler) {
-                console.warn('❌ No se encontró el navbar toggler');
-                return;
-            }
-            
-            const originalOnClick = navbarToggler.onclick;
-            
-            navbarToggler.addEventListener('click', (e) => {
-                if (this.isMobile) {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    e.stopImmediatePropagation();
-                    
-                    if (this.isOpen) {
-                        this.close();
-                    } else {
-                        this.open();
-                    }
-                    return false;
-                }
-                
-                if (originalOnClick) originalOnClick.call(navbarToggler, e);
-            });
-            
-            console.log('✅ Toggler interceptado correctamente');
-        } catch (error) {
-            console.error('Error en interceptBootstrapToggler:', error);
-        }
-    }
-    
-    open() {
-        try {
-            if (this.isOpen) return;
-            
-            if (!this.menuLoaded) {
-                this.loadMobileMenu();
-                this.menuLoaded = true;
-            }
-            
-            this.isOpen = true;
-            this.sidebar.classList.add('open');
-            this.backdrop.classList.add('show');
-            document.body.style.overflow = 'hidden';
-            this.sidebar.setAttribute('tabindex', '-1');
-            this.sidebar.focus();
-            
-            console.log('✅ Off-Canvas abierto correctamente');
-        } catch (error) {
-            console.error('Error en open:', error);
-        }
-    }
-    
-    close() {
-        try {
-            if (!this.isOpen) return;
-            
-            this.isOpen = false;
-            this.sidebar.classList.remove('open');
-            this.backdrop.classList.remove('show');
-            document.body.style.overflow = '';
-            this.closeAllSubmenus();
-            
-            console.log('✅ Off-Canvas cerrado correctamente');
-        } catch (error) {
-            console.error('Error en close:', error);
-        }
-    }
-    
-    closeAllSubmenus() {
-        try {
-            const submenus = this.sidebar.querySelectorAll('.submenu');
-            const parentItems = this.sidebar.querySelectorAll('.has-children');
-            
-            submenus.forEach(submenu => submenu.style.display = 'none');
-            parentItems.forEach(item => {
-                item.classList.remove('open');
-                const indicator = item.querySelector('.submenu-indicator');
-                if (indicator) indicator.style.transform = 'rotate(0deg)';
-            });
-        } catch (error) {
-            console.error('Error en closeAllSubmenus:', error);
-        }
-    }
-    
-    handleViewportChange(isMobile) {
-        this.isMobile = isMobile;
-        console.log('🔄 Off-Canvas cambió a modo:', this.isMobile ? 'Móvil' : 'Escritorio');
-        
-        if (!this.isMobile && this.isOpen) {
-            this.close();
-        }
-    }
-}
-
-// ==================================================
-// SCHOOL SEARCH MANAGER (SIN CAMBIOS SIGNIFICATIVOS)
+// SCHOOL SEARCH MANAGER (MANTENIDO SIN CAMBIOS)
 // ==================================================
 
 class SchoolSearch {
@@ -1213,7 +847,7 @@ class SchoolSearch {
 }
 
 // ==================================================
-// COMPONENTS MANAGER (SIN CAMBIOS SIGNIFICATIVOS)
+// COMPONENTS MANAGER (MANTENIDO SIN CAMBIOS)
 // ==================================================
 
 class ComponentsManager {
@@ -1283,7 +917,7 @@ class ComponentsManager {
 }
 
 // ==================================================
-// LANDING PAGE MANAGER (SIN CAMBIOS SIGNIFICATIVOS)
+// LANDING PAGE MANAGER (MANTENIDO SIN CAMBIOS)
 // ==================================================
 
 class LandingPageManager {
@@ -1742,136 +1376,64 @@ class LandingPageManager {
     }
 }
 
-// ===== FUNCIONALIDADES PARA LA PÁGINA DE INICIO =====
+// ==================================================
+// INICIALIZACIÓN GLOBAL DEL SISTEMA
+// ==================================================
 
+// Crear instancia global
+if (typeof window !== 'undefined') {
+    // Inicializar cuando el DOM esté listo
+    document.addEventListener('DOMContentLoaded', function() {
+        if (!window.gedSystem) {
+            window.gedSystem = new GEDSystem();
+            console.log('🌐 Sistema GED v4.2 cargado globalmente como window.gedSystem');
+        }
+    });
+    
+    // Función de debug
+    window.debugGED = function() {
+        if (window.gedSystem) {
+            console.group('🐛 DEBUG SISTEMA GED 4.2');
+            console.log('Estado:', window.gedSystem.getCurrentState());
+            console.log('Layout check:', window.gedSystem.checkLayout());
+            console.groupEnd();
+        } else {
+            console.error('Sistema GED no inicializado');
+        }
+    };
+    
+    // Función para forzar actualización
+    window.updateGEDLayout = function() {
+        if (window.gedSystem) {
+            window.gedSystem.forceLayoutUpdate();
+        }
+    };
+}
+
+// ==================================================
+// FUNCIONALIDADES ESPECÍFICAS PARA PÁGINAS
+// ==================================================
+
+// Inicialización de página de inicio
 function initIndexPage() {
     console.log('🔍 GED System - Inicializando página de inicio...');
     
-    // 1. CONFIGURAR CARRUSEL
+    // Configurar carrusel
     const carousel = document.getElementById('carouselHero');
     if (carousel) {
         console.log('✅ Carrusel detectado, configurando...');
         
-        // Asegurar altura de 70vh
         const carouselSection = document.getElementById('hero-carousel');
         if (carouselSection) {
-            carouselSection.style.height = '70vh';
-            carouselSection.style.minHeight = '400px';
-            carouselSection.style.maxHeight = '800px';
-            carouselSection.style.overflow = 'hidden';
-            carouselSection.style.position = 'relative';
-            carouselSection.style.backgroundColor = '#f8f9fa';
-            carouselSection.style.marginBottom = '2rem';
+            // Asegurar que el carrusel ocupe el ancho completo
+            carouselSection.style.width = '100vw';
+            carouselSection.style.maxWidth = '100vw';
+            carouselSection.style.paddingLeft = '0';
+            carouselSection.style.paddingRight = '0';
         }
-        
-        // Configurar imágenes
-        const images = carousel.querySelectorAll('.carousel-image');
-        images.forEach(img => {
-            img.style.objectFit = 'cover';
-            img.style.objectPosition = 'center center';
-            img.style.width = '100%';
-            img.style.height = '100%';
-            img.style.display = 'block';
-            img.style.backgroundColor = '#f8f9fa';
-            
-            // Mejorar calidad de imagen
-            img.style.imageRendering = 'auto';
-            img.style.WebkitFontSmoothing = 'antialiased';
-            img.style.MozOsxFontSmoothing = 'grayscale';
-        });
-        
-        // Configurar controles
-        const prevBtn = carousel.querySelector('.carousel-control-prev');
-        const nextBtn = carousel.querySelector('.carousel-control-next');
-        if (prevBtn && nextBtn) {
-            prevBtn.style.width = '60px';
-            prevBtn.style.height = '60px';
-            prevBtn.style.top = '50%';
-            prevBtn.style.transform = 'translateY(-50%)';
-            prevBtn.style.background = 'rgba(0, 0, 0, 0.5)';
-            prevBtn.style.borderRadius = '50%';
-            
-            nextBtn.style.width = '60px';
-            nextBtn.style.height = '60px';
-            nextBtn.style.top = '50%';
-            nextBtn.style.transform = 'translateY(-50%)';
-            nextBtn.style.background = 'rgba(0, 0, 0, 0.5)';
-            nextBtn.style.borderRadius = '50%';
-        }
-        
-        // Configurar indicadores
-        const indicators = carousel.querySelectorAll('.carousel-indicators button');
-        indicators.forEach(indicator => {
-            indicator.style.width = '12px';
-            indicator.style.height = '12px';
-            indicator.style.borderRadius = '50%';
-            indicator.style.margin = '0 5px';
-            indicator.style.border = '2px solid white';
-            indicator.style.backgroundColor = 'transparent';
-        });
-        
-        // Configurar caption
-        const captions = carousel.querySelectorAll('.carousel-caption');
-        captions.forEach(caption => {
-            caption.style.position = 'absolute';
-            caption.style.top = '50%';
-            caption.style.left = '50%';
-            caption.style.transform = 'translate(-50%, -50%)';
-            caption.style.right = 'auto';
-            caption.style.bottom = 'auto';
-            caption.style.width = '90%';
-            caption.style.maxWidth = '800px';
-            caption.style.background = 'rgba(0, 0, 0, 0.7)';
-            caption.style.padding = '2rem';
-            caption.style.borderRadius = '10px';
-            caption.style.textAlign = 'center';
-            caption.style.zIndex = '2';
-        });
-        
-        // Ajustar responsive
-        function adjustCarouselResponsive() {
-            const viewportWidth = window.innerWidth;
-            
-            if (carouselSection) {
-                if (viewportWidth <= 1024) {
-                    carouselSection.style.height = '60vh';
-                    carouselSection.style.minHeight = '350px';
-                    
-                    captions.forEach(caption => {
-                        caption.style.padding = '1.5rem';
-                        caption.style.width = '85%';
-                    });
-                }
-                
-                if (viewportWidth <= 768) {
-                    carouselSection.style.height = '50vh';
-                    carouselSection.style.minHeight = '300px';
-                    
-                    captions.forEach(caption => {
-                        caption.style.padding = '1rem';
-                        caption.style.width = '90%';
-                        caption.style.background = 'rgba(0, 0, 0, 0.8)';
-                    });
-                }
-                
-                if (viewportWidth <= 576) {
-                    carouselSection.style.height = '40vh';
-                    carouselSection.style.minHeight = '250px';
-                    carouselSection.style.marginBottom = '1rem';
-                    
-                    captions.forEach(caption => {
-                        caption.style.padding = '0.75rem';
-                    });
-                }
-            }
-        }
-        
-        // Aplicar responsive inicial y en redimensionamiento
-        adjustCarouselResponsive();
-        window.addEventListener('resize', adjustCarouselResponsive);
     }
     
-    // 2. CONFIGURAR MARKETPLACE
+    // Configurar botones
     const marketplaceBtn = document.getElementById('btn-marketplace');
     if (marketplaceBtn) {
         marketplaceBtn.addEventListener('click', function(e) {
@@ -1879,7 +1441,6 @@ function initIndexPage() {
         });
     }
     
-    // 3. CONFIGURAR BOTONES DE ACCESO
     const accesoBtn = document.getElementById('btn-acceder-sistema');
     if (accesoBtn) {
         accesoBtn.addEventListener('click', function() {
@@ -1888,17 +1449,13 @@ function initIndexPage() {
     }
 }
 
-// ===== DETECCIÓN DE PÁGINA Y EJECUCIÓN =====
-
+// Detectar página y ejecutar inicializaciones específicas
 document.addEventListener('DOMContentLoaded', function() {
-    console.log('📄 GED System - Documento cargado');
-    
     // Detectar si estamos en la página de inicio
     const isIndexPage = document.body.classList.contains('site-index') || 
                         document.body.classList.contains('landing-page') ||
                         window.location.pathname === '/' || 
-                        window.location.pathname.includes('site/index') ||
-                        window.gedCurrentPage === 'index';
+                        window.location.pathname.includes('site/index');
     
     if (isIndexPage) {
         console.log('🏠 Página de inicio detectada');
@@ -1906,118 +1463,67 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 
-// ===== FUNCIONES DE UTILIDAD =====
+// ==================================================
+// CORRECCIÓN DE EMERGENCIA PARA CARRUSEL
+// ==================================================
 
-// Función para verificar imágenes rotas
-function checkBrokenImages() {
-    const images = document.querySelectorAll('img');
-    images.forEach(img => {
-        if (img.complete && img.naturalHeight === 0) {
-            console.warn('⚠️ Imagen rota detectada:', img.src);
-        }
-    });
-}
-
-// Ejecutar chequeo de imágenes después de la carga
-window.addEventListener('load', function() {
-    setTimeout(checkBrokenImages, 1000);
-});
-
-// ===== CORRECCIÓN DE EMERGENCIA PARA CARRUSEL =====
 function corregirCarruselUrgente() {
     console.log('🚨 Aplicando corrección urgente al carrusel...');
     
     const carrusel = document.getElementById('carouselHero');
     if (!carrusel) return;
     
-    // 1. Forzar altura del carrusel
-    const seccionCarrusel = document.getElementById('hero-carousel');
-    if (seccionCarrusel) {
-        const vh = window.innerHeight * 0.7;
-        seccionCarrusel.style.height = vh + 'px';
-        seccionCarrusel.style.minHeight = '400px';
-        seccionCarrusel.style.backgroundColor = '#2c5aa0';
-    }
-    
-    // 2. Forzar dimensiones de TODAS las imágenes
+    // Forzar dimensiones de todas las imágenes
     const imagenes = document.querySelectorAll('#carouselHero .carousel-item img');
     
     imagenes.forEach((img, index) => {
-        console.log(`Corrigiendo imagen ${index + 1}: ${img.src}`);
-        
-        // Forzar dimensiones absolutas
-        img.style.width = '100%';
-        img.style.height = '100%';
+        img.style.width = '100vw';
+        img.style.maxWidth = '100vw';
         img.style.objectFit = 'cover';
         img.style.objectPosition = 'center center';
         img.style.display = 'block';
-        img.style.position = 'absolute';
-        img.style.top = '0';
-        img.style.left = '0';
         
-        // Configuración específica según cada imagen
-        if (index === 0) {
-            // Imagen 1: 2560x1920 (4:3)
-            img.style.objectPosition = 'center 30%';
-        } else if (index === 1) {
-            // Imagen 2: 1280x400 (muy panorámica)
-            img.style.objectPosition = 'center 25%';
-            img.style.objectFit = 'cover';
-        } else if (index === 2) {
-            // Imagen 3: 1024x712 (casi cuadrada)
-            img.style.objectPosition = 'center center';
-        }
-        
-        // Forzar que Bootstrap muestre la imagen
-        img.style.opacity = '1';
-        img.style.visibility = 'visible';
-        
-        // Verificar carga
         if (img.complete) {
             console.log(`✅ Imagen ${index + 1} cargada: ${img.naturalWidth}x${img.naturalHeight}`);
-        } else {
-            img.onload = function() {
-                console.log(`✅ Imagen ${index + 1} cargada: ${this.naturalWidth}x${this.naturalHeight}`);
-                // Reforzar dimensiones después de carga
-                this.style.width = '100%';
-                this.style.height = '100%';
-            };
         }
     });
     
-    // 3. Forzar que los slides inactivos también tengan dimensiones
-    const slides = document.querySelectorAll('#carouselHero .carousel-item');
-    slides.forEach((slide, index) => {
-        slide.style.position = 'absolute';
-        slide.style.width = '100%';
-        slide.style.height = '100%';
-        slide.style.top = '0';
-        slide.style.left = '0';
-        
-        // Si no es el slide activo, aún debe tener dimensiones
-        if (!slide.classList.contains('active')) {
-            slide.style.display = 'block'; // Bootstrap usa none
-            slide.style.opacity = '0';
-            slide.style.transition = 'opacity 0.6s ease';
-        }
-    });
-    
-    console.log('✅ Corrección urgente aplicada');
+    console.log('✅ Corrección urgente aplicada al carrusel');
 }
 
-// Ejecutar inmediatamente y en varios momentos
+// Ejecutar correcciones de carrusel
 document.addEventListener('DOMContentLoaded', corregirCarruselUrgente);
 window.addEventListener('load', corregirCarruselUrgente);
 
-// También cuando Bootstrap cambie de slide
-document.addEventListener('DOMContentLoaded', function() {
-    const carrusel = document.getElementById('carouselHero');
-    if (carrusel) {
-        carrusel.addEventListener('slid.bs.carousel', function() {
-            setTimeout(corregirCarruselUrgente, 50);
-        });
-    }
+// ==================================================
+// FUNCIONES DE UTILIDAD
+// ==================================================
+
+// Verificar imágenes rotas
+function checkBrokenImages() {
+    const images = document.querySelectorAll('img');
+    images.forEach(img => {
+        if (img.complete && img.naturalHeight === 0) {
+            console.warn('⚠️ Imagen rota detectada:', img.src);
+            // Reemplazar con imagen de respaldo
+            img.style.backgroundColor = '#f8f9fa';
+            img.style.padding = '20px';
+        }
+    });
+}
+
+// Ejecutar chequeo de imágenes
+window.addEventListener('load', function() {
+    setTimeout(checkBrokenImages, 1000);
 });
 
-// Y en redimensionamiento
-window.addEventListener('resize', corregirCarruselUrgente);
+// Exportar para módulos (si es necesario)
+if (typeof module !== 'undefined' && module.exports) {
+    module.exports = {
+        GEDSystem,
+        NavbarManager,
+        SchoolSearch,
+        ComponentsManager,
+        LandingPageManager
+    };
+}
