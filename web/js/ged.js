@@ -1,6 +1,6 @@
-// js/ged.js - Sistema GED - VERSIÓN 4.5 CORRECCIÓN FINAL
-// Versión: 4.5.0 - Corrección completa de OffCanvas
-// Fecha: 15/01/2024
+// js/ged.js - Sistema GED - VERSIÓN 4.6 CORRECCIÓN COMPLETA
+// Versión: 4.6.0 - Sistema robusto con manejo completo de errores
+// Fecha: 16/01/2024
 
 // ==================================================
 // MÓDULOS DEL SISTEMA - CON CONTROL DE INICIALIZACIÓN
@@ -39,30 +39,59 @@ class GEDSystem {
         this.modules = {};
         this._widthConfigApplied = false;
         this._initialized = false;
+        this._criticalError = false;
+        
+        // Dependencias y carga dinámica
+        this.dependencies = {
+            leaflet: {
+                loaded: false,
+                loading: false,
+                css: 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.css',
+                js: 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.js',
+                version: '1.9.4'
+            },
+            bootstrap: {
+                loaded: typeof bootstrap !== 'undefined',
+                required: true
+            },
+            jquery: {
+                loaded: typeof $ !== 'undefined',
+                required: false
+            }
+        };
         
         // Marcar como inicializado globalmente
         window.gedSystem = this;
         
+        // Inicializar con manejo de errores robusto
         this.init();
     }
     
     // ✅ DETECTAR PÁGINA ACTUAL
     detectCurrentPage() {
-        const path = window.location.pathname;
-        const bodyClasses = document.body.classList;
-        
-        if (path === '/' || path.includes('site/index') || 
-            bodyClasses.contains('site-index') || 
-            bodyClasses.contains('landing-page')) {
-            return 'index';
+        try {
+            const path = window.location.pathname;
+            const bodyClasses = document.body.classList;
+            
+            if (path === '/' || path.includes('site/index') || 
+                bodyClasses.contains('site-index') || 
+                bodyClasses.contains('landing-page')) {
+                return 'index';
+            }
+            
+            if (path.includes('site/login')) return 'login';
+            if (path.includes('site/signup')) return 'signup';
+            if (path.includes('ged/default')) return 'ged';
+            if (path.includes('tienda')) return 'tienda';
+            if (path.includes('reportes')) return 'reportes';
+            if (path.includes('horario')) return 'horario';
+            if (path.includes('mapa')) return 'mapa';
+            
+            return 'other';
+        } catch (error) {
+            console.error('Error en detectCurrentPage:', error);
+            return 'other';
         }
-        
-        if (path.includes('site/login')) return 'login';
-        if (path.includes('site/signup')) return 'signup';
-        if (path.includes('ged/default')) return 'ged';
-        if (path.includes('tienda')) return 'tienda';
-        
-        return 'other';
     }
     
     // ✅ VERIFICAR SI ES MÓVIL
@@ -72,20 +101,33 @@ class GEDSystem {
     
     // ✅ OBTENER ALTURA DEL NAVBAR (CORREGIDO)
     getNavbarHeight() {
-        if (this.isMobile) {
-            if (window.innerWidth < 576) return 60;
-            if (window.innerWidth < 768) return 70;
-            return 80;
-        } else {
-            // En escritorio: altura fija más consistente
-            return 120;
+        try {
+            if (this.isMobile) {
+                if (window.innerWidth < 576) return 60;
+                if (window.innerWidth < 768) return 70;
+                return 80;
+            } else {
+                // En escritorio: altura fija más consistente
+                return 120;
+            }
+        } catch (error) {
+            console.error('Error en getNavbarHeight:', error);
+            return this.isMobile ? 80 : 120;
         }
     }
     
-    // ✅ INICIALIZACIÓN PRINCIPAL
+    // ✅ INICIALIZACIÓN PRINCIPAL CON MANEJO DE ERRORES
     init() {
         if (this._initialized) {
             console.warn('⚠️ GEDSystem ya estaba inicializado');
+            return;
+        }
+        
+        // Verificar prerrequisitos críticos
+        if (!this.checkCriticalPrerequisites()) {
+            console.error('❌ Prerrequisitos críticos no cumplidos');
+            this._criticalError = true;
+            this.showCriticalError('No se pueden inicializar los componentes críticos del sistema');
             return;
         }
         
@@ -96,11 +138,33 @@ class GEDSystem {
         }
     }
     
+    // ✅ VERIFICAR PRERREQUISITOS CRÍTICOS
+    checkCriticalPrerequisites() {
+        const criticalChecks = {
+            'Body disponible': !!document.body,
+            'Document readyState': document.readyState !== 'loading',
+            'Bootstrap Offcanvas': typeof bootstrap !== 'undefined' && bootstrap.Offcanvas
+        };
+        
+        let allPassed = true;
+        for (const [name, passed] of Object.entries(criticalChecks)) {
+            if (!passed) {
+                console.error(`❌ Prerrequisito crítico fallido: ${name}`);
+                allPassed = false;
+            }
+        }
+        
+        return allPassed;
+    }
+    
     // ✅ CONFIGURACIÓN COMPLETA DEL SISTEMA
-    setup() {
-        console.log(`🚀 Sistema GED v4.5 inicializando - Página: ${this.currentPage}, Modo: ${this.isMobile ? 'Móvil' : 'Escritorio'}`);
+    async setup() {
+        console.log(`🚀 Sistema GED v4.6 inicializando - Página: ${this.currentPage}, Modo: ${this.isMobile ? 'Móvil' : 'Escritorio'}`);
         
         try {
+            // Cargar dependencias faltantes si es necesario
+            await this.loadMissingDependencies();
+            
             // Aplicar parche para OffCanvas ANTES de cualquier otra inicialización
             this.applyOffCanvasPatch();
             
@@ -117,7 +181,7 @@ class GEDSystem {
             };
             
             // ✅ INICIALIZAR MÓDULOS ESPECÍFICOS POR PÁGINA
-            this.initializePageSpecificModules();
+            await this.initializePageSpecificModules();
             
             // Configurar observadores y eventos
             this.setupObservers();
@@ -131,12 +195,93 @@ class GEDSystem {
                 this.verifyWidth();
                 this._initialized = true;
                 this.logInitializationStatus();
+                
+                // Disparar evento de inicialización completa
+                this.dispatchSystemEvent('ged:initialized');
             }, 300);
             
         } catch (error) {
             console.error('❌ Error crítico en inicialización del sistema:', error);
+            this._criticalError = true;
             this.showCriticalError('Error al inicializar el sistema GED');
         }
+    }
+    
+    // ✅ CARGAR DEPENDENCIAS FALTANTES
+    async loadMissingDependencies() {
+        console.log('📦 Verificando dependencias...');
+        
+        // Cargar Leaflet si es necesario (para módulo de mapa)
+        if (this.currentPage === 'mapa' && !this.dependencies.leaflet.loaded) {
+            await this.loadLeaflet();
+        }
+        
+        console.log('✅ Dependencias verificadas');
+    }
+    
+    // ✅ CARGAR LEAFLET DINÁMICAMENTE
+    async loadLeaflet() {
+        return new Promise((resolve, reject) => {
+            if (this.dependencies.leaflet.loaded) {
+                console.log('✅ Leaflet ya está cargado');
+                resolve(true);
+                return;
+            }
+            
+            if (this.dependencies.leaflet.loading) {
+                console.log('⏳ Leaflet ya se está cargando...');
+                // Esperar a que termine la carga actual
+                const checkInterval = setInterval(() => {
+                    if (this.dependencies.leaflet.loaded) {
+                        clearInterval(checkInterval);
+                        resolve(true);
+                    }
+                }, 100);
+                return;
+            }
+            
+            console.log('🌐 Cargando Leaflet.js dinámicamente...');
+            this.dependencies.leaflet.loading = true;
+            
+            // Cargar CSS
+            const cssLink = document.createElement('link');
+            cssLink.rel = 'stylesheet';
+            cssLink.href = this.dependencies.leaflet.css;
+            cssLink.integrity = 'sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=';
+            cssLink.crossOrigin = '';
+            document.head.appendChild(cssLink);
+            
+            // Cargar JS
+            const script = document.createElement('script');
+            script.src = this.dependencies.leaflet.js;
+            script.integrity = 'sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=';
+            script.crossOrigin = '';
+            
+            script.onload = () => {
+                console.log('✅ Leaflet.js cargado correctamente desde CDN');
+                this.dependencies.leaflet.loaded = true;
+                this.dependencies.leaflet.loading = false;
+                resolve(true);
+            };
+            
+            script.onerror = (error) => {
+                console.error('❌ Error al cargar Leaflet.js:', error);
+                this.dependencies.leaflet.loaded = false;
+                this.dependencies.leaflet.loading = false;
+                reject(error);
+            };
+            
+            document.head.appendChild(script);
+            
+            // Timeout de seguridad
+            setTimeout(() => {
+                if (!this.dependencies.leaflet.loaded) {
+                    console.warn('⚠️ Timeout al cargar Leaflet.js');
+                    this.dependencies.leaflet.loading = false;
+                    resolve(false); // Resolvemos false en lugar de rechazar para no bloquear
+                }
+            }, 10000);
+        });
     }
     
     // ✅ APLICAR PARCHES PARA OFFCANVAS
@@ -231,35 +376,78 @@ class GEDSystem {
     }
     
     // ✅ INICIALIZAR MÓDULOS ESPECÍFICOS POR PÁGINA
-    initializePageSpecificModules() {
+    async initializePageSpecificModules() {
         console.log(`📄 Inicializando módulos para página: ${this.currentPage}`);
+        
+        const modulesToInitialize = [];
         
         // Módulos que dependen de jQuery (solo si jQuery está disponible)
         if (typeof window.jQuery !== 'undefined') {
-            this.modules.search = new SchoolSearch();
+            modulesToInitialize.push({
+                name: 'search',
+                instance: new SchoolSearch(),
+                required: false
+            });
         }
         
         // LandingPageManager SOLO en página de inicio
         if (this.currentPage === 'index') {
-            this.modules.landing = new LandingPageManager();
+            if (typeof LandingPageManager !== 'undefined') {
+                modulesToInitialize.push({
+                    name: 'landing',
+                    instance: new LandingPageManager(),
+                    required: false
+                });
+            }
         }
         
-        // Inicializar cada módulo
-        Object.values(this.modules).forEach(module => {
-            if (module && typeof module.init === 'function') {
-                try {
-                    module.init();
-                } catch (moduleError) {
-                    console.warn(`⚠️ Error al inicializar módulo ${module.constructor?.name || 'desconocido'}:`, moduleError);
+        // Módulo de mapa - requiere Leaflet
+        if (this.currentPage === 'mapa') {
+            if (typeof MapaModule !== 'undefined' && this.dependencies.leaflet.loaded) {
+                modulesToInitialize.push({
+                    name: 'mapa',
+                    instance: new MapaModule(),
+                    required: false
+                });
+            } else if (typeof MapaModule !== 'undefined') {
+                console.warn('⚠️ MapaModule disponible pero Leaflet no está cargado');
+            }
+        }
+        
+        // Inicializar cada módulo con manejo de errores
+        for (const module of modulesToInitialize) {
+            try {
+                if (module.instance && typeof module.instance.init === 'function') {
+                    module.instance.init();
+                    this.modules[module.name] = module.instance;
+                    console.log(`✅ Módulo ${module.name} inicializado correctamente`);
+                }
+            } catch (moduleError) {
+                console.error(`❌ Error al inicializar módulo ${module.name}:`, moduleError);
+                
+                if (module.required) {
+                    this.showModuleError(module.name, moduleError);
                 }
             }
-        });
+        }
     }
     
     // ✅ CACHEAR ELEMENTOS DOM IMPORTANTES
     cacheElements() {
-        this.navbar = document.querySelector('.navbar-contextual');
-        this.mainContent = document.querySelector('.main-content-wrapper');
+        try {
+            this.navbar = document.querySelector('.navbar-contextual');
+            this.mainContent = document.querySelector('.main-content-wrapper');
+            
+            if (!this.navbar) {
+                console.warn('⚠️ No se encontró navbar .navbar-contextual');
+            }
+            
+            if (!this.mainContent) {
+                console.warn('⚠️ No se encontró main content .main-content-wrapper');
+            }
+        } catch (error) {
+            console.error('Error en cacheElements:', error);
+        }
     }
     
     // ✅ APLICAR CONFIGURACIÓN DE ANCHO COMPLETO
@@ -334,14 +522,19 @@ class GEDSystem {
     
     // ✅ VERIFICAR ANCHO DEL SISTEMA
     verifyWidth() {
-        const bodyWidth = this.body.offsetWidth;
-        const viewportWidth = window.innerWidth;
-        const difference = Math.abs(bodyWidth - viewportWidth);
-        
-        const isCorrect = difference < 5;
-        console.log(`📏 Verificación de ancho: Body ${bodyWidth}px, Viewport ${viewportWidth}px, Diferencia ${difference}px - ${isCorrect ? '✅ Correcto' : '⚠️ Desbordamiento'}`);
-        
-        return isCorrect;
+        try {
+            const bodyWidth = this.body.offsetWidth;
+            const viewportWidth = window.innerWidth;
+            const difference = Math.abs(bodyWidth - viewportWidth);
+            
+            const isCorrect = difference < 5;
+            console.log(`📏 Verificación de ancho: Body ${bodyWidth}px, Viewport ${viewportWidth}px, Diferencia ${difference}px - ${isCorrect ? '✅ Correcto' : '⚠️ Desbordamiento'}`);
+            
+            return isCorrect;
+        } catch (error) {
+            console.error('Error en verifyWidth:', error);
+            return false;
+        }
     }
     
     // ✅ LOG DE ESTADO DE INICIALIZACIÓN
@@ -353,36 +546,59 @@ class GEDSystem {
         console.log(`  • Navbar height: ${this.navbarHeight}px`);
         console.log(`  • Padding actual: ${this.calculatePadding()}px`);
         console.log(`  • Sistema inicializado: ${this._initialized ? '✅ Sí' : '❌ No'}`);
-        console.log('✅ Sistema GED v4.5 completamente inicializado');
+        console.log(`  • Error crítico: ${this._criticalError ? '❌ Sí' : '✅ No'}`);
+        console.log('✅ Sistema GED v4.6 completamente inicializado');
     }
     
     // ✅ CONFIGURAR OBSERVADORES DE CAMBIOS
     setupObservers() {
-        // Observar cambios en el DOM para ajustar ancho
-        const observer = new MutationObserver(() => {
-            setTimeout(() => {
-                if (!this._widthConfigApplied || this.isMobile) {
-                    this.applyFullWidthConfiguration();
-                }
-                this.fixOverflowIssues();
-            }, 100);
-        });
-        
-        observer.observe(this.body, {
-            childList: true,
-            subtree: true,
-            attributes: false
-        });
+        try {
+            // Observar cambios en el DOM para ajustar ancho
+            const observer = new MutationObserver(() => {
+                setTimeout(() => {
+                    if (!this._widthConfigApplied || this.isMobile) {
+                        this.applyFullWidthConfiguration();
+                    }
+                    this.fixOverflowIssues();
+                }, 100);
+            });
+            
+            observer.observe(this.body, {
+                childList: true,
+                subtree: true,
+                attributes: false
+            });
+            
+            this.mutationObserver = observer;
+            console.log('✅ Observadores de DOM configurados');
+        } catch (error) {
+            console.error('Error en setupObservers:', error);
+        }
     }
     
     // ✅ VINCULAR EVENTOS
     bindEvents() {
-        window.addEventListener('resize', this.debouncedResize);
-        
-        // Eventos personalizados
-        window.addEventListener('ged:updateLayout', () => {
-            this.applyFullWidthConfiguration();
-        });
+        try {
+            window.addEventListener('resize', this.debouncedResize);
+            
+            // Eventos personalizados
+            window.addEventListener('ged:updateLayout', () => {
+                this.applyFullWidthConfiguration();
+            });
+            
+            // Escuchar eventos de módulos
+            window.addEventListener('ged:offcanvas:open', () => {
+                console.log('📱 Evento recibido: OffCanvas abierto');
+            });
+            
+            window.addEventListener('ged:offcanvas:close', () => {
+                console.log('📱 Evento recibido: OffCanvas cerrado');
+            });
+            
+            console.log('✅ Eventos vinculados correctamente');
+        } catch (error) {
+            console.error('Error en bindEvents:', error);
+        }
     }
     
     // ✅ APLICAR CORRECCIONES AL BODY
@@ -432,6 +648,9 @@ class GEDSystem {
                 if (window.gedOffcanvas && typeof window.gedOffcanvas.handleViewportChange === 'function') {
                     window.gedOffcanvas.handleViewportChange(this.isMobile);
                 }
+                
+                // Disparar evento de cambio de modo
+                this.dispatchSystemEvent('ged:modechange', { isMobile: this.isMobile });
             }
             
             // Recalcular y ajustar
@@ -485,33 +704,98 @@ class GEDSystem {
         };
     }
     
+    // ✅ DISPATCHER DE EVENTOS DEL SISTEMA
+    dispatchSystemEvent(eventName, detail = {}) {
+        try {
+            const event = new CustomEvent(eventName, { 
+                detail: { ...detail, system: this } 
+            });
+            window.dispatchEvent(event);
+        } catch (error) {
+            console.error(`Error al disparar evento ${eventName}:`, error);
+        }
+    }
+    
     // ✅ MOSTRAR ERROR CRÍTICO
     showCriticalError(message) {
-        const errorDiv = document.createElement('div');
-        errorDiv.style.cssText = `
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            background: #dc3545;
-            color: white;
-            padding: 15px 20px;
-            border-radius: 6px;
-            z-index: 9999;
-            font-weight: bold;
-            font-size: 0.9rem;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-            max-width: 400px;
-        `;
-        errorDiv.textContent = `⚠️ ${message}. Por favor, recarga la página.`;
-        errorDiv.innerHTML += `<br><small style="opacity:0.8">Error en Sistema GED v4.5</small>`;
-        document.body.appendChild(errorDiv);
+        try {
+            const errorDiv = document.createElement('div');
+            errorDiv.id = 'ged-critical-error';
+            errorDiv.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: #dc3545;
+                color: white;
+                padding: 15px 20px;
+                border-radius: 6px;
+                z-index: 9999;
+                font-weight: bold;
+                font-size: 0.9rem;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+                max-width: 400px;
+                animation: slideInRight 0.3s ease-out;
+            `;
+            errorDiv.innerHTML = `
+                <div style="display: flex; align-items: center; gap: 10px;">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <div>
+                        <strong>⚠️ Error Crítico</strong><br>
+                        <small style="opacity:0.8">${message}. Por favor, recarga la página.</small>
+                    </div>
+                    <button onclick="this.parentElement.parentElement.remove()" 
+                            style="background: transparent; border: none; color: white; margin-left: auto; cursor: pointer;">
+                        ✕
+                    </button>
+                </div>
+            `;
+            
+            document.body.appendChild(errorDiv);
+            
+            // Auto-eliminar después de 10 segundos
+            setTimeout(() => {
+                if (errorDiv.parentNode) {
+                    errorDiv.parentNode.removeChild(errorDiv);
+                }
+            }, 10000);
+        } catch (error) {
+            console.error('Error en showCriticalError:', error);
+        }
+    }
+    
+    // ✅ MOSTRAR ERROR DE MÓDULO
+    showModuleError(moduleName, error) {
+        console.error(`❌ Error en módulo ${moduleName}:`, error);
         
-        // Auto-eliminar después de 10 segundos
-        setTimeout(() => {
-            if (errorDiv.parentNode) {
-                errorDiv.parentNode.removeChild(errorDiv);
-            }
-        }, 10000);
+        // Solo mostrar notificación en desarrollo
+        if (window.location.href.indexOf('localhost') > -1 || window.location.href.indexOf('debug') > -1) {
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                bottom: 20px;
+                left: 20px;
+                background: #ffc107;
+                color: #856404;
+                padding: 10px 15px;
+                border-radius: 4px;
+                z-index: 9998;
+                font-size: 0.8rem;
+                box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+                max-width: 300px;
+            `;
+            notification.innerHTML = `
+                <strong>⚠️ Módulo ${moduleName} error:</strong><br>
+                <small>${error.message || 'Error desconocido'}</small>
+            `;
+            
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                if (notification.parentNode) {
+                    notification.parentNode.removeChild(notification);
+                }
+            }, 5000);
+        }
     }
     
     // ✅ MÉTODOS PÚBLICOS PARA CONTROL EXTERNO
@@ -539,7 +823,9 @@ class GEDSystem {
             minPadding: this.minPadding,
             maxPaddingVH: this.maxPaddingVH,
             modulesLoaded: Object.keys(this.modules).filter(key => this.modules[key]),
-            initialized: this._initialized
+            initialized: this._initialized,
+            criticalError: this._criticalError,
+            dependencies: this.dependencies
         };
         
         console.table(report);
@@ -558,7 +844,7 @@ class GEDSystem {
     // ✅ OBTENER ESTADO ACTUAL
     getCurrentState() {
         return {
-            version: '4.5.0',
+            version: '4.6.0',
             isMobile: this.isMobile,
             isDesktop: this.isDesktop,
             currentPage: this.currentPage,
@@ -568,19 +854,61 @@ class GEDSystem {
             viewportWidth: window.innerWidth,
             bodyWidth: this.body.offsetWidth,
             initialized: this._initialized,
-            offCanvasPatched: typeof window.OffCanvasSidebar !== 'undefined'
+            criticalError: this._criticalError,
+            offCanvasPatched: typeof window.OffCanvasSidebar !== 'undefined',
+            dependencies: this.dependencies
         };
+    }
+    
+    // ✅ DESTRUIR SISTEMA (para limpieza)
+    destroy() {
+        try {
+            console.log('🗑️ Destruyendo sistema GED...');
+            
+            // Remover event listeners
+            window.removeEventListener('resize', this.debouncedResize);
+            
+            // Desconectar observadores
+            if (this.mutationObserver) {
+                this.mutationObserver.disconnect();
+            }
+            
+            // Limpiar referencias
+            this.navbar = null;
+            this.body = null;
+            this.html = null;
+            this.mainContent = null;
+            
+            // Limpiar módulos
+            for (const moduleName in this.modules) {
+                if (this.modules[moduleName] && typeof this.modules[moduleName].destroy === 'function') {
+                    this.modules[moduleName].destroy();
+                }
+            }
+            this.modules = {};
+            
+            // Limpiar instancia global
+            if (window.gedSystem === this) {
+                window.gedSystem = null;
+            }
+            
+            this._initialized = false;
+            console.log('✅ Sistema GED destruido correctamente');
+        } catch (error) {
+            console.error('Error en destroy:', error);
+        }
     }
 }
 
 // ==================================================
-// NAVBAR MANAGER - CORREGIDO
+// NAVBAR MANAGER - CORREGIDO Y MEJORADO
 // ==================================================
 
 class NavbarManager {
     constructor() {
         this.navbar = null;
         this.isMobile = window.innerWidth < 992;
+        this.escuelaSelector = null;
     }
     
     init() {
@@ -589,7 +917,7 @@ class NavbarManager {
             
             if (!this.navbar) {
                 console.warn('❌ Navbar contextual no encontrado');
-                return;
+                return false;
             }
             
             // ✅ FORZAR ANCHO COMPLETO
@@ -605,8 +933,10 @@ class NavbarManager {
             this.initNavbarEscuelaSelector();
             
             console.log('✅ NavbarManager inicializado');
+            return true;
         } catch (error) {
-            console.error('Error en NavbarManager.init:', error);
+            console.error('❌ Error en NavbarManager.init:', error);
+            return false;
         }
     }
     
@@ -675,9 +1005,9 @@ class NavbarManager {
     
     initNavbarEscuelaSelector() {
         try {
-            const escuelaSelect = document.getElementById('navbar-escuela-select');
-            if (escuelaSelect) {
-                escuelaSelect.addEventListener('change', function() {
+            this.escuelaSelector = document.getElementById('navbar-escuela-select');
+            if (this.escuelaSelector) {
+                this.escuelaSelector.addEventListener('change', function() {
                     const escuelaId = this.value;
                     if (escuelaId && escuelaId > 0) {
                         const escuelaNombre = this.options[this.selectedIndex].text;
@@ -685,10 +1015,18 @@ class NavbarManager {
                     }
                 });
                 console.log('✅ Selector de escuelas del navbar inicializado');
+            } else {
+                console.log('ℹ️ Selector de escuelas no encontrado en el navbar');
             }
         } catch (error) {
             console.error('Error en initNavbarEscuelaSelector:', error);
         }
+    }
+    
+    destroy() {
+        // Limpieza si es necesaria
+        this.navbar = null;
+        this.escuelaSelector = null;
     }
 }
 
@@ -717,19 +1055,21 @@ class SchoolSearch {
         try {
             if (typeof window.jQuery === 'undefined') {
                 console.warn('⚠️ jQuery no está cargado. SchoolSearch desactivado.');
-                return;
+                return false;
             }
             
             if (!document.querySelector('#schoolSearch')) {
                 console.log('ℹ️ SchoolSearch: No se encontró campo de búsqueda, omitiendo');
-                return;
+                return false;
             }
             
             this.cacheElements();
             this.bindEvents();
             console.log('✅ SchoolSearch inicializado');
+            return true;
         } catch (error) {
             console.error('Error en SchoolSearch.init:', error);
+            return false;
         }
     }
     
@@ -923,6 +1263,16 @@ class SchoolSearch {
     reloadPage() {
         setTimeout(() => location.reload(), 800);
     }
+    
+    destroy() {
+        // Limpieza de timeouts
+        if (this.searchTimeout) {
+            clearTimeout(this.searchTimeout);
+        }
+        
+        // Limpiar referencias
+        this.elements = {};
+    }
 }
 
 // ==================================================
@@ -932,6 +1282,7 @@ class SchoolSearch {
 class ComponentsManager {
     constructor() {
         this.tooltipsInitialized = false;
+        this.carouselsInitialized = false;
     }
     
     init() {
@@ -940,8 +1291,10 @@ class ComponentsManager {
             this.initEscuelaSelector();
             this.initCarousel();
             console.log('✅ ComponentsManager inicializado');
+            return true;
         } catch (error) {
             console.error('Error en ComponentsManager.init:', error);
+            return false;
         }
     }
     
@@ -987,11 +1340,18 @@ class ComponentsManager {
                     wrap: true,
                     pause: 'hover'
                 });
+                this.carouselsInitialized = true;
                 console.log('✅ Carrusel Hero inicializado');
             }
         } catch (error) {
             console.error('Error en initCarousel:', error);
         }
+    }
+    
+    destroy() {
+        // Limpieza si es necesaria
+        this.tooltipsInitialized = false;
+        this.carouselsInitialized = false;
     }
 }
 
@@ -1014,7 +1374,7 @@ class LandingPageManager {
             const hasLandingElements = document.querySelector('.landing-page, .site-index, #hero-carousel');
             if (!hasLandingElements) {
                 console.log('ℹ️ LandingPageManager: No se detectó página de inicio, omitiendo inicialización');
-                return;
+                return false;
             }
             
             console.log('🚀 Landing Page Manager inicializando...');
@@ -1028,8 +1388,10 @@ class LandingPageManager {
             this.initMarketplace();
             
             console.log('✅ LandingPageManager listo');
+            return true;
         } catch (error) {
             console.error('Error en LandingPageManager.init:', error);
+            return false;
         }
     }
 
@@ -1468,6 +1830,16 @@ class LandingPageManager {
             logo.style.transition = 'transform 0.5s ease, filter 0.5s ease';
         }, 100);
     }
+    
+    destroy() {
+        // Limpieza de event listeners y observadores
+        if (this.observer) {
+            this.observer.disconnect();
+        }
+        
+        this.carrito = [];
+        this.productos = {};
+    }
 }
 
 // ==================================================
@@ -1490,7 +1862,7 @@ document.addEventListener('DOMContentLoaded', function() {
             try {
                 new GEDSystem();
                 gedSystemInitialized = true;
-                console.log('🌐 Sistema GED v4.5 inicializado correctamente');
+                console.log('🌐 Sistema GED v4.6 inicializado correctamente');
             } catch (error) {
                 console.error('❌ Error al inicializar Sistema GED:', error);
             }
@@ -1506,9 +1878,10 @@ if (typeof window !== 'undefined') {
     // Función de debug
     window.debugGED = function() {
         if (window.gedSystem) {
-            console.group('🐛 DEBUG SISTEMA GED 4.5');
+            console.group('🐛 DEBUG SISTEMA GED 4.6');
             console.log('Estado:', window.gedSystem.getCurrentState());
             console.log('Layout check:', window.gedSystem.checkLayout());
+            console.log('Dependencias:', window.gedSystem.dependencies);
             console.groupEnd();
         } else {
             console.error('Sistema GED no inicializado');
@@ -1525,8 +1898,7 @@ if (typeof window !== 'undefined') {
     // Función para reiniciar el sistema (solo para desarrollo)
     window.restartGED = function() {
         if (window.gedSystem) {
-            window.gedSystem._initialized = false;
-            window.gedSystem._widthConfigApplied = false;
+            window.gedSystem.destroy();
             gedSystemInitialized = false;
             window.gedSystem = null;
             
@@ -1535,6 +1907,14 @@ if (typeof window !== 'undefined') {
                 console.log('🔄 Sistema GED reiniciado manualmente');
             }, 100);
         }
+    };
+    
+    // Función para verificar dependencias
+    window.checkGEDDependencies = function() {
+        if (window.gedSystem) {
+            return window.gedSystem.dependencies;
+        }
+        return null;
     };
 }
 
@@ -1601,7 +1981,7 @@ window.addEventListener('load', function() {
 if (typeof window !== 'undefined') {
     // Variable global para compatibilidad
     window.GED_SYSTEM_LOADED = true;
-    window.GED_SYSTEM_VERSION = '4.5.0';
+    window.GED_SYSTEM_VERSION = '4.6.0';
 }
 
 // Exportar para módulos (si es necesario)
