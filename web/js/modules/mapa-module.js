@@ -1,5 +1,5 @@
 // web/js/modules/mapa-module.js
-// Versión: 2.0.0 - Con carga dinámica de Leaflet y manejo robusto de errores
+// Versión: 2.0.1 - Con prevención de inicialización duplicada y carga dinámica de Leaflet
 // Fecha: 16/01/2024
 
 class MapaModule {
@@ -11,6 +11,7 @@ class MapaModule {
         this.leafletLoaded = false;
         this.leafletLoading = false;
         this._initialized = false;
+        this._mapContainerId = null;
         
         // URLs para cargar Leaflet
         this.leafletConfig = {
@@ -60,7 +61,7 @@ class MapaModule {
         }
     }
 
-    // ✅ INICIALIZAR MAPA DE SELECCIÓN
+    // ✅ INICIALIZAR MAPA DE SELECCIÓN CON PREVENCIÓN DE DUPLICADOS
     async initMapaSeleccion() {
         try {
             console.log('🗺️ Inicializando mapa de selección...');
@@ -69,6 +70,25 @@ class MapaModule {
             if (!mapElement) {
                 console.error('❌ No se encontró el elemento #map para mapa de selección');
                 this.showMissingElementError('#map', 'mapa de selección');
+                return false;
+            }
+
+            // GUARD CLAVE: Verificar si el contenedor ya tiene un mapa de Leaflet
+            if (mapElement._leaflet_id) {
+                console.warn('⚠️ El contenedor del mapa ya está inicializado. Cancelando inicialización duplicada.');
+                
+                // Si ya hay una instancia de mapa, intentar obtenerla
+                if (window.L && window.L.Map && L.Map._map && L.Map._map[mapElement._leaflet_id]) {
+                    this.mapa = L.Map._map[mapElement._leaflet_id];
+                    this.mapaInicializado = true;
+                    this._initialized = true;
+                    console.log('✅ Usando instancia existente de Leaflet');
+                    
+                    // Disparar evento de inicialización
+                    this.dispatchMapEvent('mapa:initialized', { tipo: 'seleccion', existente: true });
+                    return true;
+                }
+                
                 return false;
             }
 
@@ -122,6 +142,7 @@ class MapaModule {
 
             this.mapaInicializado = true;
             this._initialized = true;
+            this._mapContainerId = 'map';
             
             console.log('✅ Mapa de selección inicializado correctamente');
             
@@ -136,7 +157,7 @@ class MapaModule {
         }
     }
 
-    // ✅ INICIALIZAR MAPA DE VISUALIZACIÓN
+    // ✅ INICIALIZAR MAPA DE VISUALIZACIÓN CON PREVENCIÓN DE DUPLICADOS
     async initMapaVisualizacion(escuelasData) {
         try {
             console.log('🗺️ Inicializando mapa de visualización...');
@@ -150,6 +171,32 @@ class MapaModule {
             if (!mapElement) {
                 console.error('❌ No se encontró #mapa-escuelas para mapa de visualización');
                 this.showMissingElementError('#mapa-escuelas', 'mapa de visualización');
+                return false;
+            }
+
+            // GUARD CLAVE: Verificar si el contenedor ya tiene un mapa de Leaflet
+            if (mapElement._leaflet_id) {
+                console.warn('⚠️ El contenedor del mapa ya está inicializado. Cancelando inicialización duplicada.');
+                
+                // Si ya hay una instancia de mapa, intentar obtenerla
+                if (window.L && window.L.Map && L.Map._map && L.Map._map[mapElement._leaflet_id]) {
+                    this.mapa = L.Map._map[mapElement._leaflet_id];
+                    this.mapaInicializado = true;
+                    this._initialized = true;
+                    console.log('✅ Usando instancia existente de Leaflet');
+                    
+                    // Actualizar marcadores con los nuevos datos
+                    this.actualizarMapaVisualizacion(escuelasData);
+                    
+                    // Disparar evento de inicialización
+                    this.dispatchMapEvent('mapa:initialized', { 
+                        tipo: 'visualizacion', 
+                        existente: true,
+                        cantidadEscuelas: escuelasData.length 
+                    });
+                    return true;
+                }
+                
                 return false;
             }
 
@@ -207,6 +254,7 @@ class MapaModule {
 
             this.mapaInicializado = true;
             this._initialized = true;
+            this._mapContainerId = 'mapa-escuelas';
             
             console.log(`✅ Mapa de visualización inicializado con ${escuelasConCoordenadas.length} escuelas`);
             
@@ -477,6 +525,7 @@ class MapaModule {
             this.marcadores = [];
             this.mapaInicializado = false;
             this._initialized = false;
+            this._mapContainerId = null;
             
             console.log('✅ Mapa destruido correctamente');
         } catch (error) {
@@ -591,7 +640,8 @@ class MapaModule {
             leafletLoading: this.leafletLoading,
             marcadores: this.marcadores.length,
             mapaDisponible: !!this.mapa,
-            version: '2.0.0'
+            contenedorId: this._mapContainerId,
+            version: '2.0.1'
         };
     }
 
@@ -636,11 +686,24 @@ class MapaModule {
 // FUNCIONES GLOBALES PARA COMPATIBILIDAD
 // ==================================================
 
+// Variable global para evitar inicializaciones duplicadas
+window._mapaInicializacionEnProgreso = false;
+
 // Función global para inicializar mapa de selección (async)
 window.inicializarMapaSeleccion = async function() {
     try {
+        // Verificar si ya hay una inicialización en progreso
+        if (window._mapaInicializacionEnProgreso) {
+            console.warn('⚠️ Inicialización de mapa ya en progreso, omitiendo...');
+            return null;
+        }
+        
+        window._mapaInicializacionEnProgreso = true;
+        
         const mapa = new MapaModule('seleccion');
         const success = await mapa.initMapaSeleccion();
+        
+        window._mapaInicializacionEnProgreso = false;
         
         if (success) {
             console.log('✅ Mapa de selección inicializado globalmente');
@@ -650,6 +713,7 @@ window.inicializarMapaSeleccion = async function() {
             return null;
         }
     } catch (error) {
+        window._mapaInicializacionEnProgreso = false;
         console.error('❌ Error en inicializarMapaSeleccion:', error);
         return null;
     }
@@ -658,8 +722,18 @@ window.inicializarMapaSeleccion = async function() {
 // Función global para inicializar mapa de visualización (async)
 window.inicializarMapaVisualizacion = async function(escuelasData) {
     try {
+        // Verificar si ya hay una inicialización en progreso
+        if (window._mapaInicializacionEnProgreso) {
+            console.warn('⚠️ Inicialización de mapa ya en progreso, omitiendo...');
+            return null;
+        }
+        
+        window._mapaInicializacionEnProgreso = true;
+        
         const mapa = new MapaModule('visualizacion');
         const success = await mapa.initMapaVisualizacion(escuelasData);
+        
+        window._mapaInicializacionEnProgreso = false;
         
         if (success) {
             console.log('✅ Mapa de visualización inicializado globalmente');
@@ -669,6 +743,7 @@ window.inicializarMapaVisualizacion = async function(escuelasData) {
             return null;
         }
     } catch (error) {
+        window._mapaInicializacionEnProgreso = false;
         console.error('❌ Error en inicializarMapaVisualizacion:', error);
         return null;
     }
@@ -702,6 +777,15 @@ window.debugMapaModule = function() {
     
     console.log('Instancias de MapaModule en window:', mapaInstances);
     
+    // Verificar estado de inicialización de contenedores
+    mapElements.forEach(element => {
+        console.log(`Contenedor ${element.id}:`, {
+            leafletId: element._leaflet_id,
+            tieneMapa: !!element._leaflet_id,
+            instancia: element._leaflet_id && L.Map._map ? L.Map._map[element._leaflet_id] : null
+        });
+    });
+    
     if (typeof L !== 'undefined') {
         console.log('Versión Leaflet:', L.version);
     }
@@ -710,7 +794,7 @@ window.debugMapaModule = function() {
 };
 
 // ==================================================
-// INICIALIZACIÓN AUTOMÁTICA MEJORADA
+// INICIALIZACIÓN AUTOMÁTICA MEJORADA CON PREVENCIÓN DE DUPLICADOS
 // ==================================================
 
 // Inicialización automática cuando hay elementos de mapa
@@ -727,6 +811,19 @@ document.addEventListener('DOMContentLoaded', function() {
         setTimeout(async () => {
             // Inicializar mapa de selección si existe
             if (document.getElementById('map')) {
+                // Verificar si el contenedor ya está inicializado
+                const mapElement = document.getElementById('map');
+                if (mapElement && mapElement._leaflet_id) {
+                    console.log('ℹ️ Mapa de selección ya está inicializado (detectado por _leaflet_id), omitiendo inicialización automática.');
+                    return;
+                }
+                
+                // Verificar si ya hay una instancia global
+                if (window.mapaSeleccion && window.mapaSeleccion.mapaInicializado) {
+                    console.log('ℹ️ Mapa de selección ya inicializado (instancia global), omitiendo inicialización automática.');
+                    return;
+                }
+                
                 console.log('🔧 Inicializando mapa de selección automáticamente...');
                 
                 try {
@@ -823,7 +920,7 @@ if (typeof module !== 'undefined' && module.exports) {
 if (typeof window !== 'undefined') {
     window.MapaModule = MapaModule;
     window.MAPA_MODULE_LOADED = true;
-    window.MAPA_MODULE_VERSION = '2.0.0';
+    window.MAPA_MODULE_VERSION = '2.0.1';
 }
 
 // Manejo de errores global para el módulo mapa

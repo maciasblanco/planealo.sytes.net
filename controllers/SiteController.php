@@ -356,4 +356,18 @@ class SiteController extends Controller
             'data' => $data
         ]);
     }
+    public function actionGetMobileMenu()
+    {
+        // Deshabilitar layout para solo devolver el HTML del menú
+        $this->layout = false;
+        
+        // Obtener el menú usando MenuWidget
+        $menuHtml = \app\components\MenuWidget::widget([
+            'mobileMode' => true,
+            'options' => ['class' => 'mobile-menu nav flex-column']
+        ]);
+        
+        // Devolver el HTML
+        return $menuHtml ?: '<div class="alert alert-warning">Menú no disponible</div>';
+    }
 }

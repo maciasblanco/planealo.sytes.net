@@ -1,9 +1,9 @@
-// ged-offcanvas.js - Módulo OffCanvas Sidebar para GED - VERSIÓN CORREGIDA
-// Versión: 3.1.0 - Con manejo robusto de errores y verificación de elementos
+// ged-offcanvas.js - Módulo OffCanvas Sidebar para GED - VERSIÓN INTEGRADA CON MenuWidget.php
+// Versión: 3.2.0 - Integración completa con MenuWidget.php y GED System
 // Fecha: 16/01/2024
 
 // ==================================================
-// OFF-CANVAS SIDEBAR CON LAZY LOADING - VERSIÓN MEJORADA
+// OFF-CANVAS SIDEBAR INTEGRADO CON MenuWidget.php
 // ==================================================
 
 class OffCanvasSidebar {
@@ -16,29 +16,34 @@ class OffCanvasSidebar {
         this.sidebarNav = null;
         this.navbarToggler = null;
         
-        // Cache de elementos críticos
-        this.requiredElements = {
-            sidebarCreated: false,
-            navbarMenuExists: false,
-            mainMenuExists: false
+        // URLs para cargar el menú
+        this.menuConfig = {
+            ajaxUrl: '/site/get-mobile-menu', // Debes crear esta ruta en Yii2
+            fallbackOnly: false,
+            debugMode: true
         };
         
-        // Niveles de fallback
-        this.fallbackLevel = 0; // 0: AJAX, 1: Real Menu, 2: Fallback Menu, 3: Simple Menu
+        console.log('🔧 OffCanvasSidebar inicializado - Integración MenuWidget');
     }
     
     init() {
         try {
             console.log('🔧 OffCanvasSidebar inicializando...');
             
-            // Verificar elementos críticos antes de proceder
-            if (!this.checkPrerequisites()) {
-                console.warn('⚠️ Prerrequisitos no cumplidos, creando elementos necesarios...');
-                this.createRequiredElements();
+            // Verificar Bootstrap y jQuery
+            if (!this.checkDependencies()) {
+                console.error('❌ Dependencias no cumplidas');
+                return false;
             }
             
             this.createOffCanvas();
             this.bindEvents();
+            
+            // Precargar menú si estamos en móvil
+            if (this.isMobile) {
+                setTimeout(() => this.preloadMenu(), 500);
+            }
+            
             console.log('✅ Off-Canvas Sidebar inicializado - Móvil:', this.isMobile);
             return true;
         } catch (error) {
@@ -48,20 +53,18 @@ class OffCanvasSidebar {
         }
     }
     
-    // ✅ VERIFICAR PRERREQUISITOS
-    checkPrerequisites() {
+    // ✅ VERIFICAR DEPENDENCIAS
+    checkDependencies() {
         const checks = {
-            'Body disponible': !!document.body,
-            'Document readyState': document.readyState !== 'loading',
-            'jQuery disponible': typeof $ !== 'undefined',
             'Bootstrap Offcanvas': typeof bootstrap !== 'undefined' && bootstrap.Offcanvas,
-            'Navbar toggler': !!document.querySelector('.navbar-toggler')
+            'jQuery disponible': typeof $ !== 'undefined',
+            'Body disponible': !!document.body
         };
         
         let allPassed = true;
         for (const [name, passed] of Object.entries(checks)) {
             if (!passed) {
-                console.warn(`⚠️ Prerrequisito no cumplido: ${name}`);
+                console.warn(`⚠️ Dependencia no cumplida: ${name}`);
                 allPassed = false;
             }
         }
@@ -69,224 +72,250 @@ class OffCanvasSidebar {
         return allPassed;
     }
     
-    // ✅ CREAR ELEMENTOS REQUERIDOS SI NO EXISTEN
-    createRequiredElements() {
-        try {
-            // Crear navbar toggler si no existe (solo para desarrollo/debug)
-            if (!document.querySelector('.navbar-toggler') && document.querySelector('.navbar')) {
-                const navbar = document.querySelector('.navbar');
-                const toggler = document.createElement('button');
-                toggler.className = 'navbar-toggler';
-                toggler.setAttribute('type', 'button');
-                toggler.setAttribute('data-bs-toggle', 'offcanvas');
-                toggler.setAttribute('data-bs-target', '#offcanvasNavbar');
-                toggler.setAttribute('aria-controls', 'offcanvasNavbar');
-                toggler.setAttribute('aria-label', 'Toggle navigation');
-                toggler.innerHTML = '<span class="navbar-toggler-icon"></span>';
-                navbar.appendChild(toggler);
-                console.log('✅ Navbar toggler creado dinámicamente');
-            }
-        } catch (error) {
-            console.error('Error en createRequiredElements:', error);
-        }
-    }
-    
+    // ✅ CREAR ESTRUCTURA DEL OFFCANVAS
     createOffCanvas() {
         try {
             // Verificar si ya existe
-            if (document.querySelector('.ged-offcanvas-sidebar')) {
-                this.sidebar = document.querySelector('.ged-offcanvas-sidebar');
-                this.backdrop = document.querySelector('.ged-sidebar-backdrop');
+            const existingSidebar = document.querySelector('#gedMobileMenuContainer');
+            if (existingSidebar) {
+                this.sidebar = existingSidebar;
                 this.sidebarNav = this.sidebar.querySelector('.sidebar-nav');
-                this.requiredElements.sidebarCreated = true;
                 console.log('✅ OffCanvas ya existente, reutilizando');
                 return;
             }
 
-            // Crear contenedor principal
+            // Crear estructura del offcanvas
             const sidebar = document.createElement('div');
-            sidebar.className = 'ged-offcanvas-sidebar';
-            sidebar.setAttribute('role', 'dialog');
-            sidebar.setAttribute('aria-modal', 'true');
-            sidebar.setAttribute('aria-label', 'Menú de navegación móvil');
+            sidebar.id = 'gedMobileMenuContainer';
+            sidebar.className = 'ged-offcanvas-sidebar offcanvas offcanvas-start';
+            sidebar.tabIndex = -1;
+            sidebar.setAttribute('aria-labelledby', 'offcanvasLabel');
             
             sidebar.innerHTML = `
-                <div class="sidebar-header">
-                    <button class="close-sidebar" aria-label="Cerrar menú">
-                        <i class="fas fa-times"></i>
-                    </button>
-                    <div class="sidebar-title">
-                        <span>Menú Principal</span>
-                        <small class="text-muted">GED System</small>
-                    </div>
+                <div class="offcanvas-header bg-primary text-white">
+                    <h5 class="offcanvas-title" id="offcanvasLabel">
+                        <i class="fas fa-bars me-2"></i>
+                        Menú del Sistema
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" 
+                            data-bs-dismiss="offcanvas" aria-label="Close"></button>
                 </div>
-                <div class="sidebar-body">
+                <div class="offcanvas-body p-0">
                     <nav class="sidebar-nav" aria-label="Navegación principal">
-                        <div class="menu-loading">
+                        <!-- Menú se cargará aquí dinámicamente -->
+                        <div class="menu-loading text-center py-5">
                             <div class="spinner-border text-primary" role="status">
                                 <span class="visually-hidden">Cargando menú...</span>
                             </div>
-                            <p class="text-muted mt-2">Cargando menú de navegación...</p>
+                            <p class="text-muted mt-2">Cargando menú...</p>
                         </div>
                     </nav>
                 </div>
-                <div class="sidebar-footer">
-                    <div class="sidebar-info">
-                        <small class="text-muted">Sistema GED v4.5</small>
-                    </div>
+                <div class="offcanvas-footer bg-light border-top py-2 px-3">
+                    <small class="text-muted">GED System v4.6</small>
                 </div>
             `;
             
-            // Crear backdrop
-            const backdrop = document.createElement('div');
-            backdrop.className = 'ged-sidebar-backdrop';
-            backdrop.setAttribute('aria-hidden', 'true');
+            // Crear toggler si no existe
+            this.ensureNavbarToggler();
             
-            // Agregar al DOM
             document.body.appendChild(sidebar);
-            document.body.appendChild(backdrop);
             
-            // Asignar referencias
             this.sidebar = sidebar;
-            this.backdrop = backdrop;
             this.sidebarNav = this.sidebar.querySelector('.sidebar-nav');
-            this.requiredElements.sidebarCreated = true;
             
-            console.log('✅ OffCanvas creado exitosamente');
+            // Inicializar Bootstrap Offcanvas
+            this.bootstrapOffcanvas = new bootstrap.Offcanvas(sidebar);
+            
+            console.log('✅ OffCanvas creado exitosamente con Bootstrap');
         } catch (error) {
             console.error('❌ Error en createOffCanvas:', error);
-            this.showErrorNotification('No se pudo crear el menú móvil');
+            this.createEmergencyOffCanvas();
         }
     }
     
-    loadMobileMenu() {
+    // ✅ GARANTIZAR QUE EXISTA EL TOGGLER
+    ensureNavbarToggler() {
+        const navbar = document.querySelector('.navbar');
+        if (!navbar) return;
+        
+        // Buscar toggler existente
+        let toggler = navbar.querySelector('.navbar-toggler');
+        
+        if (!toggler) {
+            // Crear toggler si no existe
+            toggler = document.createElement('button');
+            toggler.className = 'navbar-toggler';
+            toggler.type = 'button';
+            toggler.setAttribute('data-bs-toggle', 'offcanvas');
+            toggler.setAttribute('data-bs-target', '#gedMobileMenuContainer');
+            toggler.setAttribute('aria-controls', 'gedMobileMenuContainer');
+            toggler.setAttribute('aria-label', 'Toggle navigation');
+            toggler.innerHTML = '<span class="navbar-toggler-icon"></span>';
+            
+            // Agregar al navbar
+            const navbarCollapse = navbar.querySelector('.navbar-collapse');
+            if (navbarCollapse) {
+                navbar.insertBefore(toggler, navbarCollapse);
+            } else {
+                navbar.appendChild(toggler);
+            }
+            
+            console.log('✅ Toggler creado dinámicamente');
+        }
+        
+        this.navbarToggler = toggler;
+    }
+    
+    // ✅ CARGAR MENÚ DINÁMICAMENTE DESDE MenuWidget.php
+    async loadMobileMenu() {
         try {
             if (this.menuLoaded) return;
             
             console.log('📱 Cargando menú específico para móvil...');
             
-            // Verificar que exista el contenedor
             if (!this.sidebarNav) {
                 console.error('❌ Contenedor de menú no encontrado');
-                this.loadSimpleMenu();
-                return;
-            }
-            
-            // Intentar cargar via AJAX primero
-            if (typeof $ !== 'undefined') {
-                this.loadMobileMenuViaAJAX();
-            } else {
-                // Si no hay jQuery, intentar menú real directamente
-                setTimeout(() => {
-                    this.loadRealMenu();
-                }, 100);
-            }
-        } catch (error) {
-            console.error('❌ Error en loadMobileMenu:', error);
-            this.loadSimpleMenu();
-        }
-    }
-    
-    loadMobileMenuViaAJAX() {
-        try {
-            console.log('🌐 Intentando cargar menú via AJAX...');
-            
-            // Verificar si la ruta probablemente existe
-            const testUrl = '/site/mobile-menu';
-            const csrfToken = $('meta[name="csrf-token"]').attr('content');
-            
-            if (!csrfToken) {
-                console.warn('⚠️ Token CSRF no encontrado, usando menú alternativo');
-                this.loadRealMenu();
-                return;
-            }
-            
-            $.ajax({
-                url: testUrl,
-                type: 'GET',
-                dataType: 'html',
-                data: {
-                    _csrf: csrfToken
-                },
-                timeout: 5000, // 5 segundos timeout
-                beforeSend: () => {
-                    this.showLoadingState();
-                },
-                success: (response) => {
-                    console.log('✅ Menú móvil cargado via AJAX');
-                    if (this.sidebarNav) {
-                        this.sidebarNav.innerHTML = response;
-                        this.adaptMenuForOffCanvas(this.sidebarNav);
-                        this.menuLoaded = true;
-                        this.fallbackLevel = 0;
-                    }
-                },
-                error: (xhr, status, error) => {
-                    console.warn(`⚠️ Error cargando menú via AJAX (${status}):`, error);
-                    console.log('🔄 Intentando cargar menú real desde navbar...');
-                    this.loadRealMenu();
-                }
-            });
-        } catch (error) {
-            console.error('❌ Error en loadMobileMenuViaAJAX:', error);
-            this.loadRealMenu();
-        }
-    }
-    
-    loadRealMenu() {
-        try {
-            console.log('🔄 Buscando menú real en navbar...');
-            
-            if (!this.sidebarNav) {
-                console.error('❌ Contenedor de menú no disponible');
                 this.loadFallbackMenu();
                 return;
             }
             
-            // Buscar menú en varias ubicaciones posibles
-            const menuSelectors = [
-                '.navbar-nav',
-                '#main-nav',
-                '.main-menu',
-                '.nav-menu',
-                'nav ul',
-                '.navigation'
+            // Mostrar estado de carga
+            this.showLoadingState();
+            
+            // Intentar cargar via AJAX
+            const success = await this.loadMenuViaAJAX();
+            
+            if (!success) {
+                // Fallback 1: Intentar obtener menú del navbar si existe
+                this.loadMenuFromExistingNavbar();
+            }
+            
+            this.menuLoaded = true;
+        } catch (error) {
+            console.error('❌ Error en loadMobileMenu:', error);
+            this.loadFallbackMenu();
+        }
+    }
+    
+    // ✅ PRECARGAR MENÚ (para mejor UX)
+    preloadMenu() {
+        if (!this.menuLoaded && this.isMobile) {
+            console.log('⚡ Precargando menú móvil...');
+            this.loadMobileMenu();
+        }
+    }
+    
+    // ✅ CARGAR MENÚ VIA AJAX (Integración con MenuWidget.php)
+    async loadMenuViaAJAX() {
+        return new Promise((resolve) => {
+            if (!window.$) {
+                console.warn('⚠️ jQuery no disponible para AJAX');
+                resolve(false);
+                return;
+            }
+            
+            console.log('🌐 Intentando cargar menú dinámico...');
+            
+            // Intenta varias rutas posibles
+            const possibleUrls = [
+                '/site/mobile-menu',
+                '/site/get-mobile-menu',
+                '/menu/widget',
+                window.location.origin + '/site/get-mobile-menu'
             ];
             
-            let realMenu = null;
+            const csrfToken = $('meta[name="csrf-token"]').attr('content');
+            
+            // Función para intentar una URL
+            const tryUrl = (urlIndex) => {
+                if (urlIndex >= possibleUrls.length) {
+                    console.warn('⚠️ Todas las rutas AJAX fallaron');
+                    resolve(false);
+                    return;
+                }
+                
+                const url = possibleUrls[urlIndex];
+                console.log(`🔍 Intentando ruta: ${url}`);
+                
+                $.ajax({
+                    url: url,
+                    type: 'GET',
+                    dataType: 'html',
+                    data: csrfToken ? { _csrf: csrfToken } : {},
+                    timeout: 3000,
+                    success: (response) => {
+                        console.log(`✅ Menú cargado desde: ${url}`);
+                        this.processMenuHTML(response);
+                        resolve(true);
+                    },
+                    error: (xhr, status, error) => {
+                        console.warn(`❌ Error en ${url}: ${status}`);
+                        // Intentar siguiente URL
+                        tryUrl(urlIndex + 1);
+                    }
+                });
+            };
+            
+            // Comenzar con la primera URL
+            tryUrl(0);
+        });
+    }
+    
+    // ✅ CARGAR MENÚ DESDE NAVBAR EXISTENTE
+    loadMenuFromExistingNavbar() {
+        try {
+            console.log('🔄 Buscando menú existente en navbar...');
+            
+            // Buscar el menú principal en varias ubicaciones posibles
+            const menuSelectors = [
+                '.navbar-nav',
+                '#navbar-menu',
+                '.main-navigation',
+                'nav .nav',
+                '[role="navigation"] ul'
+            ];
+            
+            let sourceMenu = null;
             for (const selector of menuSelectors) {
                 const element = document.querySelector(selector);
-                if (element) {
-                    realMenu = element;
+                if (element && element.children.length > 0) {
+                    sourceMenu = element;
                     console.log(`✅ Menú encontrado con selector: ${selector}`);
                     break;
                 }
             }
             
-            if (!realMenu) {
-                console.warn('❌ No se encontró ningún menú en el navbar');
-                this.loadFallbackMenu();
-                return;
+            if (sourceMenu && this.sidebarNav) {
+                // Clonar el menú
+                const clonedMenu = sourceMenu.cloneNode(true);
+                
+                // Limpiar clases de Bootstrap que puedan interferir
+                this.cleanBootstrapClasses(clonedMenu);
+                
+                this.sidebarNav.innerHTML = '';
+                this.sidebarNav.appendChild(clonedMenu);
+                
+                // Adaptar para offcanvas
+                this.adaptMenuForOffCanvas(this.sidebarNav);
+                
+                console.log('✅ Menú cargado desde navbar existente');
+                return true;
             }
             
-            // Clonar el menú
-            const clonedMenu = realMenu.cloneNode(true);
-            this.sidebarNav.innerHTML = '';
-            this.sidebarNav.appendChild(clonedMenu);
-            this.adaptMenuForOffCanvas(this.sidebarNav);
-            this.menuLoaded = true;
-            this.fallbackLevel = 1;
+            console.warn('⚠️ No se encontró menú en navbar');
+            return false;
             
-            console.log('✅ Menú real cargado y adaptado correctamente');
         } catch (error) {
-            console.error('❌ Error en loadRealMenu:', error);
-            this.loadFallbackMenu();
+            console.error('❌ Error en loadMenuFromExistingNavbar:', error);
+            return false;
         }
     }
     
+    // ✅ CARGAR MENÚ DE RESERVA (fallback principal)
     loadFallbackMenu() {
         try {
-            console.log('🔄 Cargando menú de respaldo estructurado...');
+            console.log('🔄 Cargando menú de reserva...');
             
             if (!this.sidebarNav) {
                 console.error('❌ Contenedor de menú no disponible');
@@ -294,92 +323,151 @@ class OffCanvasSidebar {
                 return;
             }
             
-            this.sidebarNav.innerHTML = `
-                <ul class="sidebar-menu">
-                    <li class="menu-item">
-                        <a href="/" class="menu-link">
-                            <i class="fas fa-home me-2"></i>
-                            Inicio
-                        </a>
-                    </li>
-                    <li class="menu-item has-children">
-                        <a href="#" class="menu-link">
-                            <i class="fas fa-cogs me-2"></i>
-                            Sistema
-                            <span class="submenu-indicator">
-                                <i class="fas fa-chevron-right"></i>
-                            </span>
-                        </a>
-                        <ul class="submenu">
-                            <li class="menu-item">
-                                <a href="/ged/default/index" class="menu-link">
-                                    <i class="fas fa-school me-2"></i>
-                                    Seleccionar Escuela
-                                </a>
-                            </li>
-                            <li class="menu-item">
-                                <a href="/site/login" class="menu-link">
-                                    <i class="fas fa-sign-in-alt me-2"></i>
-                                    Iniciar Sesión
-                                </a>
-                            </li>
-                            <li class="menu-item">
-                                <a href="/site/signup" class="menu-link">
-                                    <i class="fas fa-user-plus me-2"></i>
-                                    Registrarse
-                                </a>
-                            </li>
-                        </ul>
-                    </li>
-                    <li class="menu-item has-children">
-                        <a href="#" class="menu-link">
-                            <i class="fas fa-store me-2"></i>
-                            Tienda
-                            <span class="submenu-indicator">
-                                <i class="fas fa-chevron-right"></i>
-                            </span>
-                        </a>
-                        <ul class="submenu">
-                            <li class="menu-item">
-                                <a href="/tienda" class="menu-link">
-                                    <i class="fas fa-shopping-cart me-2"></i>
-                                    Marketplace
-                                </a>
-                            </li>
-                            <li class="menu-item">
-                                <a href="/tienda/vendedor/registro" class="menu-link">
-                                    <i class="fas fa-user-tie me-2"></i>
-                                    Ser Vendedor
-                                </a>
-                            </li>
-                        </ul>
-                    </li>
-                    <li class="menu-divider"></li>
-                    <li class="menu-item">
-                        <a href="/site/contact" class="menu-link">
-                            <i class="fas fa-envelope me-2"></i>
-                            Contacto
-                        </a>
-                    </li>
-                    <li class="menu-item">
-                        <a href="/site/help" class="menu-link">
-                            <i class="fas fa-question-circle me-2"></i>
-                            Ayuda
-                        </a>
-                    </li>
-                </ul>
-            `;
+            // Usar el HTML generado por MenuWidget.php (debería estar disponible)
+            const menuWidgetHTML = this.getMenuWidgetHTML();
             
-            this.adaptMenuForOffCanvas(this.sidebarNav);
-            this.menuLoaded = true;
-            this.fallbackLevel = 2;
-            console.log('✅ Menú de respaldo cargado exitosamente');
+            if (menuWidgetHTML) {
+                this.sidebarNav.innerHTML = menuWidgetHTML;
+                this.adaptMenuForOffCanvas(this.sidebarNav);
+                console.log('✅ Menú de reserva cargado desde HTML estático');
+            } else {
+                // Fallback a menú estático
+                this.loadStaticMenu();
+            }
+            
         } catch (error) {
             console.error('❌ Error en loadFallbackMenu:', error);
             this.loadSimpleMenu();
         }
     }
     
+    // ✅ OBTENER HTML DE MenuWidget.php (si está disponible)
+    getMenuWidgetHTML() {
+        try {
+            // Buscar menú offcanvas oculto en el DOM
+            const hiddenMenu = document.querySelector('#offcanvas-menu-template, .mobile-menu-template');
+            if (hiddenMenu && hiddenMenu.innerHTML) {
+                return hiddenMenu.innerHTML;
+            }
+            
+            // Buscar script con template
+            const scriptTemplate = document.querySelector('script[type="text/template"][data-menu]');
+            if (scriptTemplate) {
+                return scriptTemplate.textContent;
+            }
+            
+            return null;
+        } catch (error) {
+            console.error('Error en getMenuWidgetHTML:', error);
+            return null;
+        }
+    }
+    
+    // ✅ CARGAR MENÚ ESTÁTICO (fallback secundario)
+    loadStaticMenu() {
+        try {
+            if (!this.sidebarNav) return;
+            
+            this.sidebarNav.innerHTML = `
+                <div class="mobile-menu-container">
+                    <div class="menu-header mb-3">
+                        <h6 class="text-primary mb-2">
+                            <i class="fas fa-sitemap me-2"></i>Navegación Principal
+                        </h6>
+                    </div>
+                    
+                    <ul class="nav flex-column mobile-menu">
+                        <li class="nav-item">
+                            <a class="nav-link active" href="/">
+                                <i class="fas fa-home fa-fw me-2"></i>Inicio
+                            </a>
+                        </li>
+                        
+                        <li class="nav-item menu-divider">
+                            <small class="text-muted">GED System</small>
+                        </li>
+                        
+                        <li class="nav-item">
+                            <a class="nav-link" href="/ged/default/index">
+                                <i class="fas fa-school fa-fw me-2"></i>Seleccionar Escuela
+                            </a>
+                        </li>
+                        
+                        <li class="nav-item">
+                            <a class="nav-link" href="/ged/escuela/listar">
+                                <i class="fas fa-list fa-fw me-2"></i>Listar Escuelas
+                            </a>
+                        </li>
+                        
+                        <li class="nav-item menu-divider">
+                            <small class="text-muted">Tienda</small>
+                        </li>
+                        
+                        <li class="nav-item">
+                            <a class="nav-link" href="/tienda/marketplace">
+                                <i class="fas fa-store fa-fw me-2"></i>Marketplace
+                            </a>
+                        </li>
+                        
+                        <li class="nav-item">
+                            <a class="nav-link" href="/tienda/producto/create">
+                                <i class="fas fa-box fa-fw me-2"></i>Inventario
+                            </a>
+                        </li>
+                        
+                        <li class="nav-item menu-divider">
+                            <small class="text-muted">Cuenta</small>
+                        </li>
+                        
+                        ${this.getUserMenuItems()}
+                    </ul>
+                </div>
+            `;
+            
+            console.log('✅ Menú estático cargado');
+            
+        } catch (error) {
+            console.error('Error en loadStaticMenu:', error);
+        }
+    }
+    
+    // ✅ OBTENER ITEMS DE MENÚ SEGÚN ESTADO DEL USUARIO
+    getUserMenuItems() {
+        // Esta función debería sincronizarse con la lógica de MenuWidget.php
+        // Por ahora, devolvemos un menú básico
+        
+        const isGuest = true; // Esto debería detectarse dinámicamente
+        
+        if (isGuest) {
+            return `
+                <li class="nav-item">
+                    <a class="nav-link" href="/site/login">
+                        <i class="fas fa-sign-in-alt fa-fw me-2"></i>Iniciar Sesión
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/site/signup">
+                        <i class="fas fa-user-plus fa-fw me-2"></i>Registrarse
+                    </a>
+                </li>
+            `;
+        } else {
+            return `
+                <li class="nav-item">
+                    <a class="nav-link" href="/site/mi-cuenta">
+                        <i class="fas fa-user-cog fa-fw me-2"></i>Mi Cuenta
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/site/logout" data-method="post">
+                        <i class="fas fa-sign-out-alt fa-fw me-2"></i>Cerrar Sesión
+                    </a>
+                </li>
+            `;
+        }
+    }
+    
+    // ✅ CARGAR MENÚ SIMPLE (último fallback)
     loadSimpleMenu() {
         try {
             console.log('🔄 Cargando menú simple de emergencia...');
@@ -390,40 +478,156 @@ class OffCanvasSidebar {
             }
             
             this.sidebarNav.innerHTML = `
-                <div class="simple-menu">
-                    <div class="alert alert-info mb-3">
-                        <i class="fas fa-info-circle me-2"></i>
-                        Menú simplificado - Sistema GED
+                <div class="simple-menu p-3">
+                    <div class="alert alert-warning">
+                        <i class="fas fa-exclamation-triangle me-2"></i>
+                        <strong>Menú simplificado</strong>
+                        <p class="mb-0 small">No se pudo cargar el menú completo.</p>
                     </div>
                     <div class="list-group">
                         <a href="/" class="list-group-item list-group-item-action">
-                            <i class="fas fa-home me-2"></i> Inicio
+                            <i class="fas fa-home me-2"></i>Inicio
                         </a>
                         <a href="/ged/default/index" class="list-group-item list-group-item-action">
-                            <i class="fas fa-school me-2"></i> Seleccionar Escuela
+                            <i class="fas fa-school me-2"></i>GED Sistema
                         </a>
-                        <a href="/tienda" class="list-group-item list-group-item-action">
-                            <i class="fas fa-store me-2"></i> Tienda
+                        <a href="/tienda/marketplace" class="list-group-item list-group-item-action">
+                            <i class="fas fa-store me-2"></i>Tienda
                         </a>
                         <a href="/site/login" class="list-group-item list-group-item-action">
-                            <i class="fas fa-sign-in-alt me-2"></i> Iniciar Sesión
-                        </a>
-                        <a href="/site/contact" class="list-group-item list-group-item-action">
-                            <i class="fas fa-envelope me-2"></i> Contacto
+                            <i class="fas fa-sign-in-alt me-2"></i>Iniciar Sesión
                         </a>
                     </div>
                 </div>
             `;
             
-            this.menuLoaded = true;
-            this.fallbackLevel = 3;
             console.log('✅ Menú simple de emergencia cargado');
+            
         } catch (error) {
             console.error('❌ Error crítico en loadSimpleMenu:', error);
             this.showErrorState();
         }
     }
     
+    // ✅ PROCESAR HTML DEL MENÚ
+    processMenuHTML(html) {
+        if (!this.sidebarNav) return;
+        
+        try {
+            this.sidebarNav.innerHTML = html;
+            
+            // Verificar si el HTML tiene contenido válido
+            if (this.sidebarNav.children.length === 0 || 
+                (this.sidebarNav.children.length === 1 && 
+                 this.sidebarNav.children[0].classList.contains('menu-loading'))) {
+                console.warn('⚠️ HTML del menú vacío, usando fallback');
+                this.loadFallbackMenu();
+                return;
+            }
+            
+            // Adaptar para offcanvas
+            this.adaptMenuForOffCanvas(this.sidebarNav);
+            
+            console.log('✅ Menú procesado y adaptado correctamente');
+            
+        } catch (error) {
+            console.error('❌ Error en processMenuHTML:', error);
+            this.loadFallbackMenu();
+        }
+    }
+    
+    // ✅ LIMPIAR CLASES DE BOOTSTRAP
+    cleanBootstrapClasses(element) {
+        // Limpiar clases que puedan interferir con el offcanvas
+        const classesToRemove = [
+            'dropdown-menu', 'dropdown-toggle', 'dropdown-item',
+            'navbar-nav', 'nav-item', 'nav-link'
+        ];
+        
+        classesToRemove.forEach(className => {
+            const elements = element.querySelectorAll(`.${className}`);
+            elements.forEach(el => {
+                el.classList.remove(className);
+            });
+        });
+        
+        // Convertir a estructura de menú móvil
+        element.classList.add('mobile-menu', 'nav', 'flex-column');
+    }
+    
+    // ✅ ADAPTAR MENÚ PARA OFFCANVAS
+    adaptMenuForOffCanvas(menuElement) {
+        try {
+            // Agregar eventos para submenús
+            const submenuToggles = menuElement.querySelectorAll('[data-bs-toggle="dropdown"], .has-children > a');
+            
+            submenuToggles.forEach(toggle => {
+                // Reemplazar evento de dropdown de Bootstrap por nuestro propio
+                toggle.addEventListener('click', (e) => {
+                    if (this.isMobile) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        
+                        const parent = toggle.closest('.has-children, .dropdown');
+                        if (parent) {
+                            this.toggleMobileSubmenu(parent);
+                        }
+                    }
+                });
+            });
+            
+            // Agregar eventos para cerrar el offcanvas al hacer clic en enlaces
+            const menuLinks = menuElement.querySelectorAll('a:not([data-bs-toggle="dropdown"])');
+            menuLinks.forEach(link => {
+                link.addEventListener('click', () => {
+                    if (this.isMobile && this.bootstrapOffcanvas) {
+                        setTimeout(() => {
+                            this.bootstrapOffcanvas.hide();
+                        }, 300);
+                    }
+                });
+            });
+            
+            console.log('✅ Menú adaptado para offcanvas');
+            
+        } catch (error) {
+            console.error('Error en adaptMenuForOffCanvas:', error);
+        }
+    }
+    
+    // ✅ ALTERNAR SUBMENÚ MÓVIL
+    toggleMobileSubmenu(parentItem) {
+        const submenu = parentItem.querySelector('.dropdown-menu, .submenu');
+        if (!submenu) return;
+        
+        const isOpen = submenu.style.display === 'block' || 
+                      submenu.classList.contains('show');
+        
+        // Cerrar otros submenús al mismo nivel
+        const siblings = parentItem.parentElement.querySelectorAll('.has-children, .dropdown');
+        siblings.forEach(sibling => {
+            if (sibling !== parentItem) {
+                const siblingSubmenu = sibling.querySelector('.dropdown-menu, .submenu');
+                if (siblingSubmenu) {
+                    siblingSubmenu.style.display = 'none';
+                    siblingSubmenu.classList.remove('show');
+                    sibling.classList.remove('show');
+                }
+            }
+        });
+        
+        if (isOpen) {
+            submenu.style.display = 'none';
+            submenu.classList.remove('show');
+            parentItem.classList.remove('show');
+        } else {
+            submenu.style.display = 'block';
+            submenu.classList.add('show');
+            parentItem.classList.add('show');
+        }
+    }
+    
+    // ✅ MOSTRAR ESTADO DE CARGA
     showLoadingState() {
         if (this.sidebarNav) {
             this.sidebarNav.innerHTML = `
@@ -432,12 +636,13 @@ class OffCanvasSidebar {
                         <span class="visually-hidden">Cargando menú...</span>
                     </div>
                     <p class="text-muted mt-3">Cargando menú de navegación...</p>
-                    <small class="text-muted">Por favor espere</small>
+                    <small class="text-muted">Sincronizando con MenuWidget.php</small>
                 </div>
             `;
         }
     }
     
+    // ✅ MOSTRAR ESTADO DE ERROR
     showErrorState() {
         if (this.sidebarNav) {
             this.sidebarNav.innerHTML = `
@@ -455,457 +660,144 @@ class OffCanvasSidebar {
         }
     }
     
-    adaptMenuForOffCanvas(menuElement) {
+    // ✅ CREAR OFFCANVAS DE EMERGENCIA
+    createEmergencyOffCanvas() {
         try {
-            let mainMenu = menuElement.querySelector('.navbar-nav, .sidebar-menu, .simple-menu, .list-group');
-            if (!mainMenu) return;
+            const emergencyHTML = `
+                <div class="offcanvas offcanvas-start" tabindex="-1" id="emergencyMobileMenu">
+                    <div class="offcanvas-header">
+                        <h5 class="offcanvas-title">Menú de Emergencia</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="offcanvas"></button>
+                    </div>
+                    <div class="offcanvas-body">
+                        <div class="alert alert-warning">
+                            <i class="fas fa-exclamation-triangle me-2"></i>
+                            Usando menú de emergencia
+                        </div>
+                        <div class="list-group">
+                            <a href="/" class="list-group-item list-group-item-action">Inicio</a>
+                            <a href="/ged/default/index" class="list-group-item list-group-item-action">GED</a>
+                            <a href="/tienda/marketplace" class="list-group-item list-group-item-action">Tienda</a>
+                        </div>
+                    </div>
+                </div>
+            `;
             
-            if (mainMenu.classList.contains('navbar-nav')) {
-                this.convertBootstrapToMobileMenu(mainMenu);
-            }
+            const container = document.createElement('div');
+            container.innerHTML = emergencyHTML;
+            document.body.appendChild(container.firstElementChild);
             
-            this.addMobileMenuEvents(menuElement);
-            console.log('✅ Menú adaptado correctamente para móvil');
+            this.sidebar = document.getElementById('emergencyMobileMenu');
+            this.sidebarNav = this.sidebar.querySelector('.offcanvas-body');
+            
+            console.log('✅ OffCanvas de emergencia creado');
+            
         } catch (error) {
-            console.error('Error en adaptMenuForOffCanvas:', error);
+            console.error('❌ Error crítico al crear offcanvas de emergencia:', error);
         }
     }
     
-    convertBootstrapToMobileMenu(menuElement) {
-        try {
-            const dropdowns = menuElement.querySelectorAll('.dropdown, .dropdown-submenu');
-            dropdowns.forEach(dropdown => {
-                dropdown.classList.remove('dropdown', 'dropdown-submenu');
-                dropdown.classList.add('has-children');
-                
-                const toggle = dropdown.querySelector('.dropdown-toggle');
-                if (toggle) {
-                    toggle.classList.remove('dropdown-toggle');
-                    toggle.removeAttribute('data-bs-toggle');
-                    toggle.removeAttribute('aria-expanded');
-                    
-                    if (!toggle.querySelector('.submenu-indicator')) {
-                        const indicator = document.createElement('span');
-                        indicator.className = 'submenu-indicator';
-                        indicator.innerHTML = '<i class="fas fa-chevron-right"></i>';
-                        toggle.appendChild(indicator);
-                    }
-                }
-                
-                const menu = dropdown.querySelector('.dropdown-menu');
-                if (menu) {
-                    menu.classList.remove('dropdown-menu');
-                    menu.classList.add('submenu');
-                    menu.style.display = 'none';
-                }
-            });
-            
-            const navItems = menuElement.querySelectorAll('.nav-item');
-            navItems.forEach(item => {
-                item.classList.remove('nav-item');
-                item.classList.add('menu-item');
-            });
-            
-            const navLinks = menuElement.querySelectorAll('.nav-link, .dropdown-item');
-            navLinks.forEach(link => {
-                link.classList.remove('nav-link', 'dropdown-item');
-                link.classList.add('menu-link');
-                
-                if (link.getAttribute('href') === '#' && link.parentElement.classList.contains('has-children')) {
-                    link.style.cursor = 'pointer';
-                }
-            });
-            
-            menuElement.classList.remove('navbar-nav');
-            menuElement.classList.add('sidebar-menu');
-        } catch (error) {
-            console.error('Error en convertBootstrapToMobileMenu:', error);
-        }
-    }
-    
-    addMobileMenuEvents(menuElement) {
-        try {
-            // Refrescar eventos para submenús
-            const menuItems = menuElement.querySelectorAll('.has-children > .menu-link');
-            menuItems.forEach(menuItem => {
-                // Clonar para limpiar eventos anteriores
-                const newMenuItem = menuItem.cloneNode(true);
-                menuItem.parentNode.replaceChild(newMenuItem, menuItem);
-            });
-            
-            // Agregar nuevos eventos
-            const refreshedMenuItems = menuElement.querySelectorAll('.has-children > .menu-link');
-            refreshedMenuItems.forEach(menuItem => {
-                menuItem.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    this.toggleSubmenu(menuItem.parentElement);
-                });
-            });
-            
-            // Eventos para enlaces normales
-            const normalLinks = menuElement.querySelectorAll('.menu-item:not(.has-children) > .menu-link');
-            normalLinks.forEach(link => {
-                link.addEventListener('click', () => {
-                    if (this.isMobile) {
-                        setTimeout(() => this.close(), 300);
-                    }
-                });
-            });
-        } catch (error) {
-            console.error('Error en addMobileMenuEvents:', error);
-        }
-    }
-    
-    toggleSubmenu(parentItem) {
-        try {
-            const submenu = parentItem.querySelector('.submenu');
-            if (!submenu) return;
-            
-            const isCurrentlyOpen = submenu.style.display === 'block';
-            const indicator = parentItem.querySelector('.submenu-indicator i');
-            
-            // Cerrar otros submenús en el mismo nivel
-            const siblings = parentItem.parentElement.querySelectorAll('.has-children');
-            siblings.forEach(sibling => {
-                if (sibling !== parentItem) {
-                    const siblingSubmenu = sibling.querySelector('.submenu');
-                    const siblingIndicator = sibling.querySelector('.submenu-indicator i');
-                    if (siblingSubmenu) siblingSubmenu.style.display = 'none';
-                    if (siblingIndicator) {
-                        siblingIndicator.classList.remove('fa-chevron-down');
-                        siblingIndicator.classList.add('fa-chevron-right');
-                    }
-                    sibling.classList.remove('open');
-                }
-            });
-            
-            if (isCurrentlyOpen) {
-                submenu.style.display = 'none';
-                if (indicator) {
-                    indicator.classList.remove('fa-chevron-down');
-                    indicator.classList.add('fa-chevron-right');
-                }
-                parentItem.classList.remove('open');
-            } else {
-                submenu.style.display = 'block';
-                if (indicator) {
-                    indicator.classList.remove('fa-chevron-right');
-                    indicator.classList.add('fa-chevron-down');
-                }
-                parentItem.classList.add('open');
-            }
-        } catch (error) {
-            console.error('Error en toggleSubmenu:', error);
-        }
-    }
-    
+    // ✅ VINCULAR EVENTOS
     bindEvents() {
         try {
-            this.interceptBootstrapToggler();
-            
-            const closeButton = this.sidebar.querySelector('.close-sidebar');
-            if (closeButton) {
-                closeButton.addEventListener('click', () => this.close());
+            // Vincular evento para cargar menú al abrir
+            if (this.sidebar) {
+                this.sidebar.addEventListener('show.bs.offcanvas', () => {
+                    if (!this.menuLoaded) {
+                        this.loadMobileMenu();
+                    }
+                });
             }
             
-            if (this.backdrop) {
-                this.backdrop.addEventListener('click', () => this.close());
-            }
-            
-            // Cerrar con tecla Escape
-            document.addEventListener('keydown', (e) => {
-                if (e.key === 'Escape' && this.isOpen) this.close();
-            });
-            
-            // Cerrar al hacer clic fuera del sidebar
-            document.addEventListener('click', (e) => {
-                if (this.isOpen && this.sidebar && !this.sidebar.contains(e.target) && 
-                    !e.target.classList.contains('navbar-toggler')) {
-                    this.close();
+            // Escuchar cambios de viewport
+            window.addEventListener('resize', () => {
+                const newIsMobile = window.innerWidth < 992;
+                if (newIsMobile !== this.isMobile) {
+                    this.isMobile = newIsMobile;
+                    console.log(`🔄 Modo cambiado a: ${this.isMobile ? 'Móvil' : 'Escritorio'}`);
                 }
             });
             
             console.log('✅ Eventos vinculados correctamente');
+            
         } catch (error) {
             console.error('Error en bindEvents:', error);
         }
     }
     
-    interceptBootstrapToggler() {
-        try {
-            const navbarToggler = document.querySelector('.navbar-toggler');
-            if (!navbarToggler) {
-                console.warn('⚠️ No se encontró el navbar toggler, creando uno alternativo');
-                this.createNavbarToggler();
-                return;
-            }
-            
-            // Guardar referencia original
-            const originalOnClick = navbarToggler.onclick;
-            
-            navbarToggler.addEventListener('click', (e) => {
-                if (this.isMobile) {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    e.stopImmediatePropagation();
-                    
-                    if (this.isOpen) {
-                        this.close();
-                    } else {
-                        this.open();
-                    }
-                    return false;
-                }
-                
-                // En escritorio, mantener comportamiento original
-                if (originalOnClick) originalOnClick.call(navbarToggler, e);
-            }, true);
-            
-            this.navbarToggler = navbarToggler;
-            console.log('✅ Toggler interceptado correctamente');
-        } catch (error) {
-            console.error('Error en interceptBootstrapToggler:', error);
-        }
-    }
-    
-    createNavbarToggler() {
-        try {
-            // Buscar navbar existente
-            const navbar = document.querySelector('.navbar');
-            if (!navbar) return;
-            
-            // Crear toggler
-            const toggler = document.createElement('button');
-            toggler.className = 'navbar-toggler ged-toggler';
-            toggler.setAttribute('type', 'button');
-            toggler.setAttribute('aria-label', 'Toggle navigation');
-            toggler.innerHTML = '<span class="navbar-toggler-icon"></span>';
-            
-            // Agregar al navbar (al final para que sea visible)
-            navbar.appendChild(toggler);
-            
-            // Vincular evento
-            toggler.addEventListener('click', (e) => {
-                e.preventDefault();
-                if (this.isOpen) {
-                    this.close();
-                } else {
-                    this.open();
-                }
-            });
-            
-            this.navbarToggler = toggler;
-            console.log('✅ Toggler creado dinámicamente');
-        } catch (error) {
-            console.error('Error en createNavbarToggler:', error);
-        }
-    }
-    
+    // ✅ ABRIR OFFCANVAS PROGRAMÁTICAMENTE
     open() {
-        try {
-            if (this.isOpen) return;
-            
-            console.log('🔓 Abriendo Off-Canvas...');
-            
-            // Cargar menú si no está cargado
+        if (this.bootstrapOffcanvas) {
+            this.bootstrapOffcanvas.show();
             if (!this.menuLoaded) {
                 this.loadMobileMenu();
             }
-            
-            this.isOpen = true;
-            this.sidebar.classList.add('open');
-            this.backdrop.classList.add('show');
-            document.body.style.overflow = 'hidden';
-            document.body.style.paddingRight = this.getScrollbarWidth() + 'px'; // Prevenir salto
-            this.sidebar.setAttribute('tabindex', '-1');
-            this.sidebar.focus();
-            
-            // Animar entrada
-            this.sidebar.style.transform = 'translateX(0)';
-            
-            // Disparar evento personalizado
-            window.dispatchEvent(new CustomEvent('ged:offcanvas:open'));
-            
-            console.log('✅ Off-Canvas abierto correctamente');
-        } catch (error) {
-            console.error('Error en open:', error);
-            this.showErrorNotification('No se pudo abrir el menú');
         }
     }
     
+    // ✅ CERRAR OFFCANVAS PROGRAMÁTICAMENTE
     close() {
-        try {
-            if (!this.isOpen) return;
-            
-            console.log('🔒 Cerrando Off-Canvas...');
-            
-            this.isOpen = false;
-            this.sidebar.classList.remove('open');
-            this.backdrop.classList.remove('show');
-            document.body.style.overflow = '';
-            document.body.style.paddingRight = '';
-            
-            // Animar salida
-            this.sidebar.style.transform = 'translateX(-100%)';
-            
-            this.closeAllSubmenus();
-            
-            // Devolver foco al toggler
-            if (this.navbarToggler) {
-                setTimeout(() => this.navbarToggler.focus(), 100);
-            }
-            
-            // Disparar evento personalizado
-            window.dispatchEvent(new CustomEvent('ged:offcanvas:close'));
-            
-            console.log('✅ Off-Canvas cerrado correctamente');
-        } catch (error) {
-            console.error('Error en close:', error);
+        if (this.bootstrapOffcanvas) {
+            this.bootstrapOffcanvas.hide();
         }
     }
     
-    closeAllSubmenus() {
-        try {
-            const submenus = this.sidebar.querySelectorAll('.submenu');
-            const parentItems = this.sidebar.querySelectorAll('.has-children');
-            
-            submenus.forEach(submenu => submenu.style.display = 'none');
-            parentItems.forEach(item => {
-                item.classList.remove('open');
-                const indicator = item.querySelector('.submenu-indicator i');
-                if (indicator) {
-                    indicator.classList.remove('fa-chevron-down');
-                    indicator.classList.add('fa-chevron-right');
-                }
-            });
-        } catch (error) {
-            console.error('Error en closeAllSubmenus:', error);
-        }
-    }
-    
-    handleViewportChange(isMobile) {
-        this.isMobile = isMobile;
-        console.log(`🔄 Off-Canvas cambió a modo: ${this.isMobile ? 'Móvil' : 'Escritorio'}`);
-        
-        // Cerrar offcanvas cuando cambiamos a escritorio
-        if (!this.isMobile && this.isOpen) {
-            this.close();
-        }
-        
-        // Disparar evento
-        window.dispatchEvent(new CustomEvent('ged:offcanvas:modechange', {
-            detail: { isMobile: this.isMobile }
-        }));
-    }
-    
-    // ✅ FUNCIONES DE UTILIDAD
-    getScrollbarWidth() {
-        // Crear elemento para medir el ancho del scrollbar
-        const outer = document.createElement('div');
-        outer.style.visibility = 'hidden';
-        outer.style.overflow = 'scroll';
-        outer.style.msOverflowStyle = 'scrollbar';
-        document.body.appendChild(outer);
-        
-        const inner = document.createElement('div');
-        outer.appendChild(inner);
-        
-        const scrollbarWidth = (outer.offsetWidth - inner.offsetWidth);
-        
-        // Limpiar
-        outer.parentNode.removeChild(outer);
-        
-        return scrollbarWidth;
-    }
-    
+    // ✅ MOSTRAR NOTIFICACIÓN DE ERROR
     showErrorNotification(message) {
-        const notification = document.createElement('div');
-        notification.className = 'ged-notification alert alert-warning alert-dismissible fade show';
-        notification.style.cssText = `
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            z-index: 9999;
-            max-width: 350px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-            animation: slideInRight 0.3s ease-out;
-        `;
-        
-        notification.innerHTML = `
-            <div class="d-flex align-items-center">
-                <i class="fas fa-exclamation-triangle me-2"></i>
-                <div>
-                    <strong>OffCanvas Error</strong>
-                    <div class="small">${message}</div>
-                </div>
-                <button type="button" class="btn-close ms-auto" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>
-        `;
-        
-        document.body.appendChild(notification);
-        
-        // Auto-eliminar después de 5 segundos
-        setTimeout(() => {
-            if (notification.parentNode) {
-                notification.parentNode.removeChild(notification);
-            }
-        }, 5000);
+        try {
+            const notification = document.createElement('div');
+            notification.className = 'alert alert-warning alert-dismissible fade show';
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                z-index: 9999;
+                max-width: 350px;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            `;
+            
+            notification.innerHTML = `
+                <strong>OffCanvas Error</strong>
+                <div class="small">${message}</div>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            `;
+            
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                if (notification.parentNode) {
+                    notification.remove();
+                }
+            }, 5000);
+            
+        } catch (error) {
+            console.error('Error en showErrorNotification:', error);
+        }
     }
     
-    // ✅ MÉTODOS PÚBLICOS PARA CONTROL EXTERNO
+    // ✅ MÉTODOS PÚBLICOS
     reloadMenu() {
         console.log('🔄 Recargando menú manualmente...');
         this.menuLoaded = false;
-        this.fallbackLevel = 0;
         this.loadMobileMenu();
     }
     
     getStatus() {
         return {
-            isOpen: this.isOpen,
+            isOpen: this.bootstrapOffcanvas ? this.bootstrapOffcanvas._isShown : false,
             isMobile: this.isMobile,
             menuLoaded: this.menuLoaded,
-            fallbackLevel: this.fallbackLevel,
             elements: {
                 sidebar: !!this.sidebar,
-                backdrop: !!this.backdrop,
                 sidebarNav: !!this.sidebarNav,
                 navbarToggler: !!this.navbarToggler
             }
         };
     }
-    
-    destroy() {
-        try {
-            console.log('🗑️ Destruyendo OffCanvas...');
-            
-            // Remover elementos del DOM
-            if (this.sidebar && this.sidebar.parentNode) {
-                this.sidebar.parentNode.removeChild(this.sidebar);
-            }
-            
-            if (this.backdrop && this.backdrop.parentNode) {
-                this.backdrop.parentNode.removeChild(this.backdrop);
-            }
-            
-            // Limpiar referencias
-            this.sidebar = null;
-            this.backdrop = null;
-            this.sidebarNav = null;
-            this.navbarToggler = null;
-            this.isOpen = false;
-            this.menuLoaded = false;
-            
-            console.log('✅ OffCanvas destruido correctamente');
-        } catch (error) {
-            console.error('Error en destroy:', error);
-        }
-    }
 }
 
 // ==================================================
-// INICIALIZACIÓN GLOBAL MEJORADA
+// INICIALIZACIÓN GLOBAL
 // ==================================================
 
 // Hacer disponible globalmente
@@ -913,21 +805,15 @@ if (typeof window !== 'undefined') {
     window.OffCanvasSidebar = OffCanvasSidebar;
 }
 
-// Inicialización automática mejorada
+// Inicialización automática
 document.addEventListener('DOMContentLoaded', function() {
     console.log('🔧 Inicializando OffCanvas automáticamente...');
     
-    // Verificar condiciones antes de inicializar
-    const shouldInitialize = () => {
-        // Solo inicializar si hay toggler o estamos en móvil
-        const hasToggler = document.querySelector('.navbar-toggler');
-        const isMobile = window.innerWidth < 992;
-        
-        return hasToggler || isMobile;
-    };
-    
-    if (shouldInitialize()) {
-        setTimeout(() => {
+    // Esperar a que Bootstrap esté disponible
+    const waitForBootstrap = setInterval(() => {
+        if (typeof bootstrap !== 'undefined' && bootstrap.Offcanvas) {
+            clearInterval(waitForBootstrap);
+            
             if (!window.gedOffcanvas) {
                 try {
                     window.gedOffcanvas = new OffCanvasSidebar();
@@ -935,86 +821,41 @@ document.addEventListener('DOMContentLoaded', function() {
                     
                     if (success) {
                         console.log('✅ ged-offcanvas.js inicializado automáticamente');
-                        
-                        // Escuchar cambios de viewport
-                        window.addEventListener('resize', () => {
-                            const newIsMobile = window.innerWidth < 992;
-                            if (newIsMobile !== window.gedOffcanvas.isMobile) {
-                                window.gedOffcanvas.handleViewportChange(newIsMobile);
-                            }
-                        });
-                    } else {
-                        console.warn('⚠️ ged-offcanvas.js inicializado con advertencias');
                     }
                 } catch (error) {
-                    console.error('❌ Error crítico al inicializar ged-offcanvas:', error);
+                    console.error('❌ Error al inicializar ged-offcanvas:', error);
                 }
             } else {
                 console.log('ℹ️ gedOffcanvas ya estaba inicializado');
             }
-        }, 500); // Delay para asegurar que otros scripts hayan cargado
-    } else {
-        console.log('ℹ️ No se requiere inicialización de OffCanvas en esta página');
-    }
+        }
+    }, 100);
 });
 
 // ==================================================
-// FUNCIONES DE UTILIDAD GLOBALES
+// FUNCIONES GLOBALES DE UTILIDAD
 // ==================================================
 
 if (typeof window !== 'undefined') {
-    // Función para recargar el menú manualmente
+    // Función para recargar el menú
     window.reloadOffCanvasMenu = function() {
         if (window.gedOffcanvas) {
             window.gedOffcanvas.reloadMenu();
-            console.log('🔄 Menú del off-canvas recargado manualmente');
         }
     };
     
-    // Función para abrir/cerrar manualmente
-    window.toggleOffCanvas = function() {
-        if (window.gedOffcanvas) {
-            if (window.gedOffcanvas.isOpen) {
-                window.gedOffcanvas.close();
-            } else {
-                window.gedOffcanvas.open();
-            }
-        }
-    };
-    
-    // Debug function mejorada
+    // Función para debug
     window.debugOffCanvas = function() {
-        console.group('🐛 DEBUG GED OFFCANVAS - VERSIÓN MEJORADA');
-        console.log('Instancia:', window.gedOffcanvas);
-        
+        console.group('🐛 DEBUG GED OFFCANVAS');
         if (window.gedOffcanvas) {
             const status = window.gedOffcanvas.getStatus();
             console.log('Estado:', status);
-            console.log('Fallback level:', ['AJAX', 'Real Menu', 'Fallback Menu', 'Simple Menu'][status.fallbackLevel]);
-        } else {
-            console.log('Estado: No inicializado');
+            console.log('Elementos en DOM:', {
+                sidebar: document.querySelector('#gedMobileMenuContainer'),
+                toggler: document.querySelector('.navbar-toggler')
+            });
         }
-        
-        console.log('Elementos:', {
-            sidebar: document.querySelector('.ged-offcanvas-sidebar'),
-            backdrop: document.querySelector('.ged-sidebar-backdrop'),
-            navbarToggler: document.querySelector('.navbar-toggler')
-        });
-        
         console.groupEnd();
-    };
-    
-    // Función para forzar reconstrucción
-    window.rebuildOffCanvas = function() {
-        if (window.gedOffcanvas) {
-            window.gedOffcanvas.destroy();
-        }
-        
-        setTimeout(() => {
-            window.gedOffcanvas = new OffCanvasSidebar();
-            window.gedOffcanvas.init();
-            console.log('🔨 OffCanvas reconstruido manualmente');
-        }, 100);
     };
 }
 
@@ -1024,108 +865,68 @@ if (typeof module !== 'undefined' && module.exports) {
 }
 
 // ==================================================
-// ESTILOS DINÁMICOS (para emergencias)
+// ESTILOS DINÁMICOS PARA MEJOR VISUALIZACIÓN
 // ==================================================
 
-// Inyectar estilos básicos si no existen
-(function injectBasicStyles() {
+(function injectOffCanvasStyles() {
     if (!document.getElementById('ged-offcanvas-styles')) {
         const style = document.createElement('style');
         style.id = 'ged-offcanvas-styles';
         style.textContent = `
-            .ged-offcanvas-sidebar {
-                position: fixed;
-                top: 0;
-                left: 0;
-                width: 300px;
-                height: 100vh;
-                background: white;
-                z-index: 1050;
-                box-shadow: 5px 0 15px rgba(0,0,0,0.1);
-                transform: translateX(-100%);
-                transition: transform 0.3s ease;
-                display: flex;
-                flex-direction: column;
+            /* Estilos para el offcanvas de GED */
+            #gedMobileMenuContainer {
+                max-width: 300px;
             }
             
-            .ged-offcanvas-sidebar.open {
-                transform: translateX(0);
+            /* Mejoras para el menú móvil */
+            .mobile-menu .nav-link {
+                padding: 0.75rem 1rem;
+                border-radius: 0.375rem;
+                margin-bottom: 0.125rem;
             }
             
-            .ged-sidebar-backdrop {
-                position: fixed;
-                top: 0;
-                left: 0;
-                width: 100vw;
-                height: 100vh;
-                background: rgba(0,0,0,0.5);
-                z-index: 1049;
-                display: none;
+            .mobile-menu .nav-link:hover {
+                background-color: rgba(0, 0, 0, 0.05);
             }
             
-            .ged-sidebar-backdrop.show {
-                display: block;
+            .mobile-menu .nav-link.active {
+                background-color: #0d6efd;
+                color: white;
             }
             
-            .sidebar-header {
-                padding: 15px;
-                border-bottom: 1px solid #dee2e6;
-                display: flex;
-                align-items: center;
-                gap: 10px;
-            }
-            
-            .close-sidebar {
-                background: none;
-                border: none;
-                font-size: 1.5rem;
-                cursor: pointer;
-                color: #6c757d;
-            }
-            
-            .sidebar-body {
-                flex: 1;
-                overflow-y: auto;
-                padding: 15px;
-            }
-            
-            .sidebar-footer {
-                padding: 10px 15px;
+            .menu-divider {
+                padding: 0.5rem 1rem;
+                margin-top: 0.5rem;
                 border-top: 1px solid #dee2e6;
-                background: #f8f9fa;
             }
             
-            @keyframes slideInRight {
-                from {
-                    transform: translateX(100%);
-                    opacity: 0;
+            /* Submenús móviles */
+            .mobile-menu .dropdown-menu {
+                border: none;
+                box-shadow: none;
+                background-color: rgba(0, 0, 0, 0.02);
+                padding-left: 1.5rem;
+            }
+            
+            /* Animaciones */
+            @keyframes fadeIn {
+                from { opacity: 0; }
+                to { opacity: 1; }
+            }
+            
+            .mobile-menu-container {
+                animation: fadeIn 0.3s ease-out;
+            }
+            
+            /* Responsive */
+            @media (max-width: 576px) {
+                #gedMobileMenuContainer {
+                    max-width: 280px;
                 }
-                to {
-                    transform: translateX(0);
-                    opacity: 1;
-                }
-            }
-            
-            .has-children .submenu {
-                display: none;
-                padding-left: 20px;
-            }
-            
-            .has-children.open .submenu {
-                display: block;
-            }
-            
-            .submenu-indicator {
-                margin-left: auto;
-                transition: transform 0.3s ease;
-            }
-            
-            .has-children.open .submenu-indicator {
-                transform: rotate(90deg);
             }
         `;
         
         document.head.appendChild(style);
-        console.log('✅ Estilos básicos inyectados para OffCanvas');
+        console.log('✅ Estilos de OffCanvas inyectados');
     }
 })();

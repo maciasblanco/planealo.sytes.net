@@ -85,6 +85,7 @@ $config = [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
             'rules' => [
+                'site/get-mobile-menu' => 'site/get-mobile-menu',
                 'tasa-dolar' => 'tasa-dolar/index',
                 'tasa-dolar/actualizar' => 'tasa-dolar/actualizar',
                 // NUEVAS RUTAS PARA PERFIL
