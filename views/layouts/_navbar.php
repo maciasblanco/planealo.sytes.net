@@ -11,7 +11,7 @@ use yii\bootstrap5\Html;
 // ✅ REGISTRAR ARCHIVOS CSS Y JS PARA ANCHO COMPLETO
 $this->registerCssFile('@web/css/navbar.css', ['depends' => [\yii\bootstrap5\BootstrapAsset::class]]);
 $this->registerCssFile('@web/css/fullwidth-fix.css', ['depends' => [\yii\bootstrap5\BootstrapAsset::class]]);
-$this->registerJsFile('@web/js/fullwidth-fix.js', ['depends' => [\yii\bootstrap5\BootstrapPluginAsset::class]]);
+$this->registerJsFile('@web/js/navbarWidth-module.js', ['depends' => [\yii\bootstrap5\BootstrapPluginAsset::class]]);
 
 // ✅ CONFIGURACIÓN ACTUALIZADA
 $logoWidth = '15%';
@@ -40,10 +40,10 @@ $mobileDetect = Yii::$app->has('mobileDetect') ? Yii::$app->mobileDetect->isMobi
 <!-- ================================================== -->
 <!-- NAVBAR UNIFICADO - ANCHO COMPLETO 100% -->
 <!-- ================================================== -->
-<nav class="<?= $navbarClasses ?>" aria-label="Navegación principal" style="width: 100vw !important; max-width: 100vw !important;">
+<nav class="<?= $navbarClasses ?>" aria-label="Navegación principal">
     <div class="<?= $containerClasses ?>">
         <!-- ✅ LOGO - 15% -->
-        <div class="navbar-brand-section" style="width: 15%; min-width: 200px;">
+        <div class="navbar-brand-section">
             <a class="navbar-brand" href="<?= Yii::$app->homeUrl ?>" 
                title="Inicio - Sistema GED"
                onclick="return !<?= $isIndexRoute ? 'true' : 'false' ?>;">
@@ -53,7 +53,7 @@ $mobileDetect = Yii::$app->has('mobileDetect') ? Yii::$app->mobileDetect->isMobi
                     'loading' => 'eager',
                     'onerror' => "this.style.display='none'; this.nextElementSibling.style.display='block';"
                 ]) ?>
-                <div style="display: none; background: #6c3483; color: white; padding: 10px; border-radius: 5px; text-align: center;">
+                <div class="logo-fallback">
                     <strong>GED</strong><br>
                     <small>Sistema Deportivo</small>
                 </div>
@@ -223,28 +223,3 @@ $mobileDetect = Yii::$app->has('mobileDetect') ? Yii::$app->mobileDetect->isMobi
         </div>
     </div>
 </nav>
-
-<!-- ✅ SCRIPT INLINE PARA FORZAR ANCHO COMPLETO INMEDIATAMENTE -->
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    // Aplicar correcciones inmediatamente
-    setTimeout(() => {
-        // Forzar ancho completo del navbar
-        const navbar = document.querySelector('.navbar-contextual');
-        if (navbar) {
-            navbar.style.width = '100vw';
-            navbar.style.maxWidth = '100vw';
-            navbar.style.minWidth = '100vw';
-            navbar.style.left = '0';
-            navbar.style.right = '0';
-        }
-        
-        // Forzar ancho completo del body
-        document.body.style.width = '100vw';
-        document.body.style.maxWidth = '100vw';
-        document.body.style.overflowX = 'hidden';
-        
-        console.log('✅ Correcciones de ancho aplicadas inmediatamente');
-    }, 50);
-});
-</script>

@@ -1,0 +1,122 @@
+/* =================================================================
+ * ged-buttons.css - BOTONES UNIFICADOS DEL SISTEMA
+ * ================================================================= */
+
+/* Botones base */
+.ged-btn {
+    border: none;
+    border-radius: 8px;
+    padding: 12px 20px;
+    font-weight: 600;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: var(--ged-transition);
+    text-align: center;
+}
+
+.ged-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    color: white;
+}
+
+/* Variantes de color */
+.ged-btn-success {
+    background: linear-gradient(135deg, #28a745 0%, #1e7e34 100%);
+    color: white;
+}
+
+.ged-btn-primary {
+    background: linear-gradient(135deg, #2c5aa0 0%, #1e3a8a 100%);
+    color: white;
+}
+
+.ged-btn-warning {
+    background: linear-gradient(135deg, #ffc107 0%, #e0a800 100%);
+    color: white;
+}
+
+.ged-btn-secondary {
+    background: #6c757d;
+    color: white;
+}
+
+/* Botones de tienda */
+.ged-btn-tienda {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+    border: none !important;
+    color: white !important;
+    font-weight: 600 !important;
+    transition: all 0.3s ease !important;
+}
+
+.ged-btn-tienda:hover {
+    transform: translateY(-2px) !important;
+    box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4) !important;
+    color: white !important;
+}
+
+/* Botones de landing */
+.landing-btn {
+    padding: 12px 30px;
+    border-radius: 50px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    min-width: 200px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.landing-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+}
+
+/* Quick Action Buttons */
+.quick-action-btn {
+    background: rgba(255,255,255,0.1);
+    border: 1px solid rgba(255,255,255,0.2);
+    color: white;
+    border-radius: 8px;
+    padding: 10px;
+    text-align: center;
+    text-decoration: none;
+    transition: var(--ged-transition);
+}
+
+.quick-action-btn:hover {
+    background: rgba(255,255,255,0.2);
+    color: white;
+    transform: translateY(-2px);
+}
+
+/* Pre-registro buttons */
+.pre-registro-btn {
+    flex: 1;
+    padding: 8px 15px;
+    border: none;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    text-align: center;
+    text-decoration: none;
+}
+
+.pre-registro-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+}
+
+.pre-registro-btn-primary {
+    background: linear-gradient(135deg, var(--ged-primary) 0%, var(--ged-primary-dark) 100%);
+    color: white;
+}
+
+.pre-registro-btn-secondary {
+    background: #f8f9fa;
+    color: var(--ged-dark);
+    border: 1px solid #dee2e6;
+}

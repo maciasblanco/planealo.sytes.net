@@ -1,0 +1,140 @@
+/* =================================================================
+ * ged-cards.css - ESTILOS UNIFICADOS DE TARJETAS
+ * ================================================================= */
+
+.ged-card {
+    background: white;
+    border-radius: var(--ged-border-radius-lg);
+    box-shadow: var(--ged-shadow-sm);
+    border: 1px solid #e9ecef;
+    margin-bottom: var(--ged-spacing-md);
+    transition: var(--ged-transition);
+}
+
+.ged-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--ged-shadow-lg);
+}
+
+/* Headers de tarjetas */
+.ged-card-header-primary {
+    background: linear-gradient(135deg, #2c5aa0 0%, #1e3a8a 100%);
+    color: white;
+    border-radius: 15px 15px 0 0 !important;
+    padding: 20px;
+}
+
+.ged-card-header-info {
+    background: linear-gradient(135deg, #2c5aa0 0%, #1e3a8a 100%);
+    color: white;
+    border-radius: 15px 15px 0 0 !important;
+    padding: 15px;
+}
+
+.ged-card-header-success {
+    background: linear-gradient(135deg, #28a745 0%, #1e7e34 100%);
+    color: white;
+    border-radius: 15px 15px 0 0 !important;
+    padding: 15px;
+}
+
+.ged-card-header-warning {
+    background: linear-gradient(135deg, #ffc107 0%, #e0a800 100%);
+    color: white;
+    border-radius: 15px 15px 0 0 !important;
+    padding: 15px;
+}
+
+.ged-card-header-tienda {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+    border-bottom: none !important;
+}
+
+/* Tarjetas de estadísticas */
+.ged-stat-card {
+    padding: 15px;
+    text-align: center;
+    background: rgba(255,255,255,0.1);
+    border-radius: 10px;
+    margin: 5px;
+}
+
+.ged-stat-card h3 {
+    margin: 0;
+    font-weight: bold;
+    font-size: 2rem;
+}
+
+.stat-card {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 12px;
+    border-left: 4px solid #7C3AED;
+    box-shadow: 0 4px 12px rgba(167, 139, 250, 0.2);
+    transition: transform 0.2s ease;
+}
+
+.stat-card:hover {
+    transform: translateY(-2px);
+}
+
+/* Tarjetas de características */
+.feature-card {
+    border: none;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+    transition: all 0.3s ease;
+    overflow: hidden;
+    height: 100%;
+}
+
+.feature-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.12);
+}
+
+.feature-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 5px;
+    background: linear-gradient(90deg, var(--ged-primary), var(--ged-secondary));
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.feature-card:hover::before {
+    opacity: 1;
+}
+
+.feature-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--ged-primary) 0%, var(--ged-primary-dark) 100%);
+    color: white;
+    margin: 0 auto 20px;
+    transition: transform 0.3s ease;
+}
+
+.feature-card:hover .feature-icon {
+    transform: scale(1.1) rotate(5deg);
+}
+
+.feature-title {
+    color: var(--ged-primary);
+    font-weight: 700;
+    margin-bottom: 15px;
+    font-size: 1.25rem;
+}
+
+.feature-description {
+    color: #666;
+    line-height: 1.6;
+    font-size: 0.95rem;
+}

@@ -1,0 +1,255 @@
+/* =================================================================
+ * ged-responsive-escuelas.css - RESPONSIVE PARA ESCUELAS
+ * ================================================================= */
+
+/* Tablets y pantallas medianas */
+@media (max-width: 1199.98px) {
+    .school-list-container {
+        max-height: 350px;
+    }
+    
+    .pre-registro-grid {
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 15px;
+    }
+    
+    .current-school-status {
+        padding: 12px;
+    }
+    
+    .stats-grid {
+        gap: 10px;
+    }
+    
+    .stat-item {
+        padding: 8px;
+    }
+}
+
+/* Tablets pequeñas y móviles grandes */
+@media (max-width: 991.98px) {
+    .encargado-search-form {
+        flex-direction: column;
+        gap: 15px;
+    }
+    
+    .encargado-search-input {
+        width: 100%;
+    }
+    
+    .encargado-search-btn {
+        width: 100%;
+    }
+    
+    .pre-registro-grid {
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+    
+    .pre-registro-header {
+        flex-direction: column;
+        gap: 10px;
+        text-align: center;
+    }
+    
+    .pre-registro-actions {
+        flex-direction: column;
+        gap: 8px;
+    }
+    
+    .school-option {
+        padding: 10px 12px;
+    }
+    
+    .school-name {
+        font-size: 1rem;
+    }
+    
+    .school-details {
+        font-size: 0.85rem;
+    }
+    
+    /* Escuela completar registro */
+    .escuela-completar-registro .current-logo {
+        margin-top: 15px;
+    }
+    
+    #map {
+        height: 300px;
+    }
+    
+    .stats-grid {
+        flex-direction: column;
+        gap: 15px;
+    }
+    
+    .stat-item {
+        padding: 5px;
+    }
+    
+    .ged-card {
+        margin-bottom: 20px;
+    }
+    
+    .current-school-status {
+        padding: 10px;
+    }
+}
+
+/* Móviles */
+@media (max-width: 767.98px) {
+    .ged-default-select-escuela {
+        padding: 15px 0;
+    }
+    
+    .ged-default-select-escuela .card {
+        margin-bottom: 15px;
+    }
+    
+    .encargado-search-section {
+        padding: 20px;
+    }
+    
+    .pre-registro-section {
+        padding: 20px;
+    }
+    
+    .pre-registro-title {
+        font-size: 1.2rem;
+    }
+    
+    .pre-registro-card {
+        padding: 15px;
+    }
+    
+    .pre-registro-school-name {
+        font-size: 1.1rem;
+    }
+    
+    .pre-registro-detail {
+        font-size: 0.85rem;
+    }
+    
+    .pre-registro-btn {
+        padding: 6px 12px;
+        font-size: 0.8rem;
+    }
+    
+    .school-list-container {
+        max-height: 300px;
+    }
+    
+    .quick-actions-grid {
+        gap: 6px;
+    }
+    
+    .quick-action-btn {
+        padding: 8px;
+        font-size: 0.9rem;
+    }
+    
+    #map {
+        height: 250px;
+    }
+    
+    /* Horarios */
+    #horario-grid {
+        font-size: 0.75rem;
+    }
+    
+    #horario-grid th,
+    #horario-grid td {
+        padding: 2px !important;
+    }
+    
+    .horario-cell {
+        height: 30px;
+    }
+    
+    .horario-legend {
+        flex-direction: column;
+        gap: 8px;
+    }
+    
+    /* Lista de items */
+    .ged-list-item {
+        padding: 6px 0;
+        font-size: 0.85rem;
+    }
+}
+
+/* Móviles pequeños */
+@media (max-width: 575.98px) {
+    .encargado-search-section {
+        padding: 15px;
+        margin-bottom: 15px;
+    }
+    
+    .pre-registro-section {
+        padding: 15px;
+        margin-bottom: 15px;
+    }
+    
+    .pre-registro-card {
+        padding: 12px;
+    }
+    
+    .pre-registro-school-name {
+        font-size: 1rem;
+    }
+    
+    .pre-registro-status {
+        font-size: 0.7rem;
+        padding: 3px 8px;
+    }
+    
+    .school-option {
+        padding: 8px 10px;
+    }
+    
+    .school-name {
+        font-size: 0.95rem;
+    }
+    
+    .ged-stat-card h3 {
+        font-size: 1.5rem;
+    }
+    
+    /* Site index - escuelas en landing */
+    .site-index .school-card {
+        margin: 5px 0 !important;
+    }
+    
+    .site-index .school-logo-container {
+        height: 150px;
+    }
+    
+    .site-index .school-badge {
+        font-size: 0.7rem;
+        padding: 3px 6px;
+    }
+    
+    /* Formularios */
+    .ged-form-control {
+        font-size: 0.9rem;
+        padding: 0.375rem 0.75rem;
+    }
+    
+    .ged-form-label {
+        font-size: 0.9rem;
+    }
+    
+    /* Dashboard escuelas */
+    .dashboard-stats {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+    
+    .stat-card {
+        padding: 1rem;
+    }
+    
+    .stat-card h3 {
+        font-size: 1.5rem;
+    }
+}
