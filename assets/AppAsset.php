@@ -1,20 +1,8 @@
 <?php
-/**
- * @link https://www.yiiframework.com/
- * @copyright Copyright (c) 2008 Yii Software LLC
- * @license https://www.yiiframework.com/license/
- */
-
 namespace app\assets;
 
 use yii\web\AssetBundle;
 
-/**
- * Main application asset bundle.
- *
- * @author Qiang Xue <qiang.xue@gmail.com>
- * @since 2.0
- */
 class AppAsset extends AssetBundle
 {
     public $basePath = '@webroot';
@@ -23,30 +11,15 @@ class AppAsset extends AssetBundle
     public $css = [
         'css/ged.css',
         'font_ico/bootstrap-icons.css',
-        'css/mapa-escuelas.css',
-        'css/reportes.css',
-        //'css/navbar.css',
-        //'css/ged-offcanvas.css',
+        'css/leaflet/leaflet.css'
     ];
     
     public $js = [
-        // ✅ ORDEN CORRECTO: Primero módulo OffCanvas, luego sistema principal
-        'js/modules/gedOffCanvas-module.js',  // PRIMERO - Define window.OffCanvasSidebar
-        
-        // Sistema principal GED (depende del módulo OffCanvas)
+        'js/leaflet/leaflet.js',
         'js/ged.js',
-        
-        // Módulos adicionales
-        'js/modules/horario-selector.js',
-        'js/modules/mapa-module.js',
-        'js/modules/reportes-module.js',
-        'js/modules/tienda-module.js',
-        
-        // Utilidades
         'js/utils/debug-utils.js',
-        
-        // Inicialización global (DEBE SER EL ÚLTIMO)
         'js/ged-init.js',
+        // ❌ NO cargar reportes-module.js aquí (se cargará dinámicamente)
     ];
     
     public $depends = [
@@ -55,9 +28,33 @@ class AppAsset extends AssetBundle
         'yii\bootstrap5\BootstrapPluginAsset',
     ];
     
+    // ✅ Método para cargar reportes SOLO cuando se necesite
+    public static function addReportes($view)
+    {
+        $view->registerJsFile('@web/js/modules/reportes-module.js', [
+            'depends' => [self::className()],
+            'position' => \yii\web\View::POS_END
+        ]);
+        
+        $view->registerJs("
+            // Esperar a que el módulo se cargue
+            setTimeout(function() {
+                if (typeof window.reportesModule !== 'undefined') {
+                    console.log('✅ ReportesModule cargado e inicializado');
+                    window.reportesModule.init();
+                } else {
+                    console.error('❌ ReportesModule no se cargó correctamente');
+                }
+            }, 500);
+        ", \yii\web\View::POS_END);
+    }
+    
     public static function addMap($view)
     {
-        $view->registerCssFile('@web/css/mapa-escuelas.css', ['depends' => [AppAsset::class]]);
-        $view->registerJsFile('@web/js/mapa-escuelas-show.js', ['depends' => [AppAsset::class]]);
+        $view->registerJs("
+            if (typeof L !== 'undefined' && L.Icon && L.Icon.Default) {
+                L.Icon.Default.imagePath = '/images/leaflet/';
+            }
+        ", \yii\web\View::POS_HEAD);
     }
 }

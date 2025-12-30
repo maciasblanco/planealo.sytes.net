@@ -1,6 +1,6 @@
 # MODELOS DEL SISTEMA
 
-## 📊 TOTAL DE MODELOS: 21
+## 📊 TOTAL DE MODELOS: 27
 
 ## 🔹 Alergias
 
@@ -62,6 +62,18 @@
 
 **Métodos públicos:** 2
 
+📌 **Contiene reglas de validación**
+
+---
+
+## 🔹 CategoriaProducto
+
+**Clase:** `CategoriaProducto`
+
+**Métodos públicos:** 7
+
+📌 **Contiene relaciones hasOne**
+📌 **Contiene relaciones hasMany**
 📌 **Contiene reglas de validación**
 
 ---
@@ -172,6 +184,29 @@
 
 ---
 
+## 🔹 Orden
+
+**Clase:** `Orden`
+
+**Métodos públicos:** 10
+
+📌 **Contiene relaciones hasOne**
+📌 **Contiene relaciones hasMany**
+📌 **Contiene reglas de validación**
+
+---
+
+## 🔹 OrdenItem
+
+**Clase:** `OrdenItem`
+
+**Métodos públicos:** 7
+
+📌 **Contiene relaciones hasOne**
+📌 **Contiene reglas de validación**
+
+---
+
 ## 🔹 Parroquia
 
 **Clase:** `for`
@@ -180,6 +215,17 @@
 
 📌 **Contiene relaciones hasOne**
 📌 **Contiene relaciones hasMany**
+📌 **Contiene reglas de validación**
+
+---
+
+## 🔹 Producto
+
+**Clase:** `Producto`
+
+**Métodos públicos:** 12
+
+📌 **Contiene relaciones hasOne**
 📌 **Contiene reglas de validación**
 
 ---
@@ -216,12 +262,36 @@
 
 ---
 
+## 🔹 Tienda
+
+**Clase:** `Tienda`
+
+**Métodos públicos:** 12
+
+📌 **Contiene relaciones hasOne**
+📌 **Contiene relaciones hasMany**
+📌 **Contiene reglas de validación**
+
+---
+
 ## 🔹 User
 
 **Clase:** `User`
 
 **Métodos públicos:** 19
 
+📌 **Contiene reglas de validación**
+
+---
+
+## 🔹 Vendedor
+
+**Clase:** `Vendedor`
+
+**Métodos públicos:** 10
+
+📌 **Contiene relaciones hasOne**
+📌 **Contiene relaciones hasMany**
 📌 **Contiene reglas de validación**
 
 ---

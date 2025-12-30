@@ -314,7 +314,8 @@ class SiteController extends Controller
         // ✅ SIEMPRE REDIRIGIR AL INDEX, NUNCA AL LOGIN
         return $this->redirect(['site/index']);
     }
-        /**
+    
+    /**
      * ✅ MÉTODO ADICIONAL: goHome personalizado para prevenir bucle
      * Sobrescribe el método goHome() para asegurar que siempre redirija al index
      */
@@ -356,6 +357,7 @@ class SiteController extends Controller
             'data' => $data
         ]);
     }
+    
     public function actionGetMobileMenu()
     {
         // Deshabilitar layout para solo devolver el HTML del menú
@@ -369,5 +371,392 @@ class SiteController extends Controller
         
         // Devolver el HTML
         return $menuHtml ?: '<div class="alert alert-warning">Menú no disponible</div>';
+    }
+    
+    public function actionDebugMenu()
+    {
+        // Solo permitir en desarrollo
+        if (!YII_DEBUG && !YII_ENV_DEV) {
+            throw new \yii\web\NotFoundHttpException();
+        }
+        
+        $this->layout = false;
+        
+        // Verificar base de datos
+        echo "<!DOCTYPE html><html><head><title>Debug Menu</title><style>
+            body { font-family: Arial, sans-serif; padding: 20px; background: #f5f5f5; }
+            .section { background: white; padding: 20px; margin: 20px 0; border-radius: 5px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+            .success { color: green; }
+            .error { color: red; }
+            .warning { color: orange; }
+            table { width: 100%; border-collapse: collapse; }
+            th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+            th { background: #f2f2f2; }
+            .debug-box { background: #e9f7fe; border-left: 4px solid #3498db; padding: 15px; margin: 10px 0; }
+            .test-btn { padding: 10px 15px; background: #3498db; color: white; border: none; border-radius: 4px; cursor: pointer; margin: 5px; }
+            .test-btn:hover { background: #2980b9; }
+        </style></head><body>";
+        
+        echo "<h1>🔍 DEBUG DEL SISTEMA DE MENÚ</h1>";
+        
+        // 1. VERIFICAR CONEXIÓN A BD
+        echo "<div class='section'>";
+        echo "<h2>1. Verificar Base de Datos</h2>";
+        
+        try {
+            $db = \Yii::$app->db;
+            if ($db && $db->getIsActive()) {
+                echo "<p class='success'>✅ Conexión a BD establecida</p>";
+            } else {
+                echo "<p class='error'>❌ No hay conexión activa a BD</p>";
+            }
+        } catch (\Exception $e) {
+            echo "<p class='error'>❌ Error de conexión: " . $e->getMessage() . "</p>";
+        }
+        echo "</div>";
+        
+        // 2. VERIFICAR TABLA DE MENÚS
+        echo "<div class='section'>";
+        echo "<h2>2. Verificar Tabla 'seguridad.menu'</h2>";
+        
+        try {
+            $tableExists = \Yii::$app->db->createCommand("
+                SELECT EXISTS (
+                    SELECT FROM information_schema.tables 
+                    WHERE table_schema = 'seguridad' 
+                    AND table_name = 'menu'
+                )
+            ")->queryScalar();
+            
+            if ($tableExists) {
+                echo "<p class='success'>✅ Tabla 'seguridad.menu' existe</p>";
+                
+                // Contar registros
+                $count = \Yii::$app->db->createCommand("SELECT COUNT(*) FROM seguridad.menu")->queryScalar();
+                echo "<p>Total registros: " . $count . "</p>";
+                
+                // Mostrar estructura
+                $columns = \Yii::$app->db->createCommand("
+                    SELECT column_name, data_type, is_nullable
+                    FROM information_schema.columns
+                    WHERE table_schema = 'seguridad' AND table_name = 'menu'
+                    ORDER BY ordinal_position
+                ")->queryAll();
+                
+                echo "<h4>Estructura de la tabla:</h4>";
+                echo "<table>";
+                echo "<tr><th>Columna</th><th>Tipo</th><th>¿Nulo?</th></tr>";
+                foreach ($columns as $col) {
+                    echo "<tr>";
+                    echo "<td>" . $col['column_name'] . "</td>";
+                    echo "<td>" . $col['data_type'] . "</td>";
+                    echo "<td>" . $col['is_nullable'] . "</td>";
+                    echo "</tr>";
+                }
+                echo "</table>";
+                
+            } else {
+                echo "<p class='error'>❌ Tabla 'seguridad.menu' NO existe</p>";
+            }
+        } catch (\Exception $e) {
+            echo "<p class='error'>❌ Error: " . $e->getMessage() . "</p>";
+        }
+        echo "</div>";
+        
+        // 3. MOSTRAR CONTENIDO DE LA TABLA
+        echo "<div class='section'>";
+        echo "<h2>3. Contenido de la Tabla</h2>";
+        
+        try {
+            $menus = \Yii::$app->db->createCommand("
+                SELECT id, name, route, parent, \"order\" as menu_order, data
+                FROM seguridad.menu 
+                ORDER BY COALESCE(\"order\", 99999)
+            ")->queryAll();
+            
+            if (empty($menus)) {
+                echo "<p class='warning'>⚠️ La tabla está vacía</p>";
+            } else {
+                echo "<table>";
+                echo "<tr><th>ID</th><th>Nombre</th><th>Ruta</th><th>Parent</th><th>Orden</th><th>Data (JSON)</th></tr>";
+                foreach ($menus as $menu) {
+                    echo "<tr>";
+                    echo "<td>" . $menu['id'] . "</td>";
+                    echo "<td><strong>" . htmlspecialchars($menu['name']) . "</strong></td>";
+                    echo "<td>" . ($menu['route'] ? htmlspecialchars($menu['route']) : '<em># (sin ruta)</em>') . "</td>";
+                    echo "<td>" . ($menu['parent'] ?: '<em>raíz</em>') . "</td>";
+                    echo "<td>" . $menu['menu_order'] . "</td>";
+                    echo "<td><pre>" . htmlspecialchars($menu['data'] ?? '{}') . "</pre></td>";
+                    echo "</tr>";
+                }
+                echo "</table>";
+            }
+        } catch (\Exception $e) {
+            echo "<p class='error'>❌ Error al leer datos: " . $e->getMessage() . "</p>";
+        }
+        echo "</div>";
+        
+        // 4. VERIFICAR USUARIO
+        echo "<div class='section'>";
+        echo "<h2>4. Usuario Actual</h2>";
+        
+        if (\Yii::$app->user->isGuest) {
+            echo "<p class='warning'>👤 Usuario: <strong>INVITADO</strong></p>";
+        } else {
+            $user = \Yii::$app->user->identity;
+            echo "<p class='success'>👤 Usuario: <strong>" . $user->username . "</strong></p>";
+            echo "<p>ID: " . $user->id . "</p>";
+            
+            // Verificar permisos
+            echo "<h4>Permisos RBAC:</h4>";
+            $auth = \Yii::$app->authManager;
+            $permissions = $auth->getPermissionsByUser($user->id);
+            
+            if (empty($permissions)) {
+                echo "<p class='warning'>⚠️ El usuario no tiene permisos asignados</p>";
+            } else {
+                echo "<ul>";
+                foreach ($permissions as $permission) {
+                    echo "<li>" . $permission->name . "</li>";
+                }
+                echo "</ul>";
+            }
+        }
+        echo "</div>";
+        
+        // 5. PROBAR MenuWidget
+        echo "<div class='section'>";
+        echo "<h2>5. Probar MenuWidget</h2>";
+        
+        echo "<div class='debug-box'>";
+        echo "<h4>Menú generado por MenuWidget::widget():</h4>";
+        
+        try {
+            $menuOutput = \app\components\MenuWidget::widget([
+                'options' => [
+                    'class' => 'navbar-nav main-navigation w-100',
+                    'mobileMode' => false,
+                    'rootOnly' => false
+                ]
+            ]);
+            
+            if (empty(trim($menuOutput))) {
+                echo "<p class='error'>❌ MenuWidget NO generó ningún contenido</p>";
+                echo "<p>El widget retornó una cadena vacía.</p>";
+            } else {
+                echo "<p class='success'>✅ MenuWidget generó contenido</p>";
+                echo "<div style='border: 2px dashed #3498db; padding: 15px; background: #f9f9f9;'>";
+                echo $menuOutput;
+                echo "</div>";
+            }
+        } catch (\Exception $e) {
+            echo "<p class='error'>❌ Error en MenuWidget: " . $e->getMessage() . "</p>";
+            echo "<pre>" . $e->getTraceAsString() . "</pre>";
+        }
+        echo "</div>";
+        
+        // Probar función getMenuItems directamente
+        echo "<div class='debug-box'>";
+        echo "<h4>Probar getMenuItems() directamente:</h4>";
+        
+        try {
+            $widget = new \app\components\MenuWidget();
+            $items = $widget->getMenuItems(null);
+            
+            echo "<p>Total elementos obtenidos: " . count($items) . "</p>";
+            
+            if (!empty($items)) {
+                echo "<h5>Estructura del menú:</h5>";
+                echo "<pre style='background: #f0f0f0; padding: 10px;'>";
+                foreach ($items as $index => $item) {
+                    echo "Item {$index}: " . $item['label'] . " (" . ($item['route'] ?? '#') . ")\n";
+                    if (!empty($item['items'])) {
+                        foreach ($item['items'] as $childIndex => $child) {
+                            echo "  ├─ Child {$childIndex}: " . $child['label'] . " (" . ($child['route'] ?? '#') . ")\n";
+                        }
+                    }
+                }
+                echo "</pre>";
+            }
+        } catch (\Exception $e) {
+            echo "<p class='error'>❌ Error: " . $e->getMessage() . "</p>";
+        }
+        echo "</div>";
+        echo "</div>";
+        
+        // 6. VERIFICAR RUTAS PÚBLICAS (CORREGIDO - sin llamar a isPublicRoute)
+        echo "<div class='section'>";
+        echo "<h2>6. Verificar Rutas Públicas</h2>";
+        
+        $testRoutes = [
+            'tienda/marketplace' => 'Marketplace',
+            'tienda/marketplace/index' => 'Marketplace Index',
+            'ged/default/index' => 'GED Seleccionar Escuela',
+            'site/index' => 'Página Principal',
+            'admin/user/index' => 'Admin Usuarios (NO debería ser pública)',
+            'tienda/producto/create' => 'Crear Producto',
+        ];
+        
+        echo "<table>";
+        echo "<tr><th>Ruta</th><th>Descripción</th><th>¿Pública?</th><th>Acción</th></tr>";
+        
+        foreach ($testRoutes as $route => $desc) {
+            // ✅ CORRECCIÓN: Verificar rutas públicas usando params en lugar de MenuWidget
+            $publicRoutes = \Yii::$app->params['publicRoutes'] ?? [];
+            $isPublic = in_array($route, $publicRoutes);
+            
+            echo "<tr>";
+            echo "<td>" . $route . "</td>";
+            echo "<td>" . $desc . "</td>";
+            echo "<td class='" . ($isPublic ? "success" : "error") . "'>" . ($isPublic ? "✅ SÍ" : "❌ NO") . "</td>";
+            echo "<td>";
+            echo "<button class='test-btn' onclick=\"window.open('/" . $route . "', '_blank')\">Probar ruta</button>";
+            echo "</td>";
+            echo "</tr>";
+        }
+        echo "</table>";
+        
+        // Mostrar rutas públicas configuradas
+        echo "<div class='debug-box'>";
+        echo "<h4>Rutas públicas configuradas en params:</h4>";
+        $publicRoutes = \Yii::$app->params['publicRoutes'] ?? [];
+        echo "<pre>" . htmlspecialchars(print_r($publicRoutes, true)) . "</pre>";
+        
+        // Verificar allowActions también
+        echo "<h4>Rutas en allowActions:</h4>";
+        $allowActions = [
+            'site/index',
+            'site/login',
+            'site/about',
+            'site/contact',
+            'site/signup',
+            'site/request-password-reset',
+            'site/reset-password',
+            'tienda/marketplace/index',
+            'tienda/marketplace/buscar',
+            'tienda/marketplace/categoria',
+            'admin/user/signup',
+            'admin/user/request-password-reset',
+            'admin/user/reset-password',
+            'municipio/get-by-edo',
+            'parroquia/get-by-muni',
+            'parroquia/get-by-muni-cod',
+            'tasa-dolar/index',
+        ];
+        echo "<pre>" . htmlspecialchars(print_r($allowActions, true)) . "</pre>";
+        echo "</div>";
+        echo "</div>";
+        
+        // 7. BOTONES DE ACCIÓN
+        echo "<div class='section'>";
+        echo "<h2>7. Acciones</h2>";
+        
+        echo "<button class='test-btn' onclick='window.location.reload()'>🔄 Recargar</button>";
+        echo "<button class='test-btn' onclick='window.open(\"/\", \"_blank\")'>🏠 Ir al inicio</button>";
+        echo "<button class='test-btn' onclick='clearCache()'>🧹 Limpiar caché</button>";
+        echo "<button class='test-btn' onclick='testMenuWidget()'>🧪 Probar MenuWidget</button>";
+        
+        echo "<script>
+            function clearCache() {
+                fetch('/site/clear-cache')
+                    .then(response => response.text())
+                    .then(data => {
+                        alert('Cache limpiado');
+                        window.location.reload();
+                    })
+                    .catch(error => console.error('Error:', error));
+            }
+            
+            function testMenuWidget() {
+                fetch('/site/test-menu-widget')
+                    .then(response => response.text())
+                    .then(data => {
+                        alert('Test completado. Ver consola para detalles.');
+                        console.log('Test MenuWidget:', data);
+                    })
+                    .catch(error => console.error('Error:', error));
+            }
+        </script>";
+        echo "</div>";
+        
+        echo "</body></html>";
+        exit;
+    }
+
+    public function actionTestMenuWidget()
+    {
+        try {
+            $widget = new \app\components\MenuWidget();
+            $items = $widget->getMenuItems(null);
+            
+            header('Content-Type: application/json');
+            echo json_encode([
+                'success' => true,
+                'count' => count($items),
+                'items' => $items
+            ], JSON_PRETTY_PRINT);
+        } catch (\Exception $e) {
+            header('Content-Type: application/json');
+            echo json_encode([
+                'success' => false,
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ], JSON_PRETTY_PRINT);
+        }
+        exit;
+    }
+
+    public function actionClearCache()
+    {
+        if (Yii::$app->cache) {
+            Yii::$app->cache->flush();
+        }
+        
+        // Limpiar caché de menú específico
+        \app\components\MenuWidget::forceReload();
+        
+        echo "Cache limpiado";
+        exit;
+    }
+    
+    /**
+     * Método auxiliar para verificar si una ruta es pública
+     * (reemplaza al método eliminado de MenuWidget)
+     */
+    private function isRoutePublic($route)
+    {
+        $route = ltrim($route, '/');
+        
+        // Rutas públicas por defecto (deberían venir de params)
+        $publicRoutes = Yii::$app->params['publicRoutes'] ?? [
+            'site/index',
+            'site/login',
+            'site/logout',
+            'site/about',
+            'site/contact',
+            'site/signup',
+            'site/request-password-reset',
+            'site/reset-password',
+            'site/cambiar-password',
+            'site/mi-cuenta',
+            'site/acceder-sistema',
+            
+            'ged/default/index',
+            
+            'tienda/marketplace',
+            'tienda/marketplace/index',
+            'tienda/marketplace/buscar',
+            'tienda/marketplace/categoria',
+            
+            'admin/user/signup',
+            'admin/user/request-password-reset',
+            'admin/user/reset-password',
+            
+            'municipio/get-by-edo',
+            'parroquia/get-by-muni',
+            'parroquia/get-by-muni-cod',
+        ];
+        
+        return in_array($route, $publicRoutes);
     }
 }

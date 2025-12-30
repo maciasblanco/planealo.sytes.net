@@ -4,28 +4,7 @@
  * MEJORAS: Menú móvil completamente funcional
  * ================================================================= */
 
-/* ===== VARIABLES CSS UNIFICADAS ===== */
-:root {
-  /* Colores Principales GED */
-  --ged-primary: #2c5aa0;
-  --ged-primary-dark: #1e3a8a;
-  --ged-secondary: #28a745;
-  --ged-secondary-dark: #1e7e34;
-  --ged-danger: #dc3545;
-  --ged-warning: #ffc107;
-  --ged-info: #17a2b8;
-  --ged-light: #f8f9fa;
-  --ged-dark: #343a40;
-  
-  /* Colores Personalizados */
-  --ged-beige: #f5f5dc;
-  --ged-purple: #5B21B6;
-  --ged-orange: #fd7e14;
-  --ged-teal: #20c997;
-  --ged-purple-light: #8e44ad;
-  --ged-purple-dark: #6c3483;
-  
-}
+
 /* ===== ESTILOS PARA EL MÓDULO DE REPORTES ===== */
 
 /* Estilos para la vista de reportes de atletas */

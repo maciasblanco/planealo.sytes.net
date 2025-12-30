@@ -55,16 +55,24 @@
 
 **Clase:** `SiteController`
 
-**Acciones públicas:** 8
+**Acciones públicas:** 16
 **Acciones disponibles:**
 - `s`
 - `Index`
+- `AccederSistema`
 - `Login`
 - `Logout`
 - `Contact`
 - `About`
 - `CambiarPassword`
 - `MiCuenta`
+- `Testcss`
+- `TestJs`
+- `CheckRedirectLoop`
+- `GetMobileMenu`
+- `DebugMenu`
+- `TestMenuWidget`
+- `ClearCache`
 **Características:** Define behaviors
 
 ---
@@ -122,12 +130,32 @@
 - `DefaultController`
   - Acciones: 1
 - `EscuelaPreRegistroController`
-  - Acciones: 10
+  - Acciones: 14
 - `EscuelaRegistroController`
-  - Acciones: 12
+  - Acciones: 14
+- `EscuelaValidacionController`
+  - Acciones: 6
 
 ### Módulo: `ged`
 
 - `DefaultController`
   - Acciones: 13
+
+### Módulo: `reportes`
+
+- `DefaultController`
+  - Acciones: 1
+- `ReportesController`
+  - Acciones: 6
+
+### Módulo: `tienda`
+
+- `DefaultController`
+  - Acciones: 3
+- `MarketplaceController`
+  - Acciones: 7
+- `ProductoController`
+  - Acciones: 8
+- `TiendaController`
+  - Acciones: 7
 

@@ -7,19 +7,9 @@
  */
 
 use yii\bootstrap5\Html;
+use yii\helpers\Url;
 
-// ✅ REGISTRAR ARCHIVOS CSS Y JS PARA ANCHO COMPLETO
-$this->registerCssFile('@web/css/navbar.css', ['depends' => [\yii\bootstrap5\BootstrapAsset::class]]);
-$this->registerCssFile('@web/css/fullwidth-fix.css', ['depends' => [\yii\bootstrap5\BootstrapAsset::class]]);
-$this->registerJsFile('@web/js/navbarWidth-module.js', ['depends' => [\yii\bootstrap5\BootstrapPluginAsset::class]]);
-
-// ✅ CONFIGURACIÓN ACTUALIZADA
-$logoWidth = '15%';
-$menuWidth = '50%';
-$socialWidth = '15%';
-$controlWidth = '20%';
-
-// ✅ PREVENCIÓN DE BUCLE
+// ✅ DETECCIÓN DE RUTAS PARA EVITAR BUCLE
 $currentRoute = Yii::$app->controller->route;
 $isIndexRoute = $currentRoute === 'site/index';
 $isLoginRoute = $currentRoute === 'site/login';
@@ -28,20 +18,16 @@ $isSignupRoute = $currentRoute === 'site/signup';
 $showLoginButton = !Yii::$app->user->isGuest ? false : !$isLoginRoute;
 $showSignupButton = !Yii::$app->user->isGuest ? false : (!$isSignupRoute && !$isLoginRoute);
 
-// ✅ CLASES PARA ANCHO COMPLETO
-$navbarClasses = 'navbar navbar-expand-lg navbar-dark navbar-contextual fixed-top w-100 vw-100';
-$containerClasses = 'container-fluid p-0 m-0 w-100 vw-100';
-
-// ✅ DETECCIÓN DE MÓVIL
+// ✅ DETECCIÓN DE DISPOSITIVO MÓVIL
 $mobileDetect = Yii::$app->has('mobileDetect') ? Yii::$app->mobileDetect->isMobile() : false;
-
 ?>
 
 <!-- ================================================== -->
-<!-- NAVBAR UNIFICADO - ANCHO COMPLETO 100% -->
+<!-- NAVBAR UNIFICADO - ANCHO COMPLETO -->
 <!-- ================================================== -->
-<nav class="<?= $navbarClasses ?>" aria-label="Navegación principal">
-    <div class="<?= $containerClasses ?>">
+<nav class="navbar navbar-expand-lg navbar-dark navbar-contextual fixed-top" aria-label="Navegación principal">
+    <div class="container-fluid p-0 m-0 w-100 vw-100">
+        
         <!-- ✅ LOGO - 15% -->
         <div class="navbar-brand-section">
             <a class="navbar-brand" href="<?= Yii::$app->homeUrl ?>" 
@@ -60,32 +46,35 @@ $mobileDetect = Yii::$app->has('mobileDetect') ? Yii::$app->mobileDetect->isMobi
             </a>
         </div>
 
-        <!-- Toggler para móviles -->
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" 
-                data-bs-target="#navbarGedCollapse" 
-                aria-controls="navbarGedCollapse" aria-expanded="false" 
+        <!-- ✅ TOGGLER PARA MÓVIL (USANDO BOOTSTRAP OFFCANVAS) -->
+        <button class="navbar-toggler d-lg-none" type="button" 
+                data-bs-toggle="offcanvas"
+                data-bs-target="#gedMobileMenuContainer"
+                aria-controls="gedMobileMenuContainer"
+                aria-expanded="false"
                 aria-label="Alternar navegación">
             <span class="navbar-toggler-icon"></span>
         </button>
 
-        <!-- ✅ CONTENIDO COLAPSABLE - TODO EN UN SOLO MENÚ -->
-        <div class="collapse navbar-collapse w-100 vw-100" id="navbarGedCollapse">
-            <div class="navbar-container w-100 vw-100">
+        <!-- ✅ CONTENIDO DEL NAVBAR (SOLO ESCRITORIO) -->
+        <div class="collapse navbar-collapse d-none d-lg-flex" id="navbarContent">
+            <div class="navbar-container">
                 
-                <!-- ✅ SECCIÓN 1: Menú de Navegación Principal - 50% -->
-                <div class="navbar-menu-section w-100">
-                    <div class="section-container w-100">
+                <!-- ✅ MENÚ PRINCIPAL - 50% -->
+                <div class="navbar-menu-section">
+                    <div class="section-container">
                         <?= \app\components\MenuWidget::widget([
                             'options' => [
                                 'class' => 'navbar-nav main-navigation w-100',
-                                'mobileMode' => $mobileDetect
+                                'mobileMode' => false,  // IMPORTANTE: false para desktop
+                                'rootOnly' => false     // IMPORTANTE: false para mostrar todos los niveles
                             ]
                         ]) ?>
                     </div>
                 </div>
                 
-                <!-- ✅ SECCIÓN 2: Redes Sociales - 15% (OCULTO EN MÓVIL) -->
-                <div class="navbar-social-section d-none d-lg-block">
+                <!-- ✅ REDES SOCIALES - 15% (SOLO ESCRITORIO) -->
+                <div class="navbar-social-section">
                     <div class="section-container">
                         <div class="social-icons-vertical" aria-label="Redes sociales">
                             <a href="#" class="social-icon-circle" title="Facebook" aria-label="Facebook">
@@ -104,54 +93,29 @@ $mobileDetect = Yii::$app->has('mobileDetect') ? Yii::$app->mobileDetect->isMobi
                     </div>
                 </div>
                 
-                <!-- ✅ SECCIÓN 3: Control de Usuario y Escuela - 20% -->
+                <!-- ✅ CONTROL DE USUARIO Y ESCUELA - 20% -->
                 <div class="navbar-control-section">
                     <div class="section-container">
-                        <!-- Información de Escuela (OCULTO EN MÓVIL) -->
-                        <div class="school-info mb-2 d-none d-lg-block">
-                            <div class="school-search-container mb-2">
-                                <?php if ($idEscuela && $idEscuela > 0): ?>
-                                    <div class="escuela-activa-indicator">
-                                        <small class="text-white d-block">
-                                            <i class="bi bi-building" aria-hidden="true"></i> 
-                                            <strong id="current-school"><?= Html::encode($nombreEscuela) ?></strong>
-                                        </small>
-                                        <small class="text-light opacity-75 d-block" id="current-school-id">
-                                            ID: <?= $idEscuela ?>
-                                        </small>
-                                    </div>
-                                <?php else: ?>
-                                    <div class="alert alert-warning py-1 mb-2" role="alert">
-                                        <small>
-                                            <i class="bi bi-exclamation-triangle" aria-hidden="true"></i>
-                                            <strong>Sin escuela</strong>
-                                        </small>
-                                    </div>
-                                <?php endif; ?>
-                            </div>
-                            
-                            <!-- Buscador/Selector de Escuelas -->
-                            <?php if ($navbarVariant === 'default'): ?>
-                                <div class="school-search-container mb-2">
-                                    <div class="input-group input-group-sm">
-                                        <input type="text" 
-                                            id="schoolSearch" 
-                                            class="form-control" 
-                                            placeholder="Buscar escuela..."
-                                            aria-label="Buscar escuela"
-                                            autocomplete="off">
-                                        <button class="btn btn-outline-light" type="button" id="searchSchoolBtn" aria-label="Buscar">
-                                            <i class="bi bi-search" aria-hidden="true"></i>
-                                        </button>
-                                    </div>
-                                    <div id="schoolSearchResults" class="search-results-dropdown" aria-live="polite"></div>
+                        
+                        <!-- INFORMACIÓN DE ESCUELA (SOLO ESCRITORIO) -->
+                        <div class="school-info">
+                            <?php if ($idEscuela && $idEscuela > 0): ?>
+                                <div class="escuela-activa-indicator">
+                                    <small class="text-white d-block">
+                                        <i class="bi bi-building me-1" aria-hidden="true"></i> 
+                                        <strong id="current-school"><?= Html::encode(mb_strimwidth($nombreEscuela, 0, 25, '...')) ?></strong>
+                                    </small>
+                                    <small class="text-light opacity-75 d-block" id="current-school-id">
+                                        ID: <?= $idEscuela ?>
+                                    </small>
                                 </div>
-                            <?php else: ?>
-                                <div class="nav-item dropdown mb-2">
+                                
+                                <!-- SELECTOR DE ESCUELA -->
+                                <div class="nav-item dropdown">
                                     <a class="nav-link text-white dropdown-toggle p-1" href="#" 
                                        id="navbarEscuelaDropdown" role="button" data-bs-toggle="dropdown" 
                                        aria-expanded="false" title="Cambiar Escuela" aria-label="Selector de escuela">
-                                        <i class="bi bi-building me-1" aria-hidden="true"></i>Escuela
+                                        <i class="bi bi-arrow-left-right me-1" aria-hidden="true"></i>Cambiar
                                     </a>
                                     <div class="dropdown-menu dropdown-menu-end escuela-selector-dropdown" 
                                          aria-labelledby="navbarEscuelaDropdown">
@@ -161,22 +125,38 @@ $mobileDetect = Yii::$app->has('mobileDetect') ? Yii::$app->mobileDetect->isMobi
                                                     aria-label="Seleccionar escuela">
                                                 <option value="">Buscar escuela...</option>
                                             </select>
-                                            <?php if ($idEscuela && $idEscuela > 0): ?>
-                                                <div class="mt-2 text-center">
-                                                    <small class="text-muted">Escuela actual: <?= Html::encode($nombreEscuela) ?></small>
-                                                </div>
-                                            <?php endif; ?>
+                                            <div class="mt-2 text-center">
+                                                <small class="text-muted">Escuela actual: <?= Html::encode(mb_strimwidth($nombreEscuela, 0, 30, '...')) ?></small>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
+                                
+                            <?php else: ?>
+                                <!-- SIN ESCUELA SELECCIONADA -->
+                                <div class="alert alert-warning py-1 mb-2" role="alert">
+                                    <small>
+                                        <i class="bi bi-exclamation-triangle me-1" aria-hidden="true"></i>
+                                        <strong>Sin escuela seleccionada</strong>
+                                    </small>
+                                </div>
+                                
+                                <!-- BOTÓN PARA SELECCIONAR ESCUELA -->
+                                <a href="<?= Url::to(['/ged/default/index']) ?>" 
+                                   class="btn btn-sm btn-outline-light w-100"
+                                   title="Seleccionar escuela"
+                                   aria-label="Seleccionar escuela">
+                                    <i class="bi bi-building me-1" aria-hidden="true"></i>
+                                    <span>Seleccionar</span>
+                                </a>
                             <?php endif; ?>
-                        </div>                        
+                        </div>
                         
-                        <!-- ✅ Control de Sesión - VISIBLE EN TODOS LOS DISPOSITIVOS -->
-                        <div class="session-controls">
+                        <!-- CONTROL DE SESIÓN -->
+                        <div class="session-controls mt-2">
                             <?php if (Yii::$app->user->isGuest): ?>
-                                <!-- Usuario no autenticado -->
-                                <div class="d-flex flex-column flex-lg-row gap-2">
+                                <!-- USUARIO NO AUTENTICADO -->
+                                <div class="d-flex flex-column gap-1">
                                     <?php if ($showLoginButton): ?>
                                     <a class="btn btn-sm btn-outline-light" 
                                        href="<?= Yii::$app->urlManager->createUrl(['/site/login']) ?>" 
@@ -198,16 +178,16 @@ $mobileDetect = Yii::$app->has('mobileDetect') ? Yii::$app->mobileDetect->isMobi
                                     <?php endif; ?>
                                 </div>
                             <?php else: ?>
-                                <!-- Usuario autenticado -->
-                                <div class="user-info mb-2">
+                                <!-- USUARIO AUTENTICADO -->
+                                <div class="user-info mb-1 text-end">
                                     <small class="text-white d-block">
                                         <i class="bi bi-person-circle me-1" aria-hidden="true"></i>
-                                        <?= Html::encode(Yii::$app->user->identity->username ?? 'Usuario') ?>
+                                        <?= Html::encode(mb_strimwidth(Yii::$app->user->identity->username ?? 'Usuario', 0, 20, '...')) ?>
                                     </small>
                                 </div>
                                 <?= Html::beginForm(['/site/logout'], 'post', ['class' => 'd-inline w-100']) ?>
                                     <?= Html::submitButton(
-                                        '<i class="bi bi-box-arrow-right me-1"></i><span class="d-none d-lg-inline">Cerrar Sesión</span>',
+                                        '<i class="bi bi-box-arrow-right me-1"></i><span class="d-none d-lg-inline">Cerrar</span>',
                                         [
                                             'class' => 'btn btn-sm btn-outline-light w-100',
                                             'title' => 'Cerrar sesión',
@@ -217,9 +197,25 @@ $mobileDetect = Yii::$app->has('mobileDetect') ? Yii::$app->mobileDetect->isMobi
                                 <?= Html::endForm() ?>
                             <?php endif; ?>
                         </div>
+                        
                     </div>
                 </div>
+                
             </div>
         </div>
+        
     </div>
 </nav>
+
+<!-- ✅ SCRIPT PARA DEBUG (OPCIONAL) -->
+<script>
+// Solo para verificar que el menú se cargó
+document.addEventListener('DOMContentLoaded', function() {
+    const menuItems = document.querySelectorAll('.main-navigation .nav-item');
+    console.log(`📊 MenuWidget generó ${menuItems.length} elementos en el navbar`);
+    
+    if (menuItems.length === 0) {
+        console.warn('⚠️ No se encontraron elementos en el menú. Verifica MenuWidget.php');
+    }
+});
+</script>

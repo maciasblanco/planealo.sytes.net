@@ -1,41 +1,48 @@
 /* =================================================================
- * ged.css - SISTEMA GED CSS MODULAR - ARCHIVO PRINCIPAL
+ * ged.css - ARCHIVO MAESTRO DE IMPORTACIONES GED PARA YII2
+ * Este archivo NO contiene estilos, solo importa los módulos CSS
+ * Configuración para AppAsset de Yii2 Framework
+ * Fecha: 2024-01-16
  * ================================================================= */
 
-/* 1. CORE (Siempre primero) */
-@import url('core/_variables.css');
-@import url('core/_reset.css');
-@import url('core/_base.css');
-@import url('core/_utilities.css');
+/* 
+ * IMPORTANTE: Este archivo debe ser el ÚNICO archivo CSS registrado en AppAsset
+ * No contiene estilos propios, solo organiza las importaciones
+ */
 
-/* 2. COMPONENTES */
-@import url('components/_buttons.css');
-@import url('components/_cards.css');
-@import url('components/_forms.css');
-@import url('components/_tables.css');
-@import url('components/_navbar.css');
-@import url('components/_offcanvas.css');
-@import url('components/_carousel.css');
-@import url('components/_widgets.css');
+/* ===== DECLARACIÓN DE VARIABLES CSS ===== */
+@import url('_variables.css');
 
-/* 3. LAYOUTS */
-@import url('layouts/_dashboard.css');
-@import url('layouts/_escuelas.css');
-@import url('layouts/_landing.css');
-@import url('layouts/_tienda.css');
+/* ===== ESTILOS BASE Y UTILITARIOS ===== */
+@import url('_base.css');
 
-/* 4. MÓDULOS ESPECÍFICOS */
-@import url('modules/_reportes.css');
-@import url('modules/_mapa-escuelas.css');
+/* ===== COMPONENTES REUTILIZABLES ===== */
+@import url('_components.css');
 
-/* 5. RESPONSIVE (Siempre último) */
-@import url('responsive/_base.css');
-@import url('responsive/_navbar.css');
-@import url('responsive/_escuelas.css');
-@import url('responsive/_tienda.css');
-@import url('responsive/_carousel.css');
+/* ===== ESTILOS ESPECÍFICOS DE MÓDULOS ===== */
+@import url('_modules.css');
 
-/* 6. PRINT STYLES */
-@media print {
-  /* Estilos de impresión aquí */
-}
+/* ===== NAVEGACIÓN Y MENÚS ===== */
+@import url('_navigation.css');
+
+/* ===== MEDIA QUERIES RESPONSIVE ===== */
+@import url('_responsive.css');
+
+/* ===== NOTA PARA DESARROLLADORES ===== */
+/*
+ * Para usar este sistema en Yii2, configurar AppAsset.php así:
+ * 
+ * class AppAsset extends AssetBundle {
+ *     public $basePath = '@webroot';
+ *     public $baseUrl = '@web';
+ *     public $css = [
+ *         'css/ged.css',  // SOLO ESTE ARCHIVO
+ *     ];
+ *     public $js = [
+ *         // tus scripts aquí
+ *     ];
+ * }
+ * 
+ * Asegúrate de que todos los archivos importados estén en el mismo directorio
+ * que ged.css (normalmente /web/css/)
+ */

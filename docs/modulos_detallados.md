@@ -37,8 +37,9 @@
 - `DefaultController.php`
 - `EscuelaPreRegistroController.php`
 - `EscuelaRegistroController.php`
+- `EscuelaValidacionController.php`
 
-### 👁️ Vistas: 16 archivos
+### 👁️ Vistas: 18 archivos
 
 ---
 
@@ -48,6 +49,28 @@
 - `DefaultController.php`
 
 ### 👁️ Vistas: 6 archivos
+
+---
+
+## 🏗️ MÓDULO: REPORTES
+
+### 🎮 Controladores:
+- `DefaultController.php`
+- `ReportesController.php`
+
+### 👁️ Vistas: 2 archivos
+
+---
+
+## 🏗️ MÓDULO: TIENDA
+
+### 🎮 Controladores:
+- `DefaultController.php`
+- `MarketplaceController.php`
+- `ProductoController.php`
+- `TiendaController.php`
+
+### 👁️ Vistas: 16 archivos
 
 ---
 

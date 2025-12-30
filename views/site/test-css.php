@@ -1,7 +1,7 @@
 <?php
 /**
- * Test CSS - Verificación específica de archivos importados por ged.css
- * Este archivo verifica los archivos CSS parciales que realmente importa ged.css
+ * Test CSS - Verificación de estructura modularizada actual
+ * Este archivo verifica los archivos CSS parciales que importa ged.css en la estructura nueva
  */
 
 use yii\helpers\Html;
@@ -10,15 +10,20 @@ use yii\helpers\Html;
 $cssDir = Yii::getAlias('@webroot') . '/css/';
 $gedCssPath = $cssDir . 'ged.css';
 
-// Lista EXACTA de archivos que importa ged.css (según el contenido proporcionado)
+// Lista EXACTA de archivos MODULARIZADOS NUEVOS que importa ged.css (según la estructura actual)
 $cssPartialFiles = [
-    'modules/core/ged-core.css',
-    'modules/core/ged-utilities.css',
-    'modules/modules/ged-modulo-escuelas.css',
-    'modules/modules/ged-modulo-tienda.css',
-    'modules/modules/ged-modulo-landing.css',
-    'modules/modules/ged-modulo-dashboard.css',
-    'modules/responsive/ged-responsive.css'
+    '_variables.css',    # 1. Variables CSS globales
+    '_base.css',         # 2. Estilos base y utilitarios  
+    '_components.css',   # 3. Componentes reutilizables
+    '_modules.css',      # 4. Estilos específicos de módulos
+    '_navigation.css',   # 5. Navegación y menús
+    '_responsive.css',   # 6. Media queries consolidados
+    // Nota: reportes.css está separado pero no se importa en ged.css
+];
+
+// Agregar archivos adicionales que podrían existir pero no se importan
+$additionalFiles = [
+    'reportes.css'       # Estilos específicos de reportes (no se importa en ged.css)
 ];
 
 // Verificar si ged.css existe
@@ -37,7 +42,7 @@ if ($gedCssExists) {
     }
 }
 
-// Verificar archivos parciales
+// Verificar archivos parciales MODULARIZADOS
 $partialStatus = [];
 foreach ($cssPartialFiles as $file) {
     $filePath = $cssDir . $file;
@@ -54,11 +59,25 @@ foreach ($cssPartialFiles as $file) {
         'exists' => $exists,
         'referenced' => $referenced,
         'path' => $filePath,
-        'expected_in_ged' => in_array($file, $cssPartialFiles)
+        'expected_in_ged' => true
     ];
 }
 
-// Contar estadísticas
+// Verificar archivos adicionales (como reportes.css)
+$additionalStatus = [];
+foreach ($additionalFiles as $file) {
+    $filePath = $cssDir . $file;
+    $exists = file_exists($filePath);
+    
+    $additionalStatus[$file] = [
+        'exists' => $exists,
+        'referenced' => false, // Por defecto no se importan en ged.css
+        'path' => $filePath,
+        'expected_in_ged' => false
+    ];
+}
+
+// Contar estadísticas de archivos MODULARIZADOS
 $totalFiles = count($cssPartialFiles);
 $existingFiles = count(array_filter($partialStatus, fn($s) => $s['exists']));
 $referencedFiles = count(array_filter($partialStatus, fn($s) => $s['exists'] && $s['referenced']));
@@ -66,6 +85,19 @@ $referencedFiles = count(array_filter($partialStatus, fn($s) => $s['exists'] && 
 // Calcular porcentajes
 $completenessPercent = $totalFiles > 0 ? round(($existingFiles / $totalFiles) * 100) : 0;
 $referencedPercent = $existingFiles > 0 ? round(($referencedFiles / $existingFiles) * 100) : 0;
+
+// Verificar si ged.css tiene las importaciones correctas
+$expectedImports = [
+    "_variables.css",
+    "_base.css", 
+    "_components.css",
+    "_modules.css",
+    "_navigation.css",
+    "_responsive.css"
+];
+
+$missingImports = array_diff($expectedImports, $importsInGed);
+$extraImports = array_diff($importsInGed, $expectedImports);
 ?>
 
 <!DOCTYPE html>
@@ -73,7 +105,7 @@ $referencedPercent = $existingFiles > 0 ? round(($referencedFiles / $existingFil
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Test CSS - Verificación de archivos importados por ged.css</title>
+    <title>Test CSS - Verificación de estructura modularizada</title>
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -303,6 +335,24 @@ $referencedPercent = $existingFiles > 0 ? round(($referencedFiles / $existingFil
             color: #28a745;
         }
         
+        .import-check {
+            background: #f0f8ff;
+            border: 1px solid #cce5ff;
+            padding: 15px;
+            border-radius: 6px;
+            margin: 15px 0;
+        }
+        
+        .import-good {
+            color: #28a745;
+            font-weight: bold;
+        }
+        
+        .import-bad {
+            color: #dc3545;
+            font-weight: bold;
+        }
+        
         @media (max-width: 768px) {
             .file-grid {
                 grid-template-columns: 1fr;
@@ -331,7 +381,8 @@ $referencedPercent = $existingFiles > 0 ? round(($referencedFiles / $existingFil
 </head>
 <body>
     <div class="container">
-        <h1>🔍 Test CSS - Verificación de archivos importados por ged.css</h1>
+        <h1>🔍 Test CSS - Verificación de estructura MODULARIZADA</h1>
+        <h3>📁 Estructura: Archivos CSS planos en /css/ (NO subdirectorios)</h3>
         
         <!-- Estado principal de ged.css -->
         <div class="status-box <?= $gedCssExists ? 'status-success' : 'status-error' ?>">
@@ -352,10 +403,44 @@ $referencedPercent = $existingFiles > 0 ? round(($referencedFiles / $existingFil
                     <h3>Importaciones detectadas en ged.css:</h3>
                     <ul>
                         <?php foreach ($importsInGed as $import): ?>
-                            <li><code><?= Html::encode($import) ?></code></li>
+                            <li><code>@import url('<?= Html::encode($import) ?>');</code></li>
                         <?php endforeach; ?>
                     </ul>
                 <?php endif; ?>
+                
+                <!-- Verificación de orden de importaciones -->
+                <div class="import-check">
+                    <h4>✅ Verificación de orden de importaciones:</h4>
+                    <p><strong>Orden esperado:</strong></p>
+                    <ol>
+                        <li><code>@import url('_variables.css');</code> # Variables CSS globales</li>
+                        <li><code>@import url('_base.css');</code> # Estilos base y utilitarios</li>
+                        <li><code>@import url('_components.css');</code> # Componentes reutilizables</li>
+                        <li><code>@import url('_modules.css');</code> # Estilos específicos de módulos</li>
+                        <li><code>@import url('_navigation.css');</code> # Navegación y menús</li>
+                        <li><code>@import url('_responsive.css');</code> # Media queries consolidados</li>
+                    </ol>
+                    
+                    <?php if (empty($missingImports) && empty($extraImports)): ?>
+                        <p class="import-good">✅ Todas las importaciones están correctamente configuradas</p>
+                    <?php else: ?>
+                        <?php if (!empty($missingImports)): ?>
+                            <p class="import-bad">❌ Faltan importaciones: 
+                                <?php foreach ($missingImports as $missing): ?>
+                                    <code><?= $missing ?></code> 
+                                <?php endforeach; ?>
+                            </p>
+                        <?php endif; ?>
+                        
+                        <?php if (!empty($extraImports)): ?>
+                            <p class="import-bad">❌ Importaciones no esperadas: 
+                                <?php foreach ($extraImports as $extra): ?>
+                                    <code><?= $extra ?></code> 
+                                <?php endforeach; ?>
+                            </p>
+                        <?php endif; ?>
+                    <?php endif; ?>
+                </div>
             <?php else: ?>
                 <p><strong>Error:</strong> El archivo ged.css no existe en la ruta especificada.</p>
                 <p>Verifica que la ruta sea correcta y que el archivo esté en: <code>web/css/ged.css</code></p>
@@ -363,7 +448,7 @@ $referencedPercent = $existingFiles > 0 ? round(($referencedFiles / $existingFil
         </div>
         
         <!-- Resumen de estadísticas -->
-        <h2>📊 Resumen de archivos importados</h2>
+        <h2>📊 Resumen de archivos MODULARIZADOS</h2>
         <div class="summary-grid">
             <div class="summary-card">
                 <span class="summary-number"><?= $totalFiles ?></span>
@@ -392,26 +477,22 @@ $referencedPercent = $existingFiles > 0 ? round(($referencedFiles / $existingFil
             </div>
         </div>
         
-        <!-- Estructura esperada -->
+        <!-- Estructura actual esperada -->
         <div class="structure">
-            <h3>📁 Estructura de archivos CSS esperada:</h3>
-            <div class="structure-item folder">css/</div>
-            <div class="structure-item file">├── ged.css</div>
-            <div class="structure-item folder">├── modules/</div>
-            <div class="structure-item folder">│   ├── core/</div>
-            <div class="structure-item file">│   │   ├── ged-core.css</div>
-            <div class="structure-item file">│   │   └── ged-utilities.css</div>
-            <div class="structure-item folder">│   ├── modules/</div>
-            <div class="structure-item file">│   │   ├── ged-modulo-escuelas.css</div>
-            <div class="structure-item file">│   │   ├── ged-modulo-tienda.css</div>
-            <div class="structure-item file">│   │   ├── ged-modulo-landing.css</div>
-            <div class="structure-item file">│   │   └── ged-modulo-dashboard.css</div>
-            <div class="structure-item folder">│   └── responsive/</div>
-            <div class="structure-item file">│       └── ged-responsive.css</div>
+            <h3>📁 Estructura ACTUAL de archivos CSS (MODULARIZADA):</h3>
+            <div class="structure-item folder">web/css/</div>
+            <div class="structure-item file">├── ged.css (archivo maestro de importaciones)</div>
+            <div class="structure-item file">├── _variables.css (variables CSS globales)</div>
+            <div class="structure-item file">├── _base.css (estilos base y utilitarios)</div>
+            <div class="structure-item file">├── _components.css (componentes reutilizables)</div>
+            <div class="structure-item file">├── _modules.css (estilos específicos de módulos)</div>
+            <div class="structure-item file">├── _navigation.css (navegación y menús)</div>
+            <div class="structure-item file">├── _responsive.css (media queries consolidados)</div>
+            <div class="structure-item file">└── reportes.css (opcional - no se importa en ged.css)</div>
         </div>
         
-        <!-- Lista detallada de archivos -->
-        <h2>📁 Archivos CSS Parciales Importados</h2>
+        <!-- Lista detallada de archivos MODULARIZADOS -->
+        <h2>📁 Archivos CSS MODULARIZADOS (importados por ged.css)</h2>
         <div class="file-grid">
             <?php foreach ($partialStatus as $file => $status): ?>
                 <?php 
@@ -432,9 +513,9 @@ $referencedPercent = $existingFiles > 0 ? round(($referencedFiles / $existingFil
                         <?php if (!$status['exists']): ?>
                             <span class="status-error-text">❌ NO EXISTE</span>
                         <?php elseif (!$status['referenced']): ?>
-                            <span class="status-warning-text">⚠️ EXISTE pero NO REFERENCIADO</span>
+                            <span class="status-warning-text">⚠️ EXISTE pero NO REFERENCIADO en ged.css</span>
                         <?php else: ?>
-                            <span class="status-success-text">✅ EXISTE y REFERENCIADO</span>
+                            <span class="status-success-text">✅ EXISTE y REFERENCIADO en ged.css</span>
                         <?php endif; ?>
                     </div>
                     
@@ -452,9 +533,45 @@ $referencedPercent = $existingFiles > 0 ? round(($referencedFiles / $existingFil
             <?php endforeach; ?>
         </div>
         
-        <!-- Contenido de ged.css -->
+        <!-- Archivos adicionales (no importados en ged.css) -->
+        <?php if (!empty($additionalStatus)): ?>
+            <h2>📁 Archivos CSS ADICIONALES (no importados en ged.css)</h2>
+            <div class="file-grid">
+                <?php foreach ($additionalStatus as $file => $status): ?>
+                    <?php 
+                    $cardClass = 'file-card ';
+                    if (!$status['exists']) {
+                        $cardClass .= 'error';
+                    } else {
+                        $cardClass .= 'warning'; // Warning porque no se importa
+                    }
+                    ?>
+                    <div class="<?= $cardClass ?>">
+                        <div class="file-name"><?= Html::encode($file) ?></div>
+                        <div class="file-path"><?= Html::encode($status['path']) ?></div>
+                        
+                        <div class="file-status">
+                            <?php if (!$status['exists']): ?>
+                                <span class="status-error-text">❌ NO EXISTE</span>
+                            <?php else: ?>
+                                <span class="status-warning-text">⚠️ EXISTE pero NO se importa en ged.css</span>
+                            <?php endif; ?>
+                        </div>
+                        
+                        <?php if ($status['exists']): ?>
+                            <div class="file-details">
+                                <div>Tamaño: <?= number_format(filesize($status['path'])) ?> bytes</div>
+                                <div>Modificado: <?= date('Y-m-d H:i:s', filemtime($status['path'])) ?></div>
+                            </div>
+                        <?php endif; ?>
+                    </div>
+                <?php endforeach; ?>
+            </div>
+        <?php endif; ?>
+        
+        <!-- Contenido de ged.css (primeras líneas) -->
         <?php if ($gedCssExists): ?>
-            <h2>📄 Contenido de ged.css</h2>
+            <h2>📄 Contenido de ged.css (primeras 30 líneas)</h2>
             <pre><?php 
             $lines = explode("\n", $gedCssContent);
             $lineCount = count($lines);
@@ -472,10 +589,10 @@ $referencedPercent = $existingFiles > 0 ? round(($referencedFiles / $existingFil
         
         <!-- Recomendaciones -->
         <div class="recommendations">
-            <h3>💡 Recomendaciones</h3>
+            <h3>💡 Recomendaciones para Yii2</h3>
             <ul>
                 <?php if ($existingFiles < $totalFiles): ?>
-                    <li><strong>Archivos faltantes:</strong> Crea los archivos CSS que no existen en la estructura esperada.</li>
+                    <li><strong>Archivos faltantes:</strong> Crea los archivos CSS que no existen en la estructura modularizada.</li>
                 <?php endif; ?>
                 
                 <?php if ($referencedFiles < $existingFiles): ?>
@@ -483,21 +600,28 @@ $referencedPercent = $existingFiles > 0 ? round(($referencedFiles / $existingFil
                 <?php endif; ?>
                 
                 <?php if ($gedCssExists && empty($importsInGed)): ?>
-                    <li><strong>Sin importaciones:</strong> ged.css no contiene importaciones @import. Verifica que el formato sea correcto.</li>
+                    <li><strong>Sin importaciones:</strong> ged.css debe contener importaciones @import de todos los módulos.</li>
                 <?php endif; ?>
                 
-                <li><strong>Orden de importación:</strong> Asegúrate de que los estilos responsive siempre sean los últimos.</li>
-                <li><strong>Cache:</strong> Limpia el cache del navegador después de hacer cambios en los archivos CSS.</li>
-                <li><strong>Validación:</strong> Valida los archivos CSS con herramientas como <a href="https://jigsaw.w3.org/css-validator/" target="_blank">W3C CSS Validator</a>.</li>
+                <li><strong>Configuración Yii2 AppAsset:</strong> En AppAsset.php, solo debes registrar ged.css:
+<pre>public $css = [
+    'css/ged.css',  // SOLO este archivo
+];</pre>
+                </li>
+                <li><strong>Orden de importación:</strong> Asegúrate de que los estilos responsive siempre sean los últimos (después de _navigation.css).</li>
+                <li><strong>Cache:</strong> Limpia el cache de Yii2 y del navegador después de hacer cambios: <code>yii cache/flush-all</code></li>
+                <li><strong>Archivos opcionales:</strong> Si necesitas usar reportes.css, debes agregarlo a ged.css o incluirlo por separado.</li>
             </ul>
         </div>
         
         <!-- Información del servidor -->
-        <h2>🖥️ Información del Entorno</h2>
+        <h2>🖥️ Información del Entorno Yii2</h2>
         <div class="status-box">
             <p><strong>Directorio CSS:</strong> <?= Html::encode($cssDir) ?></p>
             <p><strong>ged.css existe:</strong> <?= $gedCssExists ? 'Sí' : 'No' ?></p>
+            <p><strong>Archivos modularizados encontrados:</strong> <?= $existingFiles ?> de <?= $totalFiles ?></p>
             <p><strong>PHP Version:</strong> <?= phpversion() ?></p>
+            <p><strong>Yii2 Version:</strong> <?= Yii::getVersion() ?></p>
             <p><strong>Servidor Web:</strong> <?= $_SERVER['SERVER_SOFTWARE'] ?? 'N/A' ?></p>
             <p><strong>Tiempo de Ejecución:</strong> <?= round(microtime(true) - ($_SERVER['REQUEST_TIME_FLOAT'] ?? microtime(true)), 4) ?> segundos</p>
         </div>
@@ -506,8 +630,9 @@ $referencedPercent = $existingFiles > 0 ? round(($referencedFiles / $existingFil
         <div class="debug-info">
             <p><strong>Debug Info:</strong></p>
             <p>URL Accedida: <?= Yii::$app->request->url ?></p>
-            <p>Ruta Base: <?= Yii::getAlias('@webroot') ?></p>
-            <p>Ruta Web: <?= Yii::getAlias('@web') ?></p>
+            <p>Ruta Base (@webroot): <?= Html::encode(Yii::getAlias('@webroot')) ?></p>
+            <p>Ruta Web (@web): <?= Html::encode(Yii::getAlias('@web')) ?></p>
+            <p>AppAsset Path: <?= Yii::getAlias('@web') . '/css/' ?></p>
         </div>
     </div>
 </body>

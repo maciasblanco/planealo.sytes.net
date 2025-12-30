@@ -10,7 +10,7 @@ use yii\bootstrap5\Html;
 use yii\bootstrap5\NavBar;
 use app\components\MenuWidget;
 
-// Registrar solo AppAsset para evitar conflictos
+// Registrar AssetBundle principal
 AppAsset::register($this);
 
 $this->registerCsrfMetaTags();
@@ -20,19 +20,7 @@ $this->registerMetaTag(['name' => 'description', 'content' => $this->params['met
 $this->registerMetaTag(['name' => 'keywords', 'content' => $this->params['meta_keywords'] ?? '']);
 $this->registerLinkTag(['rel' => 'icon', 'type' => 'image/x-icon', 'href' => Yii::getAlias('@web/favicon.ico')]);
 
-// Incluir FontAwesome (si no está ya en AppAsset)
-$this->registerCssFile('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css', ['depends' => [\yii\bootstrap5\BootstrapAsset::class]]);
-
-// ✅ INCLUIR CSS DEL OFF-CANVAS UNIFICADO
-$this->registerCssFile('@web/css/ged-offcanvas.css', ['depends' => [\yii\bootstrap5\BootstrapAsset::class]]);
-
-// ✅ INCLUIR JS DEL OFF-CANVAS UNIFICADO
-$this->registerJsFile('@web/js/ged-offcanvas.js', [
-    'depends' => [\yii\web\JqueryAsset::class, \yii\bootstrap5\BootstrapAsset::class],
-    'position' => \yii\web\View::POS_END
-]);
-
-// Datos de la escuela (versión temporal segura)
+// Datos de la escuela
 $session = Yii::$app->session;
 $idEscuela = $session->get('idEscuela', 0);
 $nombreEscuela = $session->get('nombreEscuela', 'Selecciona una escuela');
@@ -46,78 +34,53 @@ $hasEscuela = !empty($idEscuela) && $idEscuela != 0;
     <title><?= Html::encode($this->title) ?></title>
     <?php $this->head() ?>
 </head>
-<body class="d-flex flex-column h-100">
+<body class="d-flex flex-column h-100 <?= $hasEscuela ? 'escuela-layout' : 'default-layout' ?>">
 <?php $this->beginBody() ?>
 
-<!-- ================================================== -->
-<!-- ✅ OFF-CANVAS UNIFICADO WRAPPER -->
-<!-- ================================================== -->
-<div class="ged-offcanvas-wrapper">
-    <!-- Backdrop solo para móvil -->
-    <div class="ged-sidebar-backdrop"></div>
-    
-    <!-- Sidebar/Offcanvas -->
-    <div class="ged-offcanvas-sidebar">
-        <div class="offcanvas-header">
-            <h5 class="offcanvas-title">
-                <i class="fas fa-bars me-2"></i> 
-                <span class="menu-text">Menú GED</span>
-            </h5>
-            <button type="button" class="close-offcanvas" aria-label="Cerrar menú">
-                <i class="fas fa-times"></i>
-            </button>
-        </div>
-        
-        <div class="offcanvas-body p-0">
-            <?= MenuWidget::widget([
-                'parentId' => null,
-                'options' => ['class' => 'navbar-nav']
-            ]) ?>
-        </div>
-        
-        <!-- ✅ Toggler para PC (compact mode) -->
-        <button class="sidebar-toggler-pc" 
-                title="Alternar menú compacto"
-                aria-label="Alternar menú compacto">
-            <i class="fas fa-chevron-left"></i>
-        </button>
-    </div>
-</div>
+<!-- Contenedor para offcanvas móvil (creado dinámicamente por JS) -->
+<div id="gedMobileMenuContainer"></div>
 
-<!-- ================================================== -->
-<!-- NAVBAR USANDO PARTIAL UNIFICADO -->
-<!-- ================================================== -->
+<!-- Navbar principal -->
 <?php
 NavBar::begin([
-    'brandLabel' => Html::img('@web/img/logos/logoGed.png', ['class' => 'navbar-logo', 'alt' => 'GED Logo']),
+    'brandLabel' => Html::img('@web/img/logos/logoGed.png', [
+        'class' => 'navbar-logo', 
+        'alt' => 'GED Logo',
+        'onerror' => "this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgZmlsbD0iIzZjMzQ4MyI+PHJlY3Qgd2lkdGg9IjEwMCIgaGVpZ2h0PSIxMDAiLz48dGV4dCB4PSI1MCUiIHk9IjUwJSIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjE0IiBmaWxsPSJ3aGl0ZSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iPkdFRDwvdGV4dD48L3N2Zz4='"
+    ]),
     'brandUrl' => Yii::$app->homeUrl,
     'options' => [
-        'class' => 'navbar-contextual navbar-expand-lg',
+        'class' => 'navbar-contextual navbar-expand-lg fixed-top',
+        'id' => 'main-navbar',
+        'aria-label' => 'Navegación principal'
     ],
-    'innerContainerOptions' => ['class' => 'container-fluid']
+    'innerContainerOptions' => [
+        'class' => 'container-fluid p-0 m-0 w-100 vw-100',
+        'id' => 'navbar-container'
+    ]
 ]);
 ?>
 
-<!-- ✅ TOGGLER PARA MÓVIL (en el navbar) -->
+<!-- Toggler para móvil -->
 <button class="navbar-toggler d-lg-none ms-auto" 
         type="button" 
         data-bs-toggle="offcanvas"
-        aria-label="Mostrar menú"
-        aria-controls="ged-offcanvas-sidebar"
-        aria-expanded="false">
+        data-bs-target="#gedMobileMenuContainer"
+        aria-controls="gedMobileMenuContainer"
+        aria-expanded="false"
+        aria-label="Mostrar menú de navegación">
     <span class="navbar-toggler-icon"></span>
 </button>
 
-<!-- Aquí va el contenido actual de tu navbar partial -->
-<!-- Si usas un partial, puedes mantenerlo así: -->
+<!-- Contenido del navbar usando partial -->
 <?php if (isset($this->params['renderNavbarPartial']) && $this->params['renderNavbarPartial']): ?>
     <?= $this->render('_navbar', [
         'idEscuela' => $idEscuela,
         'nombreEscuela' => $nombreEscuela,
-        'navbarVariant' => 'default'
+        'navbarVariant' => $hasEscuela ? 'escuela' : 'default'
     ]) ?>
 <?php else: ?>
-    <!-- Contenido alternativo del navbar -->
+    <!-- Contenido alternativo para páginas sin partial -->
     <?php
     $menuItems = [];
     if (Yii::$app->user->isGuest) {
@@ -142,9 +105,7 @@ NavBar::begin([
 
 <?php NavBar::end(); ?>
 
-<!-- ================================================== -->
-<!-- ✅ CONTENIDO PRINCIPAL CON AJUSTE PARA SIDEBAR -->
-<!-- ================================================== -->
+<!-- Contenido principal -->
 <main id="main" class="flex-shrink-0 ged-main-content main-content-wrapper" role="main">
     <div class="container-fluid">
         <?php if (!empty($this->params['breadcrumbs'])): ?>
@@ -155,12 +116,13 @@ NavBar::begin([
     </div>
 </main>
 
+<!-- Footer -->
 <footer id="footer" class="mt-auto py-3 bg-light">
     <div class="container-fluid">
         <div class="row align-items-center text-muted">
             <div class="col-md-6 text-center text-md-start">
                 <i class="bi bi-graduation-cap me-2"></i>
-                &copy; <?= date('Y') ?> Sistema GED v1.0
+                &copy; <?= date('Y') ?> Sistema GED v4.6
             </div>
             <div class="col-md-6 text-center text-md-end">
                 <?php if ($idEscuela): ?>
@@ -169,45 +131,16 @@ NavBar::begin([
                     </span>
                 <?php else: ?>
                     <span class="badge bg-warning me-2">
-                        <i class="bi bi-exclamation-triangle"></i> Sin escuela
+                        <i class="bi bi-exclamation-triangle"></i> Selecciona una escuela
                     </span>
                 <?php endif; ?>
-                <?= Yii::powered() ?>
+                <span class="d-none d-md-inline"><?= Yii::powered() ?></span>
             </div>
         </div>
     </div>
 </footer>
 
 <?php $this->endBody() ?>
-
-<!-- ✅ SCRIPT DE INICIALIZACIÓN ADICIONAL -->
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    // Verificar que el offcanvas se haya inicializado correctamente
-    if (typeof window.GedOffcanvas !== 'undefined') {
-        console.log('✅ Offcanvas Manager cargado correctamente');
-        
-        // Opcional: Ajustar si hay contenido dinámico
-        window.addEventListener('resize', function() {
-            if (window.GedOffcanvas) {
-                window.GedOffcanvas.update();
-            }
-        });
-        
-        // Marcar elemento activo en el menú
-        var currentPath = window.location.pathname;
-        document.querySelectorAll('.menu-link').forEach(function(link) {
-            if (link.getAttribute('href') === currentPath || 
-                link.getAttribute('href') === (currentPath + '/')) {
-                link.classList.add('active');
-            }
-        });
-    } else {
-        console.warn('⚠️ Offcanvas Manager no se cargó');
-    }
-});
-</script>
-
 </body>
 </html>
 <?php $this->endPage() ?>

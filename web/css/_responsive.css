@@ -1,0 +1,1079 @@
+/* =================================================================
+ * _responsive.css - MEDIA QUERIES CONSOLIDADOS GED
+ * Consolidado de: ged-responsive-escuelas.css, ged-responsive-general.css, ged-responsive-tienda.css
+ * Fecha: 2024-01-16 (actualizado para consolidación)
+ * ================================================================= */
+
+/* ================================================== */
+/* TABLE Y PANTALLAS MEDIANAS (1199px a 992px)        */
+/* ================================================== */
+
+@media (max-width: 1199.98px) {
+    /* Responsive para escuelas */
+    .school-list-container {
+        max-height: 350px;
+    }
+    
+    .pre-registro-grid {
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 15px;
+    }
+    
+    .current-school-status {
+        padding: 12px;
+    }
+    
+    .stats-grid {
+        gap: 10px;
+    }
+    
+    .stat-item {
+        padding: 8px;
+    }
+    
+    /* Responsive para tienda */
+    .store-promo-content {
+        padding: 0 1rem;
+    }
+    
+    .store-icon-large {
+        font-size: 2.5rem;
+    }
+    
+    .ged-btn-tienda {
+        padding: 12px 20px !important;
+        font-size: 1rem !important;
+    }
+    
+    .tienda-card {
+        margin-bottom: 1.5rem;
+    }
+    
+    .categoria-card {
+        margin-bottom: 1.5rem;
+    }
+    
+    .total-vendidos-card {
+        flex-direction: column;
+        text-align: center;
+        padding: 1.5rem;
+    }
+    
+    .total-icon {
+        margin-right: 0;
+        margin-bottom: 1rem;
+    }
+    
+    /* Navbar responsive */
+    .navbar-contextual {
+        height: 160px;
+        min-height: 160px;
+    }
+    
+    body {
+        padding-top: 160px !important;
+    }
+    
+    main#main {
+        min-height: calc(100vh - 160px) !important;
+    }
+    
+    .navbar-brand-section {
+        min-width: 160px !important;
+        flex: 0 0 20% !important;
+        max-width: 20% !important;
+    }
+    
+    .navbar-menu-section {
+        flex: 0 0 45% !important;
+        max-width: 45% !important;
+    }
+    
+    .navbar-social-section {
+        flex: 0 0 15% !important;
+        max-width: 15% !important;
+    }
+    
+    .navbar-control-section {
+        flex: 0 0 20% !important;
+        max-width: 20% !important;
+    }
+    
+    .navbar-logo {
+        height: 40px !important;
+    }
+}
+
+/* ================================================== */
+/* TABLETS PEQUEÑAS Y MÓVILES GRANDES (991px a 768px) */
+/* ================================================== */
+
+@media (max-width: 991.98px) {
+    /* Responsive general */
+    .navbar-contextual {
+        height: 60px !important;
+        min-height: 60px !important;
+        position: fixed !important;
+        top: 0 !important;
+    }
+    
+    body {
+        padding-top: 60px !important;
+    }
+    
+    main#main {
+        margin-top: 0 !important;
+        min-height: calc(100vh - 60px) !important;
+    }
+    
+    .navbar > .container-fluid {
+        flex-wrap: wrap;
+        padding: 0 10px;
+    }
+    
+    .navbar-brand, .navbar-brand-section {
+        width: auto !important;
+        height: 60px;
+        order: 1;
+        flex: 1 !important;
+        max-width: none !important;
+        min-width: auto !important;
+        justify-content: flex-start !important;
+        padding-left: 10px !important;
+    }
+    
+    .navbar-toggler {
+        position: relative !important;
+        top: auto !important;
+        right: auto !important;
+        order: 2;
+        margin-left: auto;
+        display: block !important;
+        padding: 6px 8px !important;
+    }
+    
+    .navbar-collapse {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        width: 100%;
+        background: linear-gradient(135deg, #8e44ad 0%, #6c3483 100%);
+        z-index: 1030;
+        margin: 0;
+        padding: 20px 15px;
+        border-top: 2px solid #7d3c98;
+        box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+        display: none !important;
+        height: auto !important;
+        overflow: visible !important;
+    }
+    
+    .navbar-collapse.show {
+        display: block !important;
+    }
+    
+    .navbar-container {
+        flex-direction: column;
+        height: auto;
+        gap: 20px;
+        width: 100%;
+    }
+    
+    .navbar-menu-section,
+    .navbar-social-section,
+    .navbar-control-section {
+        width: 100% !important;
+        height: auto;
+        padding: 10px 0;
+        display: block !important;
+    }
+    
+    .navbar-menu-section { order: 3; }
+    .navbar-social-section { order: 4; }
+    .navbar-control-section { order: 2; }
+    
+    .navbar-nav {
+        flex-direction: column;
+        gap: 5px;
+        width: 100%;
+    }
+    
+    .nav-item {
+        width: 100%;
+        text-align: center;
+    }
+    
+    .nav-link {
+        padding: 15px 20px !important;
+        background: rgba(255,255,255,0.1);
+        display: block;
+        margin-bottom: 5px;
+        border-radius: 5px;
+    }
+    
+    .dropdown-menu {
+        position: static !important;
+        width: 100% !important;
+        margin: 10px 0 !important;
+        background: rgba(0,0,0,0.3) !important;
+        border: 1px solid rgba(255,255,255,0.2);
+        float: none !important;
+    }
+    
+    .dropdown-item {
+        padding: 12px 25px !important;
+        text-align: center;
+        border-bottom: 1px solid rgba(255,255,255,0.1);
+    }
+    
+    .dropdown-item:last-child {
+        border-bottom: none;
+    }
+    
+    .social-icons-vertical {
+        flex-direction: row !important;
+        justify-content: center !important;
+        gap: 15px !important;
+    }
+    
+    .social-icon-circle {
+        width: 50px !important;
+        height: 50px !important;
+        font-size: 1.4rem !important;
+    }
+    
+    /* Ajustar controles de sesión para móvil */
+    .session-controls {
+        flex-direction: row !important;
+        gap: 8px !important;
+        align-items: center !important;
+    }
+    
+    .session-controls .btn {
+        min-width: auto !important;
+        padding: 5px 10px !important;
+    }
+    
+    .session-controls .btn span:not(.bi) {
+        display: none !important;
+    }
+    
+    .user-info {
+        display: none !important;
+    }
+    
+    .school-info {
+        display: none !important;
+    }
+    
+    .navbar-nav .dropdown-menu {
+        display: none !important;
+    }
+    
+    /* EL OFFCANVAS DE BOOTSTRAP MANEJARÁ EL MENÚ EN MÓVIL */
+    /* Bootstrap crea el offcanvas con la clase .offcanvas */
+    
+    /* Responsive para escuelas */
+    .encargado-search-form {
+        flex-direction: column;
+        gap: 15px;
+    }
+    
+    .encargado-search-input {
+        width: 100%;
+    }
+    
+    .encargado-search-btn {
+        width: 100%;
+    }
+    
+    .pre-registro-grid {
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+    
+    .pre-registro-header {
+        flex-direction: column;
+        gap: 10px;
+        text-align: center;
+    }
+    
+    .pre-registro-actions {
+        flex-direction: column;
+        gap: 8px;
+    }
+    
+    .school-option {
+        padding: 10px 12px;
+    }
+    
+    .school-name {
+        font-size: 1rem;
+    }
+    
+    .school-details {
+        font-size: 0.85rem;
+    }
+    
+    /* Escuela completar registro */
+    .escuela-completar-registro .current-logo {
+        margin-top: 15px;
+    }
+    
+    #map {
+        height: 300px;
+    }
+    
+    .stats-grid {
+        flex-direction: column;
+        gap: 15px;
+    }
+    
+    .stat-item {
+        padding: 5px;
+    }
+    
+    .ged-card {
+        margin-bottom: 20px;
+    }
+    
+    .current-school-status {
+        padding: 10px;
+    }
+    
+    /* Responsive para tienda */
+    .marketplace-nav {
+        flex-direction: column;
+        gap: 0.5rem;
+        align-items: center;
+    }
+    
+    .marketplace-nav .nav-item {
+        width: 100%;
+        max-width: 300px;
+        text-align: center;
+    }
+    
+    .marketplace-nav .nav-item .nav-link {
+        display: block;
+        width: 100%;
+        padding: 0.75rem 1.5rem;
+        font-size: 1rem;
+    }
+    
+    .marketplace-menu-section h3 {
+        font-size: 1.5rem;
+        margin-bottom: 0.75rem;
+    }
+    
+    .tiendas-patrocinadas-section {
+        padding: 3rem 0;
+    }
+    
+    .vh-60 {
+        min-height: 50vh;
+    }
+    
+    /* Layouts generales */
+    .escuela-layout main#main,
+    .default-layout main#main {
+        margin-top: 0 !important;
+        padding: 15px 0;
+    }
+    
+    .escuela-layout .main-container,
+    .default-layout .main-container {
+        margin-top: 0 !important;
+    }
+    
+    /* EL OFFCANVAS SE CREA DINÁMICAMENTE POR gedOffCanvas-module.js */
+    /* Bootstrap maneja el ancho del offcanvas */
+    
+    .sidebar-header {
+        padding: 1.2rem;
+        background: linear-gradient(135deg, #8e44ad 0%, #6c3483 100%);
+        color: white;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-bottom: 1px solid #7d3c98;
+        font-weight: 600;
+        font-size: 1.1rem;
+    }
+    
+    .close-sidebar {
+        background: none;
+        border: none;
+        color: white;
+        font-size: 1.5rem;
+        cursor: pointer;
+        padding: 0.5rem;
+        border-radius: 4px;
+        transition: background 0.2s ease;
+    }
+    
+    .close-sidebar:hover {
+        background: rgba(255,255,255,0.1);
+    }
+    
+    .ged-logo {
+        max-height: 80px;
+    }
+    
+    /* Desktop específico - ELIMINADO PARA EVITAR CONFLICTOS */
+    /* .dropdown-submenu:hover > .dropdown-menu {
+        display: block !important;
+    } */
+    
+    /* .dropdown-submenu .dropdown-submenu:hover > .dropdown-menu {
+        display: block !important;
+    } */
+    
+    /* Correcciones de emergencia para navbar en móvil */
+    .navbar-contextual .navbar-collapse:not(.show) {
+        display: none !important;
+        visibility: hidden !important;
+        opacity: 0 !important;
+        height: 0 !important;
+        overflow: hidden !important;
+    }
+    
+    .navbar-contextual .navbar-collapse.show {
+        display: block !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+        height: auto !important;
+        overflow: visible !important;
+        animation: fadeIn 0.3s ease-in-out;
+    }
+    
+    .navbar-contextual .navbar-container {
+        flex-direction: column !important;
+        gap: 20px !important;
+        padding: 20px 0 !important;
+    }
+    
+    .navbar-contextual .navbar-menu-section,
+    .navbar-contextual .navbar-social-section,
+    .navbar-contextual .navbar-control-section {
+        width: 100% !important;
+        display: block !important;
+    }
+    
+    .navbar-contextual .navbar-brand-section {
+        width: auto !important;
+        display: flex !important;
+    }
+    
+    .navbar-contextual .navbar-nav {
+        flex-direction: column !important;
+        width: 100% !important;
+    }
+    
+    .navbar-contextual .nav-item {
+        width: 100% !important;
+        text-align: center !important;
+        margin-bottom: 5px !important;
+    }
+    
+    .navbar-contextual .nav-link {
+        display: block !important;
+        padding: 12px 15px !important;
+        background: rgba(255,255,255,0.1) !important;
+        border-radius: 5px !important;
+        margin-bottom: 5px !important;
+    }
+    
+    .navbar-contextual .dropdown-menu {
+        position: static !important;
+        width: 100% !important;
+        margin: 10px 0 !important;
+        background: rgba(0,0,0,0.3) !important;
+        border: 1px solid rgba(255,255,255,0.2) !important;
+        float: none !important;
+    }
+    
+    .navbar-contextual .social-icons-vertical {
+        flex-direction: row !important;
+        justify-content: center !important;
+        gap: 15px !important;
+    }
+}
+
+/* ================================================== */
+/* MÓVILES (767px a 576px)                           */
+/* ================================================== */
+
+@media (max-width: 767.98px) {
+    /* Responsive general */
+    .navbar-contextual {
+        min-height: 50px !important;
+        height: 50px !important;
+    }
+    
+    body {
+        padding-top: 50px !important;
+    }
+    
+    main#main {
+        min-height: calc(100vh - 50px) !important;
+    }
+    
+    .navbar-brand, .navbar-brand-section {
+        height: 50px;
+        padding-left: 8px !important;
+    }
+    
+    .navbar-control-section {
+        padding-right: 8px !important;
+    }
+    
+    .navbar-logo {
+        height: 32px !important;
+    }
+    
+    .session-controls {
+        gap: 6px !important;
+    }
+    
+    .session-controls .btn {
+        padding: 4px 8px !important;
+        font-size: 0.8rem !important;
+    }
+    
+    /* Responsive para escuelas */
+    .ged-default-select-escuela {
+        padding: 15px 0;
+    }
+    
+    .ged-default-select-escuela .card {
+        margin-bottom: 15px;
+    }
+    
+    .encargado-search-section {
+        padding: 20px;
+    }
+    
+    .pre-registro-section {
+        padding: 20px;
+    }
+    
+    .pre-registro-title {
+        font-size: 1.2rem;
+    }
+    
+    .pre-registro-card {
+        padding: 15px;
+    }
+    
+    .pre-registro-school-name {
+        font-size: 1.1rem;
+    }
+    
+    .pre-registro-detail {
+        font-size: 0.85rem;
+    }
+    
+    .pre-registro-btn {
+        padding: 6px 12px;
+        font-size: 0.8rem;
+    }
+    
+    .school-list-container {
+        max-height: 300px;
+    }
+    
+    .quick-actions-grid {
+        gap: 6px;
+    }
+    
+    .quick-action-btn {
+        padding: 8px;
+        font-size: 0.9rem;
+    }
+    
+    #map {
+        height: 250px;
+    }
+    
+    /* Horarios */
+    #horario-grid {
+        font-size: 0.75rem;
+    }
+    
+    #horario-grid th,
+    #horario-grid td {
+        padding: 2px !important;
+    }
+    
+    .horario-cell {
+        height: 30px;
+    }
+    
+    .horario-legend {
+        flex-direction: column;
+        gap: 8px;
+    }
+    
+    /* Lista de items */
+    .ged-list-item {
+        padding: 6px 0;
+        font-size: 0.85rem;
+    }
+    
+    /* Responsive para tienda */
+    .productos-mas-vendidos {
+        padding: 1.5rem 0;
+    }
+    
+    .categoria-header {
+        padding: 1rem;
+    }
+    
+    .categoria-icon {
+        font-size: 2rem;
+    }
+    
+    .producto-imagen-placeholder {
+        height: 80px;
+    }
+    
+    .producto-badge {
+        font-size: 0.7rem;
+        padding: 0.2rem 0.4rem;
+    }
+    
+    .precio-actual {
+        font-size: 1.1rem;
+    }
+    
+    .tienda-card {
+        padding: 1.5rem;
+    }
+    
+    .tienda-logo {
+        font-size: 2.5rem;
+    }
+    
+    .tienda-rating {
+        font-size: 1rem;
+    }
+    
+    .tienda-badge {
+        font-size: 0.7rem;
+    }
+    
+    /* Banner tiendas patrocinadas */
+    #banner-tiendas-patrocinadas {
+        width: 90%;
+        margin: 15px auto;
+        padding: 15px;
+    }
+    
+    #banner-tiendas-patrocinadas h2 {
+        font-size: 1.5rem;
+    }
+    
+    /* Responsive adicional */
+    .welcome-message .card-text {
+        font-size: 1rem;
+    }
+    
+    .landing-actions {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .landing-btn {
+        min-width: 250px;
+        margin-bottom: 10px;
+    }
+    
+    .features-section {
+        padding: 40px 0;
+    }
+    
+    .landing-footer {
+        margin-top: 40px;
+    }
+}
+
+/* ================================================== */
+/* MÓVILES PEQUEÑOS (575px y menos)                   */
+/* ================================================== */
+
+@media (max-width: 575.98px) {
+    /* Responsive general */
+    .navbar-contextual {
+        min-height: 45px !important;
+        height: 45px !important;
+    }
+    
+    body {
+        padding-top: 45px !important;
+    }
+    
+    main#main {
+        min-height: calc(100vh - 45px) !important;
+    }
+    
+    .navbar-brand, .navbar-brand-section {
+        min-width: 120px !important;
+        padding-left: 5px !important;
+        height: 45px;
+    }
+    
+    .navbar-control-section {
+        padding-right: 5px !important;
+    }
+    
+    .navbar-logo {
+        height: 28px !important;
+    }
+    
+    .session-controls .btn {
+        padding: 3px 6px !important;
+        font-size: 0.75rem !important;
+    }
+    
+    .navbar-toggler {
+        padding: 0.3rem 0.5rem !important;
+        margin-left: 5px !important;
+    }
+    
+    .escuela-layout main#main,
+    .default-layout main#main {
+        margin-top: 0 !important;
+        padding: 10px 0;
+    }
+    
+    .escuela-layout .main-container,
+    .default-layout .main-container {
+        margin-top: 0 !important;
+    }
+    
+    .social-icon-circle {
+        width: 45px;
+        height: 45px;
+        font-size: 1.2rem;
+    }
+    
+    .sidebar-menu .menu-link {
+        padding: 10px 14px;
+        font-size: 0.9rem;
+    }
+    
+    .sidebar-menu .submenu .menu-link {
+        padding-left: 25px;
+    }
+    
+    .sidebar-menu .submenu .submenu .menu-link {
+        padding-left: 35px;
+    }
+    
+    .session-controls .btn-group-horizontal {
+        flex-direction: column !important;
+        gap: 5px !important;
+    }
+    
+    .session-controls .btn-group-horizontal .btn {
+        min-width: 100% !important;
+    }
+    
+    /* Responsive para escuelas */
+    .encargado-search-section {
+        padding: 15px;
+        margin-bottom: 15px;
+    }
+    
+    .pre-registro-section {
+        padding: 15px;
+        margin-bottom: 15px;
+    }
+    
+    .pre-registro-card {
+        padding: 12px;
+    }
+    
+    .pre-registro-school-name {
+        font-size: 1rem;
+    }
+    
+    .pre-registro-status {
+        font-size: 0.7rem;
+        padding: 3px 8px;
+    }
+    
+    .school-option {
+        padding: 8px 10px;
+    }
+    
+    .school-name {
+        font-size: 0.95rem;
+    }
+    
+    .ged-stat-card h3 {
+        font-size: 1.5rem;
+    }
+    
+    /* Site index - escuelas en landing */
+    .site-index .school-card {
+        margin: 5px 0 !important;
+    }
+    
+    .site-index .school-logo-container {
+        height: 150px;
+    }
+    
+    .site-index .school-badge {
+        font-size: 0.7rem;
+        padding: 3px 6px;
+    }
+    
+    /* Formularios */
+    .ged-form-control {
+        font-size: 0.9rem;
+        padding: 0.375rem 0.75rem;
+    }
+    
+    .ged-form-label {
+        font-size: 0.9rem;
+    }
+    
+    /* Dashboard escuelas */
+    .dashboard-stats {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+    
+    .stat-card {
+        padding: 1rem;
+    }
+    
+    .stat-card h3 {
+        font-size: 1.5rem;
+    }
+    
+    /* Responsive para tienda */
+    .store-promo-content {
+        padding: 0 0.5rem;
+    }
+    
+    .store-title {
+        font-size: 1.1rem;
+    }
+    
+    .store-description {
+        font-size: 0.8rem;
+    }
+    
+    .tienda-price {
+        font-size: 1rem;
+    }
+    
+    .tienda-discount {
+        font-size: 0.8rem;
+    }
+    
+    .categoria-body {
+        padding: 1rem;
+    }
+    
+    .producto-item {
+        padding: 0.75rem 0;
+    }
+    
+    .producto-nombre {
+        font-size: 0.85rem;
+    }
+    
+    .btn-agregar-carrito {
+        padding: 0.5rem;
+        font-size: 0.8rem;
+    }
+    
+    .carrito-contador {
+        width: 18px;
+        height: 18px;
+        font-size: 0.7rem;
+    }
+    
+    .tienda-card {
+        padding: 1rem;
+    }
+    
+    .tienda-nombre {
+        font-size: 1rem;
+    }
+    
+    .tienda-desc {
+        font-size: 0.8rem;
+    }
+    
+    .tiendas-patrocinadas-section {
+        padding: 2rem 0;
+    }
+    
+    .producto-flotante {
+        width: 35px;
+        height: 35px;
+        font-size: 1.2rem;
+    }
+}
+
+/* ================================================== */
+/* RESPONSIVE ADICIONAL PARA ORIENTACIÓN              */
+/* ================================================== */
+
+@media (max-width: 768px) and (orientation: portrait) {
+    .landing-carousel {
+        height: 55vh !important;
+    }
+}
+
+@media (max-width: 768px) and (orientation: landscape) {
+    .landing-carousel {
+        height: 70vh !important;
+    }
+    
+    .landing-carousel .landing-caption {
+        bottom: 10%;
+    }
+}
+
+@media (max-width: 375px) {
+    .ged-offcanvas-sidebar {
+        width: 90% !important;
+        max-width: 280px !important;
+    }
+    
+    .menu-link {
+        padding: 10px 15px !important;
+        font-size: 0.9rem !important;
+    }
+    
+    .offcanvas-header {
+        padding: 1rem !important;
+        height: 60px !important;
+    }
+}
+
+/* ================================================== */
+/* CORRECCIONES DE VIEWPORT                           */
+/* ================================================== */
+
+.vw-100 {
+    width: 100vw !important;
+    max-width: 100vw !important;
+}
+
+/* ================================================== */
+/* PREVENCIÓN DE OVERFLOW EN NAVBAR ITEMS             */
+/* ================================================== */
+
+.navbar-nav {
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+/* ================================================== */
+/* FIX PARA DROPDOWNS                                 */
+/* ================================================== */
+
+.dropdown-menu {
+    max-width: 100vw;
+    overflow-x: hidden;
+}
+
+/* ================================================== */
+/* IMPORTANT OVERRIDES                                */
+/* ================================================== */
+
+.width-100-vw {
+    width: 100vw !important;
+}
+
+.max-width-100-vw {
+    max-width: 100vw !important;
+}
+
+.min-width-100-vw {
+    min-width: 100vw !important;
+}
+
+/* ================================================== */
+/* FIX PARA BOOTSTRAP COLLAPSE                        */
+/* ================================================== */
+
+.navbar-collapse {
+    transition: none !important;
+}
+
+#navbarGedCollapse {
+    position: absolute !important;
+    top: 100% !important;
+    left: 0 !important;
+    right: 0 !important;
+    background: linear-gradient(135deg, #6c3483 0%, #5B2C6F 100%) !important;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2) !important;
+    z-index: 1020 !important;
+    padding: 15px !important;
+    max-height: calc(100vh - 60px) !important;
+    overflow-y: auto !important;
+    border-top: 1px solid rgba(255,255,255,0.1) !important;
+}
+
+#navbarGedCollapse .main-navigation {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+}
+
+#navbarGedCollapse .nav-link {
+    width: 100% !important;
+    padding: 12px 15px !important;
+    border-radius: 4px !important;
+    margin-bottom: 5px !important;
+}
+
+#navbarGedCollapse .nav-link:hover {
+    background: rgba(255,255,255,0.15) !important;
+}
+
+/* ================================================== */
+/* ACCESIBILIDAD                                      */
+/* ================================================== */
+
+.navbar-contextual:focus-within {
+    outline: 2px solid rgba(255,255,255,0.5) !important;
+    outline-offset: -2px !important;
+}
+
+.navbar-toggler:focus,
+.navbar-toggler:active {
+    outline: 2px solid rgba(255,255,255,0.8) !important;
+    outline-offset: 2px !important;
+}
+
+/* ================================================== */
+/* PRINT STYLES                                       */
+/* ================================================== */
+
+@media print {
+    .navbar-contextual {
+        position: static !important;
+        background: white !important;
+        color: black !important;
+        box-shadow: none !important;
+        border-bottom: 1px solid #ddd !important;
+    }
+    
+    .navbar-logo {
+        filter: grayscale(100%) brightness(0%) !important;
+    }
+    
+    .navbar-social-section,
+    .session-controls,
+    .navbar-toggler {
+        display: none !important;
+    }
+}
