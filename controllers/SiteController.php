@@ -71,13 +71,6 @@ class SiteController extends Controller
     public function actionIndex()
     {
         // ✅ PREVENCIÓN DE BUCLE: Verificar si ya estamos autenticados en página de login
-        $currentRoute = Yii::$app->controller->route;
-        
-        // ✅ SI ESTÁ AUTENTICADO Y TRATA DE ACCEDER A LOGIN, REDIRIGIR AL INDEX
-        if (!Yii::$app->user->isGuest && $currentRoute === 'site/login') {
-            return $this->redirect(['site/index']);
-        }
-        
         // ✅ SI YA ESTÁ AUTENTICADO Y ACCEDE AL INDEX, NO HACER NADA ESPECIAL
         // ✅ PERMITIR QUE USUARIOS AUTENTICADOS VEAN EL LANDING
         
@@ -316,22 +309,24 @@ class SiteController extends Controller
     }
     
     /**
-     * ✅ MÉTODO ADICIONAL: goHome personalizado para prevenir bucle
-     * Sobrescribe el método goHome() para asegurar que siempre redirija al index
+     * ✅ MÉTODO ADICIONAL: Test para CSS
      */
     public function actionTestcss()
     {
-        // ✅ SIEMPRE REDIRIGIR AL INDEX, NUNCA AL LOGIN
-        // Para debug: var_dump("entre a test"); die();
         return $this->render('test-css');
     }
 
     /**
      * Acción para probar los módulos JavaScript
      * @return string
-    */
+     */
     public function actionTestJs()
     {
+        // Solo permitir en desarrollo
+        if (!YII_DEBUG && !YII_ENV_DEV) {
+            throw new \yii\web\NotFoundHttpException();
+        }
+        
         return $this->render('test-js');
     }
     
@@ -341,6 +336,11 @@ class SiteController extends Controller
      */
      public function actionCheckRedirectLoop()
     {
+        // Solo permitir en desarrollo
+        if (!YII_DEBUG && !YII_ENV_DEV) {
+            throw new \yii\web\NotFoundHttpException();
+        }
+        
         Yii::info('Verificación de bucle de redirección solicitada', 'security');
         
         $data = [
@@ -382,7 +382,6 @@ class SiteController extends Controller
         
         $this->layout = false;
         
-        // Verificar base de datos
         echo "<!DOCTYPE html><html><head><title>Debug Menu</title><style>
             body { font-family: Arial, sans-serif; padding: 20px; background: #f5f5f5; }
             .section { background: white; padding: 20px; margin: 20px 0; border-radius: 5px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
@@ -399,7 +398,6 @@ class SiteController extends Controller
         
         echo "<h1>🔍 DEBUG DEL SISTEMA DE MENÚ</h1>";
         
-        // 1. VERIFICAR CONEXIÓN A BD
         echo "<div class='section'>";
         echo "<h2>1. Verificar Base de Datos</h2>";
         
@@ -411,11 +409,10 @@ class SiteController extends Controller
                 echo "<p class='error'>❌ No hay conexión activa a BD</p>";
             }
         } catch (\Exception $e) {
-            echo "<p class='error'>❌ Error de conexión: " . $e->getMessage() . "</p>";
+            echo "<p class='error'>❌ Error de conexión: " . htmlspecialchars($e->getMessage()) . "</p>";
         }
         echo "</div>";
         
-        // 2. VERIFICAR TABLA DE MENÚS
         echo "<div class='section'>";
         echo "<h2>2. Verificar Tabla 'seguridad.menu'</h2>";
         
@@ -431,11 +428,9 @@ class SiteController extends Controller
             if ($tableExists) {
                 echo "<p class='success'>✅ Tabla 'seguridad.menu' existe</p>";
                 
-                // Contar registros
                 $count = \Yii::$app->db->createCommand("SELECT COUNT(*) FROM seguridad.menu")->queryScalar();
                 echo "<p>Total registros: " . $count . "</p>";
                 
-                // Mostrar estructura
                 $columns = \Yii::$app->db->createCommand("
                     SELECT column_name, data_type, is_nullable
                     FROM information_schema.columns
@@ -448,9 +443,9 @@ class SiteController extends Controller
                 echo "<tr><th>Columna</th><th>Tipo</th><th>¿Nulo?</th></tr>";
                 foreach ($columns as $col) {
                     echo "<tr>";
-                    echo "<td>" . $col['column_name'] . "</td>";
-                    echo "<td>" . $col['data_type'] . "</td>";
-                    echo "<td>" . $col['is_nullable'] . "</td>";
+                    echo "<td>" . htmlspecialchars($col['column_name']) . "</td>";
+                    echo "<td>" . htmlspecialchars($col['data_type']) . "</td>";
+                    echo "<td>" . htmlspecialchars($col['is_nullable']) . "</td>";
                     echo "</tr>";
                 }
                 echo "</table>";
@@ -459,11 +454,10 @@ class SiteController extends Controller
                 echo "<p class='error'>❌ Tabla 'seguridad.menu' NO existe</p>";
             }
         } catch (\Exception $e) {
-            echo "<p class='error'>❌ Error: " . $e->getMessage() . "</p>";
+            echo "<p class='error'>❌ Error: " . htmlspecialchars($e->getMessage()) . "</p>";
         }
         echo "</div>";
         
-        // 3. MOSTRAR CONTENIDO DE LA TABLA
         echo "<div class='section'>";
         echo "<h2>3. Contenido de la Tabla</h2>";
         
@@ -481,7 +475,7 @@ class SiteController extends Controller
                 echo "<tr><th>ID</th><th>Nombre</th><th>Ruta</th><th>Parent</th><th>Orden</th><th>Data (JSON)</th></tr>";
                 foreach ($menus as $menu) {
                     echo "<tr>";
-                    echo "<td>" . $menu['id'] . "</td>";
+                    echo "<td>" . htmlspecialchars($menu['id']) . "</td>";
                     echo "<td><strong>" . htmlspecialchars($menu['name']) . "</strong></td>";
                     echo "<td>" . ($menu['route'] ? htmlspecialchars($menu['route']) : '<em># (sin ruta)</em>') . "</td>";
                     echo "<td>" . ($menu['parent'] ?: '<em>raíz</em>') . "</td>";
@@ -492,11 +486,10 @@ class SiteController extends Controller
                 echo "</table>";
             }
         } catch (\Exception $e) {
-            echo "<p class='error'>❌ Error al leer datos: " . $e->getMessage() . "</p>";
+            echo "<p class='error'>❌ Error al leer datos: " . htmlspecialchars($e->getMessage()) . "</p>";
         }
         echo "</div>";
         
-        // 4. VERIFICAR USUARIO
         echo "<div class='section'>";
         echo "<h2>4. Usuario Actual</h2>";
         
@@ -504,10 +497,9 @@ class SiteController extends Controller
             echo "<p class='warning'>👤 Usuario: <strong>INVITADO</strong></p>";
         } else {
             $user = \Yii::$app->user->identity;
-            echo "<p class='success'>👤 Usuario: <strong>" . $user->username . "</strong></p>";
+            echo "<p class='success'>👤 Usuario: <strong>" . htmlspecialchars($user->username) . "</strong></p>";
             echo "<p>ID: " . $user->id . "</p>";
             
-            // Verificar permisos
             echo "<h4>Permisos RBAC:</h4>";
             $auth = \Yii::$app->authManager;
             $permissions = $auth->getPermissionsByUser($user->id);
@@ -517,14 +509,13 @@ class SiteController extends Controller
             } else {
                 echo "<ul>";
                 foreach ($permissions as $permission) {
-                    echo "<li>" . $permission->name . "</li>";
+                    echo "<li>" . htmlspecialchars($permission->name) . "</li>";
                 }
                 echo "</ul>";
             }
         }
         echo "</div>";
         
-        // 5. PROBAR MenuWidget
         echo "<div class='section'>";
         echo "<h2>5. Probar MenuWidget</h2>";
         
@@ -550,12 +541,11 @@ class SiteController extends Controller
                 echo "</div>";
             }
         } catch (\Exception $e) {
-            echo "<p class='error'>❌ Error en MenuWidget: " . $e->getMessage() . "</p>";
-            echo "<pre>" . $e->getTraceAsString() . "</pre>";
+            echo "<p class='error'>❌ Error en MenuWidget: " . htmlspecialchars($e->getMessage()) . "</p>";
+            echo "<pre>" . htmlspecialchars($e->getTraceAsString()) . "</pre>";
         }
         echo "</div>";
         
-        // Probar función getMenuItems directamente
         echo "<div class='debug-box'>";
         echo "<h4>Probar getMenuItems() directamente:</h4>";
         
@@ -569,22 +559,21 @@ class SiteController extends Controller
                 echo "<h5>Estructura del menú:</h5>";
                 echo "<pre style='background: #f0f0f0; padding: 10px;'>";
                 foreach ($items as $index => $item) {
-                    echo "Item {$index}: " . $item['label'] . " (" . ($item['route'] ?? '#') . ")\n";
+                    echo "Item {$index}: " . (isset($item['label']) ? htmlspecialchars($item['label']) : 'Sin etiqueta') . " (" . (isset($item['route']) ? htmlspecialchars($item['route']) : '#') . ")\n";
                     if (!empty($item['items'])) {
                         foreach ($item['items'] as $childIndex => $child) {
-                            echo "  ├─ Child {$childIndex}: " . $child['label'] . " (" . ($child['route'] ?? '#') . ")\n";
+                            echo "  ├─ Child {$childIndex}: " . (isset($child['label']) ? htmlspecialchars($child['label']) : 'Sin etiqueta') . " (" . (isset($child['route']) ? htmlspecialchars($child['route']) : '#') . ")\n";
                         }
                     }
                 }
                 echo "</pre>";
             }
         } catch (\Exception $e) {
-            echo "<p class='error'>❌ Error: " . $e->getMessage() . "</p>";
+            echo "<p class='error'>❌ Error: " . htmlspecialchars($e->getMessage()) . "</p>";
         }
         echo "</div>";
         echo "</div>";
         
-        // 6. VERIFICAR RUTAS PÚBLICAS (CORREGIDO - sin llamar a isPublicRoute)
         echo "<div class='section'>";
         echo "<h2>6. Verificar Rutas Públicas</h2>";
         
@@ -601,29 +590,25 @@ class SiteController extends Controller
         echo "<tr><th>Ruta</th><th>Descripción</th><th>¿Pública?</th><th>Acción</th></tr>";
         
         foreach ($testRoutes as $route => $desc) {
-            // ✅ CORRECCIÓN: Verificar rutas públicas usando params en lugar de MenuWidget
             $publicRoutes = \Yii::$app->params['publicRoutes'] ?? [];
             $isPublic = in_array($route, $publicRoutes);
             
             echo "<tr>";
-            echo "<td>" . $route . "</td>";
-            echo "<td>" . $desc . "</td>";
+            echo "<td>" . htmlspecialchars($route) . "</td>";
+            echo "<td>" . htmlspecialchars($desc) . "</td>";
             echo "<td class='" . ($isPublic ? "success" : "error") . "'>" . ($isPublic ? "✅ SÍ" : "❌ NO") . "</td>";
             echo "<td>";
-            echo "<button class='test-btn' onclick=\"window.open('/" . $route . "', '_blank')\">Probar ruta</button>";
+            echo "<button class='test-btn' onclick=\"window.open('/" . htmlspecialchars($route) . "', '_blank')\">Probar ruta</button>";
             echo "</td>";
             echo "</tr>";
         }
         echo "</table>";
         
-        // Mostrar rutas públicas configuradas
         echo "<div class='debug-box'>";
         echo "<h4>Rutas públicas configuradas en params:</h4>";
         $publicRoutes = \Yii::$app->params['publicRoutes'] ?? [];
         echo "<pre>" . htmlspecialchars(print_r($publicRoutes, true)) . "</pre>";
         
-        // Verificar allowActions también
-        echo "<h4>Rutas en allowActions:</h4>";
         $allowActions = [
             'site/index',
             'site/login',
@@ -643,11 +628,11 @@ class SiteController extends Controller
             'parroquia/get-by-muni-cod',
             'tasa-dolar/index',
         ];
+        echo "<h4>Rutas en allowActions:</h4>";
         echo "<pre>" . htmlspecialchars(print_r($allowActions, true)) . "</pre>";
         echo "</div>";
         echo "</div>";
         
-        // 7. BOTONES DE ACCIÓN
         echo "<div class='section'>";
         echo "<h2>7. Acciones</h2>";
         
@@ -659,22 +644,22 @@ class SiteController extends Controller
         echo "<script>
             function clearCache() {
                 fetch('/site/clear-cache')
-                    .then(response => response.text())
-                    .then(data => {
+                    .then(function(response) { return response.text(); })
+                    .then(function(data) {
                         alert('Cache limpiado');
                         window.location.reload();
                     })
-                    .catch(error => console.error('Error:', error));
+                    .catch(function(error) { console.error('Error:', error); });
             }
             
             function testMenuWidget() {
                 fetch('/site/test-menu-widget')
-                    .then(response => response.text())
-                    .then(data => {
+                    .then(function(response) { return response.text(); })
+                    .then(function(data) {
                         alert('Test completado. Ver consola para detalles.');
                         console.log('Test MenuWidget:', data);
                     })
-                    .catch(error => console.error('Error:', error));
+                    .catch(function(error) { console.error('Error:', error); });
             }
         </script>";
         echo "</div>";
@@ -685,6 +670,11 @@ class SiteController extends Controller
 
     public function actionTestMenuWidget()
     {
+        // Solo permitir en desarrollo
+        if (!YII_DEBUG && !YII_ENV_DEV) {
+            throw new \yii\web\NotFoundHttpException();
+        }
+        
         try {
             $widget = new \app\components\MenuWidget();
             $items = $widget->getMenuItems(null);
@@ -708,6 +698,11 @@ class SiteController extends Controller
 
     public function actionClearCache()
     {
+        // Solo permitir en desarrollo
+        if (!YII_DEBUG && !YII_ENV_DEV) {
+            throw new \yii\web\NotFoundHttpException();
+        }
+        
         if (Yii::$app->cache) {
             Yii::$app->cache->flush();
         }
@@ -718,45 +713,874 @@ class SiteController extends Controller
         echo "Cache limpiado";
         exit;
     }
-    
+
     /**
-     * Método auxiliar para verificar si una ruta es pública
-     * (reemplaza al método eliminado de MenuWidget)
+     * Acción para diagnosticar el menú GED
+     * URL: /site/diagnosticar-menu
      */
-    private function isRoutePublic($route)
+    public function actionDiagnosticarMenu()
     {
-        $route = ltrim($route, '/');
+        // Solo permitir en desarrollo
+        if (!YII_DEBUG && !YII_ENV_DEV) {
+            throw new \yii\web\NotFoundHttpException();
+        }
         
-        // Rutas públicas por defecto (deberían venir de params)
-        $publicRoutes = Yii::$app->params['publicRoutes'] ?? [
-            'site/index',
-            'site/login',
-            'site/logout',
-            'site/about',
-            'site/contact',
-            'site/signup',
-            'site/request-password-reset',
-            'site/reset-password',
-            'site/cambiar-password',
-            'site/mi-cuenta',
-            'site/acceder-sistema',
-            
-            'ged/default/index',
-            
-            'tienda/marketplace',
-            'tienda/marketplace/index',
-            'tienda/marketplace/buscar',
-            'tienda/marketplace/categoria',
-            
-            'admin/user/signup',
-            'admin/user/request-password-reset',
-            'admin/user/reset-password',
-            
-            'municipio/get-by-edo',
-            'parroquia/get-by-muni',
-            'parroquia/get-by-muni-cod',
-        ];
+        Yii::$app->response->format = Response::FORMAT_RAW;
+        header('Content-Type: text/javascript');
         
-        return in_array($route, $publicRoutes);
+        // Construir el script manualmente para evitar problemas de sintaxis
+        $script = '// ==================================================' . "\n";
+        $script .= '// DIAGNÓSTICO COMPLETO DEL MENÚ GED - SiteController' . "\n";
+        $script .= '// Generado: ' . date('Y-m-d H:i:s') . "\n";
+        $script .= '// ==================================================' . "\n\n";
+        
+        $script .= 'console.clear();' . "\n";
+        $script .= 'console.log("%c🚀 DIAGNÓSTICO DEL MENÚ GED - SiteController",' . "\n";
+        $script .= '            "color: #fff; background: #6c3483; padding: 5px 10px; border-radius: 3px; font-size: 16px;");' . "\n";
+        $script .= 'console.log("URL: " + window.location.href);' . "\n";
+        $script .= 'console.log("=========================================\\n");' . "\n\n";
+        
+        // 1. DIAGNÓSTICO BÁSICO
+        $script .= '// 1. DIAGNÓSTICO BÁSICO' . "\n";
+        $script .= 'function diagnosticoBasico() {' . "\n";
+        $script .= '    console.log("%c1. 📊 DIAGNÓSTICO BÁSICO", "color: #3498db; font-weight: bold;");' . "\n";
+        $script .= '    ' . "\n";
+        $script .= '    var submenus = document.querySelectorAll(".dropdown-submenu");' . "\n";
+        $script .= '    var menus = document.querySelectorAll(".dropdown-menu");' . "\n";
+        $script .= '    var mainNavItems = document.querySelectorAll(".main-navigation > li");' . "\n";
+        $script .= '    ' . "\n";
+        $script .= '    console.log("   • Submenús (.dropdown-submenu): " + submenus.length);' . "\n";
+        $script .= '    console.log("   • Menús dropdown (.dropdown-menu): " + menus.length);' . "\n";
+        $script .= '    console.log("   • Elementos en menú principal: " + mainNavItems.length);' . "\n";
+        $script .= '    ' . "\n";
+        $script .= '    // Mostrar estructura' . "\n";
+        $script .= '    if (submenus.length > 0) {' . "\n";
+        $script .= '        console.log("   📍 Submenús encontrados:");' . "\n";
+        $script .= '        submenus.forEach(function(sub, i) {' . "\n";
+        $script .= '            var link = sub.querySelector("a");' . "\n";
+        $script .= '            var hasMenu = sub.querySelector(".dropdown-menu");' . "\n";
+        $script .= '            var linkText = link ? link.textContent.trim() : "Sin texto";' . "\n";
+        $script .= '            console.log("     " + (i+1) + ". " + linkText + " " + (hasMenu ? "✅" : "❌"));' . "\n";
+        $script .= '        });' . "\n";
+        $script .= '    } else {' . "\n";
+        $script .= '        console.log("   ❌ NO se encontraron submenús anidados");' . "\n";
+        $script .= '    }' . "\n";
+        $script .= '    ' . "\n";
+        $script .= '    console.log("");' . "\n";
+        $script .= '    return submenus.length;' . "\n";
+        $script .= '}' . "\n\n";
+        
+        // 2. VERIFICACIÓN DE ESTILOS CSS
+        $script .= '// 2. VERIFICACIÓN DE ESTILOS CSS' . "\n";
+        $script .= 'function verificarEstilosCSS() {' . "\n";
+        $script .= '    console.log("%c2. 🎨 VERIFICACIÓN DE ESTILOS CSS", "color: #3498db; font-weight: bold;");' . "\n";
+        $script .= '    ' . "\n";
+        $script .= '    var stylesheets = Array.from(document.styleSheets);' . "\n";
+        $script .= '    var submenuStyles = 0;' . "\n";
+        $script .= '    var submenuCSS = [];' . "\n";
+        $script .= '    ' . "\n";
+        $script .= '    stylesheets.forEach(function(sheet, i) {' . "\n";
+        $script .= '        try {' . "\n";
+        $script .= '            var rules = Array.from(sheet.cssRules || []);' . "\n";
+        $script .= '            rules.forEach(function(rule) {' . "\n";
+        $script .= '                if (rule.selectorText && rule.selectorText.includes(".dropdown-submenu")) {' . "\n";
+        $script .= '                    submenuStyles++;' . "\n";
+        $script .= '                    submenuCSS.push({' . "\n";
+        $script .= '                        sheet: sheet.href ? sheet.href.split("/").pop() : "Sheet " + i,' . "\n";
+        $script .= '                        selector: rule.selectorText,' . "\n";
+        $script .= '                        display: rule.style ? rule.style.display || "N/A" : "N/A"' . "\n";
+        $script .= '                    });' . "\n";
+        $script .= '                }' . "\n";
+        $script .= '            });' . "\n";
+        $script .= '        } catch(e) {' . "\n";
+        $script .= '            // Ignorar errores de CORS' . "\n";
+        $script .= '        }' . "\n";
+        $script .= '    });' . "\n";
+        $script .= '    ' . "\n";
+        $script .= '    console.log("   • Reglas CSS para .dropdown-submenu: " + submenuStyles);' . "\n";
+        $script .= '    ' . "\n";
+        $script .= '    if (submenuCSS.length > 0) {' . "\n";
+        $script .= '        console.log("   📋 Reglas encontradas:");' . "\n";
+        $script .= '        submenuCSS.forEach(function(css) {' . "\n";
+        $script .= '            console.log("     • " + css.sheet + ": " + css.selector);' . "\n";
+        $script .= '        });' . "\n";
+        $script .= '    } else {' . "\n";
+        $script .= '        console.log("   ⚠️  No se encontraron reglas CSS específicas para submenús");' . "\n";
+        $script .= '    }' . "\n";
+        $script .= '    ' . "\n";
+        $script .= '    // Verificar si _submenus.css está cargado' . "\n";
+        $script .= '    var submenuFile = Array.from(stylesheets).find(function(s) {' . "\n";
+        $script .= '        return s.href && s.href.includes("_submenus.css");' . "\n";
+        $script .= '    });' . "\n";
+        $script .= '    console.log("   • _submenus.css cargado: " + (submenuFile ? "✅" : "❌"));' . "\n";
+        $script .= '    ' . "\n";
+        $script .= '    console.log("");' . "\n";
+        $script .= '    return submenuStyles;' . "\n";
+        $script .= '}' . "\n\n";
+        
+        // 3. VERIFICACIÓN DE POSICIÓN Y VISIBILIDAD
+        $script .= '// 3. VERIFICACIÓN DE POSICIÓN Y VISIBILIDAD' . "\n";
+        $script .= 'function verificarPosicionYVisibilidad() {' . "\n";
+        $script .= '    console.log("%c3. 📐 VERIFICACIÓN DE POSICIÓN Y VISIBILIDAD", "color: #3498db; font-weight: bold;");' . "\n";
+        $script .= '    ' . "\n";
+        $script .= '    var submenus = document.querySelectorAll(".dropdown-submenu");' . "\n";
+        $script .= '    var viewport = {' . "\n";
+        $script .= '        width: window.innerWidth,' . "\n";
+        $script .= '        height: window.innerHeight' . "\n";
+        $script .= '    };' . "\n";
+        $script .= '    ' . "\n";
+        $script .= '    console.log("   • Viewport: " + viewport.width + "px × " + viewport.height + "px");' . "\n";
+        $script .= '    console.log("   • Es escritorio (>992px): " + (viewport.width >= 992 ? "✅" : "❌"));' . "\n";
+        $script .= '    ' . "\n";
+        $script .= '    if (submenus.length === 0) {' . "\n";
+        $script .= '        console.log("   ⚠️  No hay submenús para verificar");' . "\n";
+        $script .= '        return;' . "\n";
+        $script .= '    }' . "\n";
+        $script .= '    ' . "\n";
+        $script .= '    submenus.forEach(function(submenu, index) {' . "\n";
+        $script .= '        var menu = submenu.querySelector(".dropdown-menu");' . "\n";
+        $script .= '        if (!menu) return;' . "\n";
+        $script .= '        ' . "\n";
+        $script .= '        var subRect = submenu.getBoundingClientRect();' . "\n";
+        $script .= '        var menuRect = menu.getBoundingClientRect();' . "\n";
+        $script .= '        var styles = window.getComputedStyle(menu);' . "\n";
+        $script .= '        ' . "\n";
+        $script .= '        console.log("\\n   📍 Submenú " + (index + 1) + ":");' . "\n";
+        $script .= '        console.log("     • Posición contenedor: (" + subRect.left.toFixed(0) + ", " + subRect.top.toFixed(0) + ")");' . "\n";
+        $script .= '        console.log("     • Tamaño contenedor: " + subRect.width.toFixed(0) + "×" + subRect.height.toFixed(0));' . "\n";
+        $script .= '        console.log("     • Display: " + styles.display);' . "\n";
+        $script .= '        console.log("     • Visibility: " + styles.visibility);' . "\n";
+        $script .= '        console.log("     • Opacity: " + styles.opacity);' . "\n";
+        $script .= '        console.log("     • Position: " + styles.position);' . "\n";
+        $script .= '        console.log("     • Z-index: " + styles.zIndex);' . "\n";
+        $script .= '        console.log("     • Left: " + styles.left);' . "\n";
+        $script .= '        console.log("     • Top: " + styles.top);' . "\n";
+        $script .= '        ' . "\n";
+        $script .= '        // Verificar si está fuera de pantalla' . "\n";
+        $script .= '        var isOffscreen = menuRect.left < 0 || ' . "\n";
+        $script .= '                        menuRect.top < 0 || ' . "\n";
+        $script .= '                        menuRect.right > viewport.width ||' . "\n";
+        $script .= '                        menuRect.bottom > viewport.height;' . "\n";
+        $script .= '        ' . "\n";
+        $script .= '        console.log("     • ¿Fuera de pantalla?: " + (isOffscreen ? "❌ SÍ" : "✅ NO"));' . "\n";
+        $script .= '        ' . "\n";
+        $script .= '        if (isOffscreen) {' . "\n";
+        $script .= '            console.log("     ⚠️  Se sale por:");' . "\n";
+        $script .= '            if (menuRect.left < 0) console.log("       - Izquierda: " + Math.abs(menuRect.left).toFixed(0) + "px");' . "\n";
+        $script .= '            if (menuRect.top < 0) console.log("       - Arriba: " + Math.abs(menuRect.top).toFixed(0) + "px");' . "\n";
+        $script .= '            if (menuRect.right > viewport.width) console.log("       - Derecha: " + (menuRect.right - viewport.width).toFixed(0) + "px");' . "\n";
+        $script .= '            if (menuRect.bottom > viewport.height) console.log("       - Abajo: " + (menuRect.bottom - viewport.height).toFixed(0) + "px");' . "\n";
+        $script .= '        }' . "\n";
+        $script .= '    });' . "\n";
+        $script .= '    ' . "\n";
+        $script .= '    console.log("");' . "\n";
+        $script .= '}' . "\n\n";
+        
+        // 4. VERIFICACIÓN DE EVENTOS
+        $script .= '// 4. VERIFICACIÓN DE EVENTOS' . "\n";
+        $script .= 'function verificarEventos() {' . "\n";
+        $script .= '    console.log("%c4. 🖱️ VERIFICACIÓN DE EVENTOS", "color: #3498db; font-weight: bold;");' . "\n";
+        $script .= '    ' . "\n";
+        $script .= '    var submenus = document.querySelectorAll(".dropdown-submenu");' . "\n";
+        $script .= '    var eventosRegistrados = 0;' . "\n";
+        $script .= '    ' . "\n";
+        $script .= '    submenus.forEach(function(submenu, index) {' . "\n";
+        $script .= '        var mouseenter = submenu._enterHandler ? "✅" : "❌";' . "\n";
+        $script .= '        var mouseleave = submenu._leaveHandler ? "✅" : "❌";' . "\n";
+        $script .= '        ' . "\n";
+        $script .= '        if (mouseenter === "✅" || mouseleave === "✅") {' . "\n";
+        $script .= '            eventosRegistrados++;' . "\n";
+        $script .= '            console.log("   • Submenú " + (index + 1) + ": mouseenter=" + mouseenter + ", mouseleave=" + mouseleave);' . "\n";
+        $script .= '        }' . "\n";
+        $script .= '    });' . "\n";
+        $script .= '    ' . "\n";
+        $script .= '    console.log("   • Total eventos registrados: " + eventosRegistrados + "/" + submenus.length);' . "\n";
+        $script .= '    ' . "\n";
+        $script .= '    // Verificar jQuery' . "\n";
+        $script .= '    console.log("   • jQuery disponible: " + (typeof $ !== "undefined" ? "✅" : "❌"));' . "\n";
+        $script .= '    ' . "\n";
+        $script .= '    // Verificar Bootstrap' . "\n";
+        $script .= '    console.log("   • Bootstrap disponible: " + (typeof bootstrap !== "undefined" ? "✅" : "❌"));' . "\n";
+        $script .= '    ' . "\n";
+        $script .= '    console.log("");' . "\n";
+        $script .= '}' . "\n\n";
+        
+        // 5. DIAGNÓSTICO DE PROBLEMAS COMUNES
+        $script .= '// 5. DIAGNÓSTICO DE PROBLEMAS COMUNES' . "\n";
+        $script .= 'function diagnosticarProblemasComunes() {' . "\n";
+        $script .= '    console.log("%c5. 🔍 DIAGNÓSTICO DE PROBLEMAS COMUNES", "color: #e74c3c; font-weight: bold;");' . "\n";
+        $script .= '    ' . "\n";
+        $script .= '    var problemas = [];' . "\n";
+        $script .= '    ' . "\n";
+        $script .= '    // 1. Verificar si hay submenús' . "\n";
+        $script .= '    var submenus = document.querySelectorAll(".dropdown-submenu");' . "\n";
+        $script .= '    if (submenus.length === 0) {' . "\n";
+        $script .= '        problemas.push("❌ No se encontraron elementos con clase .dropdown-submenu");' . "\n";
+        $script .= '    }' . "\n";
+        $script .= '    ' . "\n";
+        $script .= '    // 2. Verificar si tienen menús hijos' . "\n";
+        $script .= '    submenus.forEach(function(sub, i) {' . "\n";
+        $script .= '        if (!sub.querySelector(".dropdown-menu")) {' . "\n";
+        $script .= '            problemas.push("❌ Submenú " + (i+1) + " no tiene .dropdown-menu hijo");' . "\n";
+        $script .= '        }' . "\n";
+        $script .= '    });' . "\n";
+        $script .= '    ' . "\n";
+        $script .= '    // 3. Verificar CSS cargado' . "\n";
+        $script .= '    var stylesheets = Array.from(document.styleSheets);' . "\n";
+        $script .= '    var hasSubmenuCSS = stylesheets.some(function(sheet) {' . "\n";
+        $script .= '        try {' . "\n";
+        $script .= '            var rules = Array.from(sheet.cssRules || []);' . "\n";
+        $script .= '            return rules.some(function(rule) {' . "\n";
+        $script .= '                return rule.selectorText && rule.selectorText.includes(".dropdown-submenu");' . "\n";
+        $script .= '            });' . "\n";
+        $script .= '        } catch(e) {' . "\n";
+        $script .= '            return false;' . "\n";
+        $script .= '        }' . "\n";
+        $script .= '    });' . "\n";
+        $script .= '    ' . "\n";
+        $script .= '    if (!hasSubmenuCSS) {' . "\n";
+        $script .= '        problemas.push("❌ No se encontraron reglas CSS para .dropdown-submenu");' . "\n";
+        $script .= '    }' . "\n";
+        $script .= '    ' . "\n";
+        $script .= '    // 4. Verificar z-index conflictivo' . "\n";
+        $script .= '    var navbar = document.querySelector(".navbar-contextual");' . "\n";
+        $script .= '    if (navbar) {' . "\n";
+        $script .= '        var navbarZIndex = parseInt(window.getComputedStyle(navbar).zIndex);' . "\n";
+        $script .= '        if (navbarZIndex >= 9999) {' . "\n";
+            $script .= '            problemas.push("⚠️  Navbar tiene z-index alto (" + navbarZIndex + ") que podría tapar submenús");' . "\n";
+        $script .= '        }' . "\n";
+        $script .= '    }' . "\n";
+        $script .= '    ' . "\n";
+        $script .= '    // 5. Verificar overflow hidden' . "\n";
+        $script .= '    document.querySelectorAll("*").forEach(function(el) {' . "\n";
+        $script .= '        var style = window.getComputedStyle(el);' . "\n";
+        $script .= '        if (style.overflow === "hidden" || style.overflowX === "hidden" || style.overflowY === "hidden") {' . "\n";
+        $script .= '            var rect = el.getBoundingClientRect();' . "\n";
+        $script .= '            if (rect.width > 100 && rect.height > 100) {' . "\n";
+        $script .= '                problemas.push("⚠️  Elemento " + el.tagName + "." + el.className + " tiene overflow:hidden");' . "\n";
+        $script .= '            }' . "\n";
+        $script .= '        }' . "\n";
+        $script .= '    });' . "\n";
+        $script .= '    ' . "\n";
+        $script .= '    // Mostrar problemas' . "\n";
+        $script .= '    if (problemas.length === 0) {' . "\n";
+        $script .= '        console.log("   ✅ No se detectaron problemas comunes");' . "\n";
+        $script .= '    } else {' . "\n";
+        $script .= '        console.log("   ⚠️  Se detectaron " + problemas.length + " problemas:");' . "\n";
+        $script .= '        problemas.forEach(function(problema) {' . "\n";
+        $script .= '            console.log("     " + problema);' . "\n";
+        $script .= '        });' . "\n";
+        $script .= '    }' . "\n";
+        $script .= '    ' . "\n";
+        $script .= '    console.log("");' . "\n";
+        $script .= '}' . "\n\n";
+        
+        // 6. SOLUCIONES AUTOMÁTICAS
+        $script .= '// 6. SOLUCIONES AUTOMÁTICAS' . "\n";
+        $script .= 'function aplicarSolucionesAutomaticas() {' . "\n";
+        $script .= '    console.log("%c6. 🔧 APLICANDO SOLUCIONES AUTOMÁTICAS", "color: #27ae60; font-weight: bold;");' . "\n";
+        $script .= '    ' . "\n";
+        $script .= '    var submenus = document.querySelectorAll(".dropdown-submenu");' . "\n";
+        $script .= '    var isDesktop = window.innerWidth >= 992;' . "\n";
+        $script .= '    ' . "\n";
+        $script .= '    console.log("   • Modo actual: " + (isDesktop ? "Desktop (hover)" : "Mobile (click)"));' . "\n";
+        $script .= '    console.log("   • Submenús a configurar: " + submenus.length);' . "\n";
+        $script .= '    ' . "\n";
+        $script .= '    // Remover estilos de debug anteriores' . "\n";
+        $script .= '    document.querySelectorAll(".dropdown-submenu").forEach(function(sub) {' . "\n";
+        $script .= '        sub.style.outline = "none";' . "\n";
+        $script .= '        var menu = sub.querySelector(".dropdown-menu");' . "\n";
+        $script .= '        if (menu) menu.style.outline = "none";' . "\n";
+        $script .= '    });' . "\n";
+        $script .= '    ' . "\n";
+        $script .= '    if (isDesktop) {' . "\n";
+        $script .= '        // Configurar para desktop - hover' . "\n";
+        $script .= '        submenus.forEach(function(submenu) {' . "\n";
+        $script .= '            var menu = submenu.querySelector(".dropdown-menu");' . "\n";
+        $script .= '            if (!menu) return;' . "\n";
+        $script .= '            ' . "\n";
+        $script .= '            // Remover eventos anteriores' . "\n";
+        $script .= '            submenu.removeEventListener("mouseenter", submenu._enterHandler);' . "\n";
+        $script .= '            submenu.removeEventListener("mouseleave", submenu._leaveHandler);' . "\n";
+        $script .= '            ' . "\n";
+        $script .= '            // Configurar nuevos eventos' . "\n";
+        $script .= '            var enterHandler = function() {' . "\n";
+        $script .= '                menu.style.display = "block";' . "\n";
+        $script .= '                menu.style.opacity = "1";' . "\n";
+        $script .= '                menu.style.visibility = "visible";' . "\n";
+        $script .= '                menu.style.transform = "translateX(0)";' . "\n";
+        $script .= '                ' . "\n";
+        $script .= '                // Posicionar correctamente' . "\n";
+        $script .= '                var rect = submenu.getBoundingClientRect();' . "\n";
+        $script .= '                var viewportWidth = window.innerWidth;' . "\n";
+        $script .= '                ' . "\n";
+        $script .= '                if (rect.right + 250 > viewportWidth) {' . "\n";
+        $script .= '                    menu.style.left = "auto";' . "\n";
+        $script .= '                    menu.style.right = "100%";' . "\n";
+        $script .= '                } else {' . "\n";
+        $script .= '                    menu.style.left = "100%";' . "\n";
+        $script .= '                    menu.style.right = "auto";' . "\n";
+        $script .= '                }' . "\n";
+        $script .= '            };' . "\n";
+        $script .= '            ' . "\n";
+        $script .= '            var leaveHandler = function() {' . "\n";
+        $script .= '                setTimeout(function() {' . "\n";
+        $script .= '                    if (!submenu.matches(":hover") && !menu.matches(":hover")) {' . "\n";
+        $script .= '                        menu.style.display = "none";' . "\n";
+        $script .= '                        menu.style.opacity = "0";' . "\n";
+        $script .= '                        menu.style.visibility = "hidden";' . "\n";
+        $script .= '                    }' . "\n";
+        $script .= '                }, 100);' . "\n";
+        $script .= '            };' . "\n";
+        $script .= '            ' . "\n";
+        $script .= '            // Guardar referencias' . "\n";
+        $script .= '            submenu._enterHandler = enterHandler;' . "\n";
+        $script .= '            submenu._leaveHandler = leaveHandler;' . "\n";
+        $script .= '            ' . "\n";
+        $script .= '            // Asignar eventos' . "\n";
+        $script .= '            submenu.addEventListener("mouseenter", enterHandler);' . "\n";
+        $script .= '            submenu.addEventListener("mouseleave", leaveHandler);' . "\n";
+        $script .= '            ' . "\n";
+        $script .= '            // Ocultar inicialmente' . "\n";
+        $script .= '            menu.style.display = "none";' . "\n";
+        $script .= '            menu.style.opacity = "0";' . "\n";
+        $script .= '            menu.style.visibility = "hidden";' . "\n";
+        $script .= '            menu.style.position = "absolute";' . "\n";
+        $script .= '            menu.style.zIndex = "9999";' . "\n";
+        $script .= '            menu.style.transition = "all 0.3s ease";' . "\n";
+        $script .= '        });' . "\n";
+        $script .= '        ' . "\n";
+        $script .= '        console.log("   ✅ Comportamiento hover configurado para desktop");' . "\n";
+        $script .= '        ' . "\n";
+        $script .= '    } else {' . "\n";
+        $script .= '        // Configurar para mobile - click' . "\n";
+        $script .= '        submenus.forEach(function(submenu) {' . "\n";
+        $script .= '            var toggle = submenu.querySelector(".dropdown-toggle");' . "\n";
+        $script .= '            var menu = submenu.querySelector(".dropdown-menu");' . "\n";
+        $script .= '            ' . "\n";
+        $script .= '            if (!toggle || !menu) return;' . "\n";
+        $script .= '            ' . "\n";
+        $script .= '            // Remover eventos anteriores' . "\n";
+        $script .= '            toggle.removeEventListener("click", toggle._clickHandler);' . "\n";
+        $script .= '            ' . "\n";
+        $script .= '            // Configurar nuevo evento' . "\n";
+        $script .= '            var clickHandler = function(e) {' . "\n";
+        $script .= '                e.preventDefault();' . "\n";
+        $script .= '                e.stopPropagation();' . "\n";
+        $script .= '                ' . "\n";
+        $script .= '                var isVisible = menu.style.display === "block";' . "\n";
+        $script .= '                ' . "\n";
+        $script .= '                // Cerrar otros submenús' . "\n";
+        $script .= '                document.querySelectorAll(".dropdown-submenu").forEach(function(other) {' . "\n";
+        $script .= '                    if (other !== submenu) {' . "\n";
+        $script .= '                        var otherMenu = other.querySelector(".dropdown-menu");' . "\n";
+        $script .= '                        if (otherMenu) {' . "\n";
+        $script .= '                            otherMenu.style.display = "none";' . "\n";
+        $script .= '                            other.classList.remove("show");' . "\n";
+        $script .= '                        }' . "\n";
+        $script .= '                    }' . "\n";
+        $script .= '                });' . "\n";
+        $script .= '                ' . "\n";
+        $script .= '                // Alternar este submenú' . "\n";
+        $script .= '                if (isVisible) {' . "\n";
+        $script .= '                    menu.style.display = "none";' . "\n";
+        $script .= '                    submenu.classList.remove("show");' . "\n";
+        $script .= '                } else {' . "\n";
+        $script .= '                    menu.style.display = "block";' . "\n";
+        $script .= '                    menu.style.opacity = "1";' . "\n";
+        $script .= '                    menu.style.visibility = "visible";' . "\n";
+        $script .= '                    submenu.classList.add("show");' . "\n";
+        $script .= '                }' . "\n";
+        $script .= '            };' . "\n";
+        $script .= '            ' . "\n";
+        $script .= '            // Guardar referencia' . "\n";
+        $script .= '            toggle._clickHandler = clickHandler;' . "\n";
+        $script .= '            ' . "\n";
+        $script .= '            // Asignar evento' . "\n";
+        $script .= '            toggle.addEventListener("click", clickHandler);' . "\n";
+        $script .= '            ' . "\n";
+        $script .= '            // Ocultar inicialmente' . "\n";
+        $script .= '            menu.style.display = "none";' . "\n";
+        $script .= '            menu.style.position = "static";' . "\n";
+        $script .= '            menu.style.marginLeft = "15px";' . "\n";
+        $script .= '        });' . "\n";
+        $script .= '        ' . "\n";
+        $script .= '        console.log("   ✅ Comportamiento click configurado para mobile");' . "\n";
+        $script .= '    }' . "\n";
+        $script .= '    ' . "\n";
+        $script .= '    console.log("");' . "\n";
+        $script .= '}' . "\n\n";
+        
+        // 7. HERRAMIENTAS DE DEBUG
+        $script .= '// 7. HERRAMIENTAS DE DEBUG' . "\n";
+        $script .= 'function configurarHerramientasDebug() {' . "\n";
+        $script .= '    console.log("%c7. 🛠️ HERRAMIENTAS DE DEBUG DISPONIBLES", "color: #9b59b6; font-weight: bold;");' . "\n";
+        $script .= '    ' . "\n";
+        $script .= '    // Función para mostrar todos los submenús' . "\n";
+        $script .= '    window.mostrarTodosSubmenus = function() {' . "\n";
+        $script .= '        console.log("👁️  Mostrando todos los submenús...");' . "\n";
+        $script .= '        document.querySelectorAll(".dropdown-submenu > .dropdown-menu").forEach(function(menu) {' . "\n";
+        $script .= '            menu.style.cssText = "display: block !important; opacity: 1 !important; visibility: visible !important; position: fixed !important; left: 50% !important; top: 50% !important; transform: translate(-50%, -50%) !important; z-index: 99999 !important; background: #7d3c98 !important; border: 4px solid #00ff00 !important; border-radius: 10px !important; padding: 20px !important; min-width: 250px !important; color: white !important; box-shadow: 0 20px 60px rgba(0,0,0,0.7) !important;";' . "\n";
+        $script .= '        });' . "\n";
+        $script .= '        console.log("✅ Todos los submenús forzados a mostrar en el centro");' . "\n";
+        $script .= '    };' . "\n";
+        $script .= '    ' . "\n";
+        $script .= '    // Función para restaurar' . "\n";
+        $script .= '    window.restaurarSubmenus = function() {' . "\n";
+        $script .= '        console.log("🔄 Restaurando comportamiento normal...");' . "\n";
+        $script .= '        document.querySelectorAll(".dropdown-submenu > .dropdown-menu").forEach(function(menu) {' . "\n";
+        $script .= '            menu.style.cssText = "";' . "\n";
+        $script .= '        });' . "\n";
+        $script .= '        console.log("✅ Submenús restaurados");' . "\n";
+        $script .= '    };' . "\n";
+        $script .= '    ' . "\n";
+        $script .= '    // Función para ver estructura' . "\n";
+        $script .= '    window.verificarEstructuraMenu = function() {' . "\n";
+        $script .= '        console.log("📐 Verificando estructura del menú...");' . "\n";
+        $script .= '        var items = document.querySelectorAll(".main-navigation > li");' . "\n";
+        $script .= '        console.log("Menú tiene " + items.length + " elementos principales:");' . "\n";
+        $script .= '        ' . "\n";
+        $script .= '        items.forEach(function(item, i) {' . "\n";
+        $script .= '            var link = item.querySelector(".nav-link, .dropdown-toggle");' . "\n";
+        $script .= '            var submenus = item.querySelectorAll(".dropdown-submenu");' . "\n";
+        $script .= '            var linkText = link ? link.textContent.trim() : "Sin texto";' . "\n";
+        $script .= '            console.log("  " + (i+1) + ". " + linkText + " " + (submenus.length > 0 ? "(→ " + submenus.length + " submenús)" : ""));' . "\n";
+        $script .= '        });' . "\n";
+        $script .= '    };' . "\n";
+        $script .= '    ' . "\n";
+        $script .= '    // Función para inyectar CSS de emergencia' . "\n";
+        $script .= '    window.inyectarCSSemergencia = function() {' . "\n";
+        $script .= '        console.log("🎨 Inyectando CSS de emergencia...");' . "\n";
+        $script .= '        var css = ".dropdown-submenu > .dropdown-menu { display: block !important; position: absolute !important; left: 100% !important; top: 0 !important; z-index: 9999 !important; background: #7d3c98 !important; border: 3px solid red !important; border-radius: 5px !important; padding: 10px 0 !important; min-width: 200px !important; opacity: 1 !important; visibility: visible !important; }";' . "\n";
+        $script .= '        ' . "\n";
+        $script .= '        var style = document.createElement("style");' . "\n";
+        $script .= '        style.id = "css-emergencia-diagnostico";' . "\n";
+        $script .= '        style.textContent = css;' . "\n";
+        $script .= '        document.head.appendChild(style);' . "\n";
+        $script .= '        console.log("✅ CSS de emergencia inyectado");' . "\n";
+        $script .= '    };' . "\n";
+        $script .= '    ' . "\n";
+        $script .= '    console.log("   • mostrarTodosSubmenus() - Forza visibilidad de todos los submenús");' . "\n";
+        $script .= '    console.log("   • restaurarSubmenus() - Restaura comportamiento normal");' . "\n";
+        $script .= '    console.log("   • verificarEstructuraMenu() - Muestra estructura del menú");' . "\n";
+        $script .= '    console.log("   • inyectarCSSemergencia() - Inyecta CSS de emergencia");' . "\n";
+        $script .= '    console.log("");' . "\n";
+        $script .= '}' . "\n\n";
+        
+        // 8. EJECUTAR DIAGNÓSTICO COMPLETO
+        $script .= '// 8. EJECUTAR DIAGNÓSTICO COMPLETO' . "\n";
+        $script .= 'function ejecutarDiagnosticoCompleto() {' . "\n";
+        $script .= '    console.log("%c▶️ EJECUTANDO DIAGNÓSTICO COMPLETO", "color: #fff; background: #2c3e50; padding: 5px 10px;");' . "\n";
+        $script .= '    ' . "\n";
+        $script .= '    diagnosticoBasico();' . "\n";
+        $script .= '    verificarEstilosCSS();' . "\n";
+        $script .= '    verificarPosicionYVisibilidad();' . "\n";
+        $script .= '    verificarEventos();' . "\n";
+        $script .= '    diagnosticarProblemasComunes();' . "\n";
+        $script .= '    aplicarSolucionesAutomaticas();' . "\n";
+        $script .= '    configurarHerramientasDebug();' . "\n";
+        $script .= '    ' . "\n";
+        $script .= '    console.log("%c✅ DIAGNÓSTICO COMPLETADO", "color: #fff; background: #27ae60; padding: 5px 10px;");' . "\n";
+        $script .= '    console.log("\\n📋 RESUMEN:");' . "\n";
+        $script .= '    console.log("1. Ejecuta las soluciones automáticas");' . "\n";
+        $script .= '    console.log("2. Usa mostrarTodosSubmenus() para verificar");' . "\n";
+        $script .= '    console.log("3. Pasa el mouse sobre los menús para probar");' . "\n";
+        $script .= '    console.log("\\n🔧 Para forzar visibilidad inmediata:");' . "\n";
+        $script .= '    console.log("   mostrarTodosSubmenus();");' . "\n";
+        $script .= '}' . "\n\n";
+        
+        // 9. INICIALIZAR
+        $script .= '// 9. INICIALIZAR' . "\n";
+        $script .= '(function init() {' . "\n";
+        $script .= '    // Esperar a que el DOM esté listo' . "\n";
+        $script .= '    if (document.readyState === "loading") {' . "\n";
+        $script .= '        document.addEventListener("DOMContentLoaded", ejecutarDiagnosticoCompleto);' . "\n";
+        $script .= '    } else {' . "\n";
+        $script .= '        setTimeout(ejecutarDiagnosticoCompleto, 100);' . "\n";
+        $script .= '    }' . "\n";
+        $script .= '    ' . "\n";
+        $script .= '    // Exponer funciones globalmente' . "\n";
+        $script .= '    window.diagnosticoMenuGED = {' . "\n";
+        $script .= '        ejecutarCompleto: ejecutarDiagnosticoCompleto,' . "\n";
+        $script .= '        diagnosticoBasico: diagnosticoBasico,' . "\n";
+        $script .= '        verificarEstilos: verificarEstilosCSS,' . "\n";
+        $script .= '        verificarPosicion: verificarPosicionYVisibilidad,' . "\n";
+        $script .= '        verificarEventos: verificarEventos,' . "\n";
+        $script .= '        diagnosticarProblemas: diagnosticarProblemasComunes,' . "\n";
+        $script .= '        aplicarSoluciones: aplicarSolucionesAutomaticas' . "\n";
+        $script .= '    };' . "\n";
+        $script .= '})();' . "\n\n";
+        
+        // INFORMACIÓN DEL SISTEMA
+        $script .= '// ==================================================' . "\n";
+        $script .= '// INFORMACIÓN DEL SISTEMA' . "\n";
+        $script .= '// ==================================================' . "\n";
+        $script .= 'console.log("\\n📊 INFORMACIÓN DEL SISTEMA:");' . "\n";
+        $script .= 'console.log("   • User Agent:", navigator.userAgent);' . "\n";
+        $script .= 'console.log("   • Viewport:", window.innerWidth, "×", window.innerHeight);' . "\n";
+        $script .= 'console.log("   • URL:", window.location.href);' . "\n";
+        $script .= 'console.log("   • Título:", document.title);' . "\n";
+        $script .= 'console.log("\\n💡 TIPS:");' . "\n";
+        $script .= 'console.log("   • Presiona F12 para abrir las herramientas de desarrollo");' . "\n";
+        $script .= 'console.log("   • En la pestaña \"Elements\", busca \".dropdown-submenu\"");' . "\n";
+        $script .= 'console.log("   • Haz clic derecho → \"Force state\" → \":hover\" para simular hover");' . "\n";
+        $script .= 'console.log("=========================================");' . "\n";
+
+        return $script;
+    }
+
+    /**
+     * Acción para reparación automática del menú
+     * URL: /site/reparar-menu
+     */
+    public function actionRepararMenu()
+    {
+        // Solo permitir en desarrollo
+        if (!YII_DEBUG && !YII_ENV_DEV) {
+            throw new \yii\web\NotFoundHttpException();
+        }
+        
+        Yii::$app->response->format = Response::FORMAT_RAW;
+        header('Content-Type: text/javascript');
+        
+        $script = '// ==================================================' . "\n";
+        $script .= '// REPARACIÓN AUTOMÁTICA DEL MENÚ GED' . "\n";
+        $script .= '// ==================================================' . "\n\n";
+        
+        $script .= 'console.clear();' . "\n";
+        $script .= 'console.log("%c🔧 REPARACIÓN AUTOMÁTICA DEL MENÚ GED",' . "\n";
+        $script .= '            "color: #fff; background: #e74c3c; padding: 5px 10px; border-radius: 3px; font-size: 16px;");' . "\n\n";
+        
+        // 1. INYECTAR CSS DE REPARACIÓN
+        $script .= '// 1. INYECTAR CSS DE REPARACIÓN' . "\n";
+        $script .= 'console.log("\\n1. 🎨 INYECTANDO CSS DE REPARACIÓN...");' . "\n\n";
+        
+        $script .= 'var repairCSS = "' . "\n";
+        $script .= '/* REPARACIÓN DE SUBMENÚS GED */' . "\n";
+        $script .= '.dropdown-submenu {' . "\n";
+        $script .= '    position: relative !important;' . "\n";
+        $script .= '}' . "\n\n";
+        $script .= '.dropdown-submenu > .dropdown-menu {' . "\n";
+        $script .= '    position: absolute !important;' . "\n";
+        $script .= '    left: 100% !important;' . "\n";
+        $script .= '    top: 0 !important;' . "\n";
+        $script .= '    margin-top: -5px !important;' . "\n";
+        $script .= '    display: none !important;' . "\n";
+        $script .= '    opacity: 0 !important;' . "\n";
+        $script .= '    visibility: hidden !important;' . "\n";
+        $script .= '    z-index: 9999 !important;' . "\n";
+        $script .= '    background: linear-gradient(135deg, #7d3c98, #6c3483) !important;' . "\n";
+        $script .= '    border: 1px solid rgba(255,255,255,0.3) !important;' . "\n";
+        $script .= '    border-radius: 5px !important;' . "\n";
+        $script .= '    box-shadow: 0 10px 30px rgba(0,0,0,0.3) !important;' . "\n";
+        $script .= '    min-width: 200px !important;' . "\n";
+        $script .= '    padding: 5px 0 !important;' . "\n";
+        $script .= '    transform: translateX(-10px) !important;' . "\n";
+        $script .= '    transition: all 0.3s ease !important;' . "\n";
+        $script .= '}' . "\n\n";
+        $script .= '/* HOVER PARA ESCRITORIO */' . "\n";
+        $script .= '@media (min-width: 992px) {' . "\n";
+        $script .= '    .dropdown-submenu:hover > .dropdown-menu {' . "\n";
+        $script .= '        display: block !important;' . "\n";
+        $script .= '        opacity: 1 !important;' . "\n";
+        $script .= '        visibility: visible !important;' . "\n";
+        $script .= '        transform: translateX(0) !important;' . "\n";
+        $script .= '    }' . "\n";
+        $script .= '    ' . "\n";
+        $script .= '    .dropdown-submenu > a.dropdown-toggle::after {' . "\n";
+        $script .= '        content: " ›" !important;' . "\n";
+        $script .= '        float: right !important;' . "\n";
+        $script .= '        margin-left: 5px !important;' . "\n";
+        $script .= '        border: none !important;' . "\n";
+        $script .= '    }' . "\n";
+        $script .= '}' . "\n\n";
+        $script .= '/* CLICK PARA MÓVIL */' . "\n";
+        $script .= '@media (max-width: 991.98px) {' . "\n";
+        $script .= '    .dropdown-submenu > .dropdown-menu {' . "\n";
+        $script .= '        position: static !important;' . "\n";
+        $script .= '        left: auto !important;' . "\n";
+        $script .= '        margin-left: 15px !important;' . "\n";
+        $script .= '        margin-top: 5px !important;' . "\n";
+        $script .= '        border: 1px solid rgba(255,255,255,0.2) !important;' . "\n";
+        $script .= '        background: rgba(0,0,0,0.2) !important;' . "\n";
+        $script .= '    }' . "\n";
+        $script .= '    ' . "\n";
+        $script .= '    .dropdown-submenu.show > .dropdown-menu {' . "\n";
+        $script .= '        display: block !important;' . "\n";
+        $script .= '        opacity: 1 !important;' . "\n";
+        $script .= '        visibility: visible !important;' . "\n";
+        $script .= '    }' . "\n";
+        $script .= '    ' . "\n";
+        $script .= '    .dropdown-submenu > a.dropdown-toggle::after {' . "\n";
+        $script .= '        content: " ▼" !important;' . "\n";
+        $script .= '        float: right !important;' . "\n";
+        $script .= '    }' . "\n";
+        $script .= '}' . "\n\n";
+        $script .= '/* ESTILOS PARA ENLACES */' . "\n";
+        $script .= '.dropdown-submenu .dropdown-item {' . "\n";
+        $script .= '    color: white !important;' . "\n";
+        $script .= '    padding: 8px 15px !important;' . "\n";
+        $script .= '    white-space: nowrap !important;' . "\n";
+        $script .= '    border-bottom: 1px solid rgba(255,255,255,0.1) !important;' . "\n";
+        $script .= '}' . "\n\n";
+        $script .= '.dropdown-submenu .dropdown-item:hover {' . "\n";
+        $script .= '    background: rgba(255,255,255,0.1) !important;' . "\n";
+        $script .= '}' . "\n\n";
+        $script .= '.dropdown-submenu .dropdown-item:last-child {' . "\n";
+        $script .= '    border-bottom: none !important;' . "\n";
+        $script .= '}' . "\n";
+        $script .= '";' . "\n\n";
+        
+        $script .= '// Crear y añadir el CSS' . "\n";
+        $script .= 'var style = document.createElement("style");' . "\n";
+        $script .= 'style.id = "ged-menu-repair-css";' . "\n";
+        $script .= 'style.textContent = repairCSS;' . "\n";
+        $script .= 'document.head.appendChild(style);' . "\n\n";
+        
+        $script .= 'console.log("✅ CSS de reparación inyectado");' . "\n\n";
+        
+        // 2. CONFIGURAR EVENTOS
+        $script .= '// 2. CONFIGURAR EVENTOS' . "\n";
+        $script .= 'console.log("\\n2. 🖱️ CONFIGURANDO EVENTOS...");' . "\n\n";
+        
+        $script .= 'function setupMenuEvents() {' . "\n";
+        $script .= '    var submenus = document.querySelectorAll(".dropdown-submenu");' . "\n";
+        $script .= '    var isDesktop = window.innerWidth >= 992;' . "\n";
+        $script .= '    ' . "\n";
+        $script .= '    console.log("   • Configurando " + submenus.length + " submenús");' . "\n";
+        $script .= '    console.log("   • Modo: " + (isDesktop ? "Desktop (hover)" : "Mobile (click)"));' . "\n";
+        $script .= '    ' . "\n";
+        $script .= '    if (isDesktop) {' . "\n";
+        $script .= '        // Desktop: hover events' . "\n";
+        $script .= '        submenus.forEach(function(submenu) {' . "\n";
+        $script .= '            var menu = submenu.querySelector(".dropdown-menu");' . "\n";
+        $script .= '            if (!menu) return;' . "\n";
+        $script .= '            ' . "\n";
+        $script .= '            // Remover eventos previos' . "\n";
+        $script .= '            submenu.removeEventListener("mouseenter", submenu._enterHandler);' . "\n";
+        $script .= '            submenu.removeEventListener("mouseleave", submenu._leaveHandler);' . "\n";
+        $script .= '            ' . "\n";
+        $script .= '            // Nuevo evento mouseenter' . "\n";
+        $script .= '            var enterHandler = function() {' . "\n";
+        $script .= '                menu.style.display = "block";' . "\n";
+        $script .= '                menu.style.opacity = "1";' . "\n";
+        $script .= '                menu.style.visibility = "visible";' . "\n";
+        $script .= '                menu.style.transform = "translateX(0)";' . "\n";
+        $script .= '                ' . "\n";
+        $script .= '                // Posicionar correctamente' . "\n";
+        $script .= '                var rect = submenu.getBoundingClientRect();' . "\n";
+        $script .= '                var viewportWidth = window.innerWidth;' . "\n";
+        $script .= '                ' . "\n";
+        $script .= '                if (rect.right + 250 > viewportWidth) {' . "\n";
+        $script .= '                    menu.style.left = "auto";' . "\n";
+        $script .= '                    menu.style.right = "100%";' . "\n";
+        $script .= '                } else {' . "\n";
+        $script .= '                    menu.style.left = "100%";' . "\n";
+        $script .= '                    menu.style.right = "auto";' . "\n";
+        $script .= '                }' . "\n";
+        $script .= '            };' . "\n";
+        $script .= '            ' . "\n";
+        $script .= '            // Nuevo evento mouseleave' . "\n";
+        $script .= '            var leaveHandler = function() {' . "\n";
+        $script .= '                setTimeout(function() {' . "\n";
+        $script .= '                    if (!submenu.matches(":hover") && !menu.matches(":hover")) {' . "\n";
+        $script .= '                        menu.style.display = "none";' . "\n";
+        $script .= '                        menu.style.opacity = "0";' . "\n";
+        $script .= '                        menu.style.visibility = "hidden";' . "\n";
+        $script .= '                        menu.style.transform = "translateX(-10px)";' . "\n";
+        $script .= '                    }' . "\n";
+        $script .= '                }, 100);' . "\n";
+        $script .= '            };' . "\n";
+        $script .= '            ' . "\n";
+        $script .= '            // Guardar referencias' . "\n";
+        $script .= '            submenu._enterHandler = enterHandler;' . "\n";
+        $script .= '            submenu._leaveHandler = leaveHandler;' . "\n";
+        $script .= '            ' . "\n";
+        $script .= '            // Asignar eventos' . "\n";
+        $script .= '            submenu.addEventListener("mouseenter", enterHandler);' . "\n";
+        $script .= '            submenu.addEventListener("mouseleave", leaveHandler);' . "\n";
+        $script .= '            ' . "\n";
+        $script .= '            // Ocultar inicialmente' . "\n";
+        $script .= '            menu.style.display = "none";' . "\n";
+        $script .= '        });' . "\n";
+        $script .= '        ' . "\n";
+        $script .= '        console.log("✅ Eventos hover configurados para desktop");' . "\n";
+        $script .= '        ' . "\n";
+        $script .= '    } else {' . "\n";
+        $script .= '        // Mobile: click events' . "\n";
+        $script .= '        submenus.forEach(function(submenu) {' . "\n";
+        $script .= '            var toggle = submenu.querySelector(".dropdown-toggle");' . "\n";
+        $script .= '            var menu = submenu.querySelector(".dropdown-menu");' . "\n";
+        $script .= '            ' . "\n";
+        $script .= '            if (!toggle || !menu) return;' . "\n";
+        $script .= '            ' . "\n";
+        $script .= '            // Remover eventos previos' . "\n";
+        $script .= '            toggle.removeEventListener("click", toggle._clickHandler);' . "\n";
+        $script .= '            ' . "\n";
+        $script .= '            // Nuevo evento click' . "\n";
+        $script .= '            var clickHandler = function(e) {' . "\n";
+        $script .= '                e.preventDefault();' . "\n";
+        $script .= '                e.stopPropagation();' . "\n";
+        $script .= '                ' . "\n";
+        $script .= '                var isVisible = menu.style.display === "block";' . "\n";
+        $script .= '                ' . "\n";
+        $script .= '                // Cerrar otros submenús' . "\n";
+        $script .= '                document.querySelectorAll(".dropdown-submenu").forEach(function(other) {' . "\n";
+        $script .= '                    if (other !== submenu) {' . "\n";
+        $script .= '                        var otherMenu = other.querySelector(".dropdown-menu");' . "\n";
+        $script .= '                        if (otherMenu) {' . "\n";
+        $script .= '                            otherMenu.style.display = "none";' . "\n";
+        $script .= '                            other.classList.remove("show");' . "\n";
+        $script .= '                        }' . "\n";
+        $script .= '                    }' . "\n";
+        $script .= '                });' . "\n";
+        $script .= '                ' . "\n";
+        $script .= '                // Alternar este submenú' . "\n";
+        $script .= '                if (isVisible) {' . "\n";
+        $script .= '                    menu.style.display = "none";' . "\n";
+        $script .= '                    submenu.classList.remove("show");' . "\n";
+        $script .= '                } else {' . "\n";
+        $script .= '                    menu.style.display = "block";' . "\n";
+        $script .= '                    menu.style.opacity = "1";' . "\n";
+        $script .= '                    menu.style.visibility = "visible";' . "\n";
+        $script .= '                    submenu.classList.add("show");' . "\n";
+        $script .= '                }' . "\n";
+        $script .= '            };' . "\n";
+        $script .= '            ' . "\n";
+        $script .= '            // Guardar referencia' . "\n";
+        $script .= '            toggle._clickHandler = clickHandler;' . "\n";
+        $script .= '            ' . "\n";
+        $script .= '            // Asignar evento' . "\n";
+        $script .= '            toggle.addEventListener("click", clickHandler);' . "\n";
+        $script .= '            ' . "\n";
+        $script .= '            // Ocultar inicialmente' . "\n";
+        $script .= '            menu.style.display = "none";' . "\n";
+        $script .= '        });' . "\n";
+        $script .= '        ' . "\n";
+        $script .= '        console.log("✅ Eventos click configurados para mobile");' . "\n";
+        $script .= '    }' . "\n";
+        $script .= '}' . "\n\n";
+        
+        $script .= '// Ejecutar configuración inicial' . "\n";
+        $script .= 'setupMenuEvents();' . "\n\n";
+        
+        $script .= '// Reconfigurar en redimensionamiento' . "\n";
+        $script .= 'var resizeTimer;' . "\n";
+        $script .= 'window.addEventListener("resize", function() {' . "\n";
+        $script .= '    clearTimeout(resizeTimer);' . "\n";
+        $script .= '    resizeTimer = setTimeout(setupMenuEvents, 250);' . "\n";
+        $script .= '});' . "\n\n";
+        
+        // 3. FORZAR VISIBILIDAD PARA VERIFICACIÓN
+        $script .= '// 3. FORZAR VISIBILIDAD PARA VERIFICACIÓN' . "\n";
+        $script .= 'console.log("\\n3. 👁️ FORZANDO VISIBILIDAD TEMPORAL...");' . "\n\n";
+        
+        $script .= 'setTimeout(function() {' . "\n";
+        $script .= '    document.querySelectorAll(".dropdown-submenu").forEach(function(submenu) {' . "\n";
+        $script .= '        var menu = submenu.querySelector(".dropdown-menu");' . "\n";
+        $script .= '        if (menu) {' . "\n";
+        $script .= '            menu.style.cssText = "display: block !important; position: fixed !important; left: 50% !important; top: 50% !important; transform: translate(-50%, -50%) !important; z-index: 99999 !important; background: #7d3c98 !important; border: 4px solid #00ff00 !important; border-radius: 10px !important; padding: 20px !important; min-width: 250px !important; color: white !important; font-size: 16px !important; box-shadow: 0 20px 60px rgba(0,0,0,0.7) !important; opacity: 1 !important; visibility: visible !important;";' . "\n";
+        $script .= '        }' . "\n";
+        $script .= '    });' . "\n";
+        $script .= '    ' . "\n";
+        $script .= '    console.log("✅ Submenús forzados a mostrar en el centro");' . "\n";
+        $script .= '    console.log("\\n🎯 Deberías ver cuadros VERDES con los submenús");' . "\n";
+        $script .= '    console.log("\\n🔄 Restaurando en 5 segundos...");' . "\n";
+        $script .= '    ' . "\n";
+        $script .= '    // Restaurar después de 5 segundos' . "\n";
+        $script .= '    setTimeout(function() {' . "\n";
+        $script .= '        document.querySelectorAll(".dropdown-submenu > .dropdown-menu").forEach(function(menu) {' . "\n";
+        $script .= '            menu.style.cssText = "";' . "\n";
+        $script .= '        });' . "\n";
+        $script .= '        setupMenuEvents();' . "\n";
+        $script .= '        console.log("✅ Comportamiento normal restaurado");' . "\n";
+        $script .= '        console.log("\\n🎉 ¡PRUEBA EL MENÚ AHORA!");' . "\n";
+        $script .= '        console.log("• En PC: Pasa el mouse sobre los menús");' . "\n";
+        $script .= '        console.log("• En móvil: Haz clic en los menús");' . "\n";
+        $script .= '    }, 5000);' . "\n";
+        $script .= '}, 1000);' . "\n\n";
+        
+        $script .= 'console.log("\\n===========================================");' . "\n";
+        $script .= 'console.log("✅ REPARACIÓN COMPLETADA");' . "\n";
+        $script .= 'console.log("===========================================");' . "\n";
+
+        return $script;
+    }
+
+    /**
+     * Acción para obtener diagnóstico rápido
+     * URL: /site/diagnostico-rapido
+     */
+    public function actionDiagnosticoRapido()
+    {
+        // Solo permitir en desarrollo
+        if (!YII_DEBUG && !YII_ENV_DEV) {
+            throw new \yii\web\NotFoundHttpException();
+        }
+        
+        Yii::$app->response->format = Response::FORMAT_RAW;
+        header('Content-Type: text/javascript');
+        
+        $script = '// DIAGNÓSTICO RÁPIDO DEL MENÚ' . "\n";
+        $script .= '(function() {' . "\n";
+        $script .= '    console.clear();' . "\n";
+        $script .= '    ' . "\n";
+        $script .= '    // 1. Verificar elementos' . "\n";
+        $script .= '    var submenus = document.querySelectorAll(".dropdown-submenu");' . "\n";
+        $script .= '    var menus = document.querySelectorAll(".dropdown-submenu > .dropdown-menu");' . "\n";
+        $script .= '    ' . "\n";
+        $script .= '    console.log("%c📊 DIAGNÓSTICO RÁPIDO", "background: #6c3483; color: white; padding: 5px;");' . "\n";
+        $script .= '    console.log("• Submenús encontrados: " + submenus.length);' . "\n";
+        $script .= '    console.log("• Menús hijos: " + menus.length);' . "\n";
+        $script .= '    ' . "\n";
+        $script .= '    if (submenus.length === 0) {' . "\n";
+        $script .= '        console.log("%c❌ PROBLEMA: No hay submenús", "color: red;");' . "\n";
+        $script .= '        return;' . "\n";
+        $script .= '    }' . "\n";
+        $script .= '    ' . "\n";
+        $script .= '    // 2. Verificar visibilidad del primer submenú' . "\n";
+        $script .= '    var firstSubmenu = submenus[0];' . "\n";
+        $script .= '    var firstMenu = firstSubmenu.querySelector(".dropdown-menu");' . "\n";
+        $script .= '    ' . "\n";
+        $script .= '    if (firstMenu) {' . "\n";
+        $script .= '        var styles = window.getComputedStyle(firstMenu);' . "\n";
+        $script .= '        console.log("\\n🎨 Primer submenú:");' . "\n";
+        $script .= '        console.log("• Display: " + styles.display);' . "\n";
+        $script .= '        console.log("• Visibility: " + styles.visibility);' . "\n";
+        $script .= '        console.log("• Opacity: " + styles.opacity);' . "\n";
+        $script .= '        console.log("• Position: " + styles.position);' . "\n";
+        $script .= '        console.log("• Z-index: " + styles.zIndex);' . "\n";
+        $script .= '        ' . "\n";
+        $script .= '        // Forzar visibilidad para probar' . "\n";
+        $script .= '        firstMenu.style.cssText = "display: block !important; position: fixed !important; left: 50% !important; top: 50% !important; transform: translate(-50%, -50%) !important; z-index: 99999 !important; background: #7d3c98 !important; border: 4px solid red !important; border-radius: 10px !important; padding: 20px !important; min-width: 200px !important; color: white !important; opacity: 1 !important; visibility: visible !important;";' . "\n";
+        $script .= '        ' . "\n";
+        $script .= '        console.log("%c✅ Submenú forzado a mostrar (borde ROJO)", "color: green;");' . "\n";
+        $script .= '        console.log("\\n🔧 SOLUCIÓN RÁPIDA:");' . "\n";
+        $script .= '        console.log("1. Copia este CSS en _submenus.css:");' . "\n";
+        $script .= '        console.log("");' . "\n";
+        $script .= '        console.log(".dropdown-submenu > .dropdown-menu {");' . "\n";
+        $script .= '        console.log("    display: none !important;");' . "\n";
+        $script .= '        console.log("    position: absolute !important;");' . "\n";
+        $script .= '        console.log("    left: 100% !important;");' . "\n";
+        $script .= '        console.log("    top: 0 !important;");' . "\n";
+        $script .= '        console.log("    z-index: 9999 !important;");' . "\n";
+        $script .= '        console.log("}");' . "\n";
+        $script .= '        console.log("");' . "\n";
+        $script .= '        console.log("@media (min-width: 992px) {");' . "\n";
+        $script .= '        console.log("    .dropdown-submenu:hover > .dropdown-menu {");' . "\n";
+        $script .= '        console.log("        display: block !important;");' . "\n";
+        $script .= '        console.log("    }");' . "\n";
+        $script .= '        console.log("}");' . "\n";
+        $script .= '        console.log("");' . "\n";
+        $script .= '        ' . "\n";
+        $script .= '        // Restaurar después de 3 segundos' . "\n";
+        $script .= '        setTimeout(function() {' . "\n";
+        $script .= '            firstMenu.style.cssText = "";' . "\n";
+        $script .= '            console.log("\\n✅ Comportamiento restaurado");' . "\n";
+        $script .= '        }, 3000);' . "\n";
+        $script .= '    }' . "\n";
+        $script .= '})();' . "\n";
+
+        return $script;
     }
 }

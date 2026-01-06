@@ -267,126 +267,23 @@ body {
 }
 
 /* ================================================== */
-/* SUBMENÚS PARA NAVBAR HORIZONTAL - 3 NIVELES */
+/* ✅ SUBMENÚS ANIDADOS - ESTILOS BASE (NO TOCAR)     */
+/* Los estilos específicos de submenús están en       */
+/* _submenus.css - estos son solo estilos base        */
 /* ================================================== */
 
-/* Submenús anidados */
+/* SOLO ESTILOS DE BASE - NO DEFINIR COMPORTAMIENTO AQUÍ */
 .dropdown-submenu {
-    position: relative;
+    position: relative; /* Base para posicionamiento */
 }
 
-.dropdown-submenu > .dropdown-menu {
-    top: 0;
-    left: 100%;
-    margin-top: -6px;
-    margin-left: 1px;
-    border-radius: 0 6px 6px 6px;
-    display: none;
-}
+/* NO definir comportamiento de visualización aquí */
+/* .dropdown-submenu > .dropdown-menu { ... } */
 
-/* Mostrar submenú al hover en desktop */
-@media (min-width: 992px) {
-    .dropdown-submenu:hover > .dropdown-menu {
-        display: block;
-    }
-    
-    .dropdown-submenu > .dropdown-toggle {
-        padding-right: 2.5rem !important;
-    }
-    
-    .dropdown-submenu > .dropdown-toggle::after {
-        content: "\f0da"; /* fa-chevron-right */
-        font-family: "Font Awesome 5 Free";
-        font-weight: 900;
-        border: none;
-        position: absolute;
-        right: 1rem;
-        top: 50%;
-        transform: translateY(-50%);
-    }
-}
-
-/* En móvil, los submenús se muestran con collapse de Bootstrap */
-@media (max-width: 991.98px) {
-    .dropdown-submenu > .dropdown-menu {
-        position: static;
-        float: none;
-        width: auto;
-        margin-top: 0;
-        background-color: transparent;
-        border: 0;
-        box-shadow: none;
-        padding-left: 30px;
-    }
-    
-    .dropdown-submenu .dropdown-toggle::after {
-        display: none;
-    }
-    
-    .navbar-nav .dropdown-menu {
-        padding-left: 20px;
-    }
-}
-
-/* Ajustes para los enlaces del menú */
-.navbar-nav .nav-link {
-    white-space: nowrap;
-}
-
-.dropdown-item {
-    white-space: nowrap;
-}
-
-/* Ajustes para el indicador de submenú en móvil (offcanvas) */
-.offcanvas-menu .has-children .submenu-indicator {
-    transition: transform 0.3s;
-}
-
-.offcanvas-menu .has-children[aria-expanded="true"] .submenu-indicator {
-    transform: rotate(90deg);
-}
-
-/* Asegurar que los submenús no se salgan de la pantalla en desktop */
-.dropdown-menu {
-    max-height: 70vh;
-    overflow-y: auto;
-}
-
-/* Estilos para el menú principal en navbar */
-.navbar-nav.main-navigation {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-}
-
-.navbar-nav.main-navigation > .nav-item {
-    margin: 0 5px;
-}
-
-.navbar-nav.main-navigation .nav-link {
-    color: rgba(255, 255, 255, 0.85);
-    padding: 0.5rem 1rem;
-    border-radius: 4px;
-    transition: all 0.3s;
-}
-
-.navbar-nav.main-navigation .nav-link:hover,
-.navbar-nav.main-navigation .nav-link.active {
-    color: #fff;
-    background-color: rgba(255, 255, 255, 0.1);
-}
-
-/* Para invitados - destacar Marketplace */
-.navbar-nav.main-navigation .nav-item.dropdown:first-child .nav-link {
-    color: #ffd700;
-    font-weight: 600;
-}
-
-.navbar-nav.main-navigation .nav-item.dropdown:first-child .nav-link:hover {
-    background-color: rgba(255, 215, 0, 0.1);
-}
-
+/* ================================================== */
 /* ✅ DROPDOWN MENUS - ESTILOS UNIFICADOS */
+/* ================================================== */
+
 .dropdown-menu {
   background: linear-gradient(135deg, #7d3c98, #6c3483);
   border: none;
@@ -682,6 +579,26 @@ body {
     padding-right: 15px !important;
     width: 100% !important;
   }
+  
+  /* ✅ EN MÓVIL, EL MENÚ SE MUESTRA EN OFFCANVAS */
+  /* Los submenús se manejan con acordeón en el offcanvas */
+  .navbar-menu-section,
+  .navbar-social-section,
+  .navbar-control-section {
+    display: none !important;
+  }
+  
+  .navbar-brand-section {
+    flex: 1 !important;
+    max-width: none !important;
+    justify-content: flex-start !important;
+  }
+  
+  .navbar-toggler {
+    display: flex !important;
+    align-items: center !important;
+    margin-left: auto !important;
+  }
 }
 
 /* ===== ESTILOS COMUNES DEL MENÚ OFF-CANVAS ===== */
@@ -731,6 +648,62 @@ body {
   .container-fluid {
     padding-left: 30px !important;
     padding-right: 30px !important;
+  }
+  
+  /* ================================================== */
+  /* SOLUCIÓN: Forzar visibilidad del menú en escritorio */
+  /* ================================================== */
+  
+  /* ✅ 1. MOSTRAR EL COLLAPSE EN ESCRITORIO */
+  #navbarContent {
+    display: flex !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    height: auto !important;
+    transform: none !important;
+    position: static !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    border: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+  
+  .navbar-collapse.collapse:not(.show) {
+    display: flex !important;
+    height: auto !important;
+  }
+  
+  /* ✅ 2. GARANTIZAR VISIBILIDAD DEL CONTENEDOR DEL MENÚ */
+  .navbar-container {
+    display: flex !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    width: 100% !important;
+  }
+  
+  /* ✅ 3. FORZAR DISPLAY FLEX EN LAS SECCIONES */
+  .navbar-menu-section,
+  .navbar-social-section,
+  .navbar-control-section {
+    display: flex !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+  }
+  
+  /* ✅ 4. ESPECÍFICO PARA EL MENÚ PRINCIPAL */
+  .main-navigation {
+    display: flex !important;
+    flex-wrap: wrap;
+    opacity: 1 !important;
+    visibility: visible !important;
+    width: 100% !important;
+    justify-content: center !important;
+  }
+  
+  /* ✅ 5. REMOVER CUALQUIER OVERFLOW OCULTO */
+  .navbar-contextual > .container-fluid {
+    overflow: visible !important;
   }
 }
 
@@ -1227,117 +1200,6 @@ body {
   }
 }
 
-/* ✅ CORRECCIÓN DE VIEWPORT */
-.vw-100 {
-  width: 100vw !important;
-  max-width: 100vw !important;
-}
-
-/* ✅ PREVENCIÓN DE OVERFLOW EN NAVBAR ITEMS */
-.navbar-nav {
-  flex-wrap: wrap;
-  justify-content: center;
-}
-
-/* ✅ FIX PARA DROPDOWNS */
-.dropdown-menu {
-  max-width: 100vw;
-  overflow-x: hidden;
-}
-
-/* ✅ IMPORTANT OVERRIDES */
-.width-100-vw {
-  width: 100vw !important;
-}
-
-.max-width-100-vw {
-  max-width: 100vw !important;
-}
-
-.min-width-100-vw {
-  min-width: 100vw !important;
-}
-
-/* ✅ FIX PARA BOOTSTRAP COLLAPSE */
-.navbar-collapse {
-  transition: none !important;
-}
-
-#navbarGedCollapse {
-  position: absolute !important;
-  top: 100% !important;
-  left: 0 !important;
-  right: 0 !important;
-  background: linear-gradient(135deg, #6c3483 0%, #5B2C6F 100%) !important;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.2) !important;
-  z-index: 1020 !important;
-  padding: 15px !important;
-  max-height: calc(100vh - 60px) !important;
-  overflow-y: auto !important;
-  border-top: 1px solid rgba(255,255,255,0.1) !important;
-}
-
-#navbarGedCollapse .main-navigation {
-  flex-direction: column !important;
-  align-items: flex-start !important;
-}
-
-#navbarGedCollapse .nav-link {
-  width: 100% !important;
-  padding: 12px 15px !important;
-  border-radius: 4px !important;
-  margin-bottom: 5px !important;
-}
-
-#navbarGedCollapse .nav-link:hover {
-  background: rgba(255,255,255,0.15) !important;
-}
-
-/* ✅ ACCESIBILIDAD */
-.navbar-contextual:focus-within {
-  outline: 2px solid rgba(255,255,255,0.5) !important;
-  outline-offset: -2px !important;
-}
-
-.navbar-toggler:focus,
-.navbar-toggler:active {
-  outline: 2px solid rgba(255,255,255,0.8) !important;
-  outline-offset: 2px !important;
-}
-
-/* ✅ ANIMACIONES */
-@keyframes fadeInDown {
-  from {
-    opacity: 0;
-    transform: translateY(-10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-/* ✅ PRINT STYLES */
-@media print {
-  .navbar-contextual {
-    position: static !important;
-    background: white !important;
-    color: black !important;
-    box-shadow: none !important;
-    border-bottom: 1px solid #ddd !important;
-  }
-  
-  .navbar-logo {
-    filter: grayscale(100%) brightness(0%) !important;
-  }
-  
-  .navbar-social-section,
-  .session-controls,
-  .navbar-toggler {
-    display: none !important;
-  }
-}
-
 /* ===== CORRECCIONES PARA EL MENÚ MÓVIL ===== */
 .sidebar-nav .dropdown-menu {
     position: static !important;
@@ -1377,51 +1239,266 @@ body {
     transform: rotate(90deg);
 }
 
-/* ===== CORRECCIÓN PARA TERCER NIVEL DEL MENÚ ===== */
-.dropdown-submenu .dropdown-submenu .dropdown-menu {
-    display: block !important;
-    visibility: visible !important;
-    opacity: 1 !important;
-    position: absolute !important;
-    z-index: 1052 !important;
-}
-
-.dropdown-submenu > .dropdown-menu {
-    top: 0 !important;
-    left: 100% !important;
-    margin-top: -6px !important;
-    margin-left: -1px !important;
-    z-index: 1051 !important;
-}
-
-.dropdown-submenu .dropdown-submenu > .dropdown-menu {
-    z-index: 1052 !important;
-}
-
-.dropdown-submenu .dropdown-submenu .dropdown-submenu > .dropdown-menu {
-    z-index: 1053 !important;
-}
-
-/* ===== ELIMINADO: ESTILOS DE EMERGENCIA QUE FORZABAN VISIBILIDAD ===== */
-/* Estos estilos causaban conflicto y ya no son necesarios */
-/*
-.ged-offcanvas-sidebar {
-  display: block !important;
-  visibility: visible !important;
-  opacity: 1 !important;
-  z-index: 1040 !important;
-}
-
-@media (min-width: 992px) {
-  .ged-offcanvas-sidebar {
-    display: block !important;
-    visibility: visible !important;
-    opacity: 1 !important;
-  }
-}
-*/
-
 /* ===== DEBUG: Agrega bordes de colores para verificar ===== */
 .debug-border-red { outline: 2px solid red !important; }
 .debug-border-green { outline: 2px solid green !important; }
 .debug-border-blue { outline: 2px solid blue !important; }
+
+/* ✅ DEBUG: Visualizar bordes temporalmente (opcional) */
+.debug-navbar #navbarContent {
+    outline: 2px solid red !important;
+}
+.debug-navbar .navbar-container {
+    outline: 2px solid blue !important;
+}
+.debug-navbar .navbar-menu-section {
+    outline: 2px solid green !important;
+}
+.debug-navbar .main-navigation {
+    outline: 2px solid orange !important;
+}
+
+/* ✅ CORRECCIÓN ESPECÍFICA PARA MENÚ EN DESKTOP */
+.navbar-menu-section .section-container {
+    width: 100% !important;
+    display: block !important;
+}
+
+/* ✅ GARANTIZAR QUE LOS ENLACES DEL MENÚ SEAN VISIBLES */
+.main-navigation .nav-link {
+    opacity: 1 !important;
+    visibility: visible !important;
+}
+
+/* ✅ FIX FINAL: REMOVER CUALQUIER OVERRIDE DE BOOTSTRAP QUE OCULTE EL MENÚ */
+.navbar-expand-lg .navbar-collapse {
+    display: flex !important;
+    flex-basis: auto !important;
+}
+
+/* ✅ Asegurar que el navbar-collapse no tenga height: 0 en desktop */
+@media (min-width: 992px) {
+    .navbar-expand-lg .navbar-collapse {
+        height: auto !important;
+        max-height: none !important;
+        overflow: visible !important;
+    }
+}
+
+/* ===== CORRECCIÓN DE EMERGENCIA PARA MOSTRAR EL MENÚ ===== */
+/* Esta regla fuerza la visibilidad del menú principal en escritorio */
+.navbar-contextual .navbar-collapse,
+.navbar-contextual .navbar-menu-section,
+.navbar-contextual .main-navigation {
+    display: flex !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+}
+
+/* ================================================== */
+/* ✅ Z-INDEX PARA SUBMENÚS (BASE)                   */
+/* ================================================== */
+
+/* Solo definir z-index base - el comportamiento en _submenus.css */
+.navbar-nav .dropdown-menu {
+    z-index: 1050 !important;
+}
+
+.navbar-nav .dropdown-menu .dropdown-menu {
+    z-index: 1051 !important;
+}
+
+.navbar-nav .dropdown-menu .dropdown-menu .dropdown-menu {
+    z-index: 1052 !important;
+}
+
+/* ✅ CORRECCIÓN PARA NO ROMPER EL LAYOUT */
+.dropdown-menu {
+    position: absolute !important;
+    z-index: 1050 !important;
+}
+
+/* ✅ Ajustes para los enlaces del menú */
+.navbar-nav .nav-link {
+    white-space: nowrap;
+}
+
+.dropdown-item {
+    white-space: nowrap;
+}
+
+/* Ajustes para el indicador de submenú en móvil (offcanvas) */
+.offcanvas-menu .has-children .submenu-indicator {
+    transition: transform 0.3s;
+}
+
+.offcanvas-menu .has-children[aria-expanded="true"] .submenu-indicator {
+    transform: rotate(90deg);
+}
+
+/* Asegurar que los submenús no se salgan de la pantalla en desktop */
+.dropdown-menu {
+    max-height: 70vh;
+    overflow-y: auto;
+}
+
+/* Estilos para el menú principal en navbar */
+.navbar-nav.main-navigation {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+.navbar-nav.main-navigation > .nav-item {
+    margin: 0 5px;
+}
+
+.navbar-nav.main-navigation .nav-link {
+    color: rgba(255, 255, 255, 0.85);
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    transition: all 0.3s;
+}
+
+.navbar-nav.main-navigation .nav-link:hover,
+.navbar-nav.main-navigation .nav-link.active {
+    color: #fff;
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+/* Para invitados - destacar Marketplace */
+.navbar-nav.main-navigation .nav-item.dropdown:first-child .nav-link {
+    color: #ffd700;
+    font-weight: 600;
+}
+
+.navbar-nav.main-navigation .nav-item.dropdown:first-child .nav-link:hover {
+    background-color: rgba(255, 215, 0, 0.1);
+}
+
+/* ✅ PREVENIR DESBORDAMIENTO DE SUBMENÚS FUERA DE LA PANTALLA */
+.dropdown-menu-right .dropdown-submenu > .dropdown-menu {
+    left: auto !important;
+    right: 100% !important;
+}
+
+/* ✅ HOVER STATES MEJORADOS */
+.dropdown-submenu:hover > .dropdown-toggle {
+    background-color: rgba(255, 255, 255, 0.1) !important;
+    color: #fff !important;
+}
+
+/* ✅ CORRECCIÓN ESPECÍFICA PARA EL MENÚ PRINCIPAL */
+.navbar-nav .dropdown-submenu {
+    position: relative !important;
+}
+
+.navbar-nav .dropdown-submenu > .dropdown-menu {
+    margin-top: -0.5rem !important;
+}
+
+/* ✅ GARANTIZAR QUE LOS SUBMENÚS SEAN CLICKEABLES */
+.dropdown-menu.show {
+    display: block !important;
+    pointer-events: auto !important;
+}
+
+/* ✅ FIX PARA BOOTSTRAP 5: REMOVER TRANSFORM QUE INTERFIERE */
+.dropdown-menu[data-bs-popper] {
+    margin-top: 0 !important;
+}
+
+/* ✅ SOLUCIÓN ESPECÍFICA PARA EL OFFCANVAS (MÓVIL) */
+#gedMobileMenuContainer .dropdown-menu {
+    position: static !important;
+    float: none !important;
+    width: 100% !important;
+}
+
+#gedMobileMenuContainer .dropdown-submenu > .dropdown-menu {
+    margin-left: 1.5rem !important;
+}
+
+/* ✅ GARANTIZAR QUE FONT AWESOME ESTÉ DISPONIBLE */
+@import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css');
+
+/* ✅ CORRECCIÓN FINAL: GARANTIZAR QUE TODOS LOS NIVELES SEAN VISIBLES */
+.navbar-nav > .dropdown-submenu > .dropdown-menu > .dropdown-submenu > .dropdown-menu {
+    display: none !important;
+}
+
+.navbar-nav > .dropdown-submenu:hover > .dropdown-menu > .dropdown-submenu:hover > .dropdown-menu {
+    display: block !important;
+}
+
+/* ✅ ANIMACIÓN DE ENTRADA MEJORADA */
+@keyframes fadeInScale {
+    from {
+        opacity: 0;
+        transform: translateX(-10px) scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0) scale(1);
+    }
+}
+
+.dropdown-menu .dropdown-menu.show {
+    animation: fadeInScale 0.2s ease-out !important;
+}
+
+/* ✅ MEJOR VISIBILIDAD PARA NIVELES PROFUNDOS EN DARK MODE */
+.dropdown-menu .dropdown-menu {
+    background: linear-gradient(135deg, #6c3483 0%, #5B2C6F 100%) !important;
+    border: 1px solid rgba(255,255,255,0.2) !important;
+}
+
+.dropdown-menu .dropdown-menu .dropdown-menu {
+    background: linear-gradient(135deg, #5B2C6F 0%, #4A235A 100%) !important;
+}
+
+/* ✅ CORRECCIÓN PARA MENÚS MUY ANIDADOS */
+.dropdown-menu .dropdown-menu .dropdown-menu .dropdown-menu {
+    background: linear-gradient(135deg, #4A235A 0%, #391F4A 100%) !important;
+}
+
+/* ================================================== */
+/* ✅ ANIMACIONES MEJORADAS */
+/* ================================================== */
+
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ✅ PRINT STYLES */
+@media print {
+  .navbar-contextual {
+    position: static !important;
+    background: white !important;
+    color: black !important;
+    box-shadow: none !important;
+    border-bottom: 1px solid #ddd !important;
+  }
+  
+  .navbar-logo {
+    filter: grayscale(100%) brightness(0%) !important;
+  }
+  
+  .navbar-social-section,
+  .session-controls,
+  .navbar-toggler {
+    display: none !important;
+  }
+}
+
+/* ================================================== */
+/* ✅ IMPORTANTE: NO AGREGAR ESTILOS DE SUBMENÚS AQUÍ */
+/* Los estilos de submenús deben estar en _submenus.css */
+/* ================================================== */

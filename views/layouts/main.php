@@ -26,6 +26,9 @@ $idEscuela = $session->get('idEscuela', 0);
 $nombreEscuela = $session->get('nombreEscuela', 'Selecciona una escuela');
 $hasEscuela = !empty($idEscuela) && $idEscuela != 0;
 
+// ✅ IMPORTANTE: Forzar render del navbar personalizado
+$this->params['renderNavbarPartial'] = true;
+
 ?>
 <?php $this->beginPage() ?>
 <!DOCTYPE html>
@@ -80,7 +83,7 @@ NavBar::begin([
         'navbarVariant' => $hasEscuela ? 'escuela' : 'default'
     ]) ?>
 <?php else: ?>
-    <!-- Contenido alternativo para páginas sin partial -->
+    <!-- Contenido alternativo para páginas sin partial (mantenido por compatibilidad) -->
     <?php
     $menuItems = [];
     if (Yii::$app->user->isGuest) {
@@ -141,6 +144,10 @@ NavBar::begin([
 </footer>
 
 <?php $this->endBody() ?>
+// En tu layout principal (main.php), antes de </body>
+    <?php if (YII_DEBUG): ?>
+        <script src="<?= Yii::$app->urlManager->createUrl(['/site/diagnosticar-menu']) ?>"></script>
+    <?php endif; ?>
 </body>
 </html>
 <?php $this->endPage() ?>

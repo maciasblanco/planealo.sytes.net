@@ -220,7 +220,7 @@ class MenuWidget extends Widget
             $isActive = $this->isMenuItemActive($item);
             $activeClass = $isActive ? ' active' : '';
             
-            if ($hasChildren && $level < 2) {
+            if ($hasChildren) {
                 if ($level === 0) {
                     $html .= '
                     <li class="nav-item dropdown' . $activeClass . '">
@@ -282,7 +282,7 @@ class MenuWidget extends Widget
             
             $html .= '<li class="nav-item menu-item level-' . $level . $activeClass . '">';
             
-            if ($hasChildren && $level < 3) {
+            if ($hasChildren) {
                 $html .= '
                     <a href="#" class="nav-link menu-link has-children' . $activeClass . '" 
                        data-level="' . $level . '" 
@@ -498,7 +498,7 @@ class MenuWidget extends Widget
         try {
             $db = Yii::$app->db;
             
-            // Ver todos los ítems
+            // Ver todos los ítem
             $query = new Query();
             $allItems = $query->select(['id', 'name', 'route', 'parent', '"order"', 'data'])
                 ->from('seguridad.menu')

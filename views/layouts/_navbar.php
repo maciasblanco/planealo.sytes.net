@@ -23,9 +23,9 @@ $mobileDetect = Yii::$app->has('mobileDetect') ? Yii::$app->mobileDetect->isMobi
 ?>
 
 <!-- ================================================== -->
-<!-- NAVBAR UNIFICADO - ANCHO COMPLETO -->
+<!-- NAVBAR CORREGIDO - SOLO UNA ESTRUCTURA -->
 <!-- ================================================== -->
-<nav class="navbar navbar-expand-lg navbar-dark navbar-contextual fixed-top" aria-label="Navegación principal">
+<div class="navbar-contextual navbar-expand-lg fixed-top" id="main-navbar" aria-label="Navegación principal">
     <div class="container-fluid p-0 m-0 w-100 vw-100">
         
         <!-- ✅ LOGO - 15% -->
@@ -57,7 +57,7 @@ $mobileDetect = Yii::$app->has('mobileDetect') ? Yii::$app->mobileDetect->isMobi
         </button>
 
         <!-- ✅ CONTENIDO DEL NAVBAR (SOLO ESCRITORIO) -->
-        <div class="collapse navbar-collapse d-none d-lg-flex" id="navbarContent">
+        <div class="collapse navbar-collapse show" id="navbarContent">
             <div class="navbar-container">
                 
                 <!-- ✅ MENÚ PRINCIPAL - 50% -->
@@ -66,8 +66,8 @@ $mobileDetect = Yii::$app->has('mobileDetect') ? Yii::$app->mobileDetect->isMobi
                         <?= \app\components\MenuWidget::widget([
                             'options' => [
                                 'class' => 'navbar-nav main-navigation w-100',
-                                'mobileMode' => false,  // IMPORTANTE: false para desktop
-                                'rootOnly' => false     // IMPORTANTE: false para mostrar todos los niveles
+                                'mobileMode' => false,
+                                'rootOnly' => false
                             ]
                         ]) ?>
                     </div>
@@ -205,7 +205,7 @@ $mobileDetect = Yii::$app->has('mobileDetect') ? Yii::$app->mobileDetect->isMobi
         </div>
         
     </div>
-</nav>
+</div>
 
 <!-- ✅ SCRIPT PARA DEBUG (OPCIONAL) -->
 <script>
