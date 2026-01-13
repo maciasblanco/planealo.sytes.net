@@ -2,7 +2,7 @@
  * _navigation.css - NAVEGACIÓN Y MENÚS GED
  * Consolidado de: ged-modulo-navbar.css, ged-modulo-offcanvas.css, 
  *                 secciones de navbar de ged-core.css
- * Fecha: 2024-01-16 (actualizado para consolidación)
+ * Fecha: 2026-01-06 (actualizado para consolidación)
  * ================================================================= */
 
 /* Variables específicas de navegación */
@@ -1502,3 +1502,332 @@ body {
 /* ✅ IMPORTANTE: NO AGREGAR ESTILOS DE SUBMENÚS AQUÍ */
 /* Los estilos de submenús deben estar en _submenus.css */
 /* ================================================== */
+/* ================================================== */
+/* SIDEBAR DE MÓDULOS                                 */
+/* ================================================== */
+
+.sidebar-module-wrapper {
+  position: fixed;
+  top: 70px;
+  left: 0;
+  width: 250px;
+  height: calc(100vh - 70px);
+  background: #f8f9fa;
+  border-right: 1px solid #dee2e6;
+  z-index: 100;
+  overflow-y: auto;
+  padding: 20px 0;
+}
+
+.main-content-with-sidebar {
+  margin-left: 250px;
+  padding: 20px 30px;
+  min-height: calc(100vh - 70px);
+  transition: margin-left 0.3s;
+}
+
+.with-sidebar .main-content-with-sidebar {
+  width: calc(100% - 250px);
+}
+
+.mobile-module-navbar {
+  margin-top: 60px;
+  border-bottom: 1px solid #dee2e6;
+}
+
+.mobile-module-navbar .navbar-collapse {
+  background: white;
+  padding: 15px;
+  border-top: 1px solid #dee2e6;
+}
+
+.mobile-module-navbar .nav-link {
+  padding: 10px 15px;
+  border-radius: 4px;
+  margin-bottom: 2px;
+}
+
+.mobile-module-navbar .nav-link.active {
+  background-color: rgba(108, 52, 131, 0.1);
+  color: #6c3483;
+}
+
+/* Responsive */
+@media (max-width: 991.98px) {
+  .sidebar-module-wrapper {
+      display: none !important;
+  }
+  
+  .main-content-with-sidebar {
+      margin-left: 0;
+      width: 100%;
+      padding: 15px;
+  }
+  
+  .with-sidebar .main-content-with-sidebar {
+      width: 100%;
+  }
+}
+
+@media (min-width: 992px) {
+  .mobile-module-navbar {
+      display: none !important;
+  }
+}
+
+/* Estilos para el sidebar del módulo */
+.sidebar-module-nav {
+  padding: 15px;
+  background: #f8f9fa;
+  min-height: calc(100vh - 70px);
+}
+
+.sidebar-module-nav .nav-link {
+  padding: 8px 12px;
+  margin-bottom: 4px;
+  border-radius: 4px;
+  border-left: 3px solid transparent;
+  color: #495057;
+  transition: all 0.2s;
+}
+
+.sidebar-module-nav .nav-link:hover {
+  background-color: #e9ecef;
+  color: #6c3483;
+}
+
+.sidebar-module-nav .nav-link.active {
+  background-color: rgba(108, 52, 131, 0.1);
+  color: #6c3483;
+  border-left-color: #6c3483;
+  font-weight: 500;
+}
+
+.sidebar-module-nav .sidebar-heading {
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  padding: 0.5rem 1rem;
+  margin-bottom: 0.5rem;
+}
+/* ================================================== */
+/* ✅ CORRECCIONES CRÍTICAS PARA MENÚ 2 NIVELES      */
+/* ================================================== */
+
+/* 1. DROPDOWN HOVER EN DESKTOP (>992px) */
+@media (min-width: 992px) {
+  .navbar-nav .dropdown:hover .dropdown-menu {
+      display: block !important;
+      animation: fadeIn 0.2s ease;
+  }
+  
+  /* Prevenir que submenús anidados se muestren (solo 2 niveles) */
+  .dropdown-menu .dropdown-menu {
+      display: none !important;
+      pointer-events: none !important;
+  }
+  
+  /* Sidebar debe estar fijo y visible */
+  .sidebar-module-wrapper {
+      position: fixed !important;
+      top: 70px !important; /* Altura del navbar */
+      left: 0 !important;
+      width: 250px !important;
+      height: calc(100vh - 70px) !important;
+      z-index: 100 !important;
+      overflow-y: auto !important;
+      background: #f8f9fa !important;
+      border-right: 1px solid #dee2e6 !important;
+  }
+  
+  /* Contenido principal se desplaza cuando hay sidebar */
+  .main-content-with-sidebar {
+      margin-left: 250px !important;
+      width: calc(100% - 250px) !important;
+      padding: 20px 30px !important;
+      min-height: calc(100vh - 70px) !important;
+      transition: margin-left 0.3s ease !important;
+  }
+  
+  /* Contenido sin sidebar */
+  .main-content {
+      padding: 20px 30px !important;
+      min-height: calc(100vh - 70px) !important;
+      width: 100% !important;
+  }
+}
+
+/* 2. RESPONSIVE PARA TABLETS (768-992px) */
+@media (max-width: 991.98px) and (min-width: 768px) {
+  .sidebar-module-wrapper {
+      width: 200px !important;
+      display: none !important; /* En tablet usar móvil */
+  }
+  
+  .main-content-with-sidebar {
+      margin-left: 0 !important;
+      width: 100% !important;
+      padding: 15px !important;
+  }
+}
+
+/* 3. RESPONSIVE PARA MÓVIL (<768px) */
+@media (max-width: 767.98px) {
+  .sidebar-module-wrapper {
+      display: none !important;
+  }
+  
+  .main-content-with-sidebar,
+  .main-content {
+      margin-left: 0 !important;
+      width: 100% !important;
+      padding: 15px !important;
+  }
+  
+  .mobile-module-navbar {
+      margin-top: 60px;
+      border-bottom: 1px solid #dee2e6;
+  }
+  
+  .mobile-module-navbar .navbar-collapse {
+      background: white;
+      padding: 15px;
+      border-top: 1px solid #dee2e6;
+  }
+}
+
+/* 4. PREVENIR DESBORDAMIENTO DE DROPDOWNS */
+.dropdown-menu {
+  max-height: 70vh;
+  overflow-y: auto;
+}
+
+/* 5. ANIMACIÓN PARA DROPDOWNS */
+@keyframes fadeIn {
+  from { 
+      opacity: 0; 
+      transform: translateY(-10px); 
+  }
+  to { 
+      opacity: 1; 
+      transform: translateY(0); 
+  }
+}
+
+/* 6. ESTILOS ESPECÍFICOS PARA MENÚ MÓVIL (OFFCANVAS) */
+.offcanvas-body .nav {
+  flex-direction: column;
+}
+
+.offcanvas-body .dropdown-menu {
+  position: static !important;
+  border: none !important;
+  box-shadow: none !important;
+  background: transparent !important;
+  padding-left: 1.5rem !important;
+}
+
+.offcanvas-body .dropdown-item {
+  padding-left: 2.5rem !important;
+  color: #333 !important;
+}
+
+/* 7. Z-INDEX JERÁRQUICO */
+.navbar-nav .dropdown-menu {
+  z-index: 1050 !important;
+}
+
+/* 8. CORRECCIÓN PARA ITEMS DESHABILITADOS */
+.nav-link.disabled,
+.dropdown-item.disabled {
+  opacity: 0.5 !important;
+  pointer-events: none !important;
+}
+
+/* 9. ESTILOS PARA ACTIVE EN DROPDOWNS */
+.dropdown-item.active {
+  background-color: rgba(108, 52, 131, 0.1) !important;
+  color: #6c3483 !important;
+  border-left: 3px solid #6c3483 !important;
+}
+
+/* 10. CORRECCIÓN PARA LOGO RESPONSIVE */
+.navbar-logo {
+  max-height: 45px !important;
+  height: auto !important;
+  width: auto !important;
+}
+
+@media (max-width: 767.98px) {
+  .navbar-logo {
+      max-height: 35px !important;
+  }
+}
+/* ================================================== */
+/* ✅ CORRECCIONES CRÍTICAS PARA MENÚ 2 NIVELES      */
+/* ================================================== */
+
+/* 1. DROPDOWN HOVER EN DESKTOP (>992px) */
+@media (min-width: 992px) {
+  .navbar-nav .dropdown:hover .dropdown-menu {
+      display: block !important;
+      animation: fadeIn 0.2s ease;
+  }
+  
+  /* Prevenir niveles 3+ */
+  .dropdown-menu .dropdown-menu {
+      display: none !important;
+      pointer-events: none !important;
+  }
+  
+  /* Sidebar de módulo */
+  .sidebar-module-wrapper {
+      position: fixed !important;
+      top: 70px !important;
+      left: 0 !important;
+      width: 250px !important;
+      height: calc(100vh - 70px) !important;
+      z-index: 100 !important;
+      overflow-y: auto !important;
+      background: #f8f9fa !important;
+      border-right: 1px solid #dee2e6 !important;
+  }
+  
+  /* Contenido con sidebar */
+  .main-content-with-sidebar {
+      margin-left: 250px !important;
+      width: calc(100% - 250px) !important;
+      padding: 20px 30px !important;
+      min-height: calc(100vh - 70px) !important;
+      transition: margin-left 0.3s ease !important;
+  }
+  
+  /* Contenido sin sidebar */
+  .main-content {
+      padding: 20px 30px !important;
+      min-height: calc(100vh - 70px) !important;
+      width: 100% !important;
+  }
+}
+
+/* 2. ANIMACIÓN PARA DROPDOWNS */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* 3. ACORDEÓN PARA MÓVIL */
+.offcanvas-body .nav {
+  flex-direction: column;
+}
+
+.offcanvas-body .dropdown-menu {
+  position: static !important;
+  border: none !important;
+  background: transparent !important;
+  padding-left: 1.5rem !important;
+}
+
+.offcanvas-body .dropdown-item {
+  padding-left: 2.5rem !important;
+}
