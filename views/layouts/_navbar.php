@@ -8,9 +8,7 @@
 
 use yii\bootstrap5\Html;
 use yii\helpers\Url;
-use app\components\MenuWidget;
 
-// ✅ DETECCIÓN DE RUTA ACTUAL
 $currentRoute = Yii::$app->controller->route;
 $isIndexRoute = $currentRoute === 'site/index';
 $isLoginRoute = $currentRoute === 'site/login';
@@ -18,22 +16,15 @@ $isSignupRoute = $currentRoute === 'site/signup';
 
 $showLoginButton = !Yii::$app->user->isGuest ? false : !$isLoginRoute;
 $showSignupButton = !Yii::$app->user->isGuest ? false : (!$isSignupRoute && !$isLoginRoute);
-
-// ✅ DETECCIÓN DE MÓDULO ACTUAL PARA SIDEBAR
-$currentModule = Yii::$app->controller->module->id ?? '';
-$modulesConSidebar = ['atletas', 'tienda', 'escuela_club', 'aportes', 'reportes'];
-$tieneSidebar = in_array($currentModule, $modulesConSidebar);
 ?>
 
 <!-- ================================================== -->
-<!-- NAVBAR PRINCIPAL - 2 NIVELES                       -->
+<!-- NAVBAR CORREGIDO - ESTRUCTURA SIMPLIFICADA -->
 <!-- ================================================== -->
-
-<!-- ✅ NAVBAR DESKTOP (fijo en top) -->
-<nav class="navbar-contextual navbar navbar-expand-lg navbar-dark fixed-top" id="main-navbar">
-    <div class="container-fluid p-0 m-0 w-100 vw-100">
+<nav class="navbar navbar-contextual navbar-expand-lg fixed-top" id="main-navbar" aria-label="Navegación principal">
+    <div class="navbar-container container-fluid px-4">
         
-        <!-- ✅ LOGO - IZQUIERDA -->
+        <!-- ✅ LOGO (15%) - EN LÍNEA CON EL RESTO -->
         <div class="navbar-brand-section">
             <a class="navbar-brand" href="<?= Yii::$app->homeUrl ?>" 
                title="Inicio - Sistema GED"
@@ -49,59 +40,54 @@ $tieneSidebar = in_array($currentModule, $modulesConSidebar);
                     <small>Sistema Deportivo</small>
                 </div>
             </a>
+            
+            <!-- TOGGLER PARA MÓVIL (DENTRO DE LA MISMA SECCIÓN) -->
+            <button class="navbar-toggler d-lg-none" type="button" 
+                    data-bs-toggle="collapse"
+                    data-bs-target="#navbarContent"
+                    aria-controls="navbarContent"
+                    aria-expanded="false"
+                    aria-label="Alternar navegación">
+                <span class="navbar-toggler-icon"></span>
+            </button>
         </div>
 
-        <!-- ✅ TOGGLER PARA MÓVIL - OFFCANVAS BOOTSTRAP -->
-        <button class="navbar-toggler d-lg-none ms-auto" 
-                type="button" 
-                data-bs-toggle="offcanvas"
-                data-bs-target="#mobileMenuOffcanvas"
-                aria-controls="mobileMenuOffcanvas"
-                aria-expanded="false"
-                aria-label="Mostrar menú de navegación">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-
-        <!-- ✅ CONTENIDO DESKTOP - COLAPSE BOOTSTRAP -->
-        <div class="collapse navbar-collapse" id="navbarContent">
-            <div class="navbar-container">
+        <!-- ✅ CONTENIDO DEL NAVBAR (85%) - EN LÍNEA -->
+        <div class="collapse navbar-collapse show" id="navbarContent">
+            <div class="navbar-content-wrapper">
                 
-                <!-- ✅ MENÚ PRINCIPAL - SOLO DESKTOP (50%) -->
-                <div class="navbar-menu-section d-none d-lg-flex">
-                    <div class="section-container w-100">
-                        <?= MenuWidget::widget([
-                            'options' => [
-                                'class' => 'navbar-nav main-navigation w-100',
-                                'mobileMode' => false,
-                            ]
-                        ]) ?>
+                <!-- MENÚ PRINCIPAL -->
+                <div class="navbar-menu-section">
+                    <?= \app\components\MenuWidget::widget([
+                        'options' => [
+                            'class' => 'navbar-nav main-navigation',
+                            'mobileMode' => false,
+                            'rootOnly' => false
+                        ]
+                    ]) ?>
+                </div>
+                
+                <!-- REDES SOCIALES -->
+                <div class="navbar-social-section">
+                    <div class="social-icons-vertical" aria-label="Redes sociales">
+                        <a href="#" class="social-icon-circle" title="Facebook" aria-label="Facebook">
+                            <i class="bi bi-facebook" aria-hidden="true"></i>
+                        </a>
+                        <a href="#" class="social-icon-circle" title="Twitter" aria-label="Twitter">
+                            <i class="bi bi-twitter" aria-hidden="true"></i>
+                        </a>
+                        <a href="#" class="social-icon-circle" title="Instagram" aria-label="Instagram">
+                            <i class="bi bi-instagram" aria-hidden="true"></i>
+                        </a>
+                        <a href="#" class="social-icon-circle" title="YouTube" aria-label="YouTube">
+                            <i class="bi bi-youtube" aria-hidden="true"></i>
+                        </a>
                     </div>
                 </div>
                 
-                <!-- ✅ REDES SOCIALES - SOLO DESKTOP (15%) -->
-                <div class="navbar-social-section d-none d-lg-flex">
-                    <div class="section-container">
-                        <div class="social-icons-vertical" aria-label="Redes sociales">
-                            <a href="#" class="social-icon-circle" title="Facebook" aria-label="Facebook">
-                                <i class="bi bi-facebook" aria-hidden="true"></i>
-                            </a>
-                            <a href="#" class="social-icon-circle" title="Twitter" aria-label="Twitter">
-                                <i class="bi bi-twitter" aria-hidden="true"></i>
-                            </a>
-                            <a href="#" class="social-icon-circle" title="Instagram" aria-label="Instagram">
-                                <i class="bi bi-instagram" aria-hidden="true"></i>
-                            </a>
-                            <a href="#" class="social-icon-circle" title="YouTube" aria-label="YouTube">
-                                <i class="bi bi-youtube" aria-hidden="true"></i>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- ✅ CONTROL DE USUARIO Y ESCUELA - SOLO DESKTOP (20%) -->
-                <div class="navbar-control-section d-none d-lg-flex">
-                    <div class="section-container">
-                        
+                <!-- CONTROL DE USUARIO Y ESCUELA -->
+                <div class="navbar-control-section">
+                    <div class="control-content">
                         <!-- INFORMACIÓN DE ESCUELA -->
                         <div class="school-info">
                             <?php if ($idEscuela && $idEscuela > 0): ?>
@@ -158,10 +144,10 @@ $tieneSidebar = in_array($currentModule, $modulesConSidebar);
                         </div>
                         
                         <!-- CONTROL DE SESIÓN -->
-                        <div class="session-controls mt-2">
+                        <div class="session-controls">
                             <?php if (Yii::$app->user->isGuest): ?>
                                 <!-- USUARIO NO AUTENTICADO -->
-                                <div class="d-flex flex-column gap-1">
+                                <div class="d-flex gap-1">
                                     <?php if ($showLoginButton): ?>
                                     <a class="btn btn-sm btn-outline-light" 
                                        href="<?= Yii::$app->urlManager->createUrl(['/site/login']) ?>" 
@@ -184,7 +170,7 @@ $tieneSidebar = in_array($currentModule, $modulesConSidebar);
                                 </div>
                             <?php else: ?>
                                 <!-- USUARIO AUTENTICADO -->
-                                <div class="user-info mb-1 text-end">
+                                <div class="user-info text-end">
                                     <small class="text-white d-block">
                                         <i class="bi bi-person-circle me-1" aria-hidden="true"></i>
                                         <?= Html::encode(mb_strimwidth(Yii::$app->user->identity->username ?? 'Usuario', 0, 20, '...')) ?>
@@ -202,7 +188,6 @@ $tieneSidebar = in_array($currentModule, $modulesConSidebar);
                                 <?= Html::endForm() ?>
                             <?php endif; ?>
                         </div>
-                        
                     </div>
                 </div>
                 
@@ -212,90 +197,15 @@ $tieneSidebar = in_array($currentModule, $modulesConSidebar);
     </div>
 </nav>
 
-<!-- ✅ OFFCANVAS PARA MÓVIL - BOOTSTRAP NATIVO -->
-<div class="offcanvas offcanvas-start d-lg-none" tabindex="-1" id="mobileMenuOffcanvas">
-    <div class="offcanvas-header bg-primary text-white">
-        <h5 class="offcanvas-title">
-            <i class="fas fa-bars me-2"></i>Menú Principal
-        </h5>
-        <button type="button" class="btn-close btn-close-white" 
-                data-bs-dismiss="offcanvas" 
-                aria-label="Cerrar menú"></button>
-    </div>
-    <div class="offcanvas-body p-0">
-        <?= MenuWidget::widget([
-            'options' => [
-                'class' => 'navbar-nav flex-column w-100',
-                'mobileMode' => true,
-            ]
-        ]) ?>
-        
-        <!-- ✅ CONTROLES PARA MÓVIL EN EL OFFCANVAS -->
-        <div class="border-top mt-3 p-3">
-            <?php if ($idEscuela && $idEscuela > 0): ?>
-                <div class="mb-3">
-                    <small class="text-muted d-block">Escuela actual:</small>
-                    <strong class="d-block"><?= Html::encode($nombreEscuela) ?></strong>
-                    <small class="text-muted">ID: <?= $idEscuela ?></small>
-                </div>
-            <?php endif; ?>
-            
-            <?php if (Yii::$app->user->isGuest): ?>
-                <div class="d-grid gap-2">
-                    <a class="btn btn-primary" href="<?= Url::to(['/site/login']) ?>">
-                        <i class="bi bi-box-arrow-in-right me-2"></i>Iniciar Sesión
-                    </a>
-                    <a class="btn btn-outline-primary" href="<?= Url::to(['/site/signup']) ?>">
-                        <i class="bi bi-person-plus me-2"></i>Registrarse
-                    </a>
-                </div>
-            <?php else: ?>
-                <div class="d-grid">
-                    <small class="text-muted d-block mb-2">
-                        <i class="bi bi-person-circle me-1"></i>
-                        <?= Html::encode(Yii::$app->user->identity->username ?? 'Usuario') ?>
-                    </small>
-                    <?= Html::beginForm(['/site/logout'], 'post', ['class' => 'd-inline']) ?>
-                        <?= Html::submitButton(
-                            '<i class="bi bi-box-arrow-right me-2"></i>Cerrar Sesión',
-                            ['class' => 'btn btn-outline-danger w-100']
-                        ) ?>
-                    <?= Html::endForm() ?>
-                </div>
-            <?php endif; ?>
-        </div>
-    </div>
-</div>
-
-<!-- ✅ SIDEBAR DE MÓDULO (para escritorio) -->
-<?php if ($tieneSidebar && !Yii::$app->request->isAjax): ?>
-<div class="sidebar-module-wrapper d-none d-md-block">
-    <?= \app\components\ModuleMenuWidget::widget([
-        'moduleName' => $currentModule,
-    ]) ?>
-</div>
-
-<!-- ✅ NAVEGACIÓN DE MÓDULO PARA MÓVIL -->
-<div class="d-md-none mobile-module-navbar">
-    <nav class="navbar navbar-expand-lg navbar-light bg-white border-bottom">
-        <div class="container-fluid">
-            <span class="navbar-brand text-truncate">
-                <i class="bi bi-menu-button-wide me-2"></i>
-                <?= \app\components\ModuleMenuWidget::getModuleTitle($currentModule) ?>
-            </span>
-            <button class="navbar-toggler" type="button" 
-                    data-bs-toggle="collapse" 
-                    data-bs-target="#moduleNavMobile"
-                    aria-expanded="false"
-                    aria-label="Menú del módulo">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="moduleNavMobile">
-                <?= \app\components\ModuleMenuWidget::widget([
-                    'moduleName' => $currentModule,
-                ]) ?>
-            </div>
-        </div>
-    </nav>
-</div>
-<?php endif; ?>
+<!-- ✅ SCRIPT PARA DEBUG (OPCIONAL) -->
+<script>
+// Solo para verificar que el menú se cargó
+document.addEventListener('DOMContentLoaded', function() {
+    const menuItems = document.querySelectorAll('.main-navigation .nav-item');
+    console.log(`📊 MenuWidget generó ${menuItems.length} elementos en el navbar`);
+    
+    if (menuItems.length === 0) {
+        console.warn('⚠️ No se encontraron elementos en el menú. Verifica MenuWidget.php');
+    }
+});
+</script>

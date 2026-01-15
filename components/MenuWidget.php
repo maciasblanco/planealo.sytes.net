@@ -13,6 +13,7 @@ class MenuWidget extends Widget
     public $options = [];
     public $mobileMode = false;
     public $maxDepth = 2; // ✅ SOLO 2 NIVELES
+    public $excludeRoutes = []; // ✅ RUTAS A EXCLUIR
 
     public function init()
     {
@@ -23,6 +24,17 @@ class MenuWidget extends Widget
         if (isset($this->options['mobileMode'])) {
             $this->mobileMode = (bool)$this->options['mobileMode'];
         }
+        
+        // ✅ RUTAS A EXCLUIR (Login/Registro ya están en navbar-control-section)
+        $this->excludeRoutes = [
+            'site/login',
+            'site/signup',
+            'site/logout'
+        ];
+        
+        if (isset($this->options['excludeRoutes'])) {
+            $this->excludeRoutes = array_merge($this->excludeRoutes, $this->options['excludeRoutes']);
+        }
     }
 
     public function run()
@@ -31,7 +43,7 @@ class MenuWidget extends Widget
             // ✅ CONSULTAR TODOS LOS MENÚS PARA DEBUG
             self::debugAllMenus();
             
-            // ✅ OBTENER MENÚ CON SOLO 2 NIVELES
+            // ✅ OBTENER MENÚ CON SOLO 2 NIVELES (excluyendo Login/Registro)
             $menuItems = $this->getMenuItems($this->parentId);
             
             if (empty($menuItems)) {
@@ -52,7 +64,7 @@ class MenuWidget extends Widget
     }
 
     /**
-     * ✅ OBTENER ITEMS DEL MENÚ - SOLO 2 NIVELES
+     * ✅ OBTENER ITEMS DEL MENÚ - SOLO 2 NIVELES (excluyendo Login/Registro)
      */
     protected function getMenuItems($parentId = null)
     {
@@ -89,6 +101,12 @@ class MenuWidget extends Widget
         $menuItems = [];
 
         foreach ($items as $item) {
+            // ✅ VERIFICAR SI DEBE EXCLUIRSE (Login/Registro)
+            if ($this->shouldExcludeMenuItem($item)) {
+                Yii::debug('MenuWidget - Excluyendo item: ' . $item['name'] . ' (' . ($item['route'] ?? 'sin ruta') . ')');
+                continue;
+            }
+            
             // ✅ VERIFICAR SI DEBE MOSTRARSE
             if (!$this->shouldShowMenuItem($item)) {
                 Yii::debug('MenuWidget - Omitiendo item: ' . $item['name'] . ' (no visible)');
@@ -121,6 +139,27 @@ class MenuWidget extends Widget
     }
     
     /**
+     * ✅ VERIFICAR SI UN ITEM DEBE EXCLUIRSE (Login/Registro)
+     */
+    protected function shouldExcludeMenuItem($item)
+    {
+        if (empty($item['route'])) {
+            return false;
+        }
+        
+        // ✅ EXCLUIR LOGIN, REGISTRO, LOGOUT (ya están en navbar-control-section)
+        $excludeRoutes = $this->excludeRoutes;
+        
+        foreach ($excludeRoutes as $excludeRoute) {
+            if ($item['route'] === $excludeRoute) {
+                return true;
+            }
+        }
+        
+        return false;
+    }
+    
+    /**
      * ✅ OBTENER HIJOS PARA NIVEL 1 (SOLO UN NIVEL)
      */
     protected function getChildItemsForLevel1($parentId)
@@ -143,6 +182,11 @@ class MenuWidget extends Widget
             $menuItems = [];
             
             foreach ($childItems as $child) {
+                // ✅ VERIFICAR SI EL HIJO DEBE EXCLUIRSE
+                if ($this->shouldExcludeMenuItem($child)) {
+                    continue;
+                }
+                
                 // ✅ VERIFICAR SI EL HIJO DEBE MOSTRARSE
                 if (!$this->shouldShowMenuItem($child)) {
                     continue;
@@ -203,9 +247,6 @@ class MenuWidget extends Widget
         // RUTAS PÚBLICAS
         $publicRoutes = [
             'site/index',
-            'site/login',
-            'site/logout',
-            'site/signup',
             'site/about',
             'site/contact',
             'tienda/marketplace/index',
@@ -314,10 +355,14 @@ class MenuWidget extends Widget
     }
 
     /**
-     * ✅ RENDERIZAR PARA DESKTOP (2 NIVELES)
+     * ✅ RENDERIZAR PARA DESKTOP (2 NIVELES) - SIN LOGIN/REGISTRO
      */
     protected function renderMenuForDesktop($menuItems)
     {
+        if (empty($menuItems)) {
+            return $this->renderFallbackMenu();
+        }
+        
         $menuClass = isset($this->options['class']) ? $this->options['class'] : 'navbar-nav';
         $html = '<ul class="' . $menuClass . '">';
         
@@ -369,10 +414,14 @@ class MenuWidget extends Widget
     }
 
     /**
-     * ✅ RENDERIZAR PARA MÓVIL (OFFCANVAS)
+     * ✅ RENDERIZAR PARA MÓVIL (OFFCANVAS) - SIN LOGIN/REGISTRO
      */
     protected function renderMenuForMobile($menuItems)
     {
+        if (empty($menuItems)) {
+            return $this->renderFallbackMenu();
+        }
+        
         $menuClass = isset($this->options['class']) ? $this->options['class'] : 'navbar-nav flex-column w-100';
         $html = '<ul class="' . $menuClass . '">';
         
@@ -425,11 +474,15 @@ class MenuWidget extends Widget
         }
         
         $html .= '</ul>';
+        
+        // ✅ AGREGAR SEPARADOR PARA CONTROL DE SESIÓN (que estará en otra parte del offcanvas)
+        $html .= '<hr class="my-3">';
+        
         return $html;
     }
 
     /**
-     * ✅ MENÚ DE RESERVA
+     * ✅ MENÚ DE RESERVA - SIN LOGIN/REGISTRO
      */
     protected function renderFallbackMenu()
     {
@@ -441,34 +494,21 @@ class MenuWidget extends Widget
                 <a class="' . ($this->mobileMode ? 'nav-link' : 'nav-link text-white') . '" href="' . Url::to(['/']) . '">
                     <i class="fas fa-home me-1"></i>Inicio
                 </a>
-            </li>';
+            </li>
             
-        // ✅ MARKETPLACE SIEMPRE VISIBLE
-        $menuItems .= '
             <li class="nav-item">
                 <a class="' . ($this->mobileMode ? 'nav-link' : 'nav-link text-white') . '" href="' . Url::to(['/tienda/marketplace']) . '">
                     <i class="fas fa-store me-1"></i>Marketplace
                 </a>
-            </li>';
+            </li>
             
-        if (Yii::$app->user->isGuest) {
-            $menuItems .= '
             <li class="nav-item">
-                <a class="' . ($this->mobileMode ? 'nav-link' : 'nav-link text-white') . '" href="' . Url::to(['/site/login']) . '">
-                    <i class="fas fa-sign-in-alt me-1"></i>Iniciar Sesión
+                <a class="' . ($this->mobileMode ? 'nav-link' : 'nav-link text-white') . '" href="' . Url::to(['/ged/default/index']) . '">
+                    <i class="fas fa-school me-1"></i>GED Sistema
                 </a>
             </li>';
-        } else {
-            $menuItems .= '
-            <li class="nav-item">
-                ' . Html::beginForm(['/site/logout'], 'post', ['class' => 'd-inline']) . '
-                ' . Html::submitButton(
-                    '<i class="fas fa-sign-out-alt me-1"></i>Cerrar Sesión',
-                    ['class' => $this->mobileMode ? 'nav-link btn btn-link' : 'nav-link text-white btn btn-link']
-                ) . '
-                ' . Html::endForm() . '
-            </li>';
-        }
+        
+        // ❌ NO INCLUIR LOGIN/REGISTRO - YA ESTÁN EN navbar-control-section
         
         $menuItems .= '</ul>';
         

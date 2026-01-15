@@ -1,8 +1,8 @@
 /* =================================================================
  * _navigation.css - NAVEGACIÓN Y MENÚS GED
- * Consolidado de: ged-modulo-navbar.css, ged-modulo-offcanvas.css, 
- *                 secciones de navbar de ged-core.css
- * Fecha: 2026-01-06 (actualizado para consolidación)
+ * Versión: 2.0.0 - CORREGIDA PARA 100% DE ANCHO EN DESKTOP
+ * Fecha: 2026-01-14
+ * Última modificación: 2026-01-15 (Proporciones 12% | 50% | 5% | 28% - Alineación izquierda)
  * ================================================================= */
 
 /* Variables específicas de navegación */
@@ -18,24 +18,36 @@
   --navbar-shadow-light: 0 2px 10px rgba(0,0,0,0.1);
   --navbar-shadow-medium: 0 4px 20px rgba(0,0,0,0.15);
   --navbar-transition-speed: 0.3s;
+  
+  /* Nuevas variables para separación */
+  --navbar-section-gap: 2%; /* Espacio entre secciones en escritorio */
 }
 
-/* ===== RESET DE ANCHO COMPLETO ===== */
+/* ===== RESET DE ANCHO COMPLETO - SOLUCIÓN CORREGIDA ===== */
 html, body {
     width: 100vw !important;
     max-width: 100vw !important;
+    min-width: 100vw !important;
     overflow-x: hidden !important;
     position: relative;
-    margin: 0;
-    padding: 0;
+    margin: 0 !important;
+    padding: 0 !important;
     scroll-behavior: smooth;
     scroll-padding-top: 80px;
+    box-sizing: border-box !important;
 }
 
+/* ✅ BODY PRINCIPAL - ANCHO COMPLETO EN TODOS LOS DISPOSITIVOS */
 body {
+    width: 100vw !important;
+    max-width: 100vw !important;
+    min-width: 100vw !important;
     overflow-x: hidden !important;
     position: relative;
-    padding-top: 70px !important;
+    padding-top: 70px !important; /* Para navbar fijo */
+    margin: 0 !important;
+    box-sizing: border-box !important;
+    background-color: #ffffff; /* Fondo definido */
 }
 
 @media (max-width: 991.98px) {
@@ -44,9 +56,54 @@ body {
     }
 }
 
-/* ===== NAVBAR PRINCIPAL - ANCHO COMPLETO SIN PADDING LATERAL ===== */
+/* ===== ESTRUCTURA DE CONTENIDO GED - SIN PADDING EXTERNO ===== */
+
+/* ✅ CONTENEDOR PRINCIPAL DEL CONTENIDO */
+.ged-main-content-wrapper {
+    width: 100vw !important;
+    max-width: 100vw !important;
+    min-width: 100vw !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    box-sizing: border-box !important;
+}
+
+/* ✅ BREADCRUMBS - CON PADDING INTERNO */
+.ged-breadcrumbs-container {
+    padding: 20px 30px 10px 30px !important;
+    margin: 0 !important;
+    background: #f8f9fa;
+    border-bottom: 1px solid #dee2e6;
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+}
+
+/* ✅ CONTENIDO PRINCIPAL - CON PADDING INTERNO */
+.ged-main-content-wrapper > .container,
+.ged-main-content-wrapper > div:not(.ged-breadcrumbs-container):not(.alert) {
+    padding: 20px 30px !important;
+    margin: 0 auto !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+}
+
+/* ✅ MÓVIL: REDUCIR PADDING */
+@media (max-width: 991.98px) {
+    .ged-breadcrumbs-container {
+        padding: 15px 15px 8px 15px !important;
+    }
+    
+    .ged-main-content-wrapper > .container,
+    .ged-main-content-wrapper > div:not(.ged-breadcrumbs-container):not(.alert) {
+        padding: 15px !important;
+    }
+}
+
+/* ===== NAVBAR PRINCIPAL - 100vw SIN PADDING LATERAL ===== */
 .navbar-contextual {
-  /* Dimensiones y posición */
+  /* Dimensiones y posición - SOLUCIÓN CORREGIDA */
   width: 100vw !important;
   max-width: 100vw !important;
   min-width: 100vw !important;
@@ -69,26 +126,25 @@ body {
   display: flex !important;
   align-items: center !important;
   
-  /* Padding lateral controlado */
+  /* Padding lateral controlado - SIN PADDING */
   padding-left: 0 !important;
   padding-right: 0 !important;
   box-sizing: border-box !important;
   
   /* Overflow */
-  overflow: hidden !important;
+  overflow: visible !important;
   
   /* Animación inicial */
   animation: fadeInDown 0.5s ease-out;
+  
+  /* Asegurar que el navbar no tenga márgenes */
+  margin: 0 !important;
 }
 
 .navbar-contextual.scrolled {
   background: linear-gradient(135deg, #6c3483 0%, #5B2C6F 100%) !important;
   box-shadow: 0 4px 20px rgba(0,0,0,0.2) !important;
   min-height: 70px !important;
-}
-
-.navbar-contextual.scrolled .navbar-logo {
-  height: 35px !important;
 }
 
 /* FORZAR ANCHO COMPLETO EN ELEMENTOS DEL NAVBAR */
@@ -104,6 +160,7 @@ body {
     margin-right: 0 !important;
     padding-left: 0 !important;
     padding-right: 0 !important;
+    overflow: visible !important;
 }
 
 /* CORRECCIÓN PARA BOOTSTRAP CONTAINERS */
@@ -112,9 +169,11 @@ body {
     padding-right: 0 !important;
     margin-left: 0 !important;
     margin-right: 0 !important;
+    width: 100% !important;
+    max-width: 100% !important;
 }
 
-/* ✅ CONTENEDOR INTERNO - FLEXIBLE */
+/* ✅ CONTENEDOR INTERNO - SOLUCIÓN CORREGIDA ===== */
 .navbar-container {
   display: flex !important;
   flex-wrap: nowrap !important;
@@ -123,66 +182,81 @@ body {
   height: 100% !important;
   align-items: center !important;
   justify-content: space-between !important;
-  padding: 0 !important;
+  padding: 0 30px !important; /* Padding interno para separación */
   margin: 0 auto !important;
   box-sizing: border-box !important;
+  overflow: visible !important;
 }
 
-/* ✅ SECCIONES DEL NAVBAR - DISTRIBUCIÓN 15% | 50% | 15% | 20% */
+/* ===== ✅ SECCIONES DEL NAVBAR - NUEVAS PROPORCIONES ===== */
+/* DISTRIBUCIÓN CORREGIDA: 12% | 50% | 5% | 28% */
 
-/* LOGO (15%) */
+/* LOGO (12%) - ALINEACIÓN IZQUIERDA */
 .navbar-brand-section {
-  flex: 0 0 15% !important;
-  max-width: 15% !important;
-  min-width: 180px !important;
+  flex: 0 0 12% !important;
+  max-width: 12% !important;
+  min-width: 100px !important;
   display: flex !important;
   align-items: center !important;
-  justify-content: flex-start !important;
+  justify-content: flex-start !important; /* Alineación izquierda */
   padding: 8px 0 !important;
   height: 100% !important;
   box-sizing: border-box !important;
+  overflow: hidden !important;
+  margin-right: calc(var(--navbar-section-gap) * 0.5) !important;
 }
 
-/* MENÚ PRINCIPAL (50%) */
+/* ✅ MENÚ PRINCIPAL (50%) - ALINEACIÓN IZQUIERDA */
 .navbar-menu-section {
   flex: 0 0 50% !important;
   max-width: 50% !important;
   display: flex !important;
   align-items: center !important;
-  justify-content: center !important;
+  justify-content: flex-start !important; /* ✅ Alineación izquierda */
   height: 100% !important;
   padding: 0 !important;
   box-sizing: border-box !important;
+  overflow: visible !important;
+  margin: 0 calc(var(--navbar-section-gap) * 0.5) !important;
 }
 
-/* REDES SOCIALES (15%) */
+/* ✅ REDES SOCIALES (5%) - ALINEACIÓN IZQUIERDA */
 .navbar-social-section {
-  flex: 0 0 15% !important;
-  max-width: 15% !important;
+  flex: 0 0 5% !important;
+  max-width: 5% !important;
+  min-width: 60px !important;
   display: flex !important;
   align-items: center !important;
+  justify-content: flex-start !important; /* ✅ Alineación izquierda */
+  height: 100% !important;
+  padding: 0 !important;
+  box-sizing: border-box !important;
+  overflow: visible !important;
+  margin: 0 calc(var(--navbar-section-gap) * 0.5) !important;
+}
+
+/* ✅ CONTROL DE USUARIO (28%) - ALINEACIÓN IZQUIERDA */
+.navbar-control-section {
+  flex: 0 0 28% !important;
+  max-width: 28% !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: flex-start !important; /* ✅ Alineación izquierda */
   justify-content: center !important;
   height: 100% !important;
   padding: 0 !important;
   box-sizing: border-box !important;
+  overflow: visible !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  margin-left: calc(var(--navbar-section-gap) * 0.5) !important;
 }
 
-/* CONTROL DE USUARIO (20%) */
-.navbar-control-section {
-  flex: 0 0 20% !important;
-  max-width: 20% !important;
-  display: flex !important;
-  align-items: center !important;
-  justify-content: flex-end !important;
-  height: 100% !important;
-  padding: 0 !important;
-  box-sizing: border-box !important;
-}
-
-/* ✅ LOGO RESPONSIVE */
+/* ✅ LOGO RESPONSIVE - TAMAÑO RESPONSIVE (NO FIJO) */
 .navbar-logo {
-  height: 45px !important;
-  max-height: 45px !important;
+  height: auto !important;
+  max-height: 150px !important; /* Altura máxima */
+  max-width: 100% !important; /* Asegura que no se desborde */
   width: auto !important;
   transition: all 0.3s ease !important;
   object-fit: contain !important;
@@ -224,15 +298,16 @@ body {
   height: 1.25em !important;
 }
 
-/* ✅ MENÚ PRINCIPAL - ESTILOS BÁSICOS */
+/* ✅ MENÚ PRINCIPAL - ESTILOS BÁSICOS CON ALINEACIÓN IZQUIERDA */
 .main-navigation {
   width: 100% !important;
   display: flex !important;
-  justify-content: center !important;
+  justify-content: flex-start !important; /* ✅ Alineación izquierda */
   align-items: center !important;
   margin: 0 !important;
   padding: 0 !important;
   list-style: none !important;
+  flex-wrap: wrap;
 }
 
 .main-navigation .nav-link {
@@ -267,21 +342,7 @@ body {
 }
 
 /* ================================================== */
-/* ✅ SUBMENÚS ANIDADOS - ESTILOS BASE (NO TOCAR)     */
-/* Los estilos específicos de submenús están en       */
-/* _submenus.css - estos son solo estilos base        */
-/* ================================================== */
-
-/* SOLO ESTILOS DE BASE - NO DEFINIR COMPORTAMIENTO AQUÍ */
-.dropdown-submenu {
-    position: relative; /* Base para posicionamiento */
-}
-
-/* NO definir comportamiento de visualización aquí */
-/* .dropdown-submenu > .dropdown-menu { ... } */
-
-/* ================================================== */
-/* ✅ DROPDOWN MENUS - ESTILOS UNIFICADOS */
+/* ✅ DROPDOWN MENUS - SOLUCIÓN CORREGIDA ============ */
 /* ================================================== */
 
 .dropdown-menu {
@@ -295,11 +356,15 @@ body {
   border: 1px solid rgba(255,255,255,0.3) !important;
   box-shadow: 0 10px 30px rgba(0,0,0,0.3) !important;
   overflow: visible !important;
+  min-width: 200px !important;
 }
 
 .dropdown-menu.show {
   display: block !important;
   z-index: 1050 !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  transform: translateY(0) !important;
 }
 
 .dropdown-item {
@@ -310,28 +375,77 @@ body {
   border-bottom: 1px solid rgba(255,255,255,0.1);
   position: relative;
   z-index: 1051;
+  background: transparent !important;
 }
 
 .dropdown-item:last-child {
   border-bottom: none;
 }
 
-.dropdown-item:hover {
-  background: rgba(255,255,255,0.1);
+.dropdown-item:hover,
+.dropdown-item:focus {
+  background: rgba(255,255,255,0.1) !important;
   z-index: 1051;
 }
 
-/* ✅ ICONOS SOCIALES - DISPOSICIÓN VERTICAL */
+/* ✅ SUBMENÚS ANIDADOS - CORRECCIONES DE Z-INDEX */
+.navbar-nav .dropdown-menu {
+  z-index: 1050 !important;
+}
+
+.navbar-nav .dropdown-menu .dropdown-menu {
+  z-index: 1051 !important;
+  margin-left: 0 !important;
+  margin-top: 0 !important;
+}
+
+.navbar-nav .dropdown-menu .dropdown-menu .dropdown-menu {
+  z-index: 1052 !important;
+}
+
+/* ✅ CORRECCIÓN PARA DROPDOWNS QUE SE CORTAN */
+.navbar-nav .dropdown {
+  position: relative !important;
+}
+
+.navbar-nav .dropdown-menu {
+  position: absolute !important;
+  left: 0 !important;
+  top: 100% !important;
+  margin-top: 0 !important;
+}
+
+/* ✅ HOVER PARA DROPDOWNS EN DESKTOP */
+@media (min-width: 992px) {
+  .navbar-nav .dropdown:hover > .dropdown-menu {
+    display: block !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    transform: translateY(0) !important;
+  }
+  
+  .dropdown-menu .dropdown:hover > .dropdown-menu {
+    display: block !important;
+    position: absolute !important;
+    left: 100% !important;
+    top: 0 !important;
+    margin-top: 0 !important;
+  }
+}
+
+/* ✅ ICONOS SOCIALES - DISPOSICIÓN VERTICAL CON ALINEACIÓN IZQUIERDA */
 .social-icons-vertical {
   display: flex !important;
   flex-direction: column !important;
-  gap: 10px !important;
-  align-items: center !important;
+  gap: 8px !important;
+  align-items: flex-start !important; /* ✅ Alineación izquierda */
+  width: 100% !important;
+  padding: 8px 0 !important;
 }
 
 .social-icon-circle {
-  width: 32px !important;
-  height: 32px !important;
+  width: 30px !important;
+  height: 30px !important;
   border-radius: 50% !important;
   background: rgba(255, 255, 255, 0.12) !important;
   color: white !important;
@@ -340,48 +454,67 @@ body {
   justify-content: center !important;
   transition: all 0.3s ease !important;
   text-decoration: none !important;
-  font-size: 0.9rem !important;
+  font-size: 0.85rem !important;
   border: 1px solid rgba(255,255,255,0.2) !important;
 }
 
 .social-icon-circle:hover {
   background: rgba(255, 255, 255, 0.25) !important;
-  transform: translateY(-2px) scale(1.1) !important;
+  transform: translateY(-2px) scale(1.15) !important;
   box-shadow: 0 3px 10px rgba(0,0,0,0.2) !important;
 }
 
-/* ✅ INFORMACIÓN DE ESCUELA */
+/* ✅ CONTROL DE SESIÓN - DISPOSICIÓN VERTICAL ALINEADA A LA IZQUIERDA */
+.session-controls {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 12px !important;
+  width: 100% !important;
+  align-items: flex-start !important; /* ✅ Alineación izquierda */
+  text-align: left !important;
+}
+
+/* ✅ INFORMACIÓN DE ESCUELA - ALINEADA A LA IZQUIERDA */
 .school-info {
   background: rgba(0, 0, 0, 0.18) !important;
-  padding: 10px !important;
+  padding: 12px 15px !important;
   border-radius: 8px !important;
   border: 1px solid rgba(255, 255, 255, 0.15) !important;
   font-size: 0.85rem !important;
   width: 100% !important;
   box-sizing: border-box !important;
+  margin-bottom: 5px !important;
+  text-align: left !important; /* ✅ Alineación izquierda */
 }
 
 .escuela-activa-indicator {
   background: rgba(52, 152, 219, 0.2) !important;
-  padding: 8px !important;
+  padding: 10px !important;
   border-radius: 4px !important;
   border-left: 3px solid #3498db !important;
   margin-bottom: 8px !important;
+  text-align: left !important; /* ✅ Alineación izquierda */
 }
 
 .escuela-activa-indicator small {
   display: block !important;
   line-height: 1.4 !important;
+  font-size: 0.85rem !important;
+  text-align: left !important;
 }
 
-/* ✅ BUSCADOR DE ESCUELAS */
+/* ✅ BUSCADOR DE ESCUELAS - ALINEADO A LA IZQUIERDA */
 .school-search-container {
   position: relative !important;
   width: 100% !important;
+  margin-bottom: 8px !important;
+  text-align: left !important; /* ✅ Alineación izquierda */
 }
 
 .school-search-container .input-group {
   width: 100% !important;
+  flex-direction: column !important;
+  align-items: flex-start !important; /* ✅ Alineación izquierda */
 }
 
 .school-search-container .form-control {
@@ -389,7 +522,9 @@ body {
   border: 1px solid rgba(255,255,255,0.2) !important;
   color: white !important;
   font-size: 0.85rem !important;
-  height: 32px !important;
+  height: 38px !important;
+  width: 100% !important;
+  margin-bottom: 5px !important;
 }
 
 .school-search-container .form-control::placeholder {
@@ -399,13 +534,70 @@ body {
 .school-search-container .btn-outline-light {
   border-color: rgba(255,255,255,0.3) !important;
   color: white !important;
-  height: 32px !important;
+  height: 38px !important;
   padding: 0 12px !important;
   font-size: 0.85rem !important;
+  width: 100% !important;
 }
 
 .school-search-container .btn-outline-light:hover {
   background: rgba(255,255,255,0.15) !important;
+}
+
+/* ✅ INFORMACIÓN DE USUARIO - ALINEADA A LA IZQUIERDA */
+.user-info {
+  width: 100% !important;
+  text-align: left !important; /* ✅ Alineación izquierda */
+  background: rgba(0, 0, 0, 0.18) !important;
+  padding: 12px 15px !important;
+  border-radius: 8px !important;
+  border: 1px solid rgba(255, 255, 255, 0.15) !important;
+  margin-bottom: 8px !important;
+  box-sizing: border-box !important;
+}
+
+.user-info small {
+  display: block !important;
+  line-height: 1.5 !important;
+  font-size: 0.85rem !important;
+  margin-bottom: 5px !important;
+  text-align: left !important;
+}
+
+.user-info strong {
+  color: white !important;
+  font-weight: 600 !important;
+}
+
+/* ✅ BOTONES DE SESIÓN - ALINEADOS A LA IZQUIERDA */
+.session-controls .btn {
+  min-width: 100% !important;
+  transition: all 0.3s ease !important;
+  padding: 10px 15px !important;
+  font-size: 0.9rem !important;
+  border-radius: 8px !important;
+  white-space: nowrap !important;
+  margin-bottom: 5px !important;
+  text-align: center !important; /* Los botones mantienen texto centrado */
+  width: 100% !important;
+  box-sizing: border-box !important;
+}
+
+.session-controls .btn:last-child {
+  margin-bottom: 0 !important;
+}
+
+.session-controls .btn:hover {
+  transform: translateY(-2px) !important;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2) !important;
+}
+
+.session-controls .btn-outline-light {
+  border-color: rgba(255,255,255,0.4) !important;
+}
+
+.session-controls .btn-outline-light:hover {
+  background: rgba(255,255,255,0.1) !important;
 }
 
 /* DROPDOWN DE RESULTADOS */
@@ -457,48 +649,7 @@ body {
   margin-top: 2px !important;
 }
 
-/* ✅ CONTROL DE SESIÓN */
-.session-controls {
-  display: flex !important;
-  flex-direction: column !important;
-  gap: 10px !important;
-  width: 100% !important;
-  align-items: flex-end !important;
-}
-
-.user-info {
-  width: 100% !important;
-  text-align: right !important;
-}
-
-.user-info small {
-  display: block !important;
-  line-height: 1.4 !important;
-}
-
-.session-controls .btn {
-  min-width: 120px !important;
-  transition: all 0.3s ease !important;
-  padding: 6px 12px !important;
-  font-size: 0.9rem !important;
-  border-radius: 8px !important;
-  white-space: nowrap !important;
-}
-
-.session-controls .btn:hover {
-  transform: translateY(-2px) !important;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.2) !important;
-}
-
-.session-controls .btn-outline-light {
-  border-color: rgba(255,255,255,0.4) !important;
-}
-
-.session-controls .btn-outline-light:hover {
-  background: rgba(255,255,255,0.1) !important;
-}
-
-/* ✅ DROPDOWN DE SELECCIÓN DE ESCUELA */
+/* ✅ DROPDOWN DE SELECCIÓN DE ESCUELA - AJUSTES VERTICALES */
 .escuela-selector-dropdown {
   min-width: 250px !important;
   max-height: 300px !important;
@@ -521,6 +672,8 @@ body {
 .escuela-selector-dropdown .form-select {
   border: 1px solid #ddd !important;
   font-size: 0.85rem !important;
+  width: 100% !important;
+  margin-bottom: 8px !important;
 }
 
 .escuela-selector-dropdown .form-select:focus {
@@ -528,11 +681,39 @@ body {
   box-shadow: 0 0 0 0.2rem rgba(108, 52, 131, 0.25) !important;
 }
 
-/* ===== MÓVIL Y TABLET: OFF-CANVAS COMO MODAL DESLIZANTE ===== */
-@media (max-width: 991.98px) {
-  /* EL OFFCANVAS SE CREA DINÁMICAMENTE POR gedOffCanvas-module.js */
-  /* NO necesitamos definir estilos aquí, Bootstrap se encarga */
+/* ✅ AJUSTES PARA ESCRITORIO - VERTICAL STACK ALINEADO A LA IZQUIERDA */
+@media (min-width: 992px) {
+  .navbar-control-section {
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: center !important;
+    height: 100% !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+  }
   
+  .session-controls {
+    align-items: flex-start !important; /* ✅ Alineación izquierda */
+    display: flex !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+  }
+  
+  /* Asegurar que todos los elementos estén alineados a la izquierda */
+  .school-info, 
+  .school-search-container,
+  .user-info,
+  .session-controls .btn {
+    display: block !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    text-align: left !important;
+  }
+}
+
+/* ===== MÓVIL Y TABLET: OFF-CANVAS COMO MODAL DESLIZANTE ===== */
+/* SOLUCIÓN CORREGIDA: Responsividad mejorada */
+@media (max-width: 991.98px) {
   /* Backdrop para móvil (si se usa) */
   .ged-sidebar-backdrop {
     position: fixed !important;
@@ -553,45 +734,20 @@ body {
     visibility: visible !important;
   }
   
-  /* Ajustar altura para navbar móvil */
-  body {
-    padding-top: 60px !important;
-  }
-  
-  .navbar-contextual {
-    height: 60px !important;
-    min-height: 60px !important;
-    padding-left: 0 !important;
-    padding-right: 0 !important;
-  }
-  
-  /* ✅ TOGGLER PARA MÓVIL VISIBLE */
-  .navbar-toggler {
-    display: block !important;
-  }
-  
-  /* ✅ CONTENIDO SIN MARGEN IZQUIERDO EN MÓVIL */
-  .ged-main-content,
-  .main-content-wrapper,
-  main#main {
-    margin-left: 0 !important;
-    padding-left: 15px !important;
-    padding-right: 15px !important;
-    width: 100% !important;
-  }
-  
-  /* ✅ EN MÓVIL, EL MENÚ SE MUESTRA EN OFFCANVAS */
-  /* Los submenús se manejan con acordeón en el offcanvas */
+  /* ✅ EN MÓVIL: SOLO EL BRAND Y EL TOGGLER SON VISIBLES EN EL NAVBAR PRINCIPAL */
+  /* Las demás secciones se mueven al menú desplegable */
   .navbar-menu-section,
   .navbar-social-section,
   .navbar-control-section {
-    display: none !important;
+    display: none !important; /* OCULTAR en móvil */
   }
   
   .navbar-brand-section {
     flex: 1 !important;
     max-width: none !important;
     justify-content: flex-start !important;
+    min-width: auto !important;
+    margin-right: 0 !important;
   }
   
   .navbar-toggler {
@@ -601,17 +757,9 @@ body {
   }
 }
 
-/* ===== ESTILOS COMUNES DEL MENÚ OFF-CANVAS ===== */
-/* Estos estilos aplican SOLO al offcanvas creado por Bootstrap */
-.offcanvas.offcanvas-start {
-  /* Bootstrap ya tiene sus propios estilos */
-  z-index: 1045 !important; /* Bootstrap default for offcanvas */
-}
-
 /* ===== ESCRITORIO (PC): NAVBAR HORIZONTAL, NO SIDEBAR ===== */
 @media (min-width: 992px) {
   /* ❌ IMPORTANTE: EN PC NO DEBE HABER SIDEBAR VISIBLE */
-  /* El offcanvas solo debe aparecer en móvil */
   #gedMobileMenuContainer {
     display: none !important;
   }
@@ -626,13 +774,14 @@ body {
   .main-content-wrapper,
   main#main {
     margin-left: 0 !important;
-    padding-left: 30px !important;
-    padding-right: 30px !important;
+    padding-left: 0 !important; /* ❌ SIN PADDING LATERAL */
+    padding-right: 0 !important; /* ❌ SIN PADDING LATERAL */
     transition: none !important;
-    width: 100% !important;
+    width: 100vw !important;
+    max-width: 100vw !important;
   }
   
-  /* ✅ NAVBAR SE MANTIENE ANCHO COMPLETO SIN ESPACIO PARA SIDEBAR */
+  /* ✅ NAVBAR SE MANTIENE ANCHO COMPLETO */
   .navbar-contextual {
     width: 100vw !important;
     padding-left: 0 !important;
@@ -644,14 +793,8 @@ body {
     display: none !important;
   }
   
-  /* ✅ AJUSTE DE CONTENEDORES */
-  .container-fluid {
-    padding-left: 30px !important;
-    padding-right: 30px !important;
-  }
-  
   /* ================================================== */
-  /* SOLUCIÓN: Forzar visibilidad del menú en escritorio */
+  /* SOLUCIÓN COMPLETA: Forzar visibilidad del menú en escritorio */
   /* ================================================== */
   
   /* ✅ 1. MOSTRAR EL COLLAPSE EN ESCRITORIO */
@@ -667,19 +810,23 @@ body {
     border: none !important;
     padding: 0 !important;
     margin: 0 !important;
+    width: 100% !important;
+    flex: 1 !important;
   }
   
   .navbar-collapse.collapse:not(.show) {
     display: flex !important;
     height: auto !important;
+    width: 100% !important;
   }
   
-  /* ✅ 2. GARANTIZAR VISIBILIDAD DEL CONTENEDOR DEL MENÚ */
+  /* ✅ 2. GARANTIZAR VISIBILIDAD DEL CONTENIDO DEL NAVBAR */
   .navbar-container {
     display: flex !important;
     opacity: 1 !important;
     visibility: visible !important;
     width: 100% !important;
+    overflow: visible !important;
   }
   
   /* ✅ 3. FORZAR DISPLAY FLEX EN LAS SECCIONES */
@@ -689,21 +836,66 @@ body {
     display: flex !important;
     opacity: 1 !important;
     visibility: visible !important;
+    position: relative !important;
+    z-index: 1030 !important;
   }
   
   /* ✅ 4. ESPECÍFICO PARA EL MENÚ PRINCIPAL */
   .main-navigation {
     display: flex !important;
-    flex-wrap: wrap;
+    flex-wrap: nowrap !important;
     opacity: 1 !important;
     visibility: visible !important;
     width: 100% !important;
-    justify-content: center !important;
+    justify-content: flex-start !important; /* ✅ Alineación izquierda */
+    overflow: visible !important;
   }
   
   /* ✅ 5. REMOVER CUALQUIER OVERFLOW OCULTO */
   .navbar-contextual > .container-fluid {
     overflow: visible !important;
+  }
+  
+  /* ✅ 6. NUEVA DISTRIBUCIÓN: 12% | 50% | 5% | 28% */
+  .navbar-brand-section {
+    flex: 0 0 12% !important;
+    max-width: 12% !important;
+    margin-right: calc(var(--navbar-section-gap) * 0.5) !important;
+    justify-content: flex-start !important; /* ✅ Alineación izquierda */
+  }
+  
+  .navbar-menu-section {
+    flex: 0 0 50% !important; /* ✅ 50% */
+    max-width: 50% !important;
+    margin: 0 calc(var(--navbar-section-gap) * 0.5) !important;
+    justify-content: flex-start !important; /* ✅ Alineación izquierda */
+  }
+  
+  .navbar-social-section {
+    flex: 0 0 5% !important; /* ✅ 5% */
+    max-width: 5% !important;
+    min-width: 60px !important;
+    margin: 0 calc(var(--navbar-section-gap) * 0.5) !important;
+    justify-content: flex-start !important; /* ✅ Alineación izquierda */
+  }
+  
+  .navbar-control-section {
+    flex: 0 0 28% !important; /* ✅ 28% */
+    max-width: 28% !important;
+    display: flex !important;
+    margin-left: calc(var(--navbar-section-gap) * 0.5) !important;
+    align-items: flex-start !important; /* ✅ Alineación izquierda */
+  }
+  
+  /* ✅ 7. CONTENEDOR FLUID DE BOOTSTRAP - SIN PADDING LATERAL */
+  .container-fluid {
+    width: 100% !important;
+    max-width: 100% !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    box-sizing: border-box !important;
   }
 }
 
@@ -868,6 +1060,17 @@ body {
   }
 }
 
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 .ged-offcanvas-sidebar.open {
   animation: slideIn 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94) !important;
 }
@@ -913,47 +1116,98 @@ body {
 }
 
 /* ================================================== */
-/* RESPONSIVE DESIGN - CONSOLIDADO */
+/* RESPONSIVE DESIGN - CONSOLIDADO - SOLUCIÓN CORREGIDA ===== */
 /* ================================================== */
 
 /* Tablets y pantallas medianas (1199px a 992px) */
-@media (max-width: 1199.98px) {
+@media (max-width: 1199.98px) and (min-width: 992px) {
   .navbar-contextual {
-    height: 160px;
-    min-height: 160px;
+    height: 70px;
+    min-height: 70px;
   }
   
   body {
-    padding-top: 160px !important;
+    padding-top: 70px !important;
   }
   
   main#main {
-    min-height: calc(100vh - 160px) !important;
+    min-height: calc(100vh - 70px) !important;
   }
   
+  .navbar-container {
+    padding: 0 20px !important;
+  }
+  
+  /* ✅ DISTRIBUCIÓN PARA TABLET: 12% | 58% | 5% | 25% */
   .navbar-brand-section {
-    min-width: 160px !important;
-    flex: 0 0 20% !important;
-    max-width: 20% !important;
+    min-width: 100px !important;
+    flex: 0 0 12% !important;
+    max-width: 12% !important;
+    margin-right: 0.5% !important;
+    justify-content: flex-start !important; /* ✅ Alineación izquierda */
   }
   
   .navbar-menu-section {
-    flex: 0 0 45% !important;
-    max-width: 45% !important;
+    flex: 0 0 58% !important; /* Aumentado para compensar */
+    max-width: 58% !important;
+    margin: 0 0.25% !important;
+    justify-content: flex-start !important; /* ✅ Alineación izquierda */
   }
   
   .navbar-social-section {
-    flex: 0 0 15% !important;
-    max-width: 15% !important;
+    flex: 0 0 5% !important; /* ✅ 5% */
+    max-width: 5% !important;
+    min-width: 50px !important;
+    margin: 0 0.25% !important;
+    justify-content: flex-start !important; /* ✅ Alineación izquierda */
   }
   
   .navbar-control-section {
-    flex: 0 0 20% !important;
-    max-width: 20% !important;
+    flex: 0 0 25% !important;
+    max-width: 25% !important;
+    margin-left: 0.5% !important;
+    align-items: flex-start !important; /* ✅ Alineación izquierda */
   }
   
+  /* Logo responsivo (no fijo) */
   .navbar-logo {
-    height: 40px !important;
+    max-height: 45px !important; /* Altura máxima */
+    height: auto !important; /* Altura responsiva */
+  }
+  
+  .main-navigation .nav-link {
+    padding: 8px 12px !important;
+    font-size: 0.9rem !important;
+  }
+  
+  /* Ajustes para iconos sociales en tablets */
+  .social-icons-vertical {
+    gap: 6px !important; /* Reducido para tablets */
+    align-items: flex-start !important; /* ✅ Alineación izquierda */
+  }
+  
+  .social-icon-circle {
+    width: 28px !important; /* Reducido para tablets */
+    height: 28px !important;
+    font-size: 0.8rem !important;
+  }
+  
+  /* Ajustes para control de sesión vertical en tablets */
+  .session-controls {
+    gap: 8px !important;
+    align-items: flex-start !important; /* ✅ Alineación izquierda */
+  }
+  
+  .session-controls .btn {
+    padding: 8px 12px !important;
+    font-size: 0.85rem !important;
+  }
+  
+  .school-info,
+  .user-info {
+    padding: 10px 12px !important;
+    font-size: 0.8rem !important;
+    text-align: left !important; /* ✅ Alineación izquierda */
   }
 }
 
@@ -1026,6 +1280,7 @@ body {
     height: auto;
     gap: 20px;
     width: 100%;
+    padding: 0 !important;
   }
   
   .navbar-menu-section,
@@ -1035,6 +1290,9 @@ body {
     height: auto;
     padding: 10px 0;
     display: block !important;
+    flex: none !important;
+    max-width: 100% !important;
+    margin: 0 !important;
   }
   
   .navbar-menu-section { order: 3; }
@@ -1091,35 +1349,37 @@ body {
     font-size: 1.4rem !important;
   }
   
-  /* Ajustar controles de sesión para móvil */
+  /* ✅ RESPONSIVE PARA MÓVIL - CONTROLES DE SESIÓN */
   .session-controls {
     flex-direction: row !important;
     gap: 8px !important;
     align-items: center !important;
+    justify-content: center !important; /* Centrado en móvil */
   }
   
   .session-controls .btn {
     min-width: auto !important;
-    padding: 5px 10px !important;
+    padding: 8px 12px !important;
+    font-size: 0.85rem !important;
+    margin-bottom: 0 !important;
+    width: auto !important;
   }
   
   .session-controls .btn span:not(.bi) {
     display: none !important;
   }
   
-  .user-info {
+  .user-info,
+  .school-info,
+  .school-search-container {
     display: none !important;
   }
   
-  .school-info {
-    display: none !important;
+  /* Logo responsivo en móvil */
+  .navbar-logo {
+    max-height: 45px !important;
+    height: auto !important;
   }
-  
-  .navbar-nav .dropdown-menu {
-    display: none !important;
-  }
-  
-  /* El offcanvas manejará los menús en móvil */
 }
 
 /* Móviles (767px a 576px) */
@@ -1146,8 +1406,10 @@ body {
     padding-right: 8px !important;
   }
   
+  /* Logo responsivo en móviles */
   .navbar-logo {
-    height: 32px !important;
+    max-height: 40px !important;
+    height: auto !important;
   }
   
   .session-controls {
@@ -1157,6 +1419,17 @@ body {
   .session-controls .btn {
     padding: 4px 8px !important;
     font-size: 0.8rem !important;
+  }
+  
+  /* Ajustes adicionales para iconos sociales en móviles */
+  .social-icons-vertical {
+    gap: 12px !important;
+  }
+  
+  .social-icon-circle {
+    width: 40px !important;
+    height: 40px !important;
+    font-size: 1.2rem !important;
   }
 }
 
@@ -1176,7 +1449,7 @@ body {
   }
   
   .navbar-brand, .navbar-brand-section {
-    min-width: 120px !important;
+    min-width: 100px !important;
     padding-left: 5px !important;
     height: 45px;
   }
@@ -1185,8 +1458,10 @@ body {
     padding-right: 5px !important;
   }
   
+  /* Logo responsivo en móviles pequeños */
   .navbar-logo {
-    height: 28px !important;
+    max-height: 35px !important;
+    height: auto !important;
   }
   
   .session-controls .btn {
@@ -1197,6 +1472,16 @@ body {
   .navbar-toggler {
     padding: 0.3rem 0.5rem !important;
     margin-left: 5px !important;
+  }
+  
+  .social-icons-vertical {
+    gap: 10px !important;
+  }
+  
+  .social-icon-circle {
+    width: 35px !important;
+    height: 35px !important;
+    font-size: 1rem !important;
   }
 }
 
@@ -1239,69 +1524,62 @@ body {
     transform: rotate(90deg);
 }
 
-/* ===== DEBUG: Agrega bordes de colores para verificar ===== */
-.debug-border-red { outline: 2px solid red !important; }
-.debug-border-green { outline: 2px solid green !important; }
-.debug-border-blue { outline: 2px solid blue !important; }
+/* ===== SOLUCIONES CRÍTICAS ===== */
 
-/* ✅ DEBUG: Visualizar bordes temporalmente (opcional) */
-.debug-navbar #navbarContent {
-    outline: 2px solid red !important;
-}
-.debug-navbar .navbar-container {
-    outline: 2px solid blue !important;
-}
-.debug-navbar .navbar-menu-section {
-    outline: 2px solid green !important;
-}
-.debug-navbar .main-navigation {
-    outline: 2px solid orange !important;
+/* ✅ SOLUCIÓN 1: 100vw sin padding lateral */
+.navbar-contextual, 
+.navbar-contextual > .container-fluid,
+.navbar-contextual .navbar-container {
+    width: 100vw !important;
+    max-width: 100vw !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
 }
 
-/* ✅ CORRECCIÓN ESPECÍFICA PARA MENÚ EN DESKTOP */
-.navbar-menu-section .section-container {
-    width: 100% !important;
-    display: block !important;
-}
-
-/* ✅ GARANTIZAR QUE LOS ENLACES DEL MENÚ SEAN VISIBLES */
-.main-navigation .nav-link {
-    opacity: 1 !important;
-    visibility: visible !important;
-}
-
-/* ✅ FIX FINAL: REMOVER CUALQUIER OVERRIDE DE BOOTSTRAP QUE OCULTE EL MENÚ */
-.navbar-expand-lg .navbar-collapse {
-    display: flex !important;
-    flex-basis: auto !important;
-}
-
-/* ✅ Asegurar que el navbar-collapse no tenga height: 0 en desktop */
+/* ✅ SOLUCIÓN 2: DISTRIBUCIÓN 12% | 50% | 5% | 28% */
 @media (min-width: 992px) {
-    .navbar-expand-lg .navbar-collapse {
-        height: auto !important;
-        max-height: none !important;
-        overflow: visible !important;
+    .navbar-container {
+        display: flex !important;
+        width: 100% !important;
+    }
+    
+    .navbar-brand-section { 
+        flex: 0 0 12% !important; 
+        max-width: 12% !important; 
+        margin-right: calc(var(--navbar-section-gap) * 0.5) !important;
+        justify-content: flex-start !important; /* ✅ Alineación izquierda */
+    }
+    
+    .navbar-menu-section { 
+        flex: 0 0 50% !important; /* ✅ 50% */
+        max-width: 50% !important; 
+        margin: 0 calc(var(--navbar-section-gap) * 0.5) !important;
+        justify-content: flex-start !important; /* ✅ Alineación izquierda */
+    }
+    
+    .navbar-social-section { 
+        flex: 0 0 5% !important; /* ✅ 5% */
+        max-width: 5% !important; 
+        min-width: 60px !important;
+        margin: 0 calc(var(--navbar-section-gap) * 0.5) !important;
+        justify-content: flex-start !important; /* ✅ Alineación izquierda */
+    }
+    
+    .navbar-control-section { 
+        flex: 0 0 28% !important; /* ✅ 28% */
+        max-width: 28% !important; 
+        display: flex !important;
+        margin-left: calc(var(--navbar-section-gap) * 0.5) !important;
+        align-items: flex-start !important; /* ✅ Alineación izquierda */
     }
 }
 
-/* ===== CORRECCIÓN DE EMERGENCIA PARA MOSTRAR EL MENÚ ===== */
-/* Esta regla fuerza la visibilidad del menú principal en escritorio */
-.navbar-contextual .navbar-collapse,
-.navbar-contextual .navbar-menu-section,
-.navbar-contextual .main-navigation {
-    display: flex !important;
-    opacity: 1 !important;
-    visibility: visible !important;
-}
-
-/* ================================================== */
-/* ✅ Z-INDEX PARA SUBMENÚS (BASE)                   */
-/* ================================================== */
-
-/* Solo definir z-index base - el comportamiento en _submenus.css */
+/* ✅ SOLUCIÓN 3: Corrección de z-index y overflow para dropdowns */
 .navbar-nav .dropdown-menu {
     z-index: 1050 !important;
+    overflow: visible !important;
 }
 
 .navbar-nav .dropdown-menu .dropdown-menu {
@@ -1312,126 +1590,32 @@ body {
     z-index: 1052 !important;
 }
 
-/* ✅ CORRECCIÓN PARA NO ROMPER EL LAYOUT */
+/* ✅ Asegurar que los dropdowns sean visibles */
 .dropdown-menu {
-    position: absolute !important;
-    z-index: 1050 !important;
+    display: none;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-10px);
+    transition: opacity 0.3s, transform 0.3s, visibility 0.3s;
 }
 
-/* ✅ Ajustes para los enlaces del menú */
-.navbar-nav .nav-link {
-    white-space: nowrap;
-}
-
-.dropdown-item {
-    white-space: nowrap;
-}
-
-/* Ajustes para el indicador de submenú en móvil (offcanvas) */
-.offcanvas-menu .has-children .submenu-indicator {
-    transition: transform 0.3s;
-}
-
-.offcanvas-menu .has-children[aria-expanded="true"] .submenu-indicator {
-    transform: rotate(90deg);
-}
-
-/* Asegurar que los submenús no se salgan de la pantalla en desktop */
-.dropdown-menu {
-    max-height: 70vh;
-    overflow-y: auto;
-}
-
-/* Estilos para el menú principal en navbar */
-.navbar-nav.main-navigation {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-}
-
-.navbar-nav.main-navigation > .nav-item {
-    margin: 0 5px;
-}
-
-.navbar-nav.main-navigation .nav-link {
-    color: rgba(255, 255, 255, 0.85);
-    padding: 0.5rem 1rem;
-    border-radius: 4px;
-    transition: all 0.3s;
-}
-
-.navbar-nav.main-navigation .nav-link:hover,
-.navbar-nav.main-navigation .nav-link.active {
-    color: #fff;
-    background-color: rgba(255, 255, 255, 0.1);
-}
-
-/* Para invitados - destacar Marketplace */
-.navbar-nav.main-navigation .nav-item.dropdown:first-child .nav-link {
-    color: #ffd700;
-    font-weight: 600;
-}
-
-.navbar-nav.main-navigation .nav-item.dropdown:first-child .nav-link:hover {
-    background-color: rgba(255, 215, 0, 0.1);
-}
-
-/* ✅ PREVENIR DESBORDAMIENTO DE SUBMENÚS FUERA DE LA PANTALLA */
-.dropdown-menu-right .dropdown-submenu > .dropdown-menu {
-    left: auto !important;
-    right: 100% !important;
-}
-
-/* ✅ HOVER STATES MEJORADOS */
-.dropdown-submenu:hover > .dropdown-toggle {
-    background-color: rgba(255, 255, 255, 0.1) !important;
-    color: #fff !important;
-}
-
-/* ✅ CORRECCIÓN ESPECÍFICA PARA EL MENÚ PRINCIPAL */
-.navbar-nav .dropdown-submenu {
-    position: relative !important;
-}
-
-.navbar-nav .dropdown-submenu > .dropdown-menu {
-    margin-top: -0.5rem !important;
-}
-
-/* ✅ GARANTIZAR QUE LOS SUBMENÚS SEAN CLICKEABLES */
 .dropdown-menu.show {
     display: block !important;
-    pointer-events: auto !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    transform: translateY(0) !important;
 }
 
-/* ✅ FIX PARA BOOTSTRAP 5: REMOVER TRANSFORM QUE INTERFIERE */
-.dropdown-menu[data-bs-popper] {
-    margin-top: 0 !important;
+/* ✅ Hover para dropdowns en desktop */
+@media (min-width: 992px) {
+    .navbar-nav .dropdown:hover > .dropdown-menu {
+        display: block !important;
+        opacity: 1 !important;
+        visibility: visible !important;
+        transform: translateY(0) !important;
+    }
 }
 
-/* ✅ SOLUCIÓN ESPECÍFICA PARA EL OFFCANVAS (MÓVIL) */
-#gedMobileMenuContainer .dropdown-menu {
-    position: static !important;
-    float: none !important;
-    width: 100% !important;
-}
-
-#gedMobileMenuContainer .dropdown-submenu > .dropdown-menu {
-    margin-left: 1.5rem !important;
-}
-
-/* ✅ GARANTIZAR QUE FONT AWESOME ESTÉ DISPONIBLE */
-@import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css');
-
-/* ✅ CORRECCIÓN FINAL: GARANTIZAR QUE TODOS LOS NIVELES SEAN VISIBLES */
-.navbar-nav > .dropdown-submenu > .dropdown-menu > .dropdown-submenu > .dropdown-menu {
-    display: none !important;
-}
-
-.navbar-nav > .dropdown-submenu:hover > .dropdown-menu > .dropdown-submenu:hover > .dropdown-menu {
-    display: block !important;
-}
-
-/* ✅ ANIMACIÓN DE ENTRADA MEJORADA */
 @keyframes fadeInScale {
     from {
         opacity: 0;
@@ -1445,36 +1629,6 @@ body {
 
 .dropdown-menu .dropdown-menu.show {
     animation: fadeInScale 0.2s ease-out !important;
-}
-
-/* ✅ MEJOR VISIBILIDAD PARA NIVELES PROFUNDOS EN DARK MODE */
-.dropdown-menu .dropdown-menu {
-    background: linear-gradient(135deg, #6c3483 0%, #5B2C6F 100%) !important;
-    border: 1px solid rgba(255,255,255,0.2) !important;
-}
-
-.dropdown-menu .dropdown-menu .dropdown-menu {
-    background: linear-gradient(135deg, #5B2C6F 0%, #4A235A 100%) !important;
-}
-
-/* ✅ CORRECCIÓN PARA MENÚS MUY ANIDADOS */
-.dropdown-menu .dropdown-menu .dropdown-menu .dropdown-menu {
-    background: linear-gradient(135deg, #4A235A 0%, #391F4A 100%) !important;
-}
-
-/* ================================================== */
-/* ✅ ANIMACIONES MEJORADAS */
-/* ================================================== */
-
-@keyframes fadeInDown {
-  from {
-    opacity: 0;
-    transform: translateY(-10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
 }
 
 /* ✅ PRINT STYLES */
@@ -1499,13 +1653,93 @@ body {
 }
 
 /* ================================================== */
-/* ✅ IMPORTANTE: NO AGREGAR ESTILOS DE SUBMENÚS AQUÍ */
-/* Los estilos de submenús deben estar en _submenus.css */
-/* ================================================== */
-/* ================================================== */
-/* SIDEBAR DE MÓDULOS                                 */
+/* ✅ FIXES FINALES PARA GARANTIZAR FUNCIONAMIENTO === */
 /* ================================================== */
 
+/* Asegurar que el menú principal sea visible en desktop */
+@media (min-width: 992px) {
+    .navbar-expand-lg .navbar-collapse {
+        display: flex !important;
+        flex-basis: auto !important;
+        width: 100% !important;
+    }
+    
+    /* Forzar visibilidad del menú */
+    .navbar-menu-section,
+    .main-navigation,
+    .navbar-nav {
+        display: flex !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+    }
+    
+    /* Asegurar que los enlaces sean clickeables */
+    .main-navigation .nav-link {
+        pointer-events: auto !important;
+        cursor: pointer !important;
+    }
+    
+    /* ✅ CORRECCIÓN ESPECÍFICA PARA LA SECCIÓN DE CONTROL */
+    .navbar-control-section {
+        display: flex !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+        align-items: flex-start !important; /* ✅ Alineación izquierda */
+    }
+    
+    /* ✅ CORRECCIÓN PARA REDES SOCIALES */
+    .navbar-social-section {
+        display: flex !important;
+        justify-content: flex-start !important; /* ✅ Alineación izquierda */
+    }
+}
+
+/* Garantizar que Font Awesome esté disponible */
+@import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css');
+
+/* ✅ CORRECCIÓN PARA BOOTSTRAP 5 */
+.navbar-collapse {
+    flex-grow: 1 !important;
+}
+
+.navbar-nav {
+    flex-direction: row !important;
+}
+
+@media (max-width: 991.98px) {
+    .navbar-nav {
+        flex-direction: column !important;
+    }
+}
+
+/* ✅ ESTILOS DE DEBUG (OPCIONAL) */
+.debug-navbar .navbar-contextual { outline: 2px solid red !important; }
+.debug-navbar .navbar-container { outline: 2px solid blue !important; }
+.debug-navbar .navbar-menu-section { outline: 2px solid green !important; }
+.debug-navbar .main-navigation { outline: 2px solid orange !important; }
+.debug-navbar .dropdown-menu { outline: 2px solid yellow !important; }
+.debug-navbar .navbar-control-section { outline: 2px solid cyan !important; background: rgba(0,255,255,0.1) !important; }
+.debug-navbar .navbar-social-section { outline: 2px solid magenta !important; background: rgba(255,0,255,0.1) !important; }
+
+/* ✅ FIX DE EMERGENCIA: Si el menú sigue oculto */
+.navbar-contextual .navbar-collapse,
+.navbar-contextual .navbar-menu-section,
+.navbar-contextual .main-navigation,
+.navbar-contextual .navbar-control-section,
+.navbar-contextual .navbar-social-section {
+    display: flex !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    width: 100% !important;
+}
+
+/* ✅ GARANTIZAR QUE EL NAVBAR NO INTERFIERA CON EL CONTENIDO */
+main#main {
+    position: relative;
+    z-index: 1;
+}
+
+/* ✅ SIDEBAR DE MÓDULOS (para compatibilidad) */
 .sidebar-module-wrapper {
   position: fixed;
   top: 70px;
@@ -1526,308 +1760,395 @@ body {
   transition: margin-left 0.3s;
 }
 
-.with-sidebar .main-content-with-sidebar {
-  width: calc(100% - 250px);
-}
-
-.mobile-module-navbar {
-  margin-top: 60px;
-  border-bottom: 1px solid #dee2e6;
-}
-
-.mobile-module-navbar .navbar-collapse {
-  background: white;
-  padding: 15px;
-  border-top: 1px solid #dee2e6;
-}
-
-.mobile-module-navbar .nav-link {
-  padding: 10px 15px;
-  border-radius: 4px;
-  margin-bottom: 2px;
-}
-
-.mobile-module-navbar .nav-link.active {
-  background-color: rgba(108, 52, 131, 0.1);
-  color: #6c3483;
-}
-
-/* Responsive */
 @media (max-width: 991.98px) {
-  .sidebar-module-wrapper {
-      display: none !important;
+    .sidebar-module-wrapper {
+        display: none !important;
+    }
+    
+    .main-content-with-sidebar {
+        margin-left: 0 !important;
+        width: 100% !important;
+        padding: 15px !important;
+    }
+}
+
+/* ✅ AJUSTES PARA PANTALLAS MUY ANCHAS */
+@media (min-width: 1400px) {
+  .session-controls {
+    gap: 15px !important;
   }
   
-  .main-content-with-sidebar {
-      margin-left: 0;
-      width: 100%;
-      padding: 15px;
+  .session-controls .btn {
+    padding: 12px 18px !important;
+    font-size: 1rem !important;
   }
   
-  .with-sidebar .main-content-with-sidebar {
-      width: 100%;
+  .school-info,
+  .user-info {
+    padding: 15px 18px !important;
+    font-size: 0.9rem !important;
+    text-align: left !important; /* ✅ Alineación izquierda */
+  }
+  
+  /* Mantener espacio reducido */
+  :root {
+    --navbar-section-gap: 1.5% !important;
+  }
+  
+  /* Ajustar iconos sociales para pantallas grandes */
+  .social-icon-circle {
+    width: 32px !important;
+    height: 32px !important;
+    font-size: 0.9rem !important;
+  }
+  
+  /* Mantener proporción para pantallas grandes */
+  .navbar-social-section {
+    flex: 0 0 5% !important; /* ✅ MANTIENE 5% */
+    max-width: 5% !important;
+  }
+  
+  .navbar-control-section {
+    flex: 0 0 28% !important;
+    max-width: 28% !important;
+  }
+  
+  .navbar-menu-section {
+    flex: 0 0 55% !important; /* Ajustado a 55% en pantallas grandes */
+    max-width: 55% !important;
   }
 }
 
+/* ✅ AJUSTES PARA PANTALLAS PEQUEÑAS DE ESCRITORIO */
+@media (min-width: 992px) and (max-width: 1200px) {
+  :root {
+    --navbar-section-gap: 1.5% !important;
+  }
+  
+  /* Ajustar iconos sociales */
+  .social-icon-circle {
+    width: 30px !important;
+    height: 30px !important;
+    font-size: 0.85rem !important;
+  }
+  
+  .social-icons-vertical {
+    gap: 8px !important;
+    align-items: flex-start !important; /* ✅ Alineación izquierda */
+  }
+}
+
+/* ===== DEBUG DE ANCHO - VERIFICAR QUE BODY OCUPE 100% ===== */
+.debug-width-check body::after {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 2px;
+    background: rgba(255,0,0,0.5);
+    z-index: 9999;
+    pointer-events: none;
+}
+
+.debug-width-check body::before {
+    content: 'Body width: ' attr(data-width);
+    position: fixed;
+    top: 5px;
+    left: 5px;
+    background: rgba(0,0,0,0.8);
+    color: white;
+    padding: 5px 10px;
+    border-radius: 3px;
+    font-size: 12px;
+    z-index: 9999;
+    pointer-events: none;
+}
+/* ================================================== */
+/* CORRECCIONES URGENTES PARA NAVBAR EN UNA LÍNEA     */
+/* ================================================== */
+
+/* ✅ ESTRUCTURA CORREGIDA PARA ESCRITORIO */
 @media (min-width: 992px) {
-  .mobile-module-navbar {
-      display: none !important;
-  }
+    .navbar-container {
+        display: flex !important;
+        flex-wrap: nowrap !important;
+        align-items: center !important;
+        justify-content: space-between !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        padding: 0 30px !important;
+        margin: 0 auto !important;
+        box-sizing: border-box !important;
+        overflow: visible !important;
+    }
+    
+    .navbar-content-wrapper {
+        display: flex !important;
+        flex-wrap: nowrap !important;
+        align-items: center !important;
+        justify-content: flex-end !important;
+        flex-grow: 1 !important;
+        width: auto !important;
+        min-width: 0 !important;
+        gap: 20px !important;
+    }
+    
+    /* ✅ LOGO Y TOGGLER EN MISMA SECCIÓN */
+    .navbar-brand-section {
+        display: flex !important;
+        align-items: center !important;
+        gap: 15px !important;
+        flex-shrink: 0 !important;
+        min-width: 120px !important;
+        justify-content: flex-start !important; /* ✅ Alineación izquierda */
+    }
+    
+    /* ✅ MENÚ PRINCIPAL - FLEXIBLE, ALINEACIÓN IZQUIERDA */
+    .navbar-menu-section {
+        flex: 1 1 auto !important;
+        min-width: 0 !important;
+        max-width: 100% !important;
+        display: flex !important;
+        justify-content: flex-start !important; /* ✅ Alineación izquierda */
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+    
+    .navbar-menu-section .main-navigation {
+        display: flex !important;
+        flex-wrap: nowrap !important;
+        justify-content: flex-start !important; /* ✅ Alineación izquierda */
+        width: 100% !important;
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+    
+    /* ✅ REDES SOCIALES - COMPACTO (5%), ALINEACIÓN IZQUIERDA */
+    .navbar-social-section {
+        flex-shrink: 0 !important;
+        min-width: 60px !important;
+        max-width: 80px !important;
+        margin: 0 !important;
+        justify-content: flex-start !important; /* ✅ Alineación izquierda */
+    }
+    
+    /* ✅ CONTROL DE USUARIO - COMPACTO, ALINEADO A LA IZQUIERDA */
+    .navbar-control-section {
+        flex-shrink: 0 !important;
+        min-width: 250px !important;
+        max-width: 300px !important;
+        margin: 0 !important;
+        align-items: flex-start !important; /* ✅ Alineación izquierda */
+    }
+    
+    .control-content {
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 8px !important;
+        width: 100% !important;
+        align-items: flex-start !important; /* ✅ Alineación izquierda */
+        text-align: left !important;
+    }
+    
+    /* ✅ ELIMINAR OVERFLOW OCULTO */
+    .navbar-collapse.collapse:not(.show) {
+        display: flex !important;
+        flex-basis: auto !important;
+        flex-grow: 1 !important;
+    }
+    
+    /* ✅ GARANTIZAR QUE TODO ESTÉ VISIBLE */
+    .navbar-menu-section,
+    .navbar-social-section,
+    .navbar-control-section {
+        display: flex !important;
+        opacity: 1 !important;
+        visibility: visible !important;
+        position: relative !important;
+        z-index: 1030 !important;
+    }
 }
 
-/* Estilos para el sidebar del módulo */
-.sidebar-module-nav {
-  padding: 15px;
-  background: #f8f9fa;
-  min-height: calc(100vh - 70px);
+/* ✅ CORRECCIÓN ESPECÍFICA PARA EL PROBLEMA DE 2 LÍNEAS */
+.navbar-brand-section {
+    display: flex !important;
+    align-items: center !important;
+    flex-shrink: 0 !important;
 }
 
-.sidebar-module-nav .nav-link {
-  padding: 8px 12px;
-  margin-bottom: 4px;
-  border-radius: 4px;
-  border-left: 3px solid transparent;
-  color: #495057;
-  transition: all 0.2s;
+.navbar-toggler {
+    order: 2 !important;
+    margin-left: 15px !important;
 }
 
-.sidebar-module-nav .nav-link:hover {
-  background-color: #e9ecef;
-  color: #6c3483;
+/* ✅ REMOVER CUALQUIER FLEX-WRAP QUE CAUSA RUPTURA */
+.navbar-contextual > .container-fluid,
+.navbar-contextual .navbar-collapse,
+.navbar-contextual .navbar-container,
+.navbar-content-wrapper {
+    flex-wrap: nowrap !important;
+    white-space: nowrap !important;
 }
 
-.sidebar-module-nav .nav-link.active {
-  background-color: rgba(108, 52, 131, 0.1);
-  color: #6c3483;
-  border-left-color: #6c3483;
-  font-weight: 500;
+/* ✅ AJUSTES PARA MÓVIL */
+@media (max-width: 991.98px) {
+    .navbar-container {
+        padding: 0 15px !important;
+    }
+    
+    .navbar-content-wrapper {
+        flex-direction: column !important;
+        gap: 15px !important;
+        padding: 15px 0 !important;
+    }
+    
+    .navbar-social-section {
+        order: 3 !important;
+    }
+    
+    .navbar-control-section {
+        order: 2 !important;
+        width: 100% !important;
+        max-width: 100% !important;
+    }
+    
+    .control-content {
+        flex-direction: row !important;
+        flex-wrap: wrap !important;
+        justify-content: center !important;
+        gap: 10px !important;
+    }
 }
 
-.sidebar-module-nav .sidebar-heading {
-  font-size: 0.85rem;
-  font-weight: 600;
-  text-transform: uppercase;
-  padding: 0.5rem 1rem;
-  margin-bottom: 0.5rem;
-}
 /* ================================================== */
-/* ✅ CORRECCIONES CRÍTICAS PARA MENÚ 2 NIVELES      */
+/* ✅ ALTURA MÍNIMA DE 45vh PARA NAVBAR               */
 /* ================================================== */
 
-/* 1. DROPDOWN HOVER EN DESKTOP (>992px) */
+/* ✅ EN PC: ALTURA MÍNIMA 45vh Y RESPONSIVA */
 @media (min-width: 992px) {
-  .navbar-nav .dropdown:hover .dropdown-menu {
-      display: block !important;
-      animation: fadeIn 0.2s ease;
-  }
-  
-  /* Prevenir que submenús anidados se muestren (solo 2 niveles) */
-  .dropdown-menu .dropdown-menu {
-      display: none !important;
-      pointer-events: none !important;
-  }
-  
-  /* Sidebar debe estar fijo y visible */
-  .sidebar-module-wrapper {
-      position: fixed !important;
-      top: 70px !important; /* Altura del navbar */
-      left: 0 !important;
-      width: 250px !important;
-      height: calc(100vh - 70px) !important;
-      z-index: 100 !important;
-      overflow-y: auto !important;
-      background: #f8f9fa !important;
-      border-right: 1px solid #dee2e6 !important;
-  }
-  
-  /* Contenido principal se desplaza cuando hay sidebar */
-  .main-content-with-sidebar {
-      margin-left: 250px !important;
-      width: calc(100% - 250px) !important;
-      padding: 20px 30px !important;
-      min-height: calc(100vh - 70px) !important;
-      transition: margin-left 0.3s ease !important;
-  }
-  
-  /* Contenido sin sidebar */
-  .main-content {
-      padding: 20px 30px !important;
-      min-height: calc(100vh - 70px) !important;
-      width: 100% !important;
-  }
+    .navbar-contextual {
+        min-height: 45vh !important;  /* Altura mínima garantizada */
+        height: auto !important;
+        max-height: 25vh !important;  /* Límite máximo opcional */
+    }
+    
+    .navbar-contextual.scrolled {
+        min-height: 45vh !important;  /* Mantener misma altura al hacer scroll */
+        height: auto !important;
+    }
+    
+    /* ✅ AJUSTAR BODY PADDING PARA COMPENSAR */
+    body {
+        padding-top: 45vh !important;
+        min-height: 100vh;
+    }
+    
+    /* ✅ AJUSTAR ALTURA DEL CONTENIDO PRINCIPAL */
+    main#main, 
+    .main-content-wrapper, 
+    .ged-main-content,
+    .ged-main-content-wrapper > .container {
+        min-height: calc(100vh - 45vh) !important;
+    }
+    
+    /* ✅ AJUSTAR LOGO PARA SER RESPONSIVO DENTRO DEL 45vh */
+    .navbar-logo {
+        max-height: calc(45vh - 30px) !important; /* Altura dinámica */
+        height: auto !important;
+        width: auto !important;
+    }
+    
+    /* ✅ AJUSTAR SECCIONES DEL NAVBAR PARA ALTURA 45vh */
+    .navbar-brand-section,
+    .navbar-menu-section,
+    .navbar-social-section,
+    .navbar-control-section {
+        min-height: 45vh !important;
+        height: 100% !important;
+    }
+    
+    /* ✅ CENTRAR VERTICALMENTE TODO EL CONTENIDO */
+    .navbar-container,
+    .navbar-content-wrapper,
+    .main-navigation,
+    .social-icons-vertical,
+    .session-controls {
+        display: flex !important;
+        align-items: center !important;
+        height: 100% !important;
+    }
 }
 
-/* 2. RESPONSIVE PARA TABLETS (768-992px) */
-@media (max-width: 991.98px) and (min-width: 768px) {
-  .sidebar-module-wrapper {
-      width: 200px !important;
-      display: none !important; /* En tablet usar móvil */
-  }
-  
-  .main-content-with-sidebar {
-      margin-left: 0 !important;
-      width: 100% !important;
-      padding: 15px !important;
-  }
+/* ✅ EN TABLETS (992px a 1199px) */
+@media (max-width: 1199.98px) and (min-width: 992px) {
+    .navbar-contextual {
+        min-height: 45vh !important;
+        height: auto !important;
+    }
+    
+    body {
+        padding-top: 45vh !important;
+    }
+    
+    main#main {
+        min-height: calc(100vh - 45vh) !important;
+    }
 }
 
-/* 3. RESPONSIVE PARA MÓVIL (<768px) */
-@media (max-width: 767.98px) {
-  .sidebar-module-wrapper {
-      display: none !important;
-  }
-  
-  .main-content-with-sidebar,
-  .main-content {
-      margin-left: 0 !important;
-      width: 100% !important;
-      padding: 15px !important;
-  }
-  
-  .mobile-module-navbar {
-      margin-top: 60px;
-      border-bottom: 1px solid #dee2e6;
-  }
-  
-  .mobile-module-navbar .navbar-collapse {
-      background: white;
-      padding: 15px;
-      border-top: 1px solid #dee2e6;
-  }
+/* ✅ EN MÓVIL: MANTENER ALTURAS FIJAS (NO APLICAR 45vh) */
+@media (max-width: 991.98px) {
+    /* Ya tiene alturas fijas que funcionan mejor en móvil */
+    .navbar-contextual {
+        min-height: 60px !important; /* Se mantiene fijo */
+        height: 60px !important;
+    }
+    
+    body {
+        padding-top: 60px !important;
+    }
+    
+    main#main {
+        min-height: calc(100vh - 60px) !important;
+    }
 }
 
-/* 4. PREVENIR DESBORDAMIENTO DE DROPDOWNS */
-.dropdown-menu {
-  max-height: 70vh;
-  overflow-y: auto;
+/* ✅ PANTALLAS MUY ALTAS: LIMITAR ALTURA MÁXIMA */
+@media (min-height: 1200px) {
+    .navbar-contextual {
+        min-height: 200px !important; /* Máximo equivalente a ~45vh en pantallas muy altas */
+        max-height: 200px !important;
+    }
+    
+    body {
+        padding-top: 200px !important;
+    }
 }
 
-/* 5. ANIMACIÓN PARA DROPDOWNS */
-@keyframes fadeIn {
-  from { 
-      opacity: 0; 
-      transform: translateY(-10px); 
-  }
-  to { 
-      opacity: 1; 
-      transform: translateY(0); 
-  }
+/* ✅ PANTALLAS MUY BAJAS: GARANTIZAR VISIBILIDAD */
+@media (max-height: 500px) {
+    .navbar-contextual {
+        min-height: 85px !important; /* Mínimo para pantallas muy bajas */
+        height: auto !important;
+    }
+    
+    body {
+        padding-top: 85px !important;
+    }
 }
 
-/* 6. ESTILOS ESPECÍFICOS PARA MENÚ MÓVIL (OFFCANVAS) */
-.offcanvas-body .nav {
-  flex-direction: column;
-}
-
-.offcanvas-body .dropdown-menu {
-  position: static !important;
-  border: none !important;
-  box-shadow: none !important;
-  background: transparent !important;
-  padding-left: 1.5rem !important;
-}
-
-.offcanvas-body .dropdown-item {
-  padding-left: 2.5rem !important;
-  color: #333 !important;
-}
-
-/* 7. Z-INDEX JERÁRQUICO */
-.navbar-nav .dropdown-menu {
-  z-index: 1050 !important;
-}
-
-/* 8. CORRECCIÓN PARA ITEMS DESHABILITADOS */
-.nav-link.disabled,
-.dropdown-item.disabled {
-  opacity: 0.5 !important;
-  pointer-events: none !important;
-}
-
-/* 9. ESTILOS PARA ACTIVE EN DROPDOWNS */
-.dropdown-item.active {
-  background-color: rgba(108, 52, 131, 0.1) !important;
-  color: #6c3483 !important;
-  border-left: 3px solid #6c3483 !important;
-}
-
-/* 10. CORRECCIÓN PARA LOGO RESPONSIVE */
-.navbar-logo {
-  max-height: 45px !important;
-  height: auto !important;
-  width: auto !important;
-}
-
-@media (max-width: 767.98px) {
-  .navbar-logo {
-      max-height: 35px !important;
-  }
-}
-/* ================================================== */
-/* ✅ CORRECCIONES CRÍTICAS PARA MENÚ 2 NIVELES      */
-/* ================================================== */
-
-/* 1. DROPDOWN HOVER EN DESKTOP (>992px) */
-@media (min-width: 992px) {
-  .navbar-nav .dropdown:hover .dropdown-menu {
-      display: block !important;
-      animation: fadeIn 0.2s ease;
-  }
-  
-  /* Prevenir niveles 3+ */
-  .dropdown-menu .dropdown-menu {
-      display: none !important;
-      pointer-events: none !important;
-  }
-  
-  /* Sidebar de módulo */
-  .sidebar-module-wrapper {
-      position: fixed !important;
-      top: 70px !important;
-      left: 0 !important;
-      width: 250px !important;
-      height: calc(100vh - 70px) !important;
-      z-index: 100 !important;
-      overflow-y: auto !important;
-      background: #f8f9fa !important;
-      border-right: 1px solid #dee2e6 !important;
-  }
-  
-  /* Contenido con sidebar */
-  .main-content-with-sidebar {
-      margin-left: 250px !important;
-      width: calc(100% - 250px) !important;
-      padding: 20px 30px !important;
-      min-height: calc(100vh - 70px) !important;
-      transition: margin-left 0.3s ease !important;
-  }
-  
-  /* Contenido sin sidebar */
-  .main-content {
-      padding: 20px 30px !important;
-      min-height: calc(100vh - 70px) !important;
-      width: 100% !important;
-  }
-}
-
-/* 2. ANIMACIÓN PARA DROPDOWNS */
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(-10px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-/* 3. ACORDEÓN PARA MÓVIL */
-.offcanvas-body .nav {
-  flex-direction: column;
-}
-
-.offcanvas-body .dropdown-menu {
-  position: static !important;
-  border: none !important;
-  background: transparent !important;
-  padding-left: 1.5rem !important;
-}
-
-.offcanvas-body .dropdown-item {
-  padding-left: 2.5rem !important;
+/* ✅ VERIFICADOR VISUAL DE ALTURA (OPCIONAL PARA DEBUG) */
+.debug-navbar-height::before {
+    content: 'Altura: ' attr(data-height);
+    position: fixed;
+    top: 5px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(255, 0, 0, 0.8);
+    color: white;
+    padding: 5px 10px;
+    border-radius: 3px;
+    font-size: 12px;
+    z-index: 9999;
+    pointer-events: none;
 }
