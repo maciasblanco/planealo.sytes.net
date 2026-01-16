@@ -2,6 +2,7 @@
  * _responsive.css - MEDIA QUERIES CONSOLIDADOS GED
  * Consolidado de: ged-responsive-escuelas.css, ged-responsive-general.css, ged-responsive-tienda.css
  * Fecha: 2024-01-16 (actualizado para consolidación)
+ * Nota: Se eliminaron las reglas conflictivas con _navigation.css
  * ================================================================= */
 
 /* ================================================== */
@@ -64,7 +65,7 @@
         margin-bottom: 1rem;
     }
     
-    /* Navbar responsive - ALTURA 45vh */
+    /* ❌ COMENTADO: REGLAS CONFLICTIVAS CON _navigation.css 
     .navbar-contextual {
         min-height: 45vh !important;
         height: auto !important;
@@ -78,7 +79,6 @@
         min-height: calc(100vh - 45vh) !important;
     }
     
-    /* ✅ DISTRIBUCIÓN CORREGIDA: 15% | 40% | 15% | 30% (Movido 1 columna a la izquierda) */
     .navbar-brand-section {
         min-width: 120px !important;
         flex: 0 0 15% !important;
@@ -86,23 +86,24 @@
     }
     
     .navbar-menu-section {
-        flex: 0 0 40% !important; /* Cambiado de flex:1 1 auto a 40% fijo */
+        flex: 0 0 40% !important;
         max-width: 40% !important;
     }
     
     .navbar-social-section {
-        flex: 0 0 15% !important; /* Aumentado de 10% a 15% */
+        flex: 0 0 15% !important;
         max-width: 15% !important;
     }
     
     .navbar-control-section {
-        flex: 0 0 30% !important; /* Aumentado de 25% a 30% */
+        flex: 0 0 30% !important;
         max-width: 30% !important;
     }
     
     .navbar-logo {
         max-height: calc(45vh - 40px) !important;
     }
+    */
 }
 
 /* ================================================== */
@@ -173,19 +174,10 @@
         display: block !important;
     }
     
-    /* ✅ CORREGIDO: ELIMINADO FLEX-DIRECTION COLUMN QUE CAUSABA 2 LÍNEAS */
-    /* .navbar-container {
-        flex-direction: column;
-        height: auto;
-        gap: 20px;
-        width: 100%;
-    } */
-    
     .navbar-container {
         padding: 0 15px !important;
     }
     
-    /* ✅ CORREGIDO: MODIFICADO PARA EVITAR ANCHO COMPLETO EN ESCRITORIO */
     .navbar-menu-section,
     .navbar-social-section,
     .navbar-control-section {
@@ -275,9 +267,6 @@
     .navbar-nav .dropdown-menu {
         display: none !important;
     }
-    
-    /* EL OFFCANVAS DE BOOTSTRAP MANEJARÁ EL MENÚ EN MÓVIL */
-    /* Bootstrap crea el offcanvas con la clase .offcanvas */
     
     /* Responsive para escuelas */
     .encargado-search-form {
@@ -392,9 +381,6 @@
         margin-top: 0 !important;
     }
     
-    /* EL OFFCANVAS SE CREA DINÁMICAMENTE POR gedOffCanvas-module.js */
-    /* Bootstrap maneja el ancho del offcanvas */
-    
     .sidebar-header {
         padding: 1.2rem;
         background: linear-gradient(135deg, #8e44ad 0%, #6c3483 100%);
@@ -425,15 +411,6 @@
     .ged-logo {
         max-height: 80px;
     }
-    
-    /* Desktop específico - ELIMINADO PARA EVITAR CONFLICTOS */
-    /* .dropdown-submenu:hover > .dropdown-menu {
-        display: block !important;
-    } */
-    
-    /* .dropdown-submenu .dropdown-submenu:hover > .dropdown-menu {
-        display: block !important;
-    } */
     
     /* Correcciones de emergencia para navbar en móvil */
     .navbar-contextual .navbar-collapse:not(.show) {

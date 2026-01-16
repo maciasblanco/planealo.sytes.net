@@ -243,6 +243,160 @@ function getModuleTitle($moduleName)
     // Función global para debug
     window.checkNavbarHeight = verifyNavbarHeight;
     window.checkNavbarStructure = verifyNavbarStructure;
+    
+    // ==================================================
+    // ✅ CORRECCIÓN DE Z-INDEX PARA SUBMENÚS
+    // ==================================================
+    
+    function fixDropdownZIndex() {
+        // Solo aplica en desktop
+        if (window.innerWidth >= 992) {
+            console.log('🔧 Aplicando correcciones de z-index a submenús...');
+            
+            // 1. Asegurar que el navbar y contenedores sean visibles
+            const elementsToMakeVisible = [
+                '.navbar-contextual',
+                '.navbar-container',
+                '.navbar-sections-container',
+                '.navbar-collapse',
+                '.navbar-menu-section',
+                '.main-navigation'
+            ];
+            
+            elementsToMakeVisible.forEach(selector => {
+                const elements = document.querySelectorAll(selector);
+                elements.forEach(el => {
+                    el.style.overflow = 'visible';
+                    el.style.position = 'relative';
+                });
+            });
+            
+            // 2. Aplicar z-index correcto a dropdowns
+            const dropdownMenus = document.querySelectorAll('.dropdown-menu');
+            dropdownMenus.forEach((menu, index) => {
+                // Calcular nivel del dropdown
+                let level = 0;
+                let parent = menu.parentElement;
+                
+                while (parent) {
+                    if (parent.classList.contains('dropdown-menu')) {
+                        level++;
+                    }
+                    if (parent.classList.contains('navbar-nav')) {
+                        break;
+                    }
+                    parent = parent.parentElement;
+                }
+                
+                // Asignar z-index según nivel
+                const baseZIndex = 1110;
+                const zIndex = baseZIndex + (level * 10);
+                
+                menu.style.zIndex = zIndex;
+                menu.style.position = 'absolute';
+                menu.style.overflow = 'visible';
+                menu.style.transform = 'none';
+                
+                // Debug info
+                if (window.location.href.includes('debug=zindex')) {
+                    menu.setAttribute('data-dropdown-level', level);
+                    menu.setAttribute('data-z-index', zIndex);
+                    menu.style.border = '1px solid #ff0';
+                }
+            });
+            
+            // 3. Asegurar que los dropdown-toggles tengan buen z-index
+            const dropdownToggles = document.querySelectorAll('.dropdown-toggle');
+            dropdownToggles.forEach(toggle => {
+                toggle.style.position = 'relative';
+                toggle.style.zIndex = '1100';
+            });
+            
+            console.log(`✅ Corrección aplicada a ${dropdownMenus.length} dropdowns`);
+        }
+    }
+    
+    // Ejecutar inmediatamente
+    setTimeout(fixDropdownZIndex, 300);
+    
+    // Re-ejecutar en eventos importantes
+    window.addEventListener('resize', fixDropdownZIndex);
+    
+    // Corregir cuando Bootstrap muestre un dropdown
+    document.addEventListener('show.bs.dropdown', function() {
+        setTimeout(fixDropdownZIndex, 100);
+    });
+    
+    // También corregir al pasar el mouse sobre dropdowns
+    const dropdownHoverElements = document.querySelectorAll('.dropdown');
+    dropdownHoverElements.forEach(element => {
+        element.addEventListener('mouseenter', function() {
+            setTimeout(fixDropdownZIndex, 50);
+        });
+    });
+    
+    // Función global para debug
+    window.debugDropdowns = function() {
+        console.group('🐛 DEBUG DROPDOWNS');
+        const dropdowns = document.querySelectorAll('.dropdown-menu');
+        dropdowns.forEach((menu, i) => {
+            console.log(`Dropdown ${i}:`, {
+                zIndex: menu.style.zIndex || getComputedStyle(menu).zIndex,
+                position: menu.style.position || getComputedStyle(menu).position,
+                visible: menu.offsetParent !== null,
+                level: menu.getAttribute('data-dropdown-level') || '0'
+            });
+        });
+        console.groupEnd();
+    };
+    
+    // ==================================================
+    // ✅ VERIFICACIÓN DE SUBMENÚS VISIBLES
+    // ==================================================
+    
+    function verifyDropdownVisibility() {
+        if (window.innerWidth >= 992) {
+            const dropdowns = document.querySelectorAll('.dropdown-menu');
+            let hiddenDropdowns = 0;
+            
+            dropdowns.forEach(menu => {
+                const computedStyle = window.getComputedStyle(menu);
+                if (computedStyle.visibility === 'hidden' || 
+                    computedStyle.opacity === '0' || 
+                    menu.offsetParent === null) {
+                    hiddenDropdowns++;
+                }
+            });
+            
+            if (hiddenDropdowns > 0 && window.location.href.includes('debug=dropdowns')) {
+                console.warn(`⚠️ ${hiddenDropdowns} dropdowns podrían estar ocultos`);
+            }
+        }
+    }
+    
+    // Verificar periódicamente
+    setInterval(verifyDropdownVisibility, 2000);
+    
+    // ==================================================
+    // ✅ SCRIPT TEMPORAL PARA VERIFICAR Z-INDEX (eliminar después)
+    // ==================================================
+    
+    if (window.location.href.includes('debug=navbar')) {
+        const style = document.createElement('style');
+        style.textContent = `
+            .dropdown-menu {
+                box-shadow: 0 0 0 2px rgba(255,0,0,0.5) !important;
+            }
+            .dropdown-menu .dropdown-menu {
+                box-shadow: 0 0 0 2px rgba(0,255,0,0.5) !important;
+            }
+            .dropdown-menu .dropdown-menu .dropdown-menu {
+                box-shadow: 0 0 0 2px rgba(0,0,255,0.5) !important;
+            }
+        `;
+        document.head.appendChild(style);
+        console.log('🔍 Modo debug de dropdowns activado');
+    }
 });
 </script>
 

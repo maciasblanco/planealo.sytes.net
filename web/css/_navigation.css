@@ -1,8 +1,17 @@
 /* =================================================================
  * _navigation.css - NAVEGACIÓN Y MENÚS GED
- * Versión: 2.0.0 - CORREGIDA PARA 100% DE ANCHO EN DESKTOP
- * Fecha: 2026-01-14
- * Última modificación: 2026-01-15 (Proporciones 12% | 50% | 5% | 28% - Alineación izquierda)
+ * Versión: 3.4.0 - SOLUCIÓN DEFINITIVA PARA UNA LÍNEA + 45vh
+ * Fecha: 2026-01-16
+ * Última modificación: 2026-01-16 (Solución definitiva una línea)
+ * 
+ * DISTRIBUCIÓN EXACTA DEL VIEWPORT (100%):
+ *  1. Navbar: 90% del viewport (con 10% de margen derecho visual)
+ *  2. Secciones dentro del navbar:
+ *     - Logo: 12% del viewport (13.33% del navbar)
+ *     - Menú: 40.5% del viewport (45% del navbar)
+ *     - Social: 4.5% del viewport (5% del navbar)
+ *     - Control: 18% del viewport (20% del navbar)
+ *  TOTAL: 75% del viewport (83.33% del navbar) + 15% para gaps
  * ================================================================= */
 
 /* Variables específicas de navegación */
@@ -19,11 +28,24 @@
   --navbar-shadow-medium: 0 4px 20px rgba(0,0,0,0.15);
   --navbar-transition-speed: 0.3s;
   
-  /* Nuevas variables para separación */
-  --navbar-section-gap: 2%; /* Espacio entre secciones en escritorio */
+  /* ✅ VARIABLES OPTIMIZADAS - CONTROL AL 18% DEL VIEWPORT */
+  --viewport-margin-right: 10%;      /* 10% del viewport (margen visual) */
+  --viewport-navbar-width: 90%;      /* 90% del viewport */
+  --viewport-padding-left: 2.7%;     /* 3% de 90% = 2.7% del viewport */
+  --viewport-padding-right: 2.7%;    /* 3% de 90% = 2.7% del viewport */
+  --viewport-brand: 12%;             /* 13.33% de 90% = 12% del viewport */
+  --viewport-menu: 40.5%;            /* 45% de 90% = 40.5% del viewport */
+  --viewport-social: 4.5%;           /* 5% de 90% = 4.5% del viewport */
+  --viewport-control: 18%;           /* 20% de 90% = 18% del viewport */
+  --viewport-gap: 1.35%;             /* 1.5% de 90% = 1.35% del viewport */
+  --navbar-section-gap: 1.35%;       /* 1.35% del viewport */
+  
+  /* ✅ NUEVAS VARIABLES PARA SOLUCIÓN UNA LÍNEA */
+  --navbar-container-height: 45vh;   /* Altura fija del navbar */
+  --navbar-section-height: 100%;     /* Todas las secciones ocupan 100% de altura */
 }
 
-/* ===== RESET DE ANCHO COMPLETO - SOLUCIÓN CORREGIDA ===== */
+/* ===== RESET DE ANCHO COMPLETO ===== */
 html, body {
     width: 100vw !important;
     max-width: 100vw !important;
@@ -37,28 +59,26 @@ html, body {
     box-sizing: border-box !important;
 }
 
-/* ✅ BODY PRINCIPAL - ANCHO COMPLETO EN TODOS LOS DISPOSITIVOS */
+/* ✅ BODY PRINCIPAL - ANCHO COMPLETO */
 body {
     width: 100vw !important;
     max-width: 100vw !important;
     min-width: 100vw !important;
     overflow-x: hidden !important;
     position: relative;
-    padding-top: 70px !important; /* Para navbar fijo */
+    padding-top: var(--navbar-container-height) !important; /* ✅ 45vh */
     margin: 0 !important;
     box-sizing: border-box !important;
-    background-color: #ffffff; /* Fondo definido */
+    background-color: #ffffff;
 }
 
 @media (max-width: 991.98px) {
     body {
-        padding-top: 60px !important;
+        padding-top: 60px !important; /* Móvil: 60px */
     }
 }
 
-/* ===== ESTRUCTURA DE CONTENIDO GED - SIN PADDING EXTERNO ===== */
-
-/* ✅ CONTENEDOR PRINCIPAL DEL CONTENIDO */
+/* ===== ESTRUCTURA DE CONTENIDO GED ===== */
 .ged-main-content-wrapper {
     width: 100vw !important;
     max-width: 100vw !important;
@@ -68,7 +88,6 @@ body {
     box-sizing: border-box !important;
 }
 
-/* ✅ BREADCRUMBS - CON PADDING INTERNO */
 .ged-breadcrumbs-container {
     padding: 20px 30px 10px 30px !important;
     margin: 0 !important;
@@ -79,7 +98,6 @@ body {
     box-sizing: border-box !important;
 }
 
-/* ✅ CONTENIDO PRINCIPAL - CON PADDING INTERNO */
 .ged-main-content-wrapper > .container,
 .ged-main-content-wrapper > div:not(.ged-breadcrumbs-container):not(.alert) {
     padding: 20px 30px !important;
@@ -89,7 +107,6 @@ body {
     box-sizing: border-box !important;
 }
 
-/* ✅ MÓVIL: REDUCIR PADDING */
 @media (max-width: 991.98px) {
     .ged-breadcrumbs-container {
         padding: 15px 15px 8px 15px !important;
@@ -101,56 +118,59 @@ body {
     }
 }
 
-/* ===== NAVBAR PRINCIPAL - 100vw SIN PADDING LATERAL ===== */
+/* ================================================== */
+/* ✅ NAVBAR PRINCIPAL - DISTRIBUCIÓN OPTIMIZADA ===== */
+/* ================================================== */
+
 .navbar-contextual {
-  /* Dimensiones y posición - SOLUCIÓN CORREGIDA */
-  width: 100vw !important;
-  max-width: 100vw !important;
-  min-width: 100vw !important;
+  /* ✅ ANCHO Y POSICIÓN EXACTOS */
+  width: var(--viewport-navbar-width) !important;      /* 90% del viewport */
+  max-width: var(--viewport-navbar-width) !important;
+  margin: 0 0 0 auto !important;                     /* Alineado a la izquierda con 10% de margen derecho */
   position: fixed !important;
   top: 0 !important;
   left: 0 !important;
   right: 0 !important;
   z-index: 1030 !important;
   
-  /* Apariencia */
+  /* ✅ ALTURA MÍNIMA DE 45vh */
+  min-height: var(--navbar-container-height) !important;
+  height: var(--navbar-container-height) !important;
+  
+  /* ✅ APARIENCIA */
   background: var(--navbar-gradient) !important;
   box-shadow: var(--navbar-shadow-light) !important;
   border: none !important;
   border-radius: 0 !important;
   
-  /* Transiciones */
-  transition: all var(--navbar-transition-speed) ease !important;
-  
-  /* Layout */
+  /* ✅ LAYOUT FLEX OPTIMIZADO */
   display: flex !important;
+  flex-wrap: nowrap !important;
   align-items: center !important;
+  justify-content: flex-start !important;
   
-  /* Padding lateral controlado - SIN PADDING */
-  padding-left: 0 !important;
-  padding-right: 0 !important;
+  /* ✅ PADDING INTERNO EXACTO: 3% de 90% = 2.7% del viewport a cada lado */
+  padding: 0 3% !important;                          /* 3% del navbar (2.7% del viewport) */
   box-sizing: border-box !important;
   
-  /* Overflow */
-  overflow: visible !important;
-  
-  /* Animación inicial */
+  /* ✅ TRANSICIONES */
+  transition: all var(--navbar-transition-speed) ease !important;
   animation: fadeInDown 0.5s ease-out;
   
-  /* Asegurar que el navbar no tenga márgenes */
-  margin: 0 !important;
+  /* ✅ OVERFLOW */
+  overflow: hidden !important;
 }
 
 .navbar-contextual.scrolled {
   background: linear-gradient(135deg, #6c3483 0%, #5B2C6F 100%) !important;
   box-shadow: 0 4px 20px rgba(0,0,0,0.2) !important;
-  min-height: 70px !important;
+  min-height: var(--navbar-container-height) !important;
+  height: var(--navbar-container-height) !important;
 }
 
-/* FORZAR ANCHO COMPLETO EN ELEMENTOS DEL NAVBAR */
+/* ✅ FORZAR ANCHO COMPLETO EN ELEMENTOS HIJO PARA COMPATIBILIDAD */
 .navbar-contextual > .container-fluid,
-.navbar-contextual .navbar-collapse,
-.navbar-contextual .navbar-container {
+.navbar-contextual .navbar-collapse {
     width: 100vw !important;
     max-width: 100vw !important;
     min-width: 100vw !important;
@@ -163,7 +183,6 @@ body {
     overflow: visible !important;
 }
 
-/* CORRECCIÓN PARA BOOTSTRAP CONTAINERS */
 .container-fluid.p-0.m-0 {
     padding-left: 0 !important;
     padding-right: 0 !important;
@@ -173,90 +192,75 @@ body {
     max-width: 100% !important;
 }
 
-/* ✅ CONTENEDOR INTERNO - SOLUCIÓN CORREGIDA ===== */
-.navbar-container {
-  display: flex !important;
-  flex-wrap: nowrap !important;
-  width: 100% !important;
-  max-width: 100% !important;
-  height: 100% !important;
-  align-items: center !important;
-  justify-content: space-between !important;
-  padding: 0 30px !important; /* Padding interno para separación */
-  margin: 0 auto !important;
-  box-sizing: border-box !important;
-  overflow: visible !important;
-}
+/* ================================================== */
+/* ✅ SECCIONES DEL NAVBAR - DISTRIBUCIÓN OPTIMIZADA = */
+/* ================================================== */
 
-/* ===== ✅ SECCIONES DEL NAVBAR - NUEVAS PROPORCIONES ===== */
-/* DISTRIBUCIÓN CORREGIDA: 12% | 50% | 5% | 28% */
-
-/* LOGO (12%) - ALINEACIÓN IZQUIERDA */
+/* ✅ LOGO: 12% del viewport (13.33% del navbar) */
 .navbar-brand-section {
-  flex: 0 0 12% !important;
-  max-width: 12% !important;
+  flex: 0 0 var(--viewport-brand) !important;        /* 12% del viewport */
+  max-width: var(--viewport-brand) !important;       /* 12% del viewport */
   min-width: 100px !important;
   display: flex !important;
   align-items: center !important;
-  justify-content: flex-start !important; /* Alineación izquierda */
-  padding: 8px 0 !important;
-  height: 100% !important;
+  justify-content: flex-start !important;
+  padding: 0 !important;
+  height: var(--navbar-section-height) !important;
   box-sizing: border-box !important;
   overflow: hidden !important;
-  margin-right: calc(var(--navbar-section-gap) * 0.5) !important;
+  margin: 0 !important;
 }
 
-/* ✅ MENÚ PRINCIPAL (50%) - ALINEACIÓN IZQUIERDA */
+/* ✅ MENÚ PRINCIPAL: 40.5% del viewport (45% del navbar) */
 .navbar-menu-section {
-  flex: 0 0 50% !important;
-  max-width: 50% !important;
+  flex: 0 0 var(--viewport-menu) !important;         /* 40.5% del viewport */
+  max-width: var(--viewport-menu) !important;        /* 40.5% del viewport */
   display: flex !important;
   align-items: center !important;
-  justify-content: flex-start !important; /* ✅ Alineación izquierda */
-  height: 100% !important;
+  justify-content: flex-start !important;
+  height: var(--navbar-section-height) !important;
   padding: 0 !important;
   box-sizing: border-box !important;
   overflow: visible !important;
-  margin: 0 calc(var(--navbar-section-gap) * 0.5) !important;
+  margin: 0 !important;
 }
 
-/* ✅ REDES SOCIALES (5%) - ALINEACIÓN IZQUIERDA */
+/* ✅ REDES SOCIALES: 4.5% del viewport (5% del navbar) */
 .navbar-social-section {
-  flex: 0 0 5% !important;
-  max-width: 5% !important;
+  flex: 0 0 var(--viewport-social) !important;       /* 4.5% del viewport */
+  max-width: var(--viewport-social) !important;      /* 4.5% del viewport */
   min-width: 60px !important;
   display: flex !important;
   align-items: center !important;
-  justify-content: flex-start !important; /* ✅ Alineación izquierda */
-  height: 100% !important;
+  justify-content: flex-start !important;
+  height: var(--navbar-section-height) !important;
   padding: 0 !important;
   box-sizing: border-box !important;
   overflow: visible !important;
-  margin: 0 calc(var(--navbar-section-gap) * 0.5) !important;
+  margin: 0 !important;
 }
 
-/* ✅ CONTROL DE USUARIO (28%) - ALINEACIÓN IZQUIERDA */
+/* ✅ CONTROL DE USUARIO: 18% del viewport (20% del navbar) */
 .navbar-control-section {
-  flex: 0 0 28% !important;
-  max-width: 28% !important;
+  flex: 0 0 var(--viewport-control) !important;      /* 18% del viewport */
+  max-width: var(--viewport-control) !important;     /* 18% del viewport */
   display: flex !important;
-  flex-direction: column !important;
-  align-items: flex-start !important; /* ✅ Alineación izquierda */
-  justify-content: center !important;
-  height: 100% !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+  height: var(--navbar-section-height) !important;
   padding: 0 !important;
   box-sizing: border-box !important;
   overflow: visible !important;
   opacity: 1 !important;
   visibility: visible !important;
-  margin-left: calc(var(--navbar-section-gap) * 0.5) !important;
+  margin: 0 !important;
 }
 
-/* ✅ LOGO RESPONSIVE - TAMAÑO RESPONSIVE (NO FIJO) */
+/* ✅ LOGO RESPONSIVE */
 .navbar-logo {
   height: auto !important;
-  max-height: 150px !important; /* Altura máxima */
-  max-width: 100% !important; /* Asegura que no se desborde */
+  max-height: 80% !important; /* ✅ AJUSTE: 80% de la altura del navbar */
+  max-width: 100% !important;
   width: auto !important;
   transition: all 0.3s ease !important;
   object-fit: contain !important;
@@ -298,28 +302,33 @@ body {
   height: 1.25em !important;
 }
 
-/* ✅ MENÚ PRINCIPAL - ESTILOS BÁSICOS CON ALINEACIÓN IZQUIERDA */
+/* ✅ MENÚ PRINCIPAL OPTIMIZADO */
 .main-navigation {
   width: 100% !important;
   display: flex !important;
-  justify-content: flex-start !important; /* ✅ Alineación izquierda */
+  justify-content: flex-start !important;
   align-items: center !important;
   margin: 0 !important;
   padding: 0 !important;
   list-style: none !important;
-  flex-wrap: wrap;
+  flex-wrap: nowrap !important;
+  gap: 8px !important;
+  height: 100% !important;
 }
 
 .main-navigation .nav-link {
   color: white !important;
   font-weight: 500 !important;
-  padding: 10px 15px !important;
+  padding: 12px 16px !important; /* ✅ AJUSTE: padding mayor para 45vh */
   transition: all 0.3s ease !important;
   white-space: nowrap !important;
-  font-size: 0.95rem !important;
+  font-size: 1rem !important; /* ✅ AJUSTE: tamaño de fuente mayor */
   text-decoration: none !important;
   border-radius: 4px !important;
   position: relative !important;
+  height: 100% !important;
+  display: flex !important;
+  align-items: center !important;
 }
 
 .main-navigation .nav-link:hover,
@@ -341,10 +350,7 @@ body {
   border-radius: 1px;
 }
 
-/* ================================================== */
-/* ✅ DROPDOWN MENUS - SOLUCIÓN CORREGIDA ============ */
-/* ================================================== */
-
+/* ===== DROPDOWN MENUS ===== */
 .dropdown-menu {
   background: linear-gradient(135deg, #7d3c98, #6c3483);
   border: none;
@@ -388,7 +394,7 @@ body {
   z-index: 1051;
 }
 
-/* ✅ SUBMENÚS ANIDADOS - CORRECCIONES DE Z-INDEX */
+/* ✅ SUBMENÚS ANIDADOS */
 .navbar-nav .dropdown-menu {
   z-index: 1050 !important;
 }
@@ -403,7 +409,6 @@ body {
   z-index: 1052 !important;
 }
 
-/* ✅ CORRECCIÓN PARA DROPDOWNS QUE SE CORTAN */
 .navbar-nav .dropdown {
   position: relative !important;
 }
@@ -415,7 +420,6 @@ body {
   margin-top: 0 !important;
 }
 
-/* ✅ HOVER PARA DROPDOWNS EN DESKTOP */
 @media (min-width: 992px) {
   .navbar-nav .dropdown:hover > .dropdown-menu {
     display: block !important;
@@ -433,19 +437,20 @@ body {
   }
 }
 
-/* ✅ ICONOS SOCIALES - DISPOSICIÓN VERTICAL CON ALINEACIÓN IZQUIERDA */
+/* ✅ ICONOS SOCIALES OPTIMIZADOS */
 .social-icons-vertical {
   display: flex !important;
   flex-direction: column !important;
-  gap: 8px !important;
-  align-items: flex-start !important; /* ✅ Alineación izquierda */
+  gap: 6px !important;
+  align-items: flex-start !important;
   width: 100% !important;
-  padding: 8px 0 !important;
+  height: 100% !important;
+  justify-content: center !important;
 }
 
 .social-icon-circle {
-  width: 30px !important;
-  height: 30px !important;
+  width: 32px !important; /* ✅ AJUSTE: iconos más grandes */
+  height: 32px !important;
   border-radius: 50% !important;
   background: rgba(255, 255, 255, 0.12) !important;
   color: white !important;
@@ -454,7 +459,7 @@ body {
   justify-content: center !important;
   transition: all 0.3s ease !important;
   text-decoration: none !important;
-  font-size: 0.85rem !important;
+  font-size: 0.9rem !important; /* ✅ AJUSTE: fuente más grande */
   border: 1px solid rgba(255,255,255,0.2) !important;
 }
 
@@ -464,67 +469,72 @@ body {
   box-shadow: 0 3px 10px rgba(0,0,0,0.2) !important;
 }
 
-/* ✅ CONTROL DE SESIÓN - DISPOSICIÓN VERTICAL ALINEADA A LA IZQUIERDA */
+/* ✅ CONTROL DE SESIÓN OPTIMIZADO */
 .session-controls {
   display: flex !important;
   flex-direction: column !important;
-  gap: 12px !important;
+  gap: 6px !important;
   width: 100% !important;
-  align-items: flex-start !important; /* ✅ Alineación izquierda */
+  align-items: stretch !important;
   text-align: left !important;
+  height: 100% !important;
+  justify-content: center !important;
 }
 
-/* ✅ INFORMACIÓN DE ESCUELA - ALINEADA A LA IZQUIERDA */
+/* ✅ INFORMACIÓN DE ESCUELA OPTIMIZADA */
 .school-info {
   background: rgba(0, 0, 0, 0.18) !important;
-  padding: 12px 15px !important;
-  border-radius: 8px !important;
+  padding: 10px 12px !important; /* ✅ AJUSTE: padding mayor */
+  border-radius: 6px !important;
   border: 1px solid rgba(255, 255, 255, 0.15) !important;
-  font-size: 0.85rem !important;
+  font-size: 0.9rem !important; /* ✅ AJUSTE: fuente mayor */
   width: 100% !important;
   box-sizing: border-box !important;
-  margin-bottom: 5px !important;
-  text-align: left !important; /* ✅ Alineación izquierda */
+  text-align: left !important;
+  margin-bottom: 6px !important;
 }
 
 .escuela-activa-indicator {
   background: rgba(52, 152, 219, 0.2) !important;
-  padding: 10px !important;
+  padding: 10px 12px !important; /* ✅ AJUSTE: padding mayor */
   border-radius: 4px !important;
   border-left: 3px solid #3498db !important;
-  margin-bottom: 8px !important;
-  text-align: left !important; /* ✅ Alineación izquierda */
+  text-align: left !important;
+  width: 100% !important;
+  box-sizing: border-box !important;
+  margin-bottom: 6px !important;
 }
 
 .escuela-activa-indicator small {
   display: block !important;
   line-height: 1.4 !important;
-  font-size: 0.85rem !important;
+  font-size: 0.9rem !important; /* ✅ AJUSTE: fuente mayor */
   text-align: left !important;
 }
 
-/* ✅ BUSCADOR DE ESCUELAS - ALINEADO A LA IZQUIERDA */
+/* ✅ BUSCADOR DE ESCUELAS OPTIMIZADO */
 .school-search-container {
   position: relative !important;
   width: 100% !important;
-  margin-bottom: 8px !important;
-  text-align: left !important; /* ✅ Alineación izquierda */
+  text-align: left !important;
+  margin-bottom: 6px !important;
 }
 
 .school-search-container .input-group {
   width: 100% !important;
   flex-direction: column !important;
-  align-items: flex-start !important; /* ✅ Alineación izquierda */
+  align-items: stretch !important;
 }
 
 .school-search-container .form-control {
   background: rgba(255,255,255,0.1) !important;
   border: 1px solid rgba(255,255,255,0.2) !important;
   color: white !important;
-  font-size: 0.85rem !important;
-  height: 38px !important;
+  font-size: 0.9rem !important; /* ✅ AJUSTE: fuente mayor */
+  height: 38px !important; /* ✅ AJUSTE: altura mayor */
   width: 100% !important;
   margin-bottom: 5px !important;
+  box-sizing: border-box !important;
 }
 
 .school-search-container .form-control::placeholder {
@@ -534,32 +544,33 @@ body {
 .school-search-container .btn-outline-light {
   border-color: rgba(255,255,255,0.3) !important;
   color: white !important;
-  height: 38px !important;
-  padding: 0 12px !important;
-  font-size: 0.85rem !important;
+  height: 38px !important; /* ✅ AJUSTE: altura mayor */
+  padding: 0 10px !important;
+  font-size: 0.9rem !important; /* ✅ AJUSTE: fuente mayor */
   width: 100% !important;
+  box-sizing: border-box !important;
 }
 
 .school-search-container .btn-outline-light:hover {
   background: rgba(255,255,255,0.15) !important;
 }
 
-/* ✅ INFORMACIÓN DE USUARIO - ALINEADA A LA IZQUIERDA */
+/* ✅ INFORMACIÓN DE USUARIO OPTIMIZADA */
 .user-info {
   width: 100% !important;
-  text-align: left !important; /* ✅ Alineación izquierda */
+  text-align: left !important;
   background: rgba(0, 0, 0, 0.18) !important;
-  padding: 12px 15px !important;
-  border-radius: 8px !important;
+  padding: 10px 12px !important; /* ✅ AJUSTE: padding mayor */
+  border-radius: 6px !important;
   border: 1px solid rgba(255, 255, 255, 0.15) !important;
-  margin-bottom: 8px !important;
   box-sizing: border-box !important;
+  margin-bottom: 6px !important;
 }
 
 .user-info small {
   display: block !important;
   line-height: 1.5 !important;
-  font-size: 0.85rem !important;
+  font-size: 0.9rem !important; /* ✅ AJUSTE: fuente mayor */
   margin-bottom: 5px !important;
   text-align: left !important;
 }
@@ -569,18 +580,18 @@ body {
   font-weight: 600 !important;
 }
 
-/* ✅ BOTONES DE SESIÓN - ALINEADOS A LA IZQUIERDA */
+/* ✅ BOTONES DE SESIÓN OPTIMIZADOS */
 .session-controls .btn {
-  min-width: 100% !important;
-  transition: all 0.3s ease !important;
-  padding: 10px 15px !important;
-  font-size: 0.9rem !important;
-  border-radius: 8px !important;
-  white-space: nowrap !important;
-  margin-bottom: 5px !important;
-  text-align: center !important; /* Los botones mantienen texto centrado */
   width: 100% !important;
+  transition: all 0.3s ease !important;
+  padding: 8px 12px !important; /* ✅ AJUSTE: padding mayor */
+  font-size: 0.9rem !important; /* ✅ AJUSTE: fuente mayor */
+  border-radius: 6px !important;
+  white-space: nowrap !important;
+  margin-bottom: 6px !important;
+  text-align: center !important;
   box-sizing: border-box !important;
+  display: block !important;
 }
 
 .session-controls .btn:last-child {
@@ -649,7 +660,7 @@ body {
   margin-top: 2px !important;
 }
 
-/* ✅ DROPDOWN DE SELECCIÓN DE ESCUELA - AJUSTES VERTICALES */
+/* ✅ DROPDOWN DE SELECCIÓN DE ESCUELA */
 .escuela-selector-dropdown {
   min-width: 250px !important;
   max-height: 300px !important;
@@ -681,25 +692,25 @@ body {
   box-shadow: 0 0 0 0.2rem rgba(108, 52, 131, 0.25) !important;
 }
 
-/* ✅ AJUSTES PARA ESCRITORIO - VERTICAL STACK ALINEADO A LA IZQUIERDA */
+/* ✅ AJUSTES PARA ESCRITORIO */
 @media (min-width: 992px) {
   .navbar-control-section {
     display: flex !important;
-    flex-direction: column !important;
-    justify-content: center !important;
-    height: 100% !important;
+    align-items: stretch !important;
+    justify-content: flex-start !important;
+    height: var(--navbar-section-height) !important;
     opacity: 1 !important;
     visibility: visible !important;
   }
   
   .session-controls {
-    align-items: flex-start !important; /* ✅ Alineación izquierda */
+    align-items: stretch !important;
     display: flex !important;
+    flex-direction: column !important;
     opacity: 1 !important;
     visibility: visible !important;
   }
   
-  /* Asegurar que todos los elementos estén alineados a la izquierda */
   .school-info, 
   .school-search-container,
   .user-info,
@@ -708,13 +719,12 @@ body {
     opacity: 1 !important;
     visibility: visible !important;
     text-align: left !important;
+    width: 100% !important;
   }
 }
 
-/* ===== MÓVIL Y TABLET: OFF-CANVAS COMO MODAL DESLIZANTE ===== */
-/* SOLUCIÓN CORREGIDA: Responsividad mejorada */
+/* ===== MÓVIL Y TABLET: OFF-CANVAS ===== */
 @media (max-width: 991.98px) {
-  /* Backdrop para móvil (si se usa) */
   .ged-sidebar-backdrop {
     position: fixed !important;
     top: 0 !important;
@@ -734,12 +744,11 @@ body {
     visibility: visible !important;
   }
   
-  /* ✅ EN MÓVIL: SOLO EL BRAND Y EL TOGGLER SON VISIBLES EN EL NAVBAR PRINCIPAL */
-  /* Las demás secciones se mueven al menú desplegable */
+  /* ✅ EN MÓVIL: SOLO BRAND Y TOGGLER */
   .navbar-menu-section,
   .navbar-social-section,
   .navbar-control-section {
-    display: none !important; /* OCULTAR en móvil */
+    display: none !important;
   }
   
   .navbar-brand-section {
@@ -757,79 +766,108 @@ body {
   }
 }
 
-/* ===== ESCRITORIO (PC): NAVBAR HORIZONTAL, NO SIDEBAR ===== */
+/* ================================================== */
+/* ✅ ESCRITORIO (PC) - SOLUCIÓN DEFINITIVA UNA LÍNEA == */
+/* ================================================== */
+
 @media (min-width: 992px) {
-  /* ❌ IMPORTANTE: EN PC NO DEBE HABER SIDEBAR VISIBLE */
+  /* ❌ EN PC NO HAY SIDEBAR VISIBLE */
   #gedMobileMenuContainer {
     display: none !important;
   }
   
-  /* ✅ TOGGLER PARA MÓVIL OCULTO EN PC */
+  /* ✅ TOGGLER OCULTO EN PC */
   .navbar-toggler {
     display: none !important;
   }
   
-  /* ✅ AJUSTAR CONTENIDO PRINCIPAL SIN SIDEBAR */
+  /* ✅ CONTENEDOR CON DISTRIBUCIÓN EXACTA */
+  .navbar-contextual {
+    width: var(--viewport-navbar-width) !important;  /* 90% del viewport */
+    margin: 0 0 0 auto !important;                   /* Alineado a la izquierda con 10% de margen derecho */
+    padding: 0 3% !important;                        /* 3% del navbar (2.7% del viewport) */
+    min-height: var(--navbar-container-height) !important;
+    height: var(--navbar-container-height) !important;
+  }
+  
+  /* ✅ AJUSTAR CONTENIDO PRINCIPAL */
   .ged-main-content,
   .main-content-wrapper,
   main#main {
     margin-left: 0 !important;
-    padding-left: 0 !important; /* ❌ SIN PADDING LATERAL */
-    padding-right: 0 !important; /* ❌ SIN PADDING LATERAL */
+    padding-left: 0 !important;
+    padding-right: 0 !important;
     transition: none !important;
     width: 100vw !important;
     max-width: 100vw !important;
   }
   
-  /* ✅ NAVBAR SE MANTIENE ANCHO COMPLETO */
-  .navbar-contextual {
-    width: 100vw !important;
-    padding-left: 0 !important;
-    transition: none !important;
-  }
-  
-  /* ✅ BACKDROP NO SE USA EN ESCRITORIO */
   .ged-sidebar-backdrop {
     display: none !important;
   }
   
-  /* ================================================== */
-  /* SOLUCIÓN COMPLETA: Forzar visibilidad del menú en escritorio */
-  /* ================================================== */
-  
-  /* ✅ 1. MOSTRAR EL COLLAPSE EN ESCRITORIO */
-  #navbarContent {
+  /* ✅ SOLUCIÓN DEFINITIVA: TODO EN UNA LÍNEA */
+  /* 1. CONTENEDOR PRINCIPAL: FLEX EN LÍNEA */
+  .navbar-container {
     display: flex !important;
-    visibility: visible !important;
-    opacity: 1 !important;
-    height: auto !important;
-    transform: none !important;
-    position: static !important;
-    background: transparent !important;
-    box-shadow: none !important;
-    border: none !important;
-    padding: 0 !important;
-    margin: 0 !important;
+    flex-direction: row !important;
+    flex-wrap: nowrap !important;
+    align-items: stretch !important;
+    justify-content: flex-start !important;
     width: 100% !important;
-    flex: 1 !important;
+    height: var(--navbar-container-height) !important;
+    min-height: var(--navbar-container-height) !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    gap: 0 !important;
+    box-sizing: border-box !important;
+  }
+  
+  /* 2. COLLAPSE DEBE OCUPAR EL ESPACIO RESTANTE */
+  .navbar-collapse {
+    display: flex !important;
+    flex-grow: 1 !important;
+    flex-basis: auto !important;
+    width: auto !important;
+    min-width: 0 !important;
+    height: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    box-sizing: border-box !important;
   }
   
   .navbar-collapse.collapse:not(.show) {
     display: flex !important;
-    height: auto !important;
-    width: 100% !important;
+    height: 100% !important;
+    width: auto !important;
   }
   
-  /* ✅ 2. GARANTIZAR VISIBILIDAD DEL CONTENIDO DEL NAVBAR */
-  .navbar-container {
+  /* 3. CONTENEDOR INTERNO DE SECCIONES */
+  .navbar-sections-container {
+    display: flex !important;
+    flex-direction: row !important;
+    flex-wrap: nowrap !important;
+    align-items: stretch !important;
+    justify-content: flex-start !important;
+    width: 100% !important;
+    height: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    gap: 0 !important;
+    box-sizing: border-box !important;
+  }
+  
+  /* 4. GARANTIZAR VISIBILIDAD DEL CONTENIDO */
+  .navbar-contextual {
     display: flex !important;
     opacity: 1 !important;
     visibility: visible !important;
-    width: 100% !important;
-    overflow: visible !important;
+    width: var(--viewport-navbar-width) !important;
+    overflow: hidden !important;
   }
   
-  /* ✅ 3. FORZAR DISPLAY FLEX EN LAS SECCIONES */
+  /* 5. FORZAR DISPLAY FLEX EN LAS SECCIONES */
+  .navbar-brand-section,
   .navbar-menu-section,
   .navbar-social-section,
   .navbar-control-section {
@@ -838,56 +876,61 @@ body {
     visibility: visible !important;
     position: relative !important;
     z-index: 1030 !important;
+    height: 100% !important;
+    align-items: center !important;
   }
   
-  /* ✅ 4. ESPECÍFICO PARA EL MENÚ PRINCIPAL */
+  /* 6. ESPECÍFICO PARA EL MENÚ PRINCIPAL */
   .main-navigation {
     display: flex !important;
     flex-wrap: nowrap !important;
     opacity: 1 !important;
     visibility: visible !important;
     width: 100% !important;
-    justify-content: flex-start !important; /* ✅ Alineación izquierda */
+    justify-content: flex-start !important;
     overflow: visible !important;
+    height: 100% !important;
+    align-items: center !important;
   }
   
-  /* ✅ 5. REMOVER CUALQUIER OVERFLOW OCULTO */
   .navbar-contextual > .container-fluid {
     overflow: visible !important;
   }
   
-  /* ✅ 6. NUEVA DISTRIBUCIÓN: 12% | 50% | 5% | 28% */
+  /* 7. DISTRIBUCIÓN EXACTA DEL VIEWPORT - SIN MÁRGENES */
   .navbar-brand-section {
-    flex: 0 0 12% !important;
-    max-width: 12% !important;
-    margin-right: calc(var(--navbar-section-gap) * 0.5) !important;
-    justify-content: flex-start !important; /* ✅ Alineación izquierda */
+    flex: 0 0 var(--viewport-brand) !important;    /* 12% del viewport */
+    max-width: var(--viewport-brand) !important;
+    min-width: var(--viewport-brand) !important;
+    justify-content: flex-start !important;
   }
   
   .navbar-menu-section {
-    flex: 0 0 50% !important; /* ✅ 50% */
-    max-width: 50% !important;
-    margin: 0 calc(var(--navbar-section-gap) * 0.5) !important;
-    justify-content: flex-start !important; /* ✅ Alineación izquierda */
+    flex: 0 0 var(--viewport-menu) !important;     /* 40.5% del viewport */
+    max-width: var(--viewport-menu) !important;
+    min-width: var(--viewport-menu) !important;
+    justify-content: flex-start !important;
   }
   
   .navbar-social-section {
-    flex: 0 0 5% !important; /* ✅ 5% */
-    max-width: 5% !important;
-    min-width: 60px !important;
-    margin: 0 calc(var(--navbar-section-gap) * 0.5) !important;
-    justify-content: flex-start !important; /* ✅ Alineación izquierda */
+    flex: 0 0 var(--viewport-social) !important;   /* 4.5% del viewport */
+    max-width: var(--viewport-social) !important;
+    min-width: var(--viewport-social) !important;
+    justify-content: flex-start !important;
   }
   
+  /* ✅ SECCIÓN DE CONTROL - DISTRIBUCIÓN EXACTA OPTIMIZADA */
   .navbar-control-section {
-    flex: 0 0 28% !important; /* ✅ 28% */
-    max-width: 28% !important;
+    flex: 0 0 var(--viewport-control) !important;  /* 18% del viewport (20% del navbar) */
+    max-width: var(--viewport-control) !important;
+    min-width: var(--viewport-control) !important;
     display: flex !important;
-    margin-left: calc(var(--navbar-section-gap) * 0.5) !important;
-    align-items: flex-start !important; /* ✅ Alineación izquierda */
+    align-items: stretch !important;
+    justify-content: flex-start !important;
+    gap: 0 !important;
+    padding: 0 !important;
   }
   
-  /* ✅ 7. CONTENEDOR FLUID DE BOOTSTRAP - SIN PADDING LATERAL */
   .container-fluid {
     width: 100% !important;
     max-width: 100% !important;
@@ -896,6 +939,42 @@ body {
     margin-left: 0 !important;
     margin-right: 0 !important;
     box-sizing: border-box !important;
+  }
+  
+  /* ✅ CONTENIDO DENTRO DE LAS SECCIONES - OCUPA TODO EL ESPACIO */
+  .control-content {
+    width: 100% !important;
+    height: 100% !important;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: space-between !important;
+    padding: 5px 0 !important;
+    box-sizing: border-box !important;
+  }
+  
+  /* ✅ ELIMINAR CUALQUIER MARGEN O PADDING INTERNO */
+  .navbar-container > *,
+  .navbar-sections-container > *,
+  .navbar-control-section > * {
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
+  
+  /* ✅ FIX DE EMERGENCIA: FORZAR UNA LÍNEA */
+  .navbar-contextual,
+  .navbar-container,
+  .navbar-sections-container,
+  .navbar-brand-section,
+  .navbar-menu-section,
+  .navbar-social-section,
+  .navbar-control-section,
+  .main-navigation,
+  .navbar-nav,
+  .nav-item,
+  .nav-link {
+    white-space: nowrap !important;
   }
 }
 
@@ -1116,117 +1195,171 @@ body {
 }
 
 /* ================================================== */
-/* RESPONSIVE DESIGN - CONSOLIDADO - SOLUCIÓN CORREGIDA ===== */
+/* RESPONSIVE DESIGN - CONSOLIDADO Y OPTIMIZADO ====== */
 /* ================================================== */
 
 /* Tablets y pantallas medianas (1199px a 992px) */
 @media (max-width: 1199.98px) and (min-width: 992px) {
+  /* ✅ VARIABLES AJUSTADAS PARA TABLETS - PROPORCIONALES */
+  :root {
+    --viewport-navbar-width: 92% !important;      /* 92% del viewport (+2%) */
+    --viewport-padding-left: 2.76% !important;    /* 3% de 92% = 2.76% del viewport */
+    --viewport-padding-right: 2.76% !important;   /* 3% de 92% = 2.76% del viewport */
+    --viewport-brand: 11.04% !important;          /* 12% de 92% = 11.04% del viewport */
+    --viewport-menu: 37.26% !important;           /* 40.5% de 92% = 37.26% del viewport */
+    --viewport-social: 4.14% !important;          /* 4.5% de 92% = 4.14% del viewport */
+    --viewport-control: 16.56% !important;        /* 18% de 92% = 16.56% del viewport */
+    --viewport-gap: 1.38% !important;             /* 1.5% de 92% = 1.38% del viewport */
+    --navbar-section-gap: 1.5% !important;        /* 1.5% del navbar */
+    --navbar-container-height: 45vh !important;
+  }
+  
   .navbar-contextual {
-    height: 70px;
-    min-height: 70px;
+    height: var(--navbar-container-height) !important;
+    min-height: var(--navbar-container-height) !important;
   }
   
   body {
-    padding-top: 70px !important;
+    padding-top: var(--navbar-container-height) !important;
   }
   
   main#main {
-    min-height: calc(100vh - 70px) !important;
+    min-height: calc(100vh - var(--navbar-container-height)) !important;
   }
   
-  .navbar-container {
-    padding: 0 20px !important;
+  /* ✅ TABLETS: DISTRIBUCIÓN AJUSTADA */
+  .navbar-contextual {
+    width: var(--viewport-navbar-width) !important; /* 92% del viewport */
+    padding: 0 3% !important; /* 3% del navbar */
   }
   
-  /* ✅ DISTRIBUCIÓN PARA TABLET: 12% | 58% | 5% | 25% */
   .navbar-brand-section {
-    min-width: 100px !important;
-    flex: 0 0 12% !important;
-    max-width: 12% !important;
-    margin-right: 0.5% !important;
-    justify-content: flex-start !important; /* ✅ Alineación izquierda */
+    min-width: var(--viewport-brand) !important;
+    flex: 0 0 var(--viewport-brand) !important;
+    max-width: var(--viewport-brand) !important;
+    margin: 0 !important;
+    justify-content: flex-start !important;
   }
   
   .navbar-menu-section {
-    flex: 0 0 58% !important; /* Aumentado para compensar */
-    max-width: 58% !important;
-    margin: 0 0.25% !important;
-    justify-content: flex-start !important; /* ✅ Alineación izquierda */
+    flex: 0 0 var(--viewport-menu) !important;
+    max-width: var(--viewport-menu) !important;
+    margin: 0 !important;
+    justify-content: flex-start !important;
   }
   
   .navbar-social-section {
-    flex: 0 0 5% !important; /* ✅ 5% */
-    max-width: 5% !important;
-    min-width: 50px !important;
-    margin: 0 0.25% !important;
-    justify-content: flex-start !important; /* ✅ Alineación izquierda */
+    flex: 0 0 var(--viewport-social) !important;
+    max-width: var(--viewport-social) !important;
+    min-width: var(--viewport-social) !important;
+    margin: 0 !important;
+    justify-content: flex-start !important;
   }
   
+  /* ✅ SECCIÓN DE CONTROL - CORREGIDA PARA TABLETS */
   .navbar-control-section {
-    flex: 0 0 25% !important;
-    max-width: 25% !important;
-    margin-left: 0.5% !important;
-    align-items: flex-start !important; /* ✅ Alineación izquierda */
+    flex: 0 0 var(--viewport-control) !important;
+    max-width: var(--viewport-control) !important;
+    min-width: var(--viewport-control) !important;
+    margin: 0 !important;
+    align-items: stretch !important;
+    gap: 0 !important;
+    padding: 0 !important;
   }
   
-  /* Logo responsivo (no fijo) */
   .navbar-logo {
-    max-height: 45px !important; /* Altura máxima */
-    height: auto !important; /* Altura responsiva */
+    max-height: 70% !important; /* ✅ AJUSTE: 70% de la altura del navbar */
+    height: auto !important;
   }
   
   .main-navigation .nav-link {
-    padding: 8px 12px !important;
-    font-size: 0.9rem !important;
+    padding: 10px 14px !important; /* ✅ AJUSTE: padding mayor */
+    font-size: 0.95rem !important; /* ✅ AJUSTE: fuente mayor */
   }
   
-  /* Ajustes para iconos sociales en tablets */
   .social-icons-vertical {
-    gap: 6px !important; /* Reducido para tablets */
-    align-items: flex-start !important; /* ✅ Alineación izquierda */
+    gap: 4px !important;
+    align-items: flex-start !important;
   }
   
   .social-icon-circle {
-    width: 28px !important; /* Reducido para tablets */
-    height: 28px !important;
-    font-size: 0.8rem !important;
+    width: 30px !important; /* ✅ AJUSTE: iconos más grandes */
+    height: 30px !important;
+    font-size: 0.85rem !important; /* ✅ AJUSTE: fuente mayor */
   }
   
-  /* Ajustes para control de sesión vertical en tablets */
   .session-controls {
-    gap: 8px !important;
-    align-items: flex-start !important; /* ✅ Alineación izquierda */
+    gap: 4px !important;
+    align-items: stretch !important;
   }
   
   .session-controls .btn {
-    padding: 8px 12px !important;
-    font-size: 0.85rem !important;
+    padding: 7px 10px !important; /* ✅ AJUSTE: padding mayor */
+    font-size: 0.85rem !important; /* ✅ AJUSTE: fuente mayor */
   }
   
   .school-info,
   .user-info {
-    padding: 10px 12px !important;
-    font-size: 0.8rem !important;
-    text-align: left !important; /* ✅ Alineación izquierda */
+    padding: 8px 10px !important; /* ✅ AJUSTE: padding mayor */
+    font-size: 0.85rem !important; /* ✅ AJUSTE: fuente mayor */
+    text-align: left !important;
+  }
+  
+  /* ✅ EN TABLETS TAMBIÉN DEBE ESTAR EN UNA LÍNEA */
+  .navbar-container {
+    display: flex !important;
+    flex-direction: row !important;
+    flex-wrap: nowrap !important;
+    align-items: stretch !important;
+    justify-content: flex-start !important;
+    width: 100% !important;
+    height: var(--navbar-container-height) !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    gap: 0 !important;
+  }
+  
+  .navbar-sections-container {
+    display: flex !important;
+    flex-direction: row !important;
+    flex-wrap: nowrap !important;
+    align-items: stretch !important;
+    justify-content: flex-start !important;
+    width: 100% !important;
+    height: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    gap: 0 !important;
   }
 }
 
 /* Tablets pequeñas y móviles grandes (991px a 768px) */
 @media (max-width: 991.98px) {
+  /* ✅ EN MÓVIL: RESET DE VARIABLES */
+  :root {
+    --viewport-navbar-width: 100% !important;     /* 100% del viewport */
+    --viewport-padding-left: 15px !important;
+    --viewport-padding-right: 15px !important;
+    --navbar-container-height: 60px !important;
+  }
+  
   .navbar-contextual {
-    height: 60px !important;
-    min-height: 60px !important;
+    height: var(--navbar-container-height) !important;
+    min-height: var(--navbar-container-height) !important;
     position: fixed !important;
     top: 0 !important;
+    width: var(--viewport-navbar-width) !important; /* 100% del viewport */
+    margin: 0 !important;   /* ✅ Sin margen especial */
+    padding: 0 var(--viewport-padding-left) !important;
   }
   
   body {
-    padding-top: 60px !important;
+    padding-top: var(--navbar-container-height) !important;
   }
   
   main#main {
     margin-top: 0 !important;
-    min-height: calc(100vh - 60px) !important;
+    min-height: calc(100vh - var(--navbar-container-height)) !important;
   }
   
   .navbar > .container-fluid {
@@ -1236,7 +1369,7 @@ body {
   
   .navbar-brand, .navbar-brand-section {
     width: auto !important;
-    height: 60px;
+    height: var(--navbar-container-height) !important;
     order: 1;
     flex: 1 !important;
     max-width: none !important;
@@ -1273,14 +1406,6 @@ body {
   
   .navbar-collapse.show {
     display: block !important;
-  }
-  
-  .navbar-container {
-    flex-direction: column;
-    height: auto;
-    gap: 20px;
-    width: 100%;
-    padding: 0 !important;
   }
   
   .navbar-menu-section,
@@ -1354,7 +1479,7 @@ body {
     flex-direction: row !important;
     gap: 8px !important;
     align-items: center !important;
-    justify-content: center !important; /* Centrado en móvil */
+    justify-content: center !important;
   }
   
   .session-controls .btn {
@@ -1375,30 +1500,42 @@ body {
     display: none !important;
   }
   
-  /* Logo responsivo en móvil */
   .navbar-logo {
     max-height: 45px !important;
     height: auto !important;
+  }
+  
+  /* ✅ EN MÓVIL: OCULTAR CONTENEDOR DE SECCIONES FLEX */
+  .navbar-sections-container {
+    flex-direction: column !important;
+    gap: 15px !important;
   }
 }
 
 /* Móviles (767px a 576px) */
 @media (max-width: 767.98px) {
+  :root {
+    --viewport-padding-left: 8px !important;
+    --viewport-padding-right: 8px !important;
+    --navbar-container-height: 50px !important;
+  }
+  
   .navbar-contextual {
-    min-height: 50px !important;
-    height: 50px !important;
+    min-height: var(--navbar-container-height) !important;
+    height: var(--navbar-container-height) !important;
+    padding: 0 var(--viewport-padding-left) !important;
   }
   
   body {
-    padding-top: 50px !important;
+    padding-top: var(--navbar-container-height) !important;
   }
   
   main#main {
-    min-height: calc(100vh - 50px) !important;
+    min-height: calc(100vh - var(--navbar-container-height)) !important;
   }
   
   .navbar-brand, .navbar-brand-section {
-    height: 50px;
+    height: var(--navbar-container-height) !important;
     padding-left: 8px !important;
   }
   
@@ -1406,10 +1543,8 @@ body {
     padding-right: 8px !important;
   }
   
-  /* Logo responsivo en móviles */
   .navbar-logo {
-    max-height: 40px !important;
-    height: auto !important;
+    height: 32px !important;
   }
   
   .session-controls {
@@ -1421,7 +1556,6 @@ body {
     font-size: 0.8rem !important;
   }
   
-  /* Ajustes adicionales para iconos sociales en móviles */
   .social-icons-vertical {
     gap: 12px !important;
   }
@@ -1435,33 +1569,38 @@ body {
 
 /* Móviles pequeños (575px y menos) */
 @media (max-width: 575.98px) {
+  :root {
+    --viewport-padding-left: 5px !important;
+    --viewport-padding-right: 5px !important;
+    --navbar-container-height: 45px !important;
+  }
+  
   .navbar-contextual {
-    min-height: 45px !important;
-    height: 45px !important;
+    min-height: var(--navbar-container-height) !important;
+    height: var(--navbar-container-height) !important;
+    padding: 0 var(--viewport-padding-left) !important;
   }
   
   body {
-    padding-top: 45px !important;
+    padding-top: var(--navbar-container-height) !important;
   }
   
   main#main {
-    min-height: calc(100vh - 45px) !important;
+    min-height: calc(100vh - var(--navbar-container-height)) !important;
   }
   
   .navbar-brand, .navbar-brand-section {
     min-width: 100px !important;
     padding-left: 5px !important;
-    height: 45px;
+    height: var(--navbar-container-height) !important;
   }
   
   .navbar-control-section {
     padding-right: 5px !important;
   }
   
-  /* Logo responsivo en móviles pequeños */
   .navbar-logo {
-    max-height: 35px !important;
-    height: auto !important;
+    height: 28px !important;
   }
   
   .session-controls .btn {
@@ -1524,59 +1663,64 @@ body {
     transform: rotate(90deg);
 }
 
-/* ===== SOLUCIONES CRÍTICAS ===== */
+/* ================================================== */
+/* ✅ SOLUCIONES CRÍTICAS - DISTRIBUCIÓN OPTIMIZADA == */
+/* ================================================== */
 
 /* ✅ SOLUCIÓN 1: 100vw sin padding lateral */
 .navbar-contextual, 
-.navbar-contextual > .container-fluid,
-.navbar-contextual .navbar-container {
+.navbar-contextual > .container-fluid {
     width: 100vw !important;
     max-width: 100vw !important;
     padding-left: 0 !important;
-    padding-right: 0 !important;
     margin-left: 0 !important;
     margin-right: 0 !important;
 }
 
-/* ✅ SOLUCIÓN 2: DISTRIBUCIÓN 12% | 50% | 5% | 28% */
+/* ✅ SOLUCIÓN 2: DISTRIBUCIÓN EXACTA OPTIMIZADA */
 @media (min-width: 992px) {
-    .navbar-container {
+    .navbar-contextual {
         display: flex !important;
-        width: 100% !important;
+        width: var(--viewport-navbar-width) !important; /* 90% del viewport */
+        margin: 0 0 0 auto !important; /* Alineado a la izquierda con 10% de margen derecho */
     }
     
     .navbar-brand-section { 
-        flex: 0 0 12% !important; 
-        max-width: 12% !important; 
-        margin-right: calc(var(--navbar-section-gap) * 0.5) !important;
-        justify-content: flex-start !important; /* ✅ Alineación izquierda */
+        flex: 0 0 var(--viewport-brand) !important;     /* 12% del viewport */
+        max-width: var(--viewport-brand) !important; 
+        margin: 0 !important;
+        justify-content: flex-start !important;
     }
     
     .navbar-menu-section { 
-        flex: 0 0 50% !important; /* ✅ 50% */
-        max-width: 50% !important; 
-        margin: 0 calc(var(--navbar-section-gap) * 0.5) !important;
-        justify-content: flex-start !important; /* ✅ Alineación izquierda */
+        flex: 0 0 var(--viewport-menu) !important;      /* 40.5% del viewport */
+        max-width: var(--viewport-menu) !important; 
+        margin: 0 !important;
+        justify-content: flex-start !important;
     }
     
     .navbar-social-section { 
-        flex: 0 0 5% !important; /* ✅ 5% */
-        max-width: 5% !important; 
-        min-width: 60px !important;
-        margin: 0 calc(var(--navbar-section-gap) * 0.5) !important;
-        justify-content: flex-start !important; /* ✅ Alineación izquierda */
+        flex: 0 0 var(--viewport-social) !important;    /* 4.5% del viewport */
+        max-width: var(--viewport-social) !important; 
+        min-width: var(--viewport-social) !important;
+        margin: 0 !important;
+        justify-content: flex-start !important;
     }
     
+    /* ✅ SECCIÓN DE CONTROL - DISTRIBUCIÓN EXACTA OPTIMIZADA */
     .navbar-control-section { 
-        flex: 0 0 28% !important; /* ✅ 28% */
-        max-width: 28% !important; 
+        flex: 0 0 var(--viewport-control) !important;   /* 18% del viewport (20% del navbar) */
+        max-width: var(--viewport-control) !important; 
         display: flex !important;
-        margin-left: calc(var(--navbar-section-gap) * 0.5) !important;
-        align-items: flex-start !important; /* ✅ Alineación izquierda */
+        align-items: stretch !important;
+        justify-content: flex-start !important;
+        margin: 0 !important;
+        gap: 0 !important;
+        padding: 0 !important;
     }
 }
 
-/* ✅ SOLUCIÓN 3: Corrección de z-index y overflow para dropdowns */
+/* ✅ SOLUCIÓN 3: Corrección de z-index */
 .navbar-nav .dropdown-menu {
     z-index: 1050 !important;
     overflow: visible !important;
@@ -1590,7 +1734,6 @@ body {
     z-index: 1052 !important;
 }
 
-/* ✅ Asegurar que los dropdowns sean visibles */
 .dropdown-menu {
     display: none;
     opacity: 0;
@@ -1606,7 +1749,6 @@ body {
     transform: translateY(0) !important;
 }
 
-/* ✅ Hover para dropdowns en desktop */
 @media (min-width: 992px) {
     .navbar-nav .dropdown:hover > .dropdown-menu {
         display: block !important;
@@ -1656,7 +1798,6 @@ body {
 /* ✅ FIXES FINALES PARA GARANTIZAR FUNCIONAMIENTO === */
 /* ================================================== */
 
-/* Asegurar que el menú principal sea visible en desktop */
 @media (min-width: 992px) {
     .navbar-expand-lg .navbar-collapse {
         display: flex !important;
@@ -1664,7 +1805,6 @@ body {
         width: 100% !important;
     }
     
-    /* Forzar visibilidad del menú */
     .navbar-menu-section,
     .main-navigation,
     .navbar-nav {
@@ -1673,24 +1813,21 @@ body {
         opacity: 1 !important;
     }
     
-    /* Asegurar que los enlaces sean clickeables */
     .main-navigation .nav-link {
         pointer-events: auto !important;
         cursor: pointer !important;
     }
     
-    /* ✅ CORRECCIÓN ESPECÍFICA PARA LA SECCIÓN DE CONTROL */
     .navbar-control-section {
         display: flex !important;
         visibility: visible !important;
         opacity: 1 !important;
-        align-items: flex-start !important; /* ✅ Alineación izquierda */
+        align-items: stretch !important;
     }
     
-    /* ✅ CORRECCIÓN PARA REDES SOCIALES */
     .navbar-social-section {
         display: flex !important;
-        justify-content: flex-start !important; /* ✅ Alineación izquierda */
+        justify-content: flex-start !important;
     }
 }
 
@@ -1714,14 +1851,13 @@ body {
 
 /* ✅ ESTILOS DE DEBUG (OPCIONAL) */
 .debug-navbar .navbar-contextual { outline: 2px solid red !important; }
-.debug-navbar .navbar-container { outline: 2px solid blue !important; }
 .debug-navbar .navbar-menu-section { outline: 2px solid green !important; }
 .debug-navbar .main-navigation { outline: 2px solid orange !important; }
 .debug-navbar .dropdown-menu { outline: 2px solid yellow !important; }
 .debug-navbar .navbar-control-section { outline: 2px solid cyan !important; background: rgba(0,255,255,0.1) !important; }
 .debug-navbar .navbar-social-section { outline: 2px solid magenta !important; background: rgba(255,0,255,0.1) !important; }
 
-/* ✅ FIX DE EMERGENCIA: Si el menú sigue oculto */
+/* ✅ FIX DE EMERGENCIA */
 .navbar-contextual .navbar-collapse,
 .navbar-contextual .navbar-menu-section,
 .navbar-contextual .main-navigation,
@@ -1742,10 +1878,10 @@ main#main {
 /* ✅ SIDEBAR DE MÓDULOS (para compatibilidad) */
 .sidebar-module-wrapper {
   position: fixed;
-  top: 70px;
+  top: var(--navbar-container-height) !important;
   left: 0;
   width: 250px;
-  height: calc(100vh - 70px);
+  height: calc(100vh - var(--navbar-container-height)) !important;
   background: #f8f9fa;
   border-right: 1px solid #dee2e6;
   z-index: 100;
@@ -1756,7 +1892,7 @@ main#main {
 .main-content-with-sidebar {
   margin-left: 250px;
   padding: 20px 30px;
-  min-height: calc(100vh - 70px);
+  min-height: calc(100vh - var(--navbar-container-height)) !important;
   transition: margin-left 0.3s;
 }
 
@@ -1774,48 +1910,35 @@ main#main {
 
 /* ✅ AJUSTES PARA PANTALLAS MUY ANCHAS */
 @media (min-width: 1400px) {
+  /* ✅ RE-CALCULAR VARIABLES PARA PANTALLAS GRANDES */
+  :root {
+    --viewport-brand: 13.33% !important;    /* 13.33% de 90% = 12% del viewport */
+    --viewport-menu: 45% !important;        /* 45% de 90% = 40.5% del viewport */
+    --viewport-social: 5% !important;       /* 5% de 90% = 4.5% del viewport */
+    --viewport-control: 20% !important;     /* 20% de 90% = 18% del viewport */
+    --navbar-section-gap: 1.5% !important;
+  }
+  
   .session-controls {
-    gap: 15px !important;
+    gap: 8px !important;
   }
   
   .session-controls .btn {
-    padding: 12px 18px !important;
-    font-size: 1rem !important;
+    padding: 10px 14px !important; /* ✅ AJUSTE: padding mayor */
+    font-size: 1rem !important; /* ✅ AJUSTE: fuente mayor */
   }
   
   .school-info,
   .user-info {
-    padding: 15px 18px !important;
-    font-size: 0.9rem !important;
-    text-align: left !important; /* ✅ Alineación izquierda */
+    padding: 12px 14px !important; /* ✅ AJUSTE: padding mayor */
+    font-size: 1rem !important; /* ✅ AJUSTE: fuente mayor */
+    text-align: left !important;
   }
   
-  /* Mantener espacio reducido */
-  :root {
-    --navbar-section-gap: 1.5% !important;
-  }
-  
-  /* Ajustar iconos sociales para pantallas grandes */
   .social-icon-circle {
-    width: 32px !important;
-    height: 32px !important;
-    font-size: 0.9rem !important;
-  }
-  
-  /* Mantener proporción para pantallas grandes */
-  .navbar-social-section {
-    flex: 0 0 5% !important; /* ✅ MANTIENE 5% */
-    max-width: 5% !important;
-  }
-  
-  .navbar-control-section {
-    flex: 0 0 28% !important;
-    max-width: 28% !important;
-  }
-  
-  .navbar-menu-section {
-    flex: 0 0 55% !important; /* Ajustado a 55% en pantallas grandes */
-    max-width: 55% !important;
+    width: 36px !important; /* ✅ AJUSTE: iconos más grandes */
+    height: 36px !important;
+    font-size: 1rem !important; /* ✅ AJUSTE: fuente mayor */
   }
 }
 
@@ -1825,20 +1948,19 @@ main#main {
     --navbar-section-gap: 1.5% !important;
   }
   
-  /* Ajustar iconos sociales */
   .social-icon-circle {
-    width: 30px !important;
-    height: 30px !important;
-    font-size: 0.85rem !important;
+    width: 32px !important; /* ✅ AJUSTE: iconos más grandes */
+    height: 32px !important;
+    font-size: 0.9rem !important; /* ✅ AJUSTE: fuente mayor */
   }
   
   .social-icons-vertical {
-    gap: 8px !important;
-    align-items: flex-start !important; /* ✅ Alineación izquierda */
+    gap: 6px !important;
+    align-items: flex-start !important;
   }
 }
 
-/* ===== DEBUG DE ANCHO - VERIFICAR QUE BODY OCUPE 100% ===== */
+/* ===== DEBUG DE ANCHO ===== */
 .debug-width-check body::after {
     content: '';
     position: fixed;
@@ -1864,291 +1986,614 @@ main#main {
     z-index: 9999;
     pointer-events: none;
 }
+
 /* ================================================== */
-/* CORRECCIONES URGENTES PARA NAVBAR EN UNA LÍNEA     */
+/* ✅ VERIFICADOR VISUAL DE LA ESTRUCTURA ============ */
 /* ================================================== */
 
-/* ✅ ESTRUCTURA CORREGIDA PARA ESCRITORIO */
+.debug-structure .navbar-contextual {
+    background: linear-gradient(90deg, 
+        rgba(255,0,0,0.1) var(--viewport-brand), 
+        rgba(0,255,0,0.1) calc(var(--viewport-brand) + var(--viewport-menu)), 
+        rgba(0,0,255,0.1) calc(var(--viewport-brand) + var(--viewport-menu) + var(--viewport-social)), 
+        rgba(255,255,0,0.1) calc(var(--viewport-brand) + var(--viewport-menu) + var(--viewport-social) + var(--viewport-control))
+    ) !important;
+}
+
+.debug-structure .navbar-brand-section { background: rgba(255,0,0,0.3) !important; }
+.debug-structure .navbar-menu-section { background: rgba(0,255,0,0.3) !important; }
+.debug-structure .navbar-social-section { background: rgba(0,0,255,0.3) !important; }
+.debug-structure .navbar-control-section { background: rgba(255,255,0,0.3) !important; }
+
+/* ================================================== */
+/* ✅ PADDING INTERNO PARA SECCIÓN CONTROL OPTIMIZADO == */
+/* ================================================== */
+
 @media (min-width: 992px) {
-    .navbar-container {
-        display: flex !important;
-        flex-wrap: nowrap !important;
-        align-items: center !important;
-        justify-content: space-between !important;
-        width: 100% !important;
-        max-width: 100% !important;
-        padding: 0 30px !important;
-        margin: 0 auto !important;
+    .navbar-control-section {
+        padding: 0 !important;
         box-sizing: border-box !important;
-        overflow: visible !important;
     }
-    
-    .navbar-content-wrapper {
+}
+
+@media (max-width: 1199.98px) and (min-width: 992px) {
+    .navbar-control-section {
+        padding: 0 !important;
+    }
+}
+
+/* ===== ✅ CORRECCIÓN FINAL DE SECCIÓN CONTROL ===== */
+@media (min-width: 992px) {
+    .navbar-control-section {
         display: flex !important;
-        flex-wrap: nowrap !important;
-        align-items: center !important;
-        justify-content: flex-end !important;
-        flex-grow: 1 !important;
-        width: auto !important;
-        min-width: 0 !important;
-        gap: 20px !important;
+        align-items: stretch !important;
+        justify-content: flex-start !important;
+        gap: 0 !important;
+        width: 100% !important;
+        min-height: var(--navbar-container-height) !important;
+        padding: 0 !important;
     }
     
-    /* ✅ LOGO Y TOGGLER EN MISMA SECCIÓN */
-    .navbar-brand-section {
-        display: flex !important;
-        align-items: center !important;
-        gap: 15px !important;
-        flex-shrink: 0 !important;
-        min-width: 120px !important;
-        justify-content: flex-start !important; /* ✅ Alineación izquierda */
-    }
-    
-    /* ✅ MENÚ PRINCIPAL - FLEXIBLE, ALINEACIÓN IZQUIERDA */
-    .navbar-menu-section {
-        flex: 1 1 auto !important;
-        min-width: 0 !important;
+    /* Asegurar que todos los elementos dentro de control-section ocupen todo el ancho */
+    .navbar-control-section > * {
+        width: 100% !important;
         max-width: 100% !important;
-        display: flex !important;
-        justify-content: flex-start !important; /* ✅ Alineación izquierda */
-        margin: 0 !important;
-        padding: 0 !important;
-    }
-    
-    .navbar-menu-section .main-navigation {
-        display: flex !important;
-        flex-wrap: nowrap !important;
-        justify-content: flex-start !important; /* ✅ Alineación izquierda */
-        width: 100% !important;
-        margin: 0 !important;
-        padding: 0 !important;
-    }
-    
-    /* ✅ REDES SOCIALES - COMPACTO (5%), ALINEACIÓN IZQUIERDA */
-    .navbar-social-section {
+        box-sizing: border-box !important;
+        margin-left: 0 !important;
+        margin-right: 0 !important;
         flex-shrink: 0 !important;
-        min-width: 60px !important;
-        max-width: 80px !important;
-        margin: 0 !important;
-        justify-content: flex-start !important; /* ✅ Alineación izquierda */
     }
     
-    /* ✅ CONTROL DE USUARIO - COMPACTO, ALINEADO A LA IZQUIERDA */
-    .navbar-control-section {
-        flex-shrink: 0 !important;
-        min-width: 250px !important;
-        max-width: 300px !important;
-        margin: 0 !important;
-        align-items: flex-start !important; /* ✅ Alineación izquierda */
+    /* Orden específico de los elementos */
+    .school-info {
+        order: 1 !important;
     }
     
-    .control-content {
-        display: flex !important;
-        flex-direction: column !important;
-        gap: 8px !important;
-        width: 100% !important;
-        align-items: flex-start !important; /* ✅ Alineación izquierda */
-        text-align: left !important;
+    .escuela-activa-indicator {
+        order: 2 !important;
     }
     
-    /* ✅ ELIMINAR OVERFLOW OCULTO */
-    .navbar-collapse.collapse:not(.show) {
-        display: flex !important;
-        flex-basis: auto !important;
-        flex-grow: 1 !important;
-    }
-    
-    /* ✅ GARANTIZAR QUE TODO ESTÉ VISIBLE */
-    .navbar-menu-section,
-    .navbar-social-section,
-    .navbar-control-section {
-        display: flex !important;
-        opacity: 1 !important;
-        visibility: visible !important;
-        position: relative !important;
-        z-index: 1030 !important;
-    }
-}
-
-/* ✅ CORRECCIÓN ESPECÍFICA PARA EL PROBLEMA DE 2 LÍNEAS */
-.navbar-brand-section {
-    display: flex !important;
-    align-items: center !important;
-    flex-shrink: 0 !important;
-}
-
-.navbar-toggler {
-    order: 2 !important;
-    margin-left: 15px !important;
-}
-
-/* ✅ REMOVER CUALQUIER FLEX-WRAP QUE CAUSA RUPTURA */
-.navbar-contextual > .container-fluid,
-.navbar-contextual .navbar-collapse,
-.navbar-contextual .navbar-container,
-.navbar-content-wrapper {
-    flex-wrap: nowrap !important;
-    white-space: nowrap !important;
-}
-
-/* ✅ AJUSTES PARA MÓVIL */
-@media (max-width: 991.98px) {
-    .navbar-container {
-        padding: 0 15px !important;
-    }
-    
-    .navbar-content-wrapper {
-        flex-direction: column !important;
-        gap: 15px !important;
-        padding: 15px 0 !important;
-    }
-    
-    .navbar-social-section {
+    .school-search-container {
         order: 3 !important;
     }
     
-    .navbar-control-section {
-        order: 2 !important;
-        width: 100% !important;
-        max-width: 100% !important;
+    .user-info {
+        order: 4 !important;
     }
     
-    .control-content {
-        flex-direction: row !important;
-        flex-wrap: wrap !important;
-        justify-content: center !important;
-        gap: 10px !important;
+    .session-controls {
+        order: 5 !important;
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 6px !important;
+        width: 100% !important;
+    }
+    
+    /* Botones de sesión en columna */
+    .session-controls .btn {
+        width: 100% !important;
+        margin-bottom: 4px !important;
+        text-align: center !important;
+    }
+    
+    .session-controls .btn:last-child {
+        margin-bottom: 0 !important;
+    }
+    
+    /* Corrección específica para tablets (1199px a 992px) */
+    @media (max-width: 1199.98px) and (min-width: 992px) {
+        .navbar-control-section {
+            gap: 0 !important;
+            padding: 0 !important;
+        }
+        
+        .school-info,
+        .escuela-activa-indicator,
+        .school-search-container,
+        .user-info {
+            padding: 8px 10px !important; /* ✅ AJUSTE: padding mayor */
+            font-size: 0.85rem !important; /* ✅ AJUSTE: fuente mayor */
+        }
+        
+        .session-controls .btn {
+            padding: 7px 10px !important; /* ✅ AJUSTE: padding mayor */
+            font-size: 0.85rem !important; /* ✅ AJUSTE: fuente mayor */
+        }
+        
+        .social-icon-circle {
+            width: 30px !important; /* ✅ AJUSTE: iconos más grandes */
+            height: 30px !important;
+            font-size: 0.85rem !important; /* ✅ AJUSTE: fuente mayor */
+        }
+    }
+}
+
+/* ===== ✅ CORRECCIÓN PARA EVITAR SUPERPOSICIÓN ===== */
+@media (min-width: 992px) {
+    .navbar-control-section {
+        position: relative !important;
+        z-index: 1030 !important;
+        overflow-y: auto !important;
+        overflow-x: hidden !important;
+        max-height: var(--navbar-container-height) !important;
+    }
+    
+    /* Estilos para la barra de scroll */
+    .navbar-control-section::-webkit-scrollbar {
+        width: 4px !important;
+    }
+    
+    .navbar-control-section::-webkit-scrollbar-track {
+        background: rgba(255, 255, 255, 0.05) !important;
+        border-radius: 2px !important;
+    }
+    
+    .navbar-control-section::-webkit-scrollbar-thumb {
+        background: rgba(255, 255, 255, 0.2) !important;
+        border-radius: 2px !important;
+    }
+    
+    .navbar-control-section::-webkit-scrollbar-thumb:hover {
+        background: rgba(255, 255, 255, 0.3) !important;
+    }
+}
+
+/* ===== ✅ FIX ESPECÍFICO PARA EL BUSCADOR DE ESCUELAS ===== */
+.school-search-container {
+    position: relative !important;
+    width: 100% !important;
+    display: block !important;
+}
+
+.school-search-container .input-group {
+    display: flex !important;
+    flex-direction: column !important;
+    width: 100% !important;
+    gap: 5px !important;
+}
+
+.school-search-container .form-control {
+    width: 100% !important;
+    margin-bottom: 0 !important;
+}
+
+.school-search-container .btn {
+    width: 100% !important;
+    margin-top: 0 !important;
+}
+
+/* ===== ✅ AJUSTE DE ALTURA MÍNIMA PARA CONTENIDO ===== */
+@media (min-width: 992px) {
+    .navbar-control-section .control-content-wrapper {
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 6px !important;
+        width: 100% !important;
+        min-height: 40vh !important; /* ✅ AJUSTE: 40vh (un poco menos que el navbar) */
+    }
+}
+
+/* ===== ✅ DEBUG VISUAL (OPCIONAL) ===== */
+.debug-control-section .navbar-control-section > * {
+    border: 1px solid rgba(255, 255, 255, 0.3) !important;
+    background: rgba(255, 255, 255, 0.05) !important;
+    margin-bottom: 5px !important;
+    border-radius: 4px !important;
+}
+
+.debug-control-section .navbar-control-section::before {
+    content: 'Elementos: ' attr(data-count);
+    position: absolute;
+    top: -20px;
+    right: 0;
+    background: rgba(0, 0, 0, 0.7);
+    color: white;
+    padding: 2px 8px;
+    font-size: 10px;
+    border-radius: 3px;
+    z-index: 9999;
+}
+
+/* ===== ✅ RESET DE VARIABLES EN MÓVIL ===== */
+@media (max-width: 991.98px) {
+    :root {
+        --viewport-brand: auto !important;
+        --viewport-menu: 100% !important;
+        --viewport-social: 100% !important;
+        --viewport-control: 100% !important;
+        --viewport-gap: 0 !important;
     }
 }
 
 /* ================================================== */
-/* ✅ ALTURA MÍNIMA DE 45vh PARA NAVBAR               */
+/* ✅ AJUSTES FINALES PARA DISTRIBUCIÓN PERFECTA ===== */
 /* ================================================== */
 
-/* ✅ EN PC: ALTURA MÍNIMA 45vh Y RESPONSIVA */
 @media (min-width: 992px) {
-    .navbar-contextual {
-        min-height: 45vh !important;  /* Altura mínima garantizada */
-        height: auto !important;
-        max-height: 25vh !important;  /* Límite máximo opcional */
+    /* ✅ GARANTIZAR QUE TODO QUEPA EN UNA LÍNEA */
+    .navbar-contextual > .container-fluid {
+        display: flex !important;
+        flex-wrap: nowrap !important;
+        align-items: stretch !important;
+        justify-content: space-between !important;
+        width: 100% !important;
+        padding: 0 !important;
+        margin: 0 !important;
     }
     
-    .navbar-contextual.scrolled {
-        min-height: 45vh !important;  /* Mantener misma altura al hacer scroll */
-        height: auto !important;
-    }
-    
-    /* ✅ AJUSTAR BODY PADDING PARA COMPENSAR */
-    body {
-        padding-top: 45vh !important;
-        min-height: 100vh;
-    }
-    
-    /* ✅ AJUSTAR ALTURA DEL CONTENIDO PRINCIPAL */
-    main#main, 
-    .main-content-wrapper, 
-    .ged-main-content,
-    .ged-main-content-wrapper > .container {
-        min-height: calc(100vh - 45vh) !important;
-    }
-    
-    /* ✅ AJUSTAR LOGO PARA SER RESPONSIVO DENTRO DEL 45vh */
-    .navbar-logo {
-        max-height: calc(45vh - 30px) !important; /* Altura dinámica */
-        height: auto !important;
-        width: auto !important;
-    }
-    
-    /* ✅ AJUSTAR SECCIONES DEL NAVBAR PARA ALTURA 45vh */
+    /* ✅ VERIFICACIÓN DE ANCHOS TOTALES */
     .navbar-brand-section,
     .navbar-menu-section,
     .navbar-social-section,
     .navbar-control-section {
-        min-height: 45vh !important;
-        height: 100% !important;
+        flex-shrink: 0 !important;
+        flex-grow: 0 !important;
+        white-space: nowrap !important;
     }
     
-    /* ✅ CENTRAR VERTICALMENTE TODO EL CONTENIDO */
-    .navbar-container,
-    .navbar-content-wrapper,
-    .main-navigation,
-    .social-icons-vertical,
-    .session-controls {
+    /* ✅ ESPACIO ENTRE ELEMENTOS DEL MENÚ */
+    .main-navigation {
         display: flex !important;
-        align-items: center !important;
-        height: 100% !important;
+        flex-wrap: nowrap !important;
+        overflow-x: auto !important;
+        overflow-y: hidden !important;
+        -webkit-overflow-scrolling: touch !important;
+        scrollbar-width: none !important; /* Firefox */
+        -ms-overflow-style: none !important; /* IE 10+ */
+    }
+    
+    .main-navigation::-webkit-scrollbar {
+        display: none !important; /* Chrome, Safari, Opera */
     }
 }
 
-/* ✅ EN TABLETS (992px a 1199px) */
-@media (max-width: 1199.98px) and (min-width: 992px) {
+/* ✅ FIX DE ULTIMO MOMENTO PARA GARANTIZAR UNA SOLA LÍNEA */
+@media (min-width: 992px) {
     .navbar-contextual {
-        min-height: 45vh !important;
-        height: auto !important;
+        display: flex !important;
+        flex-wrap: nowrap !important;
+        white-space: nowrap !important;
+        overflow: hidden !important;
     }
     
-    body {
-        padding-top: 45vh !important;
+    .navbar-contextual > .container-fluid {
+        flex-wrap: nowrap !important;
+        white-space: nowrap !important;
     }
     
-    main#main {
-        min-height: calc(100vh - 45vh) !important;
+    /* ✅ FORZAR QUE TODOS LOS ELEMENTOS ESTÉN EN LÍNEA */
+    .navbar-brand-section,
+    .navbar-menu-section,
+    .navbar-social-section,
+    .navbar-control-section,
+    .main-navigation,
+    .navbar-nav,
+    .nav-item,
+    .nav-link {
+        white-space: nowrap !important;
+        display: inline-flex !important;
     }
 }
 
-/* ✅ EN MÓVIL: MANTENER ALTURAS FIJAS (NO APLICAR 45vh) */
+/* ✅ MEDIA QUERY PARA PANTALLAS EXTRA GRANDES */
+@media (min-width: 1600px) {
+    .main-navigation .nav-link {
+        padding: 12px 18px !important; /* ✅ AJUSTE: padding mayor */
+        font-size: 1.1rem !important; /* ✅ AJUSTE: fuente mayor */
+    }
+    
+    .social-icon-circle {
+        width: 38px !important; /* ✅ AJUSTE: iconos más grandes */
+        height: 38px !important;
+        font-size: 1.1rem !important; /* ✅ AJUSTE: fuente mayor */
+    }
+    
+    .session-controls .btn {
+        padding: 12px 16px !important; /* ✅ AJUSTE: padding mayor */
+        font-size: 1rem !important; /* ✅ AJUSTE: fuente mayor */
+    }
+}
+
+/* ✅ VERSIÓN DEL ARCHIVO EN COMENTARIO FINAL */
+/* 
+ * DISTRIBUCIÓN VERIFICADA:
+ * - Viewport total: 100%
+ * - Navbar: 90% del viewport
+ * - Sección Control: 20% del navbar (18% del viewport)
+ * - Altura mínima del navbar: 45vh
+ * - Todas las secciones en una sola línea en desktop
+ * - Optimización para todos los dispositivos
+ */
+
+/* ================================================== */
+/* ✅ SOLUCIÓN DEFINITIVA - NAVBAR EN UNA LÍNEA (AGREGADO) */
+/* ================================================== */
+
+/* ✅ CONTENEDOR PRINCIPAL CON FLEX EN LÍNEA */
+.navbar-container {
+    display: flex !important;
+    flex-direction: row !important;
+    flex-wrap: nowrap !important;
+    align-items: stretch !important;
+    justify-content: flex-start !important;
+    width: 100% !important;
+    height: var(--navbar-container-height) !important;
+    min-height: var(--navbar-container-height) !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    gap: 0 !important;
+    box-sizing: border-box !important;
+}
+
+/* ✅ CONTENEDOR DE SECCIONES DENTRO DEL COLLAPSE */
+.navbar-sections-container {
+    display: flex !important;
+    flex-direction: row !important;
+    flex-wrap: nowrap !important;
+    align-items: stretch !important;
+    justify-content: flex-start !important;
+    width: 100% !important;
+    height: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    gap: 0 !important;
+    box-sizing: border-box !important;
+}
+
+/* ✅ EL COLLAPSE DEBE SER FLEX Y OCUPAR ESPACIO */
+.navbar-collapse {
+    display: flex !important;
+    flex-grow: 1 !important;
+    flex-basis: auto !important;
+    width: auto !important;
+    min-width: 0 !important;
+    height: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    box-sizing: border-box !important;
+}
+
+/* ✅ TODAS LAS SECCIONES OCUPAN 100% DE ALTURA */
+.navbar-brand-section,
+.navbar-menu-section,
+.navbar-social-section,
+.navbar-control-section {
+    height: 100% !important;
+    min-height: 100% !important;
+    display: flex !important;
+    align-items: center !important;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+/* ✅ ELIMINAR TODOS LOS MÁRGENES Y PADDINGS INTERNOS */
+.navbar-contextual,
+.navbar-container,
+.navbar-sections-container,
+.navbar-collapse,
+.navbar-brand-section,
+.navbar-menu-section,
+.navbar-social-section,
+.navbar-control-section {
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+}
+
+/* ✅ FORZAR ANCHOS EXACTOS EN DESKTOP */
+@media (min-width: 992px) {
+    .navbar-brand-section {
+        flex: 0 0 var(--viewport-brand) !important;
+        min-width: var(--viewport-brand) !important;
+        max-width: var(--viewport-brand) !important;
+    }
+    
+    .navbar-menu-section {
+        flex: 0 0 var(--viewport-menu) !important;
+        min-width: var(--viewport-menu) !important;
+        max-width: var(--viewport-menu) !important;
+    }
+    
+    .navbar-social-section {
+        flex: 0 0 var(--viewport-social) !important;
+        min-width: var(--viewport-social) !important;
+        max-width: var(--viewport-social) !important;
+    }
+    
+    .navbar-control-section {
+        flex: 0 0 var(--viewport-control) !important;
+        min-width: var(--viewport-control) !important;
+        max-width: var(--viewport-control) !important;
+    }
+}
+
+/* ✅ CORRECCIÓN ESPECÍFICA PARA EL MENÚ */
+.main-navigation {
+    height: 100% !important;
+    align-items: center !important;
+}
+
+.main-navigation .nav-link {
+    height: auto !important;
+    display: flex !important;
+    align-items: center !important;
+}
+
+/* ✅ CORRECCIÓN PARA CONTENIDO INTERNO */
+.control-content {
+    width: 100% !important;
+    height: 100% !important;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: center !important;
+    padding: 5px 0 !important;
+    box-sizing: border-box !important;
+}
+
+/* ✅ FIX PARA MÓVIL */
 @media (max-width: 991.98px) {
-    /* Ya tiene alturas fijas que funcionan mejor en móvil */
-    .navbar-contextual {
-        min-height: 60px !important; /* Se mantiene fijo */
-        height: 60px !important;
-    }
-    
-    body {
-        padding-top: 60px !important;
-    }
-    
-    main#main {
-        min-height: calc(100vh - 60px) !important;
-    }
-}
-
-/* ✅ PANTALLAS MUY ALTAS: LIMITAR ALTURA MÁXIMA */
-@media (min-height: 1200px) {
-    .navbar-contextual {
-        min-height: 200px !important; /* Máximo equivalente a ~45vh en pantallas muy altas */
-        max-height: 200px !important;
-    }
-    
-    body {
-        padding-top: 200px !important;
-    }
-}
-
-/* ✅ PANTALLAS MUY BAJAS: GARANTIZAR VISIBILIDAD */
-@media (max-height: 500px) {
-    .navbar-contextual {
-        min-height: 85px !important; /* Mínimo para pantallas muy bajas */
+    .navbar-container {
+        flex-wrap: wrap !important;
         height: auto !important;
     }
     
-    body {
-        padding-top: 85px !important;
+    .navbar-sections-container {
+        flex-direction: column !important;
+        height: auto !important;
+    }
+    
+    .navbar-brand-section,
+    .navbar-menu-section,
+    .navbar-social-section,
+    .navbar-control-section {
+        height: auto !important;
+        width: 100% !important;
+        min-width: 100% !important;
+        max-width: 100% !important;
+    }
+}
+/* ================================================== */
+/* ✅ SOLUCIÓN DEFINITIVA Z-INDEX PARA SUBMENÚS ====== */
+/* ================================================== */
+
+/* ✅ FORZAR CONTEXTO DE APILAMIENTO CORRECTO */
+.navbar-contextual {
+    position: fixed !important;
+    z-index: 1030 !important;
+    overflow: visible !important;
+    isolation: auto !important;
+}
+
+/* ✅ NAVBAR CONTENEDORES - VISIBLES */
+.navbar-container,
+.navbar-sections-container,
+.navbar-collapse,
+.navbar-menu-section {
+    overflow: visible !important;
+}
+
+/* ✅ CONTENEDORES DE DROPDOWN - CONTEXTO SUPERIOR */
+.nav-item.dropdown {
+    position: relative !important;
+    z-index: 1100 !important;
+}
+
+/* ✅ DROPDOWN MENU PRINCIPAL */
+.navbar-nav .dropdown-menu {
+    z-index: 1110 !important;
+    position: absolute !important;
+    top: 100% !important;
+    left: 0 !important;
+    margin-top: 0 !important;
+    opacity: 0 !important;
+    visibility: hidden !important;
+    transform: translateY(10px) !important;
+    transition: all 0.3s ease !important;
+    pointer-events: none !important;
+    will-change: transform, opacity;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+}
+
+/* ✅ DROPDOWN VISIBLE */
+.navbar-nav .dropdown-menu.show {
+    opacity: 1 !important;
+    visibility: visible !important;
+    transform: translateY(0) !important;
+    pointer-events: auto !important;
+    display: block !important;
+}
+
+/* ✅ HOVER EN DESKTOP */
+@media (min-width: 992px) {
+    .navbar-nav .dropdown:hover > .dropdown-menu {
+        opacity: 1 !important;
+        visibility: visible !important;
+        transform: translateY(0) !important;
+        pointer-events: auto !important;
+        display: block !important;
+    }
+    
+    /* ✅ SUBMENÚS ANIDADOS (SEGUNDO NIVEL) */
+    .dropdown-menu .dropdown-menu {
+        z-index: 1120 !important;
+        position: absolute !important;
+        left: 100% !important;
+        top: 0 !important;
+        margin-left: 0 !important;
+        margin-top: 0 !important;
+    }
+    
+    /* ✅ TERCER NIVEL */
+    .dropdown-menu .dropdown-menu .dropdown-menu {
+        z-index: 1130 !important;
+    }
+    
+    /* ✅ ANIMACIÓN SUAVE */
+    .navbar-nav .dropdown-menu {
+        animation: dropdownFadeIn 0.3s ease-out !important;
+    }
+    
+    .dropdown-menu .dropdown-menu {
+        animation: dropdownFadeIn 0.2s ease-out !important;
     }
 }
 
-/* ✅ VERIFICADOR VISUAL DE ALTURA (OPCIONAL PARA DEBUG) */
-.debug-navbar-height::before {
-    content: 'Altura: ' attr(data-height);
-    position: fixed;
-    top: 5px;
-    left: 50%;
-    transform: translateX(-50%);
-    background: rgba(255, 0, 0, 0.8);
-    color: white;
-    padding: 5px 10px;
-    border-radius: 3px;
-    font-size: 12px;
-    z-index: 9999;
-    pointer-events: none;
+/* ✅ ANIMACIÓN PERSONALIZADA */
+@keyframes dropdownFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
+
+/* ✅ CORRECCIÓN ESPECÍFICA PARA BOOTSTRAP 5 */
+[data-bs-toggle="dropdown"] {
+    position: relative !important;
+    z-index: 1100 !important;
+}
+
+/* ✅ GARANTIZAR QUE LOS SUBMENÚS NO SEAN CORTADOS */
+.dropdown-menu {
+    transform: none !important;
+    overflow: visible !important;
+}
+
+/* ✅ FIX DE EMERGENCIA - Z-INDEX MÁXIMO PARA DROPDOWNS ACTIVOS */
+.dropdown-menu.show {
+    z-index: 9999 !important;
+}
+
+/* ✅ PREVENIR HERENCIA DE PROPIEDADES */
+.navbar-menu-section,
+.navbar-menu-section > *,
+.main-navigation,
+.main-navigation > * {
+    overflow: visible !important;
+}
+
+/* ================================================== */
+/* ✅ DEBUG VISUAL (OPCIONAL) - SOLO ACTIVAR SI NECESITAS DEBUG */
+/* ================================================== */
+
+/* 
+.debug-dropdown .dropdown-menu {
+    border: 3px solid #ff0000 !important;
+    background: rgba(255, 0, 0, 0.05) !important;
+}
+
+.debug-dropdown .dropdown-menu .dropdown-menu {
+    border: 3px solid #00ff00 !important;
+    background: rgba(0, 255, 0, 0.05) !important;
+}
+
+.debug-dropdown .dropdown-menu .dropdown-menu .dropdown-menu {
+    border: 3px solid #0000ff !important;
+    background: rgba(0, 0, 255, 0.05) !important;
+}
+*/

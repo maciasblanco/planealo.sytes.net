@@ -19,13 +19,15 @@ $showSignupButton = !Yii::$app->user->isGuest ? false : (!$isSignupRoute && !$is
 ?>
 
 <!-- ================================================== -->
-<!-- NAVBAR CORREGIDO - ESTRUCTURA SIMPLIFICADA -->
+<!-- NAVBAR CORREGIDO - TODAS LAS SECCIONES EN UNA LÍNEA -->
+<!-- Estructura: 100vw → 90% contenedor → 12%|40.5%|4.5%|18% -->
 <!-- ================================================== -->
 <nav class="navbar navbar-contextual navbar-expand-lg fixed-top" id="main-navbar" aria-label="Navegación principal">
-    <div class="navbar-container container-fluid px-4">
+    <!-- ✅ CONTENEDOR PRINCIPAL (90% del ancho total) - FLEX EN LÍNEA -->
+    <div class="navbar-container d-flex align-items-stretch w-100">
         
-        <!-- ✅ LOGO (15%) - EN LÍNEA CON EL RESTO -->
-        <div class="navbar-brand-section">
+        <!-- ✅ LOGO (12%) - EN LÍNEA CON EL RESTO -->
+        <div class="navbar-brand-section d-flex align-items-center">
             <a class="navbar-brand" href="<?= Yii::$app->homeUrl ?>" 
                title="Inicio - Sistema GED"
                onclick="return !<?= $isIndexRoute ? 'true' : 'false' ?>;">
@@ -40,24 +42,24 @@ $showSignupButton = !Yii::$app->user->isGuest ? false : (!$isSignupRoute && !$is
                     <small>Sistema Deportivo</small>
                 </div>
             </a>
-            
-            <!-- TOGGLER PARA MÓVIL (DENTRO DE LA MISMA SECCIÓN) -->
-            <button class="navbar-toggler d-lg-none" type="button" 
-                    data-bs-toggle="collapse"
-                    data-bs-target="#navbarContent"
-                    aria-controls="navbarContent"
-                    aria-expanded="false"
-                    aria-label="Alternar navegación">
-                <span class="navbar-toggler-icon"></span>
-            </button>
         </div>
+        
+        <!-- ✅ TOGGLER PARA MÓVIL (SOLO EN MÓVIL) -->
+        <button class="navbar-toggler d-lg-none ms-auto" type="button" 
+                data-bs-toggle="collapse"
+                data-bs-target="#navbarContent"
+                aria-controls="navbarContent"
+                aria-expanded="false"
+                aria-label="Alternar navegación">
+            <span class="navbar-toggler-icon"></span>
+        </button>
 
-        <!-- ✅ CONTENIDO DEL NAVBAR (85%) - EN LÍNEA -->
+        <!-- ✅ CONTENIDO DEL NAVBAR (88%) - EN LÍNEA EN DESKTOP -->
         <div class="collapse navbar-collapse show" id="navbarContent">
-            <div class="navbar-content-wrapper">
+            <div class="navbar-sections-container d-flex align-items-stretch flex-grow-1">
                 
-                <!-- MENÚ PRINCIPAL -->
-                <div class="navbar-menu-section">
+                <!-- MENÚ PRINCIPAL (40.5%) -->
+                <div class="navbar-menu-section d-flex align-items-center">
                     <?= \app\components\MenuWidget::widget([
                         'options' => [
                             'class' => 'navbar-nav main-navigation',
@@ -67,8 +69,8 @@ $showSignupButton = !Yii::$app->user->isGuest ? false : (!$isSignupRoute && !$is
                     ]) ?>
                 </div>
                 
-                <!-- REDES SOCIALES -->
-                <div class="navbar-social-section">
+                <!-- REDES SOCIALES (4.5%) -->
+                <div class="navbar-social-section d-flex align-items-center">
                     <div class="social-icons-vertical" aria-label="Redes sociales">
                         <a href="#" class="social-icon-circle" title="Facebook" aria-label="Facebook">
                             <i class="bi bi-facebook" aria-hidden="true"></i>
@@ -85,11 +87,11 @@ $showSignupButton = !Yii::$app->user->isGuest ? false : (!$isSignupRoute && !$is
                     </div>
                 </div>
                 
-                <!-- CONTROL DE USUARIO Y ESCUELA -->
-                <div class="navbar-control-section">
-                    <div class="control-content">
+                <!-- CONTROL DE USUARIO Y ESCUELA (18%) -->
+                <div class="navbar-control-section d-flex align-items-center">
+                    <div class="control-content d-flex flex-column h-100 w-100">
                         <!-- INFORMACIÓN DE ESCUELA -->
-                        <div class="school-info">
+                        <div class="school-info flex-grow-1">
                             <?php if ($idEscuela && $idEscuela > 0): ?>
                                 <div class="escuela-activa-indicator">
                                     <small class="text-white d-block">
@@ -102,7 +104,7 @@ $showSignupButton = !Yii::$app->user->isGuest ? false : (!$isSignupRoute && !$is
                                 </div>
                                 
                                 <!-- SELECTOR DE ESCUELA -->
-                                <div class="nav-item dropdown">
+                                <div class="nav-item dropdown mt-1">
                                     <a class="nav-link text-white dropdown-toggle p-1" href="#" 
                                        id="navbarEscuelaDropdown" role="button" data-bs-toggle="dropdown" 
                                        aria-expanded="false" title="Cambiar Escuela" aria-label="Selector de escuela">
@@ -134,7 +136,7 @@ $showSignupButton = !Yii::$app->user->isGuest ? false : (!$isSignupRoute && !$is
                                 
                                 <!-- BOTÓN PARA SELECCIONAR ESCUELA -->
                                 <a href="<?= Url::to(['/ged/default/index']) ?>" 
-                                   class="btn btn-sm btn-outline-light w-100"
+                                   class="btn btn-sm btn-outline-light w-100 mt-1"
                                    title="Seleccionar escuela"
                                    aria-label="Seleccionar escuela">
                                     <i class="bi bi-building me-1" aria-hidden="true"></i>
@@ -144,12 +146,12 @@ $showSignupButton = !Yii::$app->user->isGuest ? false : (!$isSignupRoute && !$is
                         </div>
                         
                         <!-- CONTROL DE SESIÓN -->
-                        <div class="session-controls">
+                        <div class="session-controls flex-grow-1 d-flex flex-column justify-content-end">
                             <?php if (Yii::$app->user->isGuest): ?>
                                 <!-- USUARIO NO AUTENTICADO -->
-                                <div class="d-flex gap-1">
+                                <div class="d-flex gap-1 flex-wrap">
                                     <?php if ($showLoginButton): ?>
-                                    <a class="btn btn-sm btn-outline-light" 
+                                    <a class="btn btn-sm btn-outline-light flex-grow-1" 
                                        href="<?= Yii::$app->urlManager->createUrl(['/site/login']) ?>" 
                                        title="Iniciar sesión"
                                        aria-label="Iniciar sesión">
@@ -159,7 +161,7 @@ $showSignupButton = !Yii::$app->user->isGuest ? false : (!$isSignupRoute && !$is
                                     <?php endif; ?>
                                     
                                     <?php if ($showSignupButton): ?>
-                                    <a class="btn btn-sm btn-outline-light" 
+                                    <a class="btn btn-sm btn-outline-light flex-grow-1" 
                                        href="<?= Yii::$app->urlManager->createUrl(['/site/signup']) ?>" 
                                        title="Registrarse"
                                        aria-label="Crear cuenta">
@@ -170,7 +172,7 @@ $showSignupButton = !Yii::$app->user->isGuest ? false : (!$isSignupRoute && !$is
                                 </div>
                             <?php else: ?>
                                 <!-- USUARIO AUTENTICADO -->
-                                <div class="user-info text-end">
+                                <div class="user-info text-end mb-1">
                                     <small class="text-white d-block">
                                         <i class="bi bi-person-circle me-1" aria-hidden="true"></i>
                                         <?= Html::encode(mb_strimwidth(Yii::$app->user->identity->username ?? 'Usuario', 0, 20, '...')) ?>
@@ -197,15 +199,120 @@ $showSignupButton = !Yii::$app->user->isGuest ? false : (!$isSignupRoute && !$is
     </div>
 </nav>
 
-<!-- ✅ SCRIPT PARA DEBUG (OPCIONAL) -->
+<!-- ✅ SCRIPT DE VERIFICACIÓN Y CORRECCIÓN -->
 <script>
-// Solo para verificar que el menú se cargó
 document.addEventListener('DOMContentLoaded', function() {
-    const menuItems = document.querySelectorAll('.main-navigation .nav-item');
-    console.log(`📊 MenuWidget generó ${menuItems.length} elementos en el navbar`);
+    console.log('🔍 Verificando estructura del navbar...');
     
-    if (menuItems.length === 0) {
-        console.warn('⚠️ No se encontraron elementos en el menú. Verifica MenuWidget.php');
+    // Función para forzar navbar en una línea (solo en desktop)
+    function forceSingleLineNavbar() {
+        if (window.innerWidth >= 992) {
+            const navbar = document.querySelector('.navbar-contextual');
+            const container = document.querySelector('.navbar-container');
+            const sectionsContainer = document.querySelector('.navbar-sections-container');
+            
+            if (container) {
+                // Forzar display flex en línea
+                container.style.display = 'flex';
+                container.style.flexDirection = 'row';
+                container.style.flexWrap = 'nowrap';
+                container.style.alignItems = 'stretch';
+                container.style.justifyContent = 'flex-start';
+                container.style.width = '100%';
+                container.style.margin = '0';
+                container.style.padding = '0';
+                container.style.gap = '0';
+                
+                // Asegurar que todos los hijos sean flex
+                Array.from(container.children).forEach(child => {
+                    child.style.display = 'flex';
+                    child.style.flexShrink = '0';
+                    child.style.margin = '0';
+                    child.style.padding = '0';
+                });
+            }
+            
+            if (sectionsContainer) {
+                sectionsContainer.style.display = 'flex';
+                sectionsContainer.style.flexDirection = 'row';
+                sectionsContainer.style.flexWrap = 'nowrap';
+                sectionsContainer.style.alignItems = 'stretch';
+                sectionsContainer.style.flexGrow = '1';
+                sectionsContainer.style.margin = '0';
+                sectionsContainer.style.padding = '0';
+                sectionsContainer.style.gap = '0';
+            }
+            
+            // Verificar que el collapse ocupe espacio
+            const collapse = document.querySelector('.navbar-collapse');
+            if (collapse) {
+                collapse.style.display = 'flex';
+                collapse.style.flexGrow = '1';
+                collapse.style.margin = '0';
+                collapse.style.padding = '0';
+            }
+            
+            console.log('✅ Navbar forzado a una línea');
+            
+            // Verificar anchos
+            const brandSection = document.querySelector('.navbar-brand-section');
+            const menuSection = document.querySelector('.navbar-menu-section');
+            const socialSection = document.querySelector('.navbar-social-section');
+            const controlSection = document.querySelector('.navbar-control-section');
+            
+            console.log('📏 Anchos calculados:');
+            console.log('• Logo:', brandSection?.offsetWidth, 'px');
+            console.log('• Menú:', menuSection?.offsetWidth, 'px');
+            console.log('• Social:', socialSection?.offsetWidth, 'px');
+            console.log('• Control:', controlSection?.offsetWidth, 'px');
+            
+            // Verificar que la suma sea aproximadamente el 90% del viewport
+            const totalWidth = (brandSection?.offsetWidth || 0) + 
+                              (menuSection?.offsetWidth || 0) + 
+                              (socialSection?.offsetWidth || 0) + 
+                              (controlSection?.offsetWidth || 0);
+            const viewportWidth = window.innerWidth;
+            const expectedWidth = viewportWidth * 0.9;
+            
+            console.log('• Total actual:', totalWidth, 'px');
+            console.log('• Total esperado (90% de viewport):', expectedWidth, 'px');
+            console.log('• Diferencia:', Math.abs(totalWidth - expectedWidth), 'px');
+        }
     }
+    
+    // Ejecutar inmediatamente
+    setTimeout(forceSingleLineNavbar, 50);
+    
+    // Re-ejecutar en redimensionamiento
+    let resizeTimer;
+    window.addEventListener('resize', function() {
+        clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(forceSingleLineNavbar, 250);
+    });
+    
+    // Verificar altura de 45vh
+    function verifyNavbarHeight() {
+        const navbar = document.querySelector('.navbar-contextual');
+        if (navbar) {
+            const viewportHeight = window.innerHeight;
+            const navbarHeight = navbar.offsetHeight;
+            const minRequiredHeight = viewportHeight * 0.45;
+            
+            console.log('📏 Verificación altura 45vh:');
+            console.log('• Viewport:', viewportHeight, 'px');
+            console.log('• Navbar actual:', navbarHeight, 'px');
+            console.log('• 45vh requerido:', Math.round(minRequiredHeight), 'px');
+            console.log('• Cumple:', navbarHeight >= minRequiredHeight ? '✅ SÍ' : '❌ NO');
+            
+            if (window.innerWidth >= 992 && navbarHeight < minRequiredHeight) {
+                console.log('🔄 Ajustando altura a 45vh...');
+                navbar.style.height = minRequiredHeight + 'px';
+                navbar.style.minHeight = minRequiredHeight + 'px';
+                document.body.style.paddingTop = minRequiredHeight + 'px';
+            }
+        }
+    }
+    
+    verifyNavbarHeight();
 });
 </script>
