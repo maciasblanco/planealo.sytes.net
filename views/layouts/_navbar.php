@@ -44,18 +44,17 @@ $showSignupButton = !Yii::$app->user->isGuest ? false : (!$isSignupRoute && !$is
             </a>
         </div>
         
-        <!-- ✅ TOGGLER PARA MÓVIL (SOLO EN MÓVIL) -->
+        <!-- ✅ TOGGLER PARA MÓVIL (SOLO EN MÓVIL) - MODIFICADO PARA OFFCANVAS -->
         <button class="navbar-toggler d-lg-none ms-auto" type="button" 
-                data-bs-toggle="collapse"
-                data-bs-target="#navbarContent"
-                aria-controls="navbarContent"
-                aria-expanded="false"
-                aria-label="Alternar navegación">
+                data-bs-toggle="offcanvas"
+                data-bs-target="#mobileMenuOffcanvas"
+                aria-controls="mobileMenuOffcanvas"
+                aria-label="Abrir menú móvil">
             <span class="navbar-toggler-icon"></span>
         </button>
 
         <!-- ✅ CONTENIDO DEL NAVBAR (88%) - EN LÍNEA EN DESKTOP -->
-        <div class="collapse navbar-collapse show" id="navbarContent">
+        <div class="collapse navbar-collapse show d-none d-lg-flex" id="navbarContent">
             <div class="navbar-sections-container d-flex align-items-stretch flex-grow-1">
                 
                 <!-- MENÚ PRINCIPAL (40.5%) -->
@@ -199,6 +198,109 @@ $showSignupButton = !Yii::$app->user->isGuest ? false : (!$isSignupRoute && !$is
     </div>
 </nav>
 
+<!-- ✅ SIDEBAR MÓVIL (OFFCANVAS) -->
+<div class="offcanvas offcanvas-start ged-mobile-sidebar" tabindex="-1" id="mobileMenuOffcanvas" 
+     aria-labelledby="mobileMenuOffcanvasLabel">
+    <div class="offcanvas-header bg-primary text-white">
+        <h5 class="offcanvas-title" id="mobileMenuOffcanvasLabel">
+            <i class="bi bi-menu-app me-2"></i>Menú GED
+        </h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" 
+                aria-label="Cerrar menú"></button>
+    </div>
+    <div class="offcanvas-body p-0">
+        <!-- Menú móvil -->
+        <div class="mobile-menu-container">
+            <?= \app\components\MenuWidget::widget([
+                'options' => [
+                    'class' => 'nav flex-column mobile-nav-menu',
+                    'mobileMode' => true,
+                    'itemClass' => 'nav-item',
+                    'linkClass' => 'nav-link'
+                ]
+            ]) ?>
+            
+            <!-- Información de escuela en móvil -->
+            <?php if ($idEscuela && $idEscuela > 0): ?>
+            <div class="mobile-school-info p-3 bg-light border-top">
+                <h6 class="text-muted mb-2">
+                    <i class="bi bi-building me-1"></i>Escuela activa
+                </h6>
+                <p class="mb-1"><strong><?= Html::encode($nombreEscuela) ?></strong></p>
+                <small class="text-muted">ID: <?= $idEscuela ?></small>
+            </div>
+            <?php endif; ?>
+            
+            <!-- Redes sociales en móvil -->
+            <div class="mobile-social-section p-3 border-top">
+                <h6 class="text-muted mb-3">Síguenos</h6>
+                <div class="d-flex justify-content-center gap-3">
+                    <a href="#" class="social-icon-circle" title="Facebook">
+                        <i class="bi bi-facebook"></i>
+                    </a>
+                    <a href="#" class="social-icon-circle" title="Twitter">
+                        <i class="bi bi-twitter"></i>
+                    </a>
+                    <a href="#" class="social-icon-circle" title="Instagram">
+                        <i class="bi bi-instagram"></i>
+                    </a>
+                    <a href="#" class="social-icon-circle" title="YouTube">
+                        <i class="bi bi-youtube"></i>
+                    </a>
+                </div>
+            </div>
+            
+            <!-- Control de sesión en móvil -->
+            <div class="mobile-session-controls p-3 border-top">
+                <?php if (Yii::$app->user->isGuest): ?>
+                    <!-- USUARIO NO AUTENTICADO -->
+                    <div class="d-grid gap-2">
+                        <?php if ($showLoginButton): ?>
+                        <a class="btn btn-outline-primary" 
+                           href="<?= Yii::$app->urlManager->createUrl(['/site/login']) ?>" 
+                           title="Iniciar sesión">
+                            <i class="bi bi-box-arrow-in-right me-2"></i>Iniciar sesión
+                        </a>
+                        <?php endif; ?>
+                        
+                        <?php if ($showSignupButton): ?>
+                        <a class="btn btn-primary" 
+                           href="<?= Yii::$app->urlManager->createUrl(['/site/signup']) ?>" 
+                           title="Registrarse">
+                            <i class="bi bi-person-plus me-2"></i>Crear cuenta
+                        </a>
+                        <?php endif; ?>
+                    </div>
+                <?php else: ?>
+                    <!-- USUARIO AUTENTICADO -->
+                    <div class="user-info-mobile mb-3">
+                        <div class="d-flex align-items-center mb-2">
+                            <i class="bi bi-person-circle fs-4 me-3 text-primary"></i>
+                            <div>
+                                <strong><?= Html::encode(Yii::$app->user->identity->username ?? 'Usuario') ?></strong>
+                                <?php if ($idEscuela && $idEscuela > 0): ?>
+                                <div class="text-muted small">
+                                    <i class="bi bi-building me-1"></i><?= Html::encode(mb_strimwidth($nombreEscuela, 0, 25, '...')) ?>
+                                </div>
+                                <?php endif; ?>
+                            </div>
+                        </div>
+                    </div>
+                    <?= Html::beginForm(['/site/logout'], 'post', ['class' => 'd-grid']) ?>
+                        <?= Html::submitButton(
+                            '<i class="bi bi-box-arrow-right me-2"></i>Cerrar sesión',
+                            [
+                                'class' => 'btn btn-outline-danger',
+                                'title' => 'Cerrar sesión'
+                            ]
+                        ) ?>
+                    <?= Html::endForm() ?>
+                <?php endif; ?>
+            </div>
+        </div>
+    </div>
+</div>
+
 <!-- ✅ SCRIPT DE VERIFICACIÓN Y CORRECCIÓN -->
 <script>
 document.addEventListener('DOMContentLoaded', function() {
@@ -314,5 +416,64 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     verifyNavbarHeight();
+    
+    // Script para manejar el sidebar móvil
+    function setupMobileSidebar() {
+        const offcanvas = document.getElementById('mobileMenuOffcanvas');
+        if (offcanvas) {
+            // Inicializar offcanvas de Bootstrap 5
+            const bsOffcanvas = new bootstrap.Offcanvas(offcanvas);
+            
+            // Manejar eventos de apertura/cierre
+            offcanvas.addEventListener('show.bs.offcanvas', function() {
+                console.log('📱 Sidebar móvil abierto');
+                document.body.style.overflow = 'hidden';
+            });
+            
+            offcanvas.addEventListener('hidden.bs.offcanvas', function() {
+                console.log('📱 Sidebar móvil cerrado');
+                document.body.style.overflow = 'auto';
+            });
+            
+            // Manejar dropdowns dentro del sidebar móvil
+            const dropdownToggles = offcanvas.querySelectorAll('.dropdown-toggle');
+            dropdownToggles.forEach(toggle => {
+                toggle.addEventListener('click', function(e) {
+                    if (window.innerWidth < 992) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        
+                        const dropdownMenu = this.nextElementSibling;
+                        if (dropdownMenu && dropdownMenu.classList.contains('dropdown-menu')) {
+                            dropdownMenu.classList.toggle('show');
+                            this.setAttribute('aria-expanded', 
+                                dropdownMenu.classList.contains('show') ? 'true' : 'false');
+                        }
+                    }
+                });
+            });
+            
+            // Cerrar dropdowns al hacer clic fuera
+            document.addEventListener('click', function(e) {
+                if (window.innerWidth < 992 && !e.target.closest('.mobile-nav-menu')) {
+                    offcanvas.querySelectorAll('.dropdown-menu.show').forEach(menu => {
+                        menu.classList.remove('show');
+                        const toggle = menu.previousElementSibling;
+                        if (toggle && toggle.classList.contains('dropdown-toggle')) {
+                            toggle.setAttribute('aria-expanded', 'false');
+                        }
+                    });
+                }
+            });
+        }
+    }
+    
+    // Inicializar sidebar móvil
+    if (typeof bootstrap !== 'undefined' && bootstrap.Offcanvas) {
+        setupMobileSidebar();
+    } else {
+        // Esperar a que Bootstrap se cargue
+        setTimeout(setupMobileSidebar, 100);
+    }
 });
 </script>

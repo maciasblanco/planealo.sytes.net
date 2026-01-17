@@ -2597,3 +2597,241 @@ main#main {
     background: rgba(0, 0, 255, 0.05) !important;
 }
 */
+/* ================================================== */
+/* ✅ SIDEBAR MÓVIL (OFFCANVAS)                       */
+/* ================================================== */
+
+.ged-mobile-sidebar {
+    width: 280px !important;
+    background: linear-gradient(135deg, #6c3483 0%, #8e44ad 100%) !important;
+    color: white !important;
+}
+
+.ged-mobile-sidebar .offcanvas-header {
+    border-bottom: 1px solid rgba(255,255,255,0.2) !important;
+    padding: 1.25rem !important;
+}
+
+.ged-mobile-sidebar .offcanvas-title {
+    font-weight: 600 !important;
+    font-size: 1.2rem !important;
+    display: flex !important;
+    align-items: center !important;
+}
+
+.ged-mobile-sidebar .btn-close-white {
+    filter: invert(1) grayscale(100%) brightness(200%) !important;
+    opacity: 0.8 !important;
+}
+
+.ged-mobile-sidebar .btn-close-white:hover {
+    opacity: 1 !important;
+}
+
+/* Menú móvil */
+.mobile-menu-container {
+    display: flex !important;
+    flex-direction: column !important;
+    height: 100% !important;
+}
+
+.mobile-nav-menu {
+    padding: 10px 0 !important;
+    margin: 0 !important;
+    list-style: none !important;
+    flex-grow: 1 !important;
+    overflow-y: auto !important;
+}
+
+.mobile-nav-menu .nav-item {
+    width: 100% !important;
+    margin: 0 !important;
+}
+
+.mobile-nav-menu .nav-link {
+    color: rgba(255,255,255,0.9) !important;
+    padding: 12px 20px !important;
+    border-radius: 0 !important;
+    border-left: 3px solid transparent !important;
+    transition: all 0.3s ease !important;
+    font-size: 0.95rem !important;
+    display: flex !important;
+    align-items: center !important;
+    text-decoration: none !important;
+}
+
+.mobile-nav-menu .nav-link:hover,
+.mobile-nav-menu .nav-link.active {
+    background: rgba(255,255,255,0.1) !important;
+    color: white !important;
+    border-left-color: #3498db !important;
+    padding-left: 25px !important;
+}
+
+/* Dropdowns en móvil */
+.mobile-nav-menu .dropdown-toggle {
+    position: relative !important;
+}
+
+.mobile-nav-menu .dropdown-toggle::after {
+    display: inline-block !important;
+    margin-left: auto !important;
+    transition: transform 0.3s ease !important;
+    border-top: 0.3em solid transparent !important;
+    border-right: 0.3em solid transparent !important;
+    border-bottom: 0 !important;
+    border-left: 0.3em solid !important;
+    transform: rotate(0deg) !important;
+}
+
+.mobile-nav-menu .dropdown-toggle[aria-expanded="true"]::after {
+    transform: rotate(90deg) !important;
+}
+
+.mobile-nav-menu .dropdown-menu {
+    position: static !important;
+    float: none !important;
+    width: 100% !important;
+    background: rgba(0,0,0,0.2) !important;
+    border: none !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    display: none !important;
+}
+
+.mobile-nav-menu .dropdown-menu.show {
+    display: block !important;
+}
+
+.mobile-nav-menu .dropdown-item {
+    color: rgba(255,255,255,0.8) !important;
+    padding: 10px 20px 10px 40px !important;
+    border-bottom: 1px solid rgba(255,255,255,0.05) !important;
+    text-decoration: none !important;
+    transition: all 0.3s ease !important;
+}
+
+.mobile-nav-menu .dropdown-item:hover {
+    background: rgba(255,255,255,0.1) !important;
+    color: white !important;
+    padding-left: 45px !important;
+}
+
+/* Información de escuela en móvil */
+.mobile-school-info {
+    background: rgba(255,255,255,0.05) !important;
+    border-top: 1px solid rgba(255,255,255,0.1) !important;
+}
+
+.mobile-school-info h6 {
+    font-size: 0.9rem !important;
+    color: rgba(255,255,255,0.7) !important;
+}
+
+.mobile-school-info p {
+    font-size: 0.95rem !important;
+    margin-bottom: 0.25rem !important;
+    color: white !important;
+}
+
+.mobile-school-info small {
+    font-size: 0.8rem !important;
+    color: rgba(255,255,255,0.6) !important;
+}
+
+/* Redes sociales en móvil */
+.mobile-social-section {
+    background: rgba(255,255,255,0.03) !important;
+    border-top: 1px solid rgba(255,255,255,0.1) !important;
+}
+
+.mobile-social-section h6 {
+    font-size: 0.9rem !important;
+    color: rgba(255,255,255,0.7) !important;
+    text-align: center !important;
+}
+
+.mobile-social-section .social-icon-circle {
+    width: 44px !important;
+    height: 44px !important;
+    font-size: 1.2rem !important;
+    background: rgba(255,255,255,0.15) !important;
+    border: 1px solid rgba(255,255,255,0.2) !important;
+}
+
+/* Control de sesión en móvil */
+.mobile-session-controls {
+    background: rgba(255,255,255,0.03) !important;
+    border-top: 1px solid rgba(255,255,255,0.1) !important;
+}
+
+.user-info-mobile {
+    background: rgba(255,255,255,0.05) !important;
+    padding: 12px !important;
+    border-radius: 8px !important;
+    border: 1px solid rgba(255,255,255,0.1) !important;
+}
+
+.user-info-mobile strong {
+    font-size: 1rem !important;
+    color: white !important;
+    display: block !important;
+}
+
+.user-info-mobile .text-muted {
+    font-size: 0.85rem !important;
+    color: rgba(255,255,255,0.7) !important;
+}
+
+.mobile-session-controls .btn {
+    padding: 10px 16px !important;
+    font-size: 0.95rem !important;
+    border-radius: 6px !important;
+}
+
+/* Responsive para móvil */
+@media (max-width: 991.98px) {
+    .navbar-collapse:not(.show) {
+        display: none !important;
+    }
+    
+    .ged-mobile-sidebar {
+        width: 85% !important;
+        max-width: 300px !important;
+    }
+}
+
+@media (max-width: 575.98px) {
+    .ged-mobile-sidebar {
+        width: 90% !important;
+    }
+    
+    .mobile-nav-menu .nav-link {
+        padding: 10px 15px !important;
+        font-size: 0.9rem !important;
+    }
+    
+    .mobile-nav-menu .dropdown-item {
+        padding: 8px 15px 8px 30px !important;
+    }
+}
+
+/* Scrollbar personalizado para sidebar */
+.ged-mobile-sidebar .offcanvas-body::-webkit-scrollbar {
+    width: 4px !important;
+}
+
+.ged-mobile-sidebar .offcanvas-body::-webkit-scrollbar-track {
+    background: rgba(255,255,255,0.05) !important;
+}
+
+.ged-mobile-sidebar .offcanvas-body::-webkit-scrollbar-thumb {
+    background: rgba(255,255,255,0.2) !important;
+    border-radius: 2px !important;
+}
+
+.ged-mobile-sidebar .offcanvas-body::-webkit-scrollbar-thumb:hover {
+    background: rgba(255,255,255,0.3) !important;
+}

@@ -64,46 +64,6 @@
         margin-right: 0;
         margin-bottom: 1rem;
     }
-    
-    /* ❌ COMENTADO: REGLAS CONFLICTIVAS CON _navigation.css 
-    .navbar-contextual {
-        min-height: 45vh !important;
-        height: auto !important;
-    }
-    
-    body {
-        padding-top: 45vh !important;
-    }
-    
-    main#main {
-        min-height: calc(100vh - 45vh) !important;
-    }
-    
-    .navbar-brand-section {
-        min-width: 120px !important;
-        flex: 0 0 15% !important;
-        max-width: 15% !important;
-    }
-    
-    .navbar-menu-section {
-        flex: 0 0 40% !important;
-        max-width: 40% !important;
-    }
-    
-    .navbar-social-section {
-        flex: 0 0 15% !important;
-        max-width: 15% !important;
-    }
-    
-    .navbar-control-section {
-        flex: 0 0 30% !important;
-        max-width: 30% !important;
-    }
-    
-    .navbar-logo {
-        max-height: calc(45vh - 40px) !important;
-    }
-    */
 }
 
 /* ================================================== */
@@ -117,6 +77,10 @@
         min-height: 60px !important;
         position: fixed !important;
         top: 0 !important;
+        width: 100vw !important;
+        margin: 0 !important;
+        padding: 0 15px !important;
+        background: linear-gradient(135deg, #8e44ad 0%, #6c3483 100%) !important;
     }
     
     body {
@@ -128,144 +92,223 @@
         min-height: calc(100vh - 60px) !important;
     }
     
-    .navbar > .container-fluid {
-        flex-wrap: wrap;
-        padding: 0 10px;
+    /* ✅ SOLO LOGO Y TOGGLER VISIBLES EN MÓVIL - OCULTAR TODO LO DEMÁS */
+    .navbar-menu-section,
+    .navbar-social-section,
+    .navbar-control-section,
+    .navbar-sections-container,
+    .navbar-collapse {
+        display: none !important;
+        visibility: hidden !important;
+        height: 0 !important;
+        width: 0 !important;
+        overflow: hidden !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        opacity: 0 !important;
     }
     
-    .navbar-brand, .navbar-brand-section {
+    /* ✅ MANTENER BRAND SECTION (LOGO) VISIBLE */
+    .navbar-brand-section {
         width: auto !important;
         height: 60px;
         order: 1;
-        flex: 1 !important;
+        flex: 0 0 auto !important;
         max-width: none !important;
         min-width: auto !important;
         justify-content: flex-start !important;
-        padding-left: 10px !important;
+        padding-left: 0 !important;
+        display: flex !important;
+        align-items: center !important;
     }
     
+    /* ✅ TOGGLER VISIBLE Y POSICIONADO CORRECTAMENTE */
     .navbar-toggler {
         position: relative !important;
         top: auto !important;
         right: auto !important;
         order: 2;
         margin-left: auto;
-        display: block !important;
+        display: flex !important;
         padding: 6px 8px !important;
+        align-items: center;
+        justify-content: center;
+        width: 44px;
+        height: 44px;
+        z-index: 9999;
+        background: rgba(255,255,255,0.1) !important;
+        border: 1px solid rgba(255,255,255,0.3) !important;
+        border-radius: 4px !important;
     }
     
-    .navbar-collapse {
-        position: absolute;
-        top: 100%;
-        left: 0;
-        width: 100%;
-        background: linear-gradient(135deg, #8e44ad 0%, #6c3483 100%);
-        z-index: 1030;
-        margin: 0;
-        padding: 20px 15px;
-        border-top: 2px solid #7d3c98;
-        box-shadow: 0 5px 20px rgba(0,0,0,0.3);
-        display: none !important;
-        height: auto !important;
-        overflow: visible !important;
+    .navbar-toggler:hover {
+        background: rgba(255,255,255,0.2) !important;
     }
     
-    .navbar-collapse.show {
-        display: block !important;
+    .navbar-toggler-icon {
+        background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%28255, 255, 255, 0.8%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e") !important;
     }
     
+    /* ✅ Asegurar que el contenedor sea compacto */
     .navbar-container {
-        padding: 0 15px !important;
+        display: flex !important;
+        flex-direction: row !important;
+        align-items: center !important;
+        justify-content: space-between !important;
+        width: 100% !important;
+        height: 60px !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        gap: 0 !important;
     }
     
-    .navbar-menu-section,
-    .navbar-social-section,
-    .navbar-control-section {
+    /* ✅ LOGO AJUSTADO PARA MÓVIL */
+    .navbar-logo {
+        height: 40px !important;
+        max-height: 40px !important;
+        width: auto !important;
+    }
+    
+    /* ✅ ELIMINAR CUALQUIER CONTENIDO QUE SE MUESTRE EN EL NAVBAR */
+    .navbar-contextual > .container-fluid {
+        width: 100% !important;
+        padding: 0 !important;
+        margin: 0 !important;
+    }
+    
+    /* ✅ ESTILOS PARA SIDEBAR MÓVIL - ASEGURAR QUE EL MENÚ SEA VISIBLE */
+    .ged-mobile-sidebar .offcanvas-body {
+        display: flex !important;
+        flex-direction: column !important;
+        height: 100% !important;
+        padding: 0 !important;
+        overflow-y: auto !important;
+    }
+    
+    .ged-mobile-sidebar .mobile-menu-container {
+        display: flex !important;
+        flex-direction: column !important;
+        flex-grow: 1 !important;
+        min-height: 100% !important;
+    }
+    
+    .ged-mobile-sidebar .mobile-nav-menu {
+        display: flex !important;
+        flex-direction: column !important;
+        flex-grow: 1 !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        list-style: none !important;
+        opacity: 1 !important;
+        visibility: visible !important;
+    }
+    
+    .ged-mobile-sidebar .mobile-nav-menu .nav-item {
+        display: block !important;
         width: 100% !important;
         margin: 0 !important;
-        padding: 10px 0 !important;
+        border-bottom: 1px solid rgba(255,255,255,0.1) !important;
     }
     
-    .navbar-menu-section { order: 3; }
-    .navbar-social-section { order: 4; }
-    .navbar-control-section { order: 2; }
-    
-    .navbar-nav {
-        flex-direction: column;
-        gap: 5px;
-        width: 100%;
-    }
-    
-    .nav-item {
-        width: 100%;
-        text-align: center;
-    }
-    
-    .nav-link {
-        padding: 15px 20px !important;
-        background: rgba(255,255,255,0.1);
-        display: block;
-        margin-bottom: 5px;
-        border-radius: 5px;
-    }
-    
-    .dropdown-menu {
-        position: static !important;
-        width: 100% !important;
-        margin: 10px 0 !important;
-        background: rgba(0,0,0,0.3) !important;
-        border: 1px solid rgba(255,255,255,0.2);
-        float: none !important;
-    }
-    
-    .dropdown-item {
-        padding: 12px 25px !important;
-        text-align: center;
-        border-bottom: 1px solid rgba(255,255,255,0.1);
-    }
-    
-    .dropdown-item:last-child {
-        border-bottom: none;
-    }
-    
-    .social-icons-vertical {
-        flex-direction: row !important;
-        justify-content: center !important;
-        gap: 15px !important;
-    }
-    
-    .social-icon-circle {
-        width: 50px !important;
-        height: 50px !important;
-        font-size: 1.4rem !important;
-    }
-    
-    /* Ajustar controles de sesión para móvil */
-    .session-controls {
-        flex-direction: row !important;
-        gap: 8px !important;
+    .ged-mobile-sidebar .mobile-nav-menu .nav-link {
+        display: flex !important;
         align-items: center !important;
+        padding: 14px 20px !important;
+        color: rgba(255,255,255,0.9) !important;
+        text-decoration: none !important;
+        font-size: 1rem !important;
+        width: 100% !important;
+        background: transparent !important;
+        border-left: 3px solid transparent !important;
+        transition: all 0.3s ease !important;
     }
     
-    .session-controls .btn {
-        min-width: auto !important;
-        padding: 5px 10px !important;
+    .ged-mobile-sidebar .mobile-nav-menu .nav-link:hover,
+    .ged-mobile-sidebar .mobile-nav-menu .nav-link.active {
+        background: rgba(255,255,255,0.1) !important;
+        color: white !important;
+        border-left-color: #3498db !important;
+        padding-left: 25px !important;
     }
     
-    .session-controls .btn span:not(.bi) {
+    .ged-mobile-sidebar .mobile-nav-menu .nav-link i {
+        margin-right: 12px !important;
+        font-size: 1.1rem !important;
+        width: 24px !important;
+        text-align: center !important;
+    }
+    
+    /* Dropdowns en móvil */
+    .ged-mobile-sidebar .mobile-nav-menu .dropdown-toggle::after {
+        margin-left: auto !important;
+        border-top: 0.3em solid transparent !important;
+        border-right: 0.3em solid transparent !important;
+        border-bottom: 0 !important;
+        border-left: 0.3em solid !important;
+        transform: rotate(0deg) !important;
+        transition: transform 0.3s ease !important;
+    }
+    
+    .ged-mobile-sidebar .mobile-nav-menu .dropdown-toggle[aria-expanded="true"]::after {
+        transform: rotate(90deg) !important;
+    }
+    
+    .ged-mobile-sidebar .mobile-nav-menu .dropdown-menu {
+        position: static !important;
+        float: none !important;
+        width: 100% !important;
+        background: rgba(0,0,0,0.2) !important;
+        border: none !important;
+        border-radius: 0 !important;
+        box-shadow: none !important;
+        margin: 0 !important;
+        padding: 0 !important;
         display: none !important;
     }
     
-    .user-info {
-        display: none !important;
+    .ged-mobile-sidebar .mobile-nav-menu .dropdown-menu.show {
+        display: block !important;
     }
     
-    .school-info {
-        display: none !important;
+    .ged-mobile-sidebar .mobile-nav-menu .dropdown-item {
+        color: rgba(255,255,255,0.8) !important;
+        padding: 12px 20px 12px 40px !important;
+        border-bottom: 1px solid rgba(255,255,255,0.05) !important;
+        text-decoration: none !important;
+        transition: all 0.3s ease !important;
+        display: block !important;
+        width: 100% !important;
     }
     
-    .navbar-nav .dropdown-menu {
-        display: none !important;
+    .ged-mobile-sidebar .mobile-nav-menu .dropdown-item:hover {
+        background: rgba(255,255,255,0.1) !important;
+        color: white !important;
+        padding-left: 45px !important;
+    }
+    
+    /* Información de escuela en móvil */
+    .ged-mobile-sidebar .mobile-school-info {
+        background: rgba(255,255,255,0.05) !important;
+        border-top: 1px solid rgba(255,255,255,0.1) !important;
+        padding: 15px !important;
+        display: block !important;
+    }
+    
+    /* Redes sociales en móvil */
+    .ged-mobile-sidebar .mobile-social-section {
+        background: rgba(255,255,255,0.03) !important;
+        border-top: 1px solid rgba(255,255,255,0.1) !important;
+        padding: 15px !important;
+        display: block !important;
+        text-align: center !important;
+    }
+    
+    /* Control de sesión en móvil */
+    .ged-mobile-sidebar .mobile-session-controls {
+        background: rgba(255,255,255,0.03) !important;
+        border-top: 1px solid rgba(255,255,255,0.1) !important;
+        padding: 15px !important;
+        display: block !important;
     }
     
     /* Responsive para escuelas */
@@ -381,105 +424,14 @@
         margin-top: 0 !important;
     }
     
-    .sidebar-header {
-        padding: 1.2rem;
-        background: linear-gradient(135deg, #8e44ad 0%, #6c3483 100%);
-        color: white;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        border-bottom: 1px solid #7d3c98;
-        font-weight: 600;
-        font-size: 1.1rem;
-    }
-    
-    .close-sidebar {
-        background: none;
-        border: none;
-        color: white;
-        font-size: 1.5rem;
-        cursor: pointer;
-        padding: 0.5rem;
-        border-radius: 4px;
-        transition: background 0.2s ease;
-    }
-    
-    .close-sidebar:hover {
-        background: rgba(255,255,255,0.1);
-    }
-    
-    .ged-logo {
-        max-height: 80px;
-    }
-    
-    /* Correcciones de emergencia para navbar en móvil */
-    .navbar-contextual .navbar-collapse:not(.show) {
+    /* ✅ FORZAR QUE SOLO EL LOGO Y TOGGLER SEAN VISIBLES */
+    .navbar-contextual > .navbar-container > :not(.navbar-brand-section):not(.navbar-toggler) {
         display: none !important;
-        visibility: hidden !important;
-        opacity: 0 !important;
+        width: 0 !important;
         height: 0 !important;
         overflow: hidden !important;
-    }
-    
-    .navbar-contextual .navbar-collapse.show {
-        display: block !important;
-        visibility: visible !important;
-        opacity: 1 !important;
-        height: auto !important;
-        overflow: visible !important;
-        animation: fadeIn 0.3s ease-in-out;
-    }
-    
-    .navbar-contextual .navbar-container {
-        flex-direction: column !important;
-        gap: 20px !important;
-        padding: 20px 0 !important;
-    }
-    
-    .navbar-contextual .navbar-menu-section,
-    .navbar-contextual .navbar-social-section,
-    .navbar-contextual .navbar-control-section {
-        width: 100% !important;
-        display: block !important;
-    }
-    
-    .navbar-contextual .navbar-brand-section {
-        width: auto !important;
-        display: flex !important;
-    }
-    
-    .navbar-contextual .navbar-nav {
-        flex-direction: column !important;
-        width: 100% !important;
-    }
-    
-    .navbar-contextual .nav-item {
-        width: 100% !important;
-        text-align: center !important;
-        margin-bottom: 5px !important;
-    }
-    
-    .navbar-contextual .nav-link {
-        display: block !important;
-        padding: 12px 15px !important;
-        background: rgba(255,255,255,0.1) !important;
-        border-radius: 5px !important;
-        margin-bottom: 5px !important;
-    }
-    
-    .navbar-contextual .dropdown-menu {
-        position: static !important;
-        width: 100% !important;
-        margin: 10px 0 !important;
-        background: rgba(0,0,0,0.3) !important;
-        border: 1px solid rgba(255,255,255,0.2) !important;
-        float: none !important;
-    }
-    
-    .navbar-contextual .social-icons-vertical {
-        flex-direction: row !important;
-        justify-content: center !important;
-        gap: 15px !important;
+        opacity: 0 !important;
+        visibility: hidden !important;
     }
 }
 
@@ -492,6 +444,7 @@
     .navbar-contextual {
         min-height: 50px !important;
         height: 50px !important;
+        padding: 0 8px !important;
     }
     
     body {
@@ -507,21 +460,34 @@
         padding-left: 8px !important;
     }
     
-    .navbar-control-section {
-        padding-right: 8px !important;
-    }
-    
     .navbar-logo {
         height: 32px !important;
     }
     
-    .session-controls {
-        gap: 6px !important;
+    .navbar-toggler {
+        padding: 4px 6px !important;
+        width: 40px;
+        height: 40px;
     }
     
-    .session-controls .btn {
-        padding: 4px 8px !important;
-        font-size: 0.8rem !important;
+    /* ✅ ESTILOS PARA SIDEBAR MÓVIL EN PANTALLAS PEQUEÑAS */
+    .ged-mobile-sidebar {
+        width: 85% !important;
+        max-width: 300px !important;
+    }
+    
+    .ged-mobile-sidebar .mobile-nav-menu .nav-link {
+        padding: 12px 16px !important;
+        font-size: 0.95rem !important;
+    }
+    
+    .ged-mobile-sidebar .mobile-nav-menu .nav-link i {
+        font-size: 1rem !important;
+        width: 22px !important;
+    }
+    
+    .ged-mobile-sidebar .mobile-nav-menu .dropdown-item {
+        padding: 10px 16px 10px 35px !important;
     }
     
     /* Responsive para escuelas */
@@ -656,29 +622,6 @@
     #banner-tiendas-patrocinadas h2 {
         font-size: 1.5rem;
     }
-    
-    /* Responsive adicional */
-    .welcome-message .card-text {
-        font-size: 1rem;
-    }
-    
-    .landing-actions {
-        flex-direction: column;
-        align-items: center;
-    }
-    
-    .landing-btn {
-        min-width: 250px;
-        margin-bottom: 10px;
-    }
-    
-    .features-section {
-        padding: 40px 0;
-    }
-    
-    .landing-footer {
-        margin-top: 40px;
-    }
 }
 
 /* ================================================== */
@@ -690,6 +633,7 @@
     .navbar-contextual {
         min-height: 45px !important;
         height: 45px !important;
+        padding: 0 5px !important;
     }
     
     body {
@@ -706,201 +650,57 @@
         height: 45px;
     }
     
-    .navbar-control-section {
-        padding-right: 5px !important;
-    }
-    
     .navbar-logo {
         height: 28px !important;
-    }
-    
-    .session-controls .btn {
-        padding: 3px 6px !important;
-        font-size: 0.75rem !important;
     }
     
     .navbar-toggler {
         padding: 0.3rem 0.5rem !important;
         margin-left: 5px !important;
+        width: 36px;
+        height: 36px;
     }
     
-    .escuela-layout main#main,
-    .default-layout main#main {
-        margin-top: 0 !important;
-        padding: 10px 0;
+    /* ✅ ESTILOS PARA SIDEBAR MÓVIL EN PANTALLAS MUY PEQUEÑAS */
+    .ged-mobile-sidebar {
+        width: 90% !important;
+        max-width: 280px !important;
     }
     
-    .escuela-layout .main-container,
-    .default-layout .main-container {
-        margin-top: 0 !important;
+    .ged-mobile-sidebar .offcanvas-header {
+        padding: 1rem !important;
+        height: 60px !important;
+    }
+    
+    .ged-mobile-sidebar .offcanvas-title {
+        font-size: 1.1rem !important;
+    }
+    
+    .ged-mobile-sidebar .mobile-nav-menu .nav-link {
+        padding: 10px 14px !important;
+        font-size: 0.9rem !important;
+    }
+    
+    .ged-mobile-sidebar .mobile-nav-menu .nav-link i {
+        font-size: 0.9rem !important;
+        width: 20px !important;
+    }
+    
+    .ged-mobile-sidebar .mobile-nav-menu .dropdown-item {
+        padding: 8px 14px 8px 30px !important;
+        font-size: 0.85rem !important;
+    }
+    
+    .ged-mobile-sidebar .mobile-school-info,
+    .ged-mobile-sidebar .mobile-social-section,
+    .ged-mobile-sidebar .mobile-session-controls {
+        padding: 12px !important;
     }
     
     .social-icon-circle {
-        width: 45px;
-        height: 45px;
-        font-size: 1.2rem;
-    }
-    
-    .sidebar-menu .menu-link {
-        padding: 10px 14px;
-        font-size: 0.9rem;
-    }
-    
-    .sidebar-menu .submenu .menu-link {
-        padding-left: 25px;
-    }
-    
-    .sidebar-menu .submenu .submenu .menu-link {
-        padding-left: 35px;
-    }
-    
-    .session-controls .btn-group-horizontal {
-        flex-direction: column !important;
-        gap: 5px !important;
-    }
-    
-    .session-controls .btn-group-horizontal .btn {
-        min-width: 100% !important;
-    }
-    
-    /* Responsive para escuelas */
-    .encargado-search-section {
-        padding: 15px;
-        margin-bottom: 15px;
-    }
-    
-    .pre-registro-section {
-        padding: 15px;
-        margin-bottom: 15px;
-    }
-    
-    .pre-registro-card {
-        padding: 12px;
-    }
-    
-    .pre-registro-school-name {
-        font-size: 1rem;
-    }
-    
-    .pre-registro-status {
-        font-size: 0.7rem;
-        padding: 3px 8px;
-    }
-    
-    .school-option {
-        padding: 8px 10px;
-    }
-    
-    .school-name {
-        font-size: 0.95rem;
-    }
-    
-    .ged-stat-card h3 {
-        font-size: 1.5rem;
-    }
-    
-    /* Site index - escuelas en landing */
-    .site-index .school-card {
-        margin: 5px 0 !important;
-    }
-    
-    .site-index .school-logo-container {
-        height: 150px;
-    }
-    
-    .site-index .school-badge {
-        font-size: 0.7rem;
-        padding: 3px 6px;
-    }
-    
-    /* Formularios */
-    .ged-form-control {
-        font-size: 0.9rem;
-        padding: 0.375rem 0.75rem;
-    }
-    
-    .ged-form-label {
-        font-size: 0.9rem;
-    }
-    
-    /* Dashboard escuelas */
-    .dashboard-stats {
-        grid-template-columns: 1fr;
-        gap: 1rem;
-    }
-    
-    .stat-card {
-        padding: 1rem;
-    }
-    
-    .stat-card h3 {
-        font-size: 1.5rem;
-    }
-    
-    /* Responsive para tienda */
-    .store-promo-content {
-        padding: 0 0.5rem;
-    }
-    
-    .store-title {
-        font-size: 1.1rem;
-    }
-    
-    .store-description {
-        font-size: 0.8rem;
-    }
-    
-    .tienda-price {
-        font-size: 1rem;
-    }
-    
-    .tienda-discount {
-        font-size: 0.8rem;
-    }
-    
-    .categoria-body {
-        padding: 1rem;
-    }
-    
-    .producto-item {
-        padding: 0.75rem 0;
-    }
-    
-    .producto-nombre {
-        font-size: 0.85rem;
-    }
-    
-    .btn-agregar-carrito {
-        padding: 0.5rem;
-        font-size: 0.8rem;
-    }
-    
-    .carrito-contador {
-        width: 18px;
-        height: 18px;
-        font-size: 0.7rem;
-    }
-    
-    .tienda-card {
-        padding: 1rem;
-    }
-    
-    .tienda-nombre {
-        font-size: 1rem;
-    }
-    
-    .tienda-desc {
-        font-size: 0.8rem;
-    }
-    
-    .tiendas-patrocinadas-section {
-        padding: 2rem 0;
-    }
-    
-    .producto-flotante {
-        width: 35px;
-        height: 35px;
-        font-size: 1.2rem;
+        width: 40px !important;
+        height: 40px !important;
+        font-size: 1rem !important;
     }
 }
 
@@ -924,23 +724,6 @@
     }
 }
 
-@media (max-width: 375px) {
-    .ged-offcanvas-sidebar {
-        width: 90% !important;
-        max-width: 280px !important;
-    }
-    
-    .menu-link {
-        padding: 10px 15px !important;
-        font-size: 0.9rem !important;
-    }
-    
-    .offcanvas-header {
-        padding: 1rem !important;
-        height: 60px !important;
-    }
-}
-
 /* ================================================== */
 /* CORRECCIONES DE VIEWPORT                           */
 /* ================================================== */
@@ -948,24 +731,6 @@
 .vw-100 {
     width: 100vw !important;
     max-width: 100vw !important;
-}
-
-/* ================================================== */
-/* PREVENCIÓN DE OVERFLOW EN NAVBAR ITEMS             */
-/* ================================================== */
-
-.navbar-nav {
-    flex-wrap: wrap;
-    justify-content: center;
-}
-
-/* ================================================== */
-/* FIX PARA DROPDOWNS                                 */
-/* ================================================== */
-
-.dropdown-menu {
-    max-width: 100vw;
-    overflow-x: hidden;
 }
 
 /* ================================================== */
@@ -1058,5 +823,58 @@
     .session-controls,
     .navbar-toggler {
         display: none !important;
+    }
+}
+
+/* ================================================== */
+/* ESTILOS DE DEPURACIÓN PARA EL MENÚ MÓVIL           */
+/* ================================================== */
+
+@media (max-width: 991.98px) {
+    /* ✅ ESTILOS ADICIONALES PARA ASEGURAR VISIBILIDAD DEL SIDEBAR */
+    .ged-mobile-sidebar .offcanvas-body {
+        opacity: 1 !important;
+        visibility: visible !important;
+    }
+    
+    .ged-mobile-sidebar .mobile-menu-container {
+        opacity: 1 !important;
+        visibility: visible !important;
+    }
+    
+    /* ✅ FORZAR VISIBILIDAD DEL MENÚ SI ESTÁ OCULTO */
+    .mobile-nav-menu:empty {
+        min-height: 100px;
+        display: flex !important;
+        align-items: center;
+        justify-content: center;
+        color: rgba(255,255,255,0.7);
+        font-style: italic;
+    }
+    
+    .mobile-nav-menu:empty::after {
+        content: "Menú no disponible";
+    }
+    
+    /* ✅ ESTILOS PARA BOTONES EN EL SIDEBAR MÓVIL */
+    .mobile-session-controls .btn {
+        display: block !important;
+        width: 100% !important;
+        margin-bottom: 10px !important;
+        padding: 10px !important;
+        font-size: 1rem !important;
+        text-align: center !important;
+    }
+    
+    .mobile-session-controls .btn:last-child {
+        margin-bottom: 0 !important;
+    }
+    
+    /* ✅ ESTILOS PARA REDES SOCIALES EN MÓVIL */
+    .mobile-social-section .social-icon-circle {
+        display: inline-flex !important;
+        align-items: center;
+        justify-content: center;
+        margin: 0 5px !important;
     }
 }
