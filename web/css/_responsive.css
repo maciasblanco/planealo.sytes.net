@@ -92,12 +92,12 @@
         min-height: calc(100vh - 60px) !important;
     }
     
-    /* ✅ SOLO LOGO Y TOGGLER VISIBLES EN MÓVIL - OCULTAR TODO LO DEMÁS */
-    .navbar-menu-section,
-    .navbar-social-section,
-    .navbar-control-section,
-    .navbar-sections-container,
-    .navbar-collapse {
+    /* ✅ SOLO LOGO Y TOGGLER VISIBLES EN MÓVIL - NO OCULTAR EL OFFCANVAS */
+    .navbar-contextual .navbar-menu-section,
+    .navbar-contextual .navbar-social-section,
+    .navbar-contextual .navbar-control-section,
+    .navbar-contextual .navbar-sections-container,
+    .navbar-contextual .navbar-collapse {
         display: none !important;
         visibility: hidden !important;
         height: 0 !important;
@@ -106,6 +106,16 @@
         padding: 0 !important;
         margin: 0 !important;
         opacity: 0 !important;
+    }
+    
+    /* ✅ PERO EL OFFCANVAS Y SU CONTENIDO DEBEN SER VISIBLES */
+    #mobileMenuOffcanvas,
+    .ged-mobile-sidebar,
+    .mobile-menu-container,
+    .mobile-nav-menu {
+        display: block !important;
+        visibility: visible !important;
+        opacity: 1 !important;
     }
     
     /* ✅ MANTENER BRAND SECTION (LOGO) VISIBLE */
@@ -688,7 +698,6 @@
     
     .ged-mobile-sidebar .mobile-nav-menu .dropdown-item {
         padding: 8px 14px 8px 30px !important;
-        font-size: 0.85rem !important;
     }
     
     .ged-mobile-sidebar .mobile-school-info,

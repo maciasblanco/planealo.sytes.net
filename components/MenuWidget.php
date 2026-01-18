@@ -40,9 +40,6 @@ class MenuWidget extends Widget
     public function run()
     {
         try {
-            // ✅ CONSULTAR TODOS LOS MENÚS PARA DEBUG
-            self::debugAllMenus();
-            
             // ✅ OBTENER MENÚ CON SOLO 2 NIVELES (excluyendo Login/Registro)
             $menuItems = $this->getMenuItems($this->parentId);
             
@@ -91,7 +88,6 @@ class MenuWidget extends Widget
             ->orderBy('m."order" ASC, m.name ASC');
             
             $items = $query->all();
-            Yii::debug('MenuWidget - Consulta ejecutada. Items: ' . count($items) . ' para parentId: ' . ($parentId ?: 'null'));
             
         } catch (\Exception $e) {
             Yii::error('MenuWidget DB ERROR: ' . $e->getMessage(), __METHOD__);
@@ -103,13 +99,6 @@ class MenuWidget extends Widget
         foreach ($items as $item) {
             // ✅ VERIFICAR SI DEBE EXCLUIRSE (Login/Registro)
             if ($this->shouldExcludeMenuItem($item)) {
-                Yii::debug('MenuWidget - Excluyendo item: ' . $item['name'] . ' (' . ($item['route'] ?? 'sin ruta') . ')');
-                continue;
-            }
-            
-            // ✅ VERIFICAR SI DEBE MOSTRARSE
-            if (!$this->shouldShowMenuItem($item)) {
-                Yii::debug('MenuWidget - Omitiendo item: ' . $item['name'] . ' (no visible)');
                 continue;
             }
             
@@ -187,11 +176,6 @@ class MenuWidget extends Widget
                     continue;
                 }
                 
-                // ✅ VERIFICAR SI EL HIJO DEBE MOSTRARSE
-                if (!$this->shouldShowMenuItem($child)) {
-                    continue;
-                }
-                
                 // ✅ NO OBTENER NIETOS (SOLO 2 NIVELES)
                 $menuItems[] = [
                     'id' => $child['id'],
@@ -214,26 +198,26 @@ class MenuWidget extends Widget
     }
 
     /**
-     * ✅ VERIFICAR SI UN ITEM DEBE MOSTRARSE
+     * ✅ SIMPLIFICADO: SIEMPRE MOSTRAR EL ITEM (los filtros ya se hicieron en shouldExcludeMenuItem)
      */
     protected function shouldShowMenuItem($item)
     {
-        // ✅ 1. SI ES PÚBLICO, MOSTRAR SIEMPRE
-        if ($this->isPublicMenuItem($item)) {
+        // ✅ SI EL ITEM TIENE RUTA VACÍA O ES '#', ES UN CONTENEDOR, MOSTRAR SIEMPRE
+        if (empty($item['route']) || $item['route'] == '#') {
             return true;
         }
         
-        // ✅ 2. SI ES USUARIO GUEST, SOLO MOSTRAR PÚBLICOS
+        // ✅ PARA USUARIOS GUEST: PERMITIR ALGUNAS RUTAS PÚBLICAS
         if (Yii::$app->user->isGuest) {
-            return false;
+            return $this->isPublicMenuItem($item);
         }
         
-        // ✅ 3. VERIFICAR PERMISOS RBAC
-        return $this->checkMenuItemPermission($item);
+        // ✅ PARA USUARIOS AUTENTICADOS: MOSTRAR TODOS (los permisos se manejan en los controladores)
+        return true;
     }
 
     /**
-     * ✅ VERIFICAR SI ES PÚBLICO
+     * ✅ VERIFICAR SI ES PÚBLICO - MÁS FLEXIBLE
      */
     protected function isPublicMenuItem($item)
     {
@@ -244,24 +228,42 @@ class MenuWidget extends Widget
             return true;
         }
         
-        // RUTAS PÚBLICAS
+        // RUTAS PÚBLICAS (ampliadas)
         $publicRoutes = [
             'site/index',
             'site/about',
             'site/contact',
             'tienda/marketplace/index',
             'tienda/producto/create',
+            'tienda/marketplace/view',
+            'tienda/producto/index',
             'ged/default/index',
+            'ged/default/select-escuela',
             'municipio/get-by-edo',
             'parroquia/get-by-muni',
+            'escuela-club/default/index',
+            'escuela-club/escuela/view',
+            'atletas/atleta/index',
+            'reportes/default/index',
+            'aportes/default/index',
         ];
         
         if (!empty($item['route']) && in_array($item['route'], $publicRoutes)) {
             return true;
         }
         
-        // PATRONES DE RUTAS PÚBLICAS
-        $publicPatterns = ['tienda/', 'marketplace', 'site/', 'ged/default'];
+        // PATRONES DE RUTAS PÚBLICAS (ampliados)
+        $publicPatterns = [
+            'tienda/', 
+            'marketplace', 
+            'site/', 
+            'ged/', 
+            'escuela-club/',
+            'atletas/',
+            'reportes/',
+            'aportes/'
+        ];
+        
         foreach ($publicPatterns as $pattern) {
             if (!empty($item['route']) && strpos($item['route'], $pattern) === 0) {
                 return true;
@@ -269,54 +271,6 @@ class MenuWidget extends Widget
         }
         
         return false;
-    }
-
-    /**
-     * ✅ VERIFICAR PERMISOS RBAC
-     */
-    protected function checkMenuItemPermission($item)
-    {
-        // ✅ SI NO TIENE RUTA O ES CONTENEDOR, PERMITIR
-        if (empty($item['route']) || $item['route'] == '#') {
-            return true;
-        }
-        
-        try {
-            $route = $item['route'];
-            
-            // ✅ VERIFICAR PERMISO DIRECTO
-            if (Yii::$app->user->can($route)) {
-                return true;
-            }
-            
-            // ✅ VERIFICAR POR PATRÓN
-            $routeParts = explode('/', $route);
-            if (count($routeParts) >= 2) {
-                $modulePattern = $routeParts[0] . '/*';
-                if (Yii::$app->user->can($modulePattern)) {
-                    return true;
-                }
-                
-                $controllerPattern = $routeParts[0] . '/' . $routeParts[1] . '/*';
-                if (Yii::$app->user->can($controllerPattern)) {
-                    return true;
-                }
-            }
-            
-            // ✅ VERIFICAR ROLES DE ADMINISTRADOR
-            $adminRoles = ['admin', 'administrator', 'superadmin'];
-            foreach ($adminRoles as $role) {
-                if (Yii::$app->user->can($role)) {
-                    return true;
-                }
-            }
-            
-            return false;
-            
-        } catch (\Exception $e) {
-            Yii::error('Permission check error: ' . $e->getMessage(), __METHOD__);
-            return false;
-        }
     }
 
     /**
@@ -475,9 +429,6 @@ class MenuWidget extends Widget
         
         $html .= '</ul>';
         
-        // ✅ AGREGAR SEPARADOR PARA CONTROL DE SESIÓN (que estará en otra parte del offcanvas)
-        $html .= '<hr class="my-3">';
-        
         return $html;
     }
 
@@ -513,41 +464,5 @@ class MenuWidget extends Widget
         $menuItems .= '</ul>';
         
         return $menuItems;
-    }
-    
-    /**
-     * ✅ DEBUG: VER TODOS LOS MENÚS DISPONIBLES
-     */
-    public static function debugAllMenus()
-    {
-        try {
-            $query = new Query();
-            $allMenus = $query->select([
-                    'm.id', 
-                    'm.name', 
-                    'm.route', 
-                    'm.parent', 
-                    'm."order" as menu_order'
-                ])
-                ->from('seguridad.menu m')
-                ->orderBy('m.parent ASC, m."order" ASC')
-                ->all();
-            
-            Yii::debug('=== TODOS LOS MENÚS EN LA BD ===', __METHOD__);
-            foreach ($allMenus as $menu) {
-                Yii::debug(sprintf(
-                    'ID: %d | Nombre: %s | Ruta: %s | Parent: %s',
-                    $menu['id'],
-                    $menu['name'],
-                    $menu['route'] ?: 'null',
-                    $menu['parent'] ?: 'null'
-                ), __METHOD__);
-            }
-            
-            return $allMenus;
-        } catch (\Exception $e) {
-            Yii::error('ERROR obteniendo menús: ' . $e->getMessage(), __METHOD__);
-            return [];
-        }
     }
 }
