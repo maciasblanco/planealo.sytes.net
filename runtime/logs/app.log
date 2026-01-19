@@ -75329,3 +75329,1460 @@ $_SERVER = [
     'REQUEST_TIME_FLOAT' => 1768730735.0065
     'REQUEST_TIME' => 1768730735
 ]
+2026-01-19 10:21:41 [::1][-][-][warning][application] MenuWidget: Base de datos no disponible
+    in C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php:71
+    in C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php:44
+    in C:\xampp\htdocs\planealo.sytes.net\views\layouts\_navbar.php:62
+2026-01-19 10:21:41 [::1][-][-][warning][application] MenuWidget: No se encontraron items, usando fallback
+    in C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php:47
+    in C:\xampp\htdocs\planealo.sytes.net\views\layouts\_navbar.php:62
+    in C:\xampp\htdocs\planealo.sytes.net\views\layouts\main.php:57
+2026-01-19 10:21:41 [::1][-][-][warning][application] MenuWidget: Base de datos no disponible
+    in C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php:71
+    in C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php:44
+    in C:\xampp\htdocs\planealo.sytes.net\views\layouts\_navbar.php:214
+2026-01-19 10:21:41 [::1][-][-][warning][application] MenuWidget: No se encontraron items, usando fallback
+    in C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php:47
+    in C:\xampp\htdocs\planealo.sytes.net\views\layouts\_navbar.php:214
+    in C:\xampp\htdocs\planealo.sytes.net\views\layouts\main.php:57
+2026-01-19 10:21:41 [::1][-][-][warning][application] MenuWidget: Base de datos no disponible
+    in C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php:71
+    in C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php:44
+    in C:\xampp\htdocs\planealo.sytes.net\views\layouts\main.php:102
+2026-01-19 10:21:41 [::1][-][-][warning][application] MenuWidget: No se encontraron items, usando fallback
+    in C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php:47
+    in C:\xampp\htdocs\planealo.sytes.net\views\layouts\main.php:102
+    in C:\xampp\htdocs\planealo.sytes.net\controllers\SiteController.php:80
+2026-01-19 10:21:38 [::1][-][-][info][application] $_GET = []
+
+$_POST = []
+
+$_FILES = []
+
+$_COOKIE = [
+    '_ga' => 'GA1.1.1679908835.1749223008'
+    '_csrf' => 'b26dfb1896bc57fd30c5b742ca13964754cdeef8c92d3118f3ea2fe504e4794aa:2:{i:0;s:5:\"_csrf\";i:1;s:32:\"2GmyDK7YlhT4TjmsaU6UJM_i3bjmUodJ\";}'
+    'PHPSESSID' => '6klntft7q8v8jliqdkpi006d66'
+]
+
+$_SESSION = [
+    '__flash' => []
+    '__returnUrl' => 'http://localhost/planealo.sytes.net/web/tienda/registro-vendedor'
+]
+
+$_SERVER = [
+    'MIBDIRS' => 'C:/xampp/php/extras/mibs'
+    'MYSQL_HOME' => '\\xampp\\mysql\\bin'
+    'OPENSSL_CONF' => 'C:/xampp/apache/bin/openssl.cnf'
+    'PHP_PEAR_SYSCONF_DIR' => '\\xampp\\php'
+    'PHPRC' => '\\xampp\\php'
+    'TMP' => '\\xampp\\tmp'
+    'HTTP_HOST' => 'localhost'
+    'HTTP_CONNECTION' => 'keep-alive'
+    'HTTP_CACHE_CONTROL' => 'max-age=0'
+    'HTTP_SEC_CH_UA' => '\"Chromium\";v=\"140\", \"Not=A?Brand\";v=\"24\", \"Opera GX\";v=\"124\"'
+    'HTTP_SEC_CH_UA_MOBILE' => '?0'
+    'HTTP_SEC_CH_UA_PLATFORM' => '\"Windows\"'
+    'HTTP_UPGRADE_INSECURE_REQUESTS' => '1'
+    'HTTP_USER_AGENT' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36 OPR/124.0.0.0'
+    'HTTP_ACCEPT' => 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7'
+    'HTTP_SEC_FETCH_SITE' => 'same-origin'
+    'HTTP_SEC_FETCH_MODE' => 'navigate'
+    'HTTP_SEC_FETCH_USER' => '?1'
+    'HTTP_SEC_FETCH_DEST' => 'document'
+    'HTTP_REFERER' => 'http://localhost/planealo.sytes.net/web/login'
+    'HTTP_ACCEPT_ENCODING' => 'gzip, deflate, br, zstd'
+    'HTTP_ACCEPT_LANGUAGE' => 'en,id;q=0.9,tr;q=0.8,ru;q=0.7'
+    'HTTP_COOKIE' => '_ga=GA1.1.1679908835.1749223008; _csrf=b26dfb1896bc57fd30c5b742ca13964754cdeef8c92d3118f3ea2fe504e4794aa%3A2%3A%7Bi%3A0%3Bs%3A5%3A%22_csrf%22%3Bi%3A1%3Bs%3A32%3A%222GmyDK7YlhT4TjmsaU6UJM_i3bjmUodJ%22%3B%7D; PHPSESSID=6klntft7q8v8jliqdkpi006d66'
+    'PATH' => 'C:\\WINDOWS\\system32;C:\\WINDOWS;C:\\WINDOWS\\System32\\Wbem;C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\;C:\\WINDOWS\\System32\\OpenSSH\\;C:\\xampp\\php;C:\\ProgramData\\ComposerSetup\\bin;C:\\Program Files\\PuTTY\\;C:\\Program Files\\Git\\cmd;C:\\Program Files\\nodejs\\;C:\\Program Files (x86)\\Microsoft SQL Server\\160\\Tools\\Binn\\;C:\\Program Files\\Microsoft SQL Server\\160\\Tools\\Binn\\;C:\\Program Files\\Microsoft SQL Server\\Client SDK\\ODBC\\170\\Tools\\Binn\\;C:\\Program Files\\Microsoft SQL Server\\160\\DTS\\Binn\\;C:\\Program Files (x86)\\Microsoft SQL Server\\160\\DTS\\Binn\\;C:\\Users\\Otic-Sistemas\\AppData\\Local\\Microsoft\\WindowsApps;;C:\\Users\\Otic-Sistemas\\AppData\\Local\\Programs\\Microsoft VS Code\\bin;C:\\Users\\Otic-Sistemas\\AppData\\Roaming\\Composer\\vendor\\bin;C:\\Users\\Otic-Sistemas\\AppData\\Roaming\\npm'
+    'SystemRoot' => 'C:\\WINDOWS'
+    'COMSPEC' => 'C:\\WINDOWS\\system32\\cmd.exe'
+    'PATHEXT' => '.COM;.EXE;.BAT;.CMD;.VBS;.VBE;.JS;.JSE;.WSF;.WSH;.MSC'
+    'WINDIR' => 'C:\\WINDOWS'
+    'SERVER_SIGNATURE' => '<address>Apache/2.4.54 (Win64) OpenSSL/1.1.1p PHP/8.2.0 Server at localhost Port 80</address>
+'
+    'SERVER_SOFTWARE' => 'Apache/2.4.54 (Win64) OpenSSL/1.1.1p PHP/8.2.0'
+    'SERVER_NAME' => 'localhost'
+    'SERVER_ADDR' => '::1'
+    'SERVER_PORT' => '80'
+    'REMOTE_ADDR' => '::1'
+    'DOCUMENT_ROOT' => 'C:/xampp/htdocs'
+    'REQUEST_SCHEME' => 'http'
+    'CONTEXT_PREFIX' => ''
+    'CONTEXT_DOCUMENT_ROOT' => 'C:/xampp/htdocs'
+    'SERVER_ADMIN' => 'postmaster@localhost'
+    'SCRIPT_FILENAME' => 'C:/xampp/htdocs/planealo.sytes.net/web/index.php'
+    'REMOTE_PORT' => '54696'
+    'GATEWAY_INTERFACE' => 'CGI/1.1'
+    'SERVER_PROTOCOL' => 'HTTP/1.1'
+    'REQUEST_METHOD' => 'GET'
+    'QUERY_STRING' => ''
+    'REQUEST_URI' => '/planealo.sytes.net/web/'
+    'SCRIPT_NAME' => '/planealo.sytes.net/web/index.php'
+    'PHP_SELF' => '/planealo.sytes.net/web/index.php'
+    'REQUEST_TIME_FLOAT' => 1768832495.7919
+    'REQUEST_TIME' => 1768832495
+]
+2026-01-19 10:25:23 [::1][-][-][warning][application] MenuWidget: Base de datos no disponible
+    in C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php:71
+    in C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php:44
+    in C:\xampp\htdocs\planealo.sytes.net\views\layouts\_navbar.php:62
+2026-01-19 10:25:23 [::1][-][-][warning][application] MenuWidget: No se encontraron items, usando fallback
+    in C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php:47
+    in C:\xampp\htdocs\planealo.sytes.net\views\layouts\_navbar.php:62
+    in C:\xampp\htdocs\planealo.sytes.net\views\layouts\main.php:57
+2026-01-19 10:25:23 [::1][-][-][warning][application] MenuWidget: Base de datos no disponible
+    in C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php:71
+    in C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php:44
+    in C:\xampp\htdocs\planealo.sytes.net\views\layouts\_navbar.php:214
+2026-01-19 10:25:23 [::1][-][-][warning][application] MenuWidget: No se encontraron items, usando fallback
+    in C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php:47
+    in C:\xampp\htdocs\planealo.sytes.net\views\layouts\_navbar.php:214
+    in C:\xampp\htdocs\planealo.sytes.net\views\layouts\main.php:57
+2026-01-19 10:25:23 [::1][-][-][warning][application] MenuWidget: Base de datos no disponible
+    in C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php:71
+    in C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php:44
+    in C:\xampp\htdocs\planealo.sytes.net\views\layouts\main.php:102
+2026-01-19 10:25:23 [::1][-][-][warning][application] MenuWidget: No se encontraron items, usando fallback
+    in C:\xampp\htdocs\planealo.sytes.net\components\MenuWidget.php:47
+    in C:\xampp\htdocs\planealo.sytes.net\views\layouts\main.php:102
+    in C:\xampp\htdocs\planealo.sytes.net\controllers\SiteController.php:153
+2026-01-19 10:25:21 [::1][-][-][info][application] $_GET = []
+
+$_POST = []
+
+$_FILES = []
+
+$_COOKIE = [
+    '_ga' => 'GA1.1.1679908835.1749223008'
+    '_csrf' => 'b26dfb1896bc57fd30c5b742ca13964754cdeef8c92d3118f3ea2fe504e4794aa:2:{i:0;s:5:\"_csrf\";i:1;s:32:\"2GmyDK7YlhT4TjmsaU6UJM_i3bjmUodJ\";}'
+    'PHPSESSID' => '6klntft7q8v8jliqdkpi006d66'
+]
+
+$_SESSION = [
+    '__flash' => []
+    '__returnUrl' => 'http://localhost/planealo.sytes.net/web/tienda/registro-vendedor'
+]
+
+$_SERVER = [
+    'REDIRECT_MIBDIRS' => 'C:/xampp/php/extras/mibs'
+    'REDIRECT_MYSQL_HOME' => '\\xampp\\mysql\\bin'
+    'REDIRECT_OPENSSL_CONF' => 'C:/xampp/apache/bin/openssl.cnf'
+    'REDIRECT_PHP_PEAR_SYSCONF_DIR' => '\\xampp\\php'
+    'REDIRECT_PHPRC' => '\\xampp\\php'
+    'REDIRECT_TMP' => '\\xampp\\tmp'
+    'REDIRECT_STATUS' => '200'
+    'MIBDIRS' => 'C:/xampp/php/extras/mibs'
+    'MYSQL_HOME' => '\\xampp\\mysql\\bin'
+    'OPENSSL_CONF' => 'C:/xampp/apache/bin/openssl.cnf'
+    'PHP_PEAR_SYSCONF_DIR' => '\\xampp\\php'
+    'PHPRC' => '\\xampp\\php'
+    'TMP' => '\\xampp\\tmp'
+    'HTTP_HOST' => 'localhost'
+    'HTTP_CONNECTION' => 'keep-alive'
+    'HTTP_SEC_CH_UA' => '\"Chromium\";v=\"140\", \"Not=A?Brand\";v=\"24\", \"Opera GX\";v=\"124\"'
+    'HTTP_SEC_CH_UA_MOBILE' => '?1'
+    'HTTP_SEC_CH_UA_PLATFORM' => '\"Android\"'
+    'HTTP_UPGRADE_INSECURE_REQUESTS' => '1'
+    'HTTP_USER_AGENT' => 'Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Mobile Safari/537.36'
+    'HTTP_ACCEPT' => 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7'
+    'HTTP_SEC_FETCH_SITE' => 'same-origin'
+    'HTTP_SEC_FETCH_MODE' => 'navigate'
+    'HTTP_SEC_FETCH_USER' => '?1'
+    'HTTP_SEC_FETCH_DEST' => 'document'
+    'HTTP_REFERER' => 'http://localhost/planealo.sytes.net/web/tienda/marketplace'
+    'HTTP_ACCEPT_ENCODING' => 'gzip, deflate, br, zstd'
+    'HTTP_ACCEPT_LANGUAGE' => 'en,id;q=0.9,tr;q=0.8,ru;q=0.7'
+    'HTTP_COOKIE' => '_ga=GA1.1.1679908835.1749223008; _csrf=b26dfb1896bc57fd30c5b742ca13964754cdeef8c92d3118f3ea2fe504e4794aa%3A2%3A%7Bi%3A0%3Bs%3A5%3A%22_csrf%22%3Bi%3A1%3Bs%3A32%3A%222GmyDK7YlhT4TjmsaU6UJM_i3bjmUodJ%22%3B%7D; PHPSESSID=6klntft7q8v8jliqdkpi006d66'
+    'PATH' => 'C:\\WINDOWS\\system32;C:\\WINDOWS;C:\\WINDOWS\\System32\\Wbem;C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\;C:\\WINDOWS\\System32\\OpenSSH\\;C:\\xampp\\php;C:\\ProgramData\\ComposerSetup\\bin;C:\\Program Files\\PuTTY\\;C:\\Program Files\\Git\\cmd;C:\\Program Files\\nodejs\\;C:\\Program Files (x86)\\Microsoft SQL Server\\160\\Tools\\Binn\\;C:\\Program Files\\Microsoft SQL Server\\160\\Tools\\Binn\\;C:\\Program Files\\Microsoft SQL Server\\Client SDK\\ODBC\\170\\Tools\\Binn\\;C:\\Program Files\\Microsoft SQL Server\\160\\DTS\\Binn\\;C:\\Program Files (x86)\\Microsoft SQL Server\\160\\DTS\\Binn\\;C:\\Users\\Otic-Sistemas\\AppData\\Local\\Microsoft\\WindowsApps;;C:\\Users\\Otic-Sistemas\\AppData\\Local\\Programs\\Microsoft VS Code\\bin;C:\\Users\\Otic-Sistemas\\AppData\\Roaming\\Composer\\vendor\\bin;C:\\Users\\Otic-Sistemas\\AppData\\Roaming\\npm'
+    'SystemRoot' => 'C:\\WINDOWS'
+    'COMSPEC' => 'C:\\WINDOWS\\system32\\cmd.exe'
+    'PATHEXT' => '.COM;.EXE;.BAT;.CMD;.VBS;.VBE;.JS;.JSE;.WSF;.WSH;.MSC'
+    'WINDIR' => 'C:\\WINDOWS'
+    'SERVER_SIGNATURE' => '<address>Apache/2.4.54 (Win64) OpenSSL/1.1.1p PHP/8.2.0 Server at localhost Port 80</address>
+'
+    'SERVER_SOFTWARE' => 'Apache/2.4.54 (Win64) OpenSSL/1.1.1p PHP/8.2.0'
+    'SERVER_NAME' => 'localhost'
+    'SERVER_ADDR' => '::1'
+    'SERVER_PORT' => '80'
+    'REMOTE_ADDR' => '::1'
+    'DOCUMENT_ROOT' => 'C:/xampp/htdocs'
+    'REQUEST_SCHEME' => 'http'
+    'CONTEXT_PREFIX' => ''
+    'CONTEXT_DOCUMENT_ROOT' => 'C:/xampp/htdocs'
+    'SERVER_ADMIN' => 'postmaster@localhost'
+    'SCRIPT_FILENAME' => 'C:/xampp/htdocs/planealo.sytes.net/web/index.php'
+    'REMOTE_PORT' => '54899'
+    'REDIRECT_URL' => '/planealo.sytes.net/web/login'
+    'GATEWAY_INTERFACE' => 'CGI/1.1'
+    'SERVER_PROTOCOL' => 'HTTP/1.1'
+    'REQUEST_METHOD' => 'GET'
+    'QUERY_STRING' => ''
+    'REQUEST_URI' => '/planealo.sytes.net/web/login'
+    'SCRIPT_NAME' => '/planealo.sytes.net/web/index.php'
+    'PHP_SELF' => '/planealo.sytes.net/web/index.php'
+    'REQUEST_TIME_FLOAT' => 1768832721.0268
+    'REQUEST_TIME' => 1768832721
+]
+2026-01-19 10:32:38 [::1][1][rgeriltv49hvpqikkathcggkkk][error][yii\web\HttpException:404] yii\base\InvalidRouteException: Unable to resolve the request "img/logos/escuelas/logo6.png". in C:\xampp\htdocs\planealo.sytes.net\vendor\yiisoft\yii2\base\Module.php:564
+Stack trace:
+#0 C:\xampp\htdocs\planealo.sytes.net\vendor\yiisoft\yii2\web\Application.php(103): yii\base\Module->runAction('img/logos/escue...', Array)
+#1 C:\xampp\htdocs\planealo.sytes.net\vendor\yiisoft\yii2\base\Application.php(387): yii\web\Application->handleRequest(Object(yii\web\Request))
+#2 C:\xampp\htdocs\planealo.sytes.net\web\index.php(12): yii\base\Application->run()
+#3 {main}
+
+Next yii\web\NotFoundHttpException: Página no encontrada. in C:\xampp\htdocs\planealo.sytes.net\vendor\yiisoft\yii2\web\Application.php:115
+Stack trace:
+#0 C:\xampp\htdocs\planealo.sytes.net\vendor\yiisoft\yii2\base\Application.php(387): yii\web\Application->handleRequest(Object(yii\web\Request))
+#1 C:\xampp\htdocs\planealo.sytes.net\web\index.php(12): yii\base\Application->run()
+#2 {main}
+2026-01-19 10:32:38 [::1][1][rgeriltv49hvpqikkathcggkkk][info][application] $_GET = []
+
+$_POST = []
+
+$_FILES = []
+
+$_COOKIE = [
+    '_ga' => 'GA1.1.1679908835.1749223008'
+    'PHPSESSID' => 'rgeriltv49hvpqikkathcggkkk'
+    '_csrf' => 'dbde5b1a0ac035dea6582fee59fe415e24bc635f99eac2a0d1d58bd0f1475a25a:2:{i:0;s:5:\"_csrf\";i:1;s:32:\"sUSc6CUunvV3OADJlbxTuIIQkUBJAUCv\";}'
+]
+
+$_SESSION = [
+    '__flash' => []
+    '__returnUrl' => 'http://localhost/planealo.sytes.net/web/tienda/registro-vendedor'
+    '__id' => 1
+    '__authKey' => 'FCxNRGJia25jro30ecX5r8yVk7nCuaOY'
+    'id_escuela' => 2
+    'nombre_escuela' => 'Club Aves Voladoras'
+    'escuela_activa' => true
+    'escuela_ultima_actualizacion' => 1768833157
+    'idEscuela' => 2
+    'nombreEscuela' => 'Club Aves Voladoras'
+]
+
+$_SERVER = [
+    'REDIRECT_MIBDIRS' => 'C:/xampp/php/extras/mibs'
+    'REDIRECT_MYSQL_HOME' => '\\xampp\\mysql\\bin'
+    'REDIRECT_OPENSSL_CONF' => 'C:/xampp/apache/bin/openssl.cnf'
+    'REDIRECT_PHP_PEAR_SYSCONF_DIR' => '\\xampp\\php'
+    'REDIRECT_PHPRC' => '\\xampp\\php'
+    'REDIRECT_TMP' => '\\xampp\\tmp'
+    'REDIRECT_STATUS' => '200'
+    'MIBDIRS' => 'C:/xampp/php/extras/mibs'
+    'MYSQL_HOME' => '\\xampp\\mysql\\bin'
+    'OPENSSL_CONF' => 'C:/xampp/apache/bin/openssl.cnf'
+    'PHP_PEAR_SYSCONF_DIR' => '\\xampp\\php'
+    'PHPRC' => '\\xampp\\php'
+    'TMP' => '\\xampp\\tmp'
+    'HTTP_HOST' => 'localhost'
+    'HTTP_CONNECTION' => 'keep-alive'
+    'HTTP_SEC_CH_UA_PLATFORM' => '\"Android\"'
+    'HTTP_USER_AGENT' => 'Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Mobile Safari/537.36'
+    'HTTP_SEC_CH_UA' => '\"Chromium\";v=\"140\", \"Not=A?Brand\";v=\"24\", \"Opera GX\";v=\"124\"'
+    'HTTP_SEC_CH_UA_MOBILE' => '?1'
+    'HTTP_ACCEPT' => 'image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8'
+    'HTTP_SEC_FETCH_SITE' => 'same-origin'
+    'HTTP_SEC_FETCH_MODE' => 'no-cors'
+    'HTTP_SEC_FETCH_DEST' => 'image'
+    'HTTP_REFERER' => 'http://localhost/planealo.sytes.net/web/ged/default/index'
+    'HTTP_ACCEPT_ENCODING' => 'gzip, deflate, br, zstd'
+    'HTTP_ACCEPT_LANGUAGE' => 'en,id;q=0.9,tr;q=0.8,ru;q=0.7'
+    'HTTP_COOKIE' => '_ga=GA1.1.1679908835.1749223008; PHPSESSID=rgeriltv49hvpqikkathcggkkk; _csrf=dbde5b1a0ac035dea6582fee59fe415e24bc635f99eac2a0d1d58bd0f1475a25a%3A2%3A%7Bi%3A0%3Bs%3A5%3A%22_csrf%22%3Bi%3A1%3Bs%3A32%3A%22sUSc6CUunvV3OADJlbxTuIIQkUBJAUCv%22%3B%7D'
+    'PATH' => 'C:\\WINDOWS\\system32;C:\\WINDOWS;C:\\WINDOWS\\System32\\Wbem;C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\;C:\\WINDOWS\\System32\\OpenSSH\\;C:\\xampp\\php;C:\\ProgramData\\ComposerSetup\\bin;C:\\Program Files\\PuTTY\\;C:\\Program Files\\Git\\cmd;C:\\Program Files\\nodejs\\;C:\\Program Files (x86)\\Microsoft SQL Server\\160\\Tools\\Binn\\;C:\\Program Files\\Microsoft SQL Server\\160\\Tools\\Binn\\;C:\\Program Files\\Microsoft SQL Server\\Client SDK\\ODBC\\170\\Tools\\Binn\\;C:\\Program Files\\Microsoft SQL Server\\160\\DTS\\Binn\\;C:\\Program Files (x86)\\Microsoft SQL Server\\160\\DTS\\Binn\\;C:\\Users\\Otic-Sistemas\\AppData\\Local\\Microsoft\\WindowsApps;;C:\\Users\\Otic-Sistemas\\AppData\\Local\\Programs\\Microsoft VS Code\\bin;C:\\Users\\Otic-Sistemas\\AppData\\Roaming\\Composer\\vendor\\bin;C:\\Users\\Otic-Sistemas\\AppData\\Roaming\\npm'
+    'SystemRoot' => 'C:\\WINDOWS'
+    'COMSPEC' => 'C:\\WINDOWS\\system32\\cmd.exe'
+    'PATHEXT' => '.COM;.EXE;.BAT;.CMD;.VBS;.VBE;.JS;.JSE;.WSF;.WSH;.MSC'
+    'WINDIR' => 'C:\\WINDOWS'
+    'SERVER_SIGNATURE' => '<address>Apache/2.4.54 (Win64) OpenSSL/1.1.1p PHP/8.2.0 Server at localhost Port 80</address>
+'
+    'SERVER_SOFTWARE' => 'Apache/2.4.54 (Win64) OpenSSL/1.1.1p PHP/8.2.0'
+    'SERVER_NAME' => 'localhost'
+    'SERVER_ADDR' => '::1'
+    'SERVER_PORT' => '80'
+    'REMOTE_ADDR' => '::1'
+    'DOCUMENT_ROOT' => 'C:/xampp/htdocs'
+    'REQUEST_SCHEME' => 'http'
+    'CONTEXT_PREFIX' => ''
+    'CONTEXT_DOCUMENT_ROOT' => 'C:/xampp/htdocs'
+    'SERVER_ADMIN' => 'postmaster@localhost'
+    'SCRIPT_FILENAME' => 'C:/xampp/htdocs/planealo.sytes.net/web/index.php'
+    'REMOTE_PORT' => '55246'
+    'REDIRECT_URL' => '/planealo.sytes.net/web/img/logos/escuelas/logo6.png'
+    'GATEWAY_INTERFACE' => 'CGI/1.1'
+    'SERVER_PROTOCOL' => 'HTTP/1.1'
+    'REQUEST_METHOD' => 'GET'
+    'QUERY_STRING' => ''
+    'REQUEST_URI' => '/planealo.sytes.net/web/img/logos/escuelas/logo6.png'
+    'SCRIPT_NAME' => '/planealo.sytes.net/web/index.php'
+    'PHP_SELF' => '/planealo.sytes.net/web/index.php'
+    'REQUEST_TIME_FLOAT' => 1768833158.274
+    'REQUEST_TIME' => 1768833158
+]
+2026-01-19 10:32:38 [::1][1][rgeriltv49hvpqikkathcggkkk][error][yii\web\HttpException:404] yii\base\InvalidRouteException: Unable to resolve the request "img/logos/escuelas/logo5.png". in C:\xampp\htdocs\planealo.sytes.net\vendor\yiisoft\yii2\base\Module.php:564
+Stack trace:
+#0 C:\xampp\htdocs\planealo.sytes.net\vendor\yiisoft\yii2\web\Application.php(103): yii\base\Module->runAction('img/logos/escue...', Array)
+#1 C:\xampp\htdocs\planealo.sytes.net\vendor\yiisoft\yii2\base\Application.php(387): yii\web\Application->handleRequest(Object(yii\web\Request))
+#2 C:\xampp\htdocs\planealo.sytes.net\web\index.php(12): yii\base\Application->run()
+#3 {main}
+
+Next yii\web\NotFoundHttpException: Página no encontrada. in C:\xampp\htdocs\planealo.sytes.net\vendor\yiisoft\yii2\web\Application.php:115
+Stack trace:
+#0 C:\xampp\htdocs\planealo.sytes.net\vendor\yiisoft\yii2\base\Application.php(387): yii\web\Application->handleRequest(Object(yii\web\Request))
+#1 C:\xampp\htdocs\planealo.sytes.net\web\index.php(12): yii\base\Application->run()
+#2 {main}
+2026-01-19 10:32:38 [::1][1][rgeriltv49hvpqikkathcggkkk][info][application] $_GET = []
+
+$_POST = []
+
+$_FILES = []
+
+$_COOKIE = [
+    '_ga' => 'GA1.1.1679908835.1749223008'
+    'PHPSESSID' => 'rgeriltv49hvpqikkathcggkkk'
+    '_csrf' => 'dbde5b1a0ac035dea6582fee59fe415e24bc635f99eac2a0d1d58bd0f1475a25a:2:{i:0;s:5:\"_csrf\";i:1;s:32:\"sUSc6CUunvV3OADJlbxTuIIQkUBJAUCv\";}'
+]
+
+$_SESSION = [
+    '__flash' => []
+    '__returnUrl' => 'http://localhost/planealo.sytes.net/web/tienda/registro-vendedor'
+    '__id' => 1
+    '__authKey' => 'FCxNRGJia25jro30ecX5r8yVk7nCuaOY'
+    'id_escuela' => 2
+    'nombre_escuela' => 'Club Aves Voladoras'
+    'escuela_activa' => true
+    'escuela_ultima_actualizacion' => 1768833157
+    'idEscuela' => 2
+    'nombreEscuela' => 'Club Aves Voladoras'
+]
+
+$_SERVER = [
+    'REDIRECT_MIBDIRS' => 'C:/xampp/php/extras/mibs'
+    'REDIRECT_MYSQL_HOME' => '\\xampp\\mysql\\bin'
+    'REDIRECT_OPENSSL_CONF' => 'C:/xampp/apache/bin/openssl.cnf'
+    'REDIRECT_PHP_PEAR_SYSCONF_DIR' => '\\xampp\\php'
+    'REDIRECT_PHPRC' => '\\xampp\\php'
+    'REDIRECT_TMP' => '\\xampp\\tmp'
+    'REDIRECT_STATUS' => '200'
+    'MIBDIRS' => 'C:/xampp/php/extras/mibs'
+    'MYSQL_HOME' => '\\xampp\\mysql\\bin'
+    'OPENSSL_CONF' => 'C:/xampp/apache/bin/openssl.cnf'
+    'PHP_PEAR_SYSCONF_DIR' => '\\xampp\\php'
+    'PHPRC' => '\\xampp\\php'
+    'TMP' => '\\xampp\\tmp'
+    'HTTP_HOST' => 'localhost'
+    'HTTP_CONNECTION' => 'keep-alive'
+    'HTTP_SEC_CH_UA_PLATFORM' => '\"Android\"'
+    'HTTP_USER_AGENT' => 'Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Mobile Safari/537.36'
+    'HTTP_SEC_CH_UA' => '\"Chromium\";v=\"140\", \"Not=A?Brand\";v=\"24\", \"Opera GX\";v=\"124\"'
+    'HTTP_SEC_CH_UA_MOBILE' => '?1'
+    'HTTP_ACCEPT' => 'image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8'
+    'HTTP_SEC_FETCH_SITE' => 'same-origin'
+    'HTTP_SEC_FETCH_MODE' => 'no-cors'
+    'HTTP_SEC_FETCH_DEST' => 'image'
+    'HTTP_REFERER' => 'http://localhost/planealo.sytes.net/web/ged/default/index'
+    'HTTP_ACCEPT_ENCODING' => 'gzip, deflate, br, zstd'
+    'HTTP_ACCEPT_LANGUAGE' => 'en,id;q=0.9,tr;q=0.8,ru;q=0.7'
+    'HTTP_COOKIE' => '_ga=GA1.1.1679908835.1749223008; PHPSESSID=rgeriltv49hvpqikkathcggkkk; _csrf=dbde5b1a0ac035dea6582fee59fe415e24bc635f99eac2a0d1d58bd0f1475a25a%3A2%3A%7Bi%3A0%3Bs%3A5%3A%22_csrf%22%3Bi%3A1%3Bs%3A32%3A%22sUSc6CUunvV3OADJlbxTuIIQkUBJAUCv%22%3B%7D'
+    'PATH' => 'C:\\WINDOWS\\system32;C:\\WINDOWS;C:\\WINDOWS\\System32\\Wbem;C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\;C:\\WINDOWS\\System32\\OpenSSH\\;C:\\xampp\\php;C:\\ProgramData\\ComposerSetup\\bin;C:\\Program Files\\PuTTY\\;C:\\Program Files\\Git\\cmd;C:\\Program Files\\nodejs\\;C:\\Program Files (x86)\\Microsoft SQL Server\\160\\Tools\\Binn\\;C:\\Program Files\\Microsoft SQL Server\\160\\Tools\\Binn\\;C:\\Program Files\\Microsoft SQL Server\\Client SDK\\ODBC\\170\\Tools\\Binn\\;C:\\Program Files\\Microsoft SQL Server\\160\\DTS\\Binn\\;C:\\Program Files (x86)\\Microsoft SQL Server\\160\\DTS\\Binn\\;C:\\Users\\Otic-Sistemas\\AppData\\Local\\Microsoft\\WindowsApps;;C:\\Users\\Otic-Sistemas\\AppData\\Local\\Programs\\Microsoft VS Code\\bin;C:\\Users\\Otic-Sistemas\\AppData\\Roaming\\Composer\\vendor\\bin;C:\\Users\\Otic-Sistemas\\AppData\\Roaming\\npm'
+    'SystemRoot' => 'C:\\WINDOWS'
+    'COMSPEC' => 'C:\\WINDOWS\\system32\\cmd.exe'
+    'PATHEXT' => '.COM;.EXE;.BAT;.CMD;.VBS;.VBE;.JS;.JSE;.WSF;.WSH;.MSC'
+    'WINDIR' => 'C:\\WINDOWS'
+    'SERVER_SIGNATURE' => '<address>Apache/2.4.54 (Win64) OpenSSL/1.1.1p PHP/8.2.0 Server at localhost Port 80</address>
+'
+    'SERVER_SOFTWARE' => 'Apache/2.4.54 (Win64) OpenSSL/1.1.1p PHP/8.2.0'
+    'SERVER_NAME' => 'localhost'
+    'SERVER_ADDR' => '::1'
+    'SERVER_PORT' => '80'
+    'REMOTE_ADDR' => '::1'
+    'DOCUMENT_ROOT' => 'C:/xampp/htdocs'
+    'REQUEST_SCHEME' => 'http'
+    'CONTEXT_PREFIX' => ''
+    'CONTEXT_DOCUMENT_ROOT' => 'C:/xampp/htdocs'
+    'SERVER_ADMIN' => 'postmaster@localhost'
+    'SCRIPT_FILENAME' => 'C:/xampp/htdocs/planealo.sytes.net/web/index.php'
+    'REMOTE_PORT' => '55247'
+    'REDIRECT_URL' => '/planealo.sytes.net/web/img/logos/escuelas/logo5.png'
+    'GATEWAY_INTERFACE' => 'CGI/1.1'
+    'SERVER_PROTOCOL' => 'HTTP/1.1'
+    'REQUEST_METHOD' => 'GET'
+    'QUERY_STRING' => ''
+    'REQUEST_URI' => '/planealo.sytes.net/web/img/logos/escuelas/logo5.png'
+    'SCRIPT_NAME' => '/planealo.sytes.net/web/index.php'
+    'PHP_SELF' => '/planealo.sytes.net/web/index.php'
+    'REQUEST_TIME_FLOAT' => 1768833158.4289
+    'REQUEST_TIME' => 1768833158
+]
+2026-01-19 10:33:30 [::1][1][-][error][tasa-dolar] Error BCV Directo: fopen(https://www.bcv.org.ve/): Failed to open stream: Se produjo un error durante el intento de conexión ya que la parte conectada no respondió adecuadamente tras un periodo de tiempo, o bien se produjo un error en la conexión establecida ya que el host conectado no ha podido responder
+2026-01-19 10:33:30 [::1][1][-][warning][tasa-dolar] ❌ Fuente BCV_Directo falló o tasa inválida: 0
+2026-01-19 10:33:50 [::1][1][-][error][tasa-dolar] Error BCV Alternativo: fopen(https://www.bcv.org.ve/tasas-informativas-sistema-bancario): Failed to open stream: Se produjo un error durante el intento de conexión ya que la parte conectada no respondió adecuadamente tras un periodo de tiempo, o bien se produjo un error en la conexión establecida ya que el host conectado no ha podido responder
+2026-01-19 10:33:50 [::1][1][-][warning][tasa-dolar] ❌ Fuente BCV_Alternativo falló o tasa inválida: 0
+2026-01-19 10:34:05 [::1][1][-][error][tasa-dolar] Error Yahoo Finance: fopen(https://query1.finance.yahoo.com/v8/finance/chart/USDVES=X): Failed to open stream: Se produjo un error durante el intento de conexión ya que la parte conectada no respondió adecuadamente tras un periodo de tiempo, o bien se produjo un error en la conexión establecida ya que el host conectado no ha podido responder
+2026-01-19 10:34:05 [::1][1][-][warning][tasa-dolar] ❌ Fuente EnParalelo falló o tasa inválida: 0
+2026-01-19 10:34:20 [::1][1][-][error][tasa-dolar] Error ExchangeRate-API: fopen(https://api.exchangerate-api.com/v4/latest/USD): Failed to open stream: Se produjo un error durante el intento de conexión ya que la parte conectada no respondió adecuadamente tras un periodo de tiempo, o bien se produjo un error en la conexión establecida ya que el host conectado no ha podido responder
+2026-01-19 10:34:20 [::1][1][-][warning][tasa-dolar] ❌ Fuente API_Respaldo falló o tasa inválida: 0
+2026-01-19 10:34:20 [::1][1][-][error][tasa-dolar] ❌ Todas las fuentes fallaron
+2026-01-19 10:33:06 [::1][1][-][info][application] $_GET = []
+
+$_POST = []
+
+$_FILES = []
+
+$_COOKIE = [
+    '_ga' => 'GA1.1.1679908835.1749223008'
+    'PHPSESSID' => 'rgeriltv49hvpqikkathcggkkk'
+    '_csrf' => 'dbde5b1a0ac035dea6582fee59fe415e24bc635f99eac2a0d1d58bd0f1475a25a:2:{i:0;s:5:\"_csrf\";i:1;s:32:\"sUSc6CUunvV3OADJlbxTuIIQkUBJAUCv\";}'
+]
+
+$_SESSION = [
+    '__flash' => []
+    '__returnUrl' => 'http://localhost/planealo.sytes.net/web/tienda/registro-vendedor'
+    '__id' => 1
+    '__authKey' => 'FCxNRGJia25jro30ecX5r8yVk7nCuaOY'
+    'id_escuela' => 2
+    'nombre_escuela' => 'Club Aves Voladoras'
+    'escuela_activa' => true
+    'escuela_ultima_actualizacion' => 1768833157
+    'idEscuela' => 2
+    'nombreEscuela' => 'Club Aves Voladoras'
+]
+
+$_SERVER = [
+    'REDIRECT_MIBDIRS' => 'C:/xampp/php/extras/mibs'
+    'REDIRECT_MYSQL_HOME' => '\\xampp\\mysql\\bin'
+    'REDIRECT_OPENSSL_CONF' => 'C:/xampp/apache/bin/openssl.cnf'
+    'REDIRECT_PHP_PEAR_SYSCONF_DIR' => '\\xampp\\php'
+    'REDIRECT_PHPRC' => '\\xampp\\php'
+    'REDIRECT_TMP' => '\\xampp\\tmp'
+    'REDIRECT_STATUS' => '200'
+    'MIBDIRS' => 'C:/xampp/php/extras/mibs'
+    'MYSQL_HOME' => '\\xampp\\mysql\\bin'
+    'OPENSSL_CONF' => 'C:/xampp/apache/bin/openssl.cnf'
+    'PHP_PEAR_SYSCONF_DIR' => '\\xampp\\php'
+    'PHPRC' => '\\xampp\\php'
+    'TMP' => '\\xampp\\tmp'
+    'HTTP_HOST' => 'localhost'
+    'HTTP_CONNECTION' => 'keep-alive'
+    'HTTP_SEC_CH_UA' => '\"Chromium\";v=\"140\", \"Not=A?Brand\";v=\"24\", \"Opera GX\";v=\"124\"'
+    'HTTP_SEC_CH_UA_MOBILE' => '?1'
+    'HTTP_SEC_CH_UA_PLATFORM' => '\"Android\"'
+    'HTTP_UPGRADE_INSECURE_REQUESTS' => '1'
+    'HTTP_USER_AGENT' => 'Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Mobile Safari/537.36'
+    'HTTP_ACCEPT' => 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7'
+    'HTTP_SEC_FETCH_SITE' => 'same-origin'
+    'HTTP_SEC_FETCH_MODE' => 'navigate'
+    'HTTP_SEC_FETCH_USER' => '?1'
+    'HTTP_SEC_FETCH_DEST' => 'document'
+    'HTTP_REFERER' => 'http://localhost/planealo.sytes.net/web/ged/default/index'
+    'HTTP_ACCEPT_ENCODING' => 'gzip, deflate, br, zstd'
+    'HTTP_ACCEPT_LANGUAGE' => 'en,id;q=0.9,tr;q=0.8,ru;q=0.7'
+    'HTTP_COOKIE' => '_ga=GA1.1.1679908835.1749223008; PHPSESSID=rgeriltv49hvpqikkathcggkkk; _csrf=dbde5b1a0ac035dea6582fee59fe415e24bc635f99eac2a0d1d58bd0f1475a25a%3A2%3A%7Bi%3A0%3Bs%3A5%3A%22_csrf%22%3Bi%3A1%3Bs%3A32%3A%22sUSc6CUunvV3OADJlbxTuIIQkUBJAUCv%22%3B%7D'
+    'PATH' => 'C:\\WINDOWS\\system32;C:\\WINDOWS;C:\\WINDOWS\\System32\\Wbem;C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\;C:\\WINDOWS\\System32\\OpenSSH\\;C:\\xampp\\php;C:\\ProgramData\\ComposerSetup\\bin;C:\\Program Files\\PuTTY\\;C:\\Program Files\\Git\\cmd;C:\\Program Files\\nodejs\\;C:\\Program Files (x86)\\Microsoft SQL Server\\160\\Tools\\Binn\\;C:\\Program Files\\Microsoft SQL Server\\160\\Tools\\Binn\\;C:\\Program Files\\Microsoft SQL Server\\Client SDK\\ODBC\\170\\Tools\\Binn\\;C:\\Program Files\\Microsoft SQL Server\\160\\DTS\\Binn\\;C:\\Program Files (x86)\\Microsoft SQL Server\\160\\DTS\\Binn\\;C:\\Users\\Otic-Sistemas\\AppData\\Local\\Microsoft\\WindowsApps;;C:\\Users\\Otic-Sistemas\\AppData\\Local\\Programs\\Microsoft VS Code\\bin;C:\\Users\\Otic-Sistemas\\AppData\\Roaming\\Composer\\vendor\\bin;C:\\Users\\Otic-Sistemas\\AppData\\Roaming\\npm'
+    'SystemRoot' => 'C:\\WINDOWS'
+    'COMSPEC' => 'C:\\WINDOWS\\system32\\cmd.exe'
+    'PATHEXT' => '.COM;.EXE;.BAT;.CMD;.VBS;.VBE;.JS;.JSE;.WSF;.WSH;.MSC'
+    'WINDIR' => 'C:\\WINDOWS'
+    'SERVER_SIGNATURE' => '<address>Apache/2.4.54 (Win64) OpenSSL/1.1.1p PHP/8.2.0 Server at localhost Port 80</address>
+'
+    'SERVER_SOFTWARE' => 'Apache/2.4.54 (Win64) OpenSSL/1.1.1p PHP/8.2.0'
+    'SERVER_NAME' => 'localhost'
+    'SERVER_ADDR' => '::1'
+    'SERVER_PORT' => '80'
+    'REMOTE_ADDR' => '::1'
+    'DOCUMENT_ROOT' => 'C:/xampp/htdocs'
+    'REQUEST_SCHEME' => 'http'
+    'CONTEXT_PREFIX' => ''
+    'CONTEXT_DOCUMENT_ROOT' => 'C:/xampp/htdocs'
+    'SERVER_ADMIN' => 'postmaster@localhost'
+    'SCRIPT_FILENAME' => 'C:/xampp/htdocs/planealo.sytes.net/web/index.php'
+    'REMOTE_PORT' => '55271'
+    'REDIRECT_URL' => '/planealo.sytes.net/web/aportes/aportes/index'
+    'GATEWAY_INTERFACE' => 'CGI/1.1'
+    'SERVER_PROTOCOL' => 'HTTP/1.1'
+    'REQUEST_METHOD' => 'GET'
+    'QUERY_STRING' => ''
+    'REQUEST_URI' => '/planealo.sytes.net/web/aportes/aportes/index'
+    'SCRIPT_NAME' => '/planealo.sytes.net/web/index.php'
+    'PHP_SELF' => '/planealo.sytes.net/web/index.php'
+    'REQUEST_TIME_FLOAT' => 1768833186.8201
+    'REQUEST_TIME' => 1768833186
+]
+2026-01-19 10:34:23 [::1][1][rgeriltv49hvpqikkathcggkkk][error][yii\web\HttpException:404] yii\base\InvalidRouteException: Unable to resolve the request "js/escuela-selector.js". in C:\xampp\htdocs\planealo.sytes.net\vendor\yiisoft\yii2\base\Module.php:564
+Stack trace:
+#0 C:\xampp\htdocs\planealo.sytes.net\vendor\yiisoft\yii2\web\Application.php(103): yii\base\Module->runAction('js/escuela-sele...', Array)
+#1 C:\xampp\htdocs\planealo.sytes.net\vendor\yiisoft\yii2\base\Application.php(387): yii\web\Application->handleRequest(Object(yii\web\Request))
+#2 C:\xampp\htdocs\planealo.sytes.net\web\index.php(12): yii\base\Application->run()
+#3 {main}
+
+Next yii\web\NotFoundHttpException: Página no encontrada. in C:\xampp\htdocs\planealo.sytes.net\vendor\yiisoft\yii2\web\Application.php:115
+Stack trace:
+#0 C:\xampp\htdocs\planealo.sytes.net\vendor\yiisoft\yii2\base\Application.php(387): yii\web\Application->handleRequest(Object(yii\web\Request))
+#1 C:\xampp\htdocs\planealo.sytes.net\web\index.php(12): yii\base\Application->run()
+#2 {main}
+2026-01-19 10:34:23 [::1][1][rgeriltv49hvpqikkathcggkkk][info][application] $_GET = []
+
+$_POST = []
+
+$_FILES = []
+
+$_COOKIE = [
+    '_ga' => 'GA1.1.1679908835.1749223008'
+    'PHPSESSID' => 'rgeriltv49hvpqikkathcggkkk'
+    '_csrf' => 'dbde5b1a0ac035dea6582fee59fe415e24bc635f99eac2a0d1d58bd0f1475a25a:2:{i:0;s:5:\"_csrf\";i:1;s:32:\"sUSc6CUunvV3OADJlbxTuIIQkUBJAUCv\";}'
+]
+
+$_SESSION = [
+    '__flash' => []
+    '__returnUrl' => 'http://localhost/planealo.sytes.net/web/tienda/registro-vendedor'
+    '__id' => 1
+    '__authKey' => 'FCxNRGJia25jro30ecX5r8yVk7nCuaOY'
+    'id_escuela' => 2
+    'nombre_escuela' => 'Club Aves Voladoras'
+    'escuela_activa' => true
+    'escuela_ultima_actualizacion' => 1768833157
+    'idEscuela' => 2
+    'nombreEscuela' => 'Club Aves Voladoras'
+]
+
+$_SERVER = [
+    'REDIRECT_MIBDIRS' => 'C:/xampp/php/extras/mibs'
+    'REDIRECT_MYSQL_HOME' => '\\xampp\\mysql\\bin'
+    'REDIRECT_OPENSSL_CONF' => 'C:/xampp/apache/bin/openssl.cnf'
+    'REDIRECT_PHP_PEAR_SYSCONF_DIR' => '\\xampp\\php'
+    'REDIRECT_PHPRC' => '\\xampp\\php'
+    'REDIRECT_TMP' => '\\xampp\\tmp'
+    'REDIRECT_STATUS' => '200'
+    'MIBDIRS' => 'C:/xampp/php/extras/mibs'
+    'MYSQL_HOME' => '\\xampp\\mysql\\bin'
+    'OPENSSL_CONF' => 'C:/xampp/apache/bin/openssl.cnf'
+    'PHP_PEAR_SYSCONF_DIR' => '\\xampp\\php'
+    'PHPRC' => '\\xampp\\php'
+    'TMP' => '\\xampp\\tmp'
+    'HTTP_HOST' => 'localhost'
+    'HTTP_CONNECTION' => 'keep-alive'
+    'HTTP_SEC_CH_UA_PLATFORM' => '\"Android\"'
+    'HTTP_USER_AGENT' => 'Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Mobile Safari/537.36'
+    'HTTP_SEC_CH_UA' => '\"Chromium\";v=\"140\", \"Not=A?Brand\";v=\"24\", \"Opera GX\";v=\"124\"'
+    'HTTP_SEC_CH_UA_MOBILE' => '?1'
+    'HTTP_ACCEPT' => '*/*'
+    'HTTP_SEC_FETCH_SITE' => 'same-origin'
+    'HTTP_SEC_FETCH_MODE' => 'no-cors'
+    'HTTP_SEC_FETCH_DEST' => 'script'
+    'HTTP_REFERER' => 'http://localhost/planealo.sytes.net/web/aportes/aportes/index'
+    'HTTP_ACCEPT_ENCODING' => 'gzip, deflate, br, zstd'
+    'HTTP_ACCEPT_LANGUAGE' => 'en,id;q=0.9,tr;q=0.8,ru;q=0.7'
+    'HTTP_COOKIE' => '_ga=GA1.1.1679908835.1749223008; PHPSESSID=rgeriltv49hvpqikkathcggkkk; _csrf=dbde5b1a0ac035dea6582fee59fe415e24bc635f99eac2a0d1d58bd0f1475a25a%3A2%3A%7Bi%3A0%3Bs%3A5%3A%22_csrf%22%3Bi%3A1%3Bs%3A32%3A%22sUSc6CUunvV3OADJlbxTuIIQkUBJAUCv%22%3B%7D'
+    'PATH' => 'C:\\WINDOWS\\system32;C:\\WINDOWS;C:\\WINDOWS\\System32\\Wbem;C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\;C:\\WINDOWS\\System32\\OpenSSH\\;C:\\xampp\\php;C:\\ProgramData\\ComposerSetup\\bin;C:\\Program Files\\PuTTY\\;C:\\Program Files\\Git\\cmd;C:\\Program Files\\nodejs\\;C:\\Program Files (x86)\\Microsoft SQL Server\\160\\Tools\\Binn\\;C:\\Program Files\\Microsoft SQL Server\\160\\Tools\\Binn\\;C:\\Program Files\\Microsoft SQL Server\\Client SDK\\ODBC\\170\\Tools\\Binn\\;C:\\Program Files\\Microsoft SQL Server\\160\\DTS\\Binn\\;C:\\Program Files (x86)\\Microsoft SQL Server\\160\\DTS\\Binn\\;C:\\Users\\Otic-Sistemas\\AppData\\Local\\Microsoft\\WindowsApps;;C:\\Users\\Otic-Sistemas\\AppData\\Local\\Programs\\Microsoft VS Code\\bin;C:\\Users\\Otic-Sistemas\\AppData\\Roaming\\Composer\\vendor\\bin;C:\\Users\\Otic-Sistemas\\AppData\\Roaming\\npm'
+    'SystemRoot' => 'C:\\WINDOWS'
+    'COMSPEC' => 'C:\\WINDOWS\\system32\\cmd.exe'
+    'PATHEXT' => '.COM;.EXE;.BAT;.CMD;.VBS;.VBE;.JS;.JSE;.WSF;.WSH;.MSC'
+    'WINDIR' => 'C:\\WINDOWS'
+    'SERVER_SIGNATURE' => '<address>Apache/2.4.54 (Win64) OpenSSL/1.1.1p PHP/8.2.0 Server at localhost Port 80</address>
+'
+    'SERVER_SOFTWARE' => 'Apache/2.4.54 (Win64) OpenSSL/1.1.1p PHP/8.2.0'
+    'SERVER_NAME' => 'localhost'
+    'SERVER_ADDR' => '::1'
+    'SERVER_PORT' => '80'
+    'REMOTE_ADDR' => '::1'
+    'DOCUMENT_ROOT' => 'C:/xampp/htdocs'
+    'REQUEST_SCHEME' => 'http'
+    'CONTEXT_PREFIX' => ''
+    'CONTEXT_DOCUMENT_ROOT' => 'C:/xampp/htdocs'
+    'SERVER_ADMIN' => 'postmaster@localhost'
+    'SCRIPT_FILENAME' => 'C:/xampp/htdocs/planealo.sytes.net/web/index.php'
+    'REMOTE_PORT' => '55337'
+    'REDIRECT_URL' => '/planealo.sytes.net/web/js/escuela-selector.js'
+    'GATEWAY_INTERFACE' => 'CGI/1.1'
+    'SERVER_PROTOCOL' => 'HTTP/1.1'
+    'REQUEST_METHOD' => 'GET'
+    'QUERY_STRING' => ''
+    'REQUEST_URI' => '/planealo.sytes.net/web/js/escuela-selector.js'
+    'SCRIPT_NAME' => '/planealo.sytes.net/web/index.php'
+    'PHP_SELF' => '/planealo.sytes.net/web/index.php'
+    'REQUEST_TIME_FLOAT' => 1768833263.7061
+    'REQUEST_TIME' => 1768833263
+]
+2026-01-19 10:40:20 [::1][1][-][error][tasa-dolar] Error BCV Directo: fopen(https://www.bcv.org.ve/): Failed to open stream: Se produjo un error durante el intento de conexión ya que la parte conectada no respondió adecuadamente tras un periodo de tiempo, o bien se produjo un error en la conexión establecida ya que el host conectado no ha podido responder
+2026-01-19 10:40:20 [::1][1][-][warning][tasa-dolar] ❌ Fuente BCV_Directo falló o tasa inválida: 0
+2026-01-19 10:40:40 [::1][1][-][error][tasa-dolar] Error BCV Alternativo: fopen(https://www.bcv.org.ve/tasas-informativas-sistema-bancario): Failed to open stream: Se produjo un error durante el intento de conexión ya que la parte conectada no respondió adecuadamente tras un periodo de tiempo, o bien se produjo un error en la conexión establecida ya que el host conectado no ha podido responder
+2026-01-19 10:40:40 [::1][1][-][warning][tasa-dolar] ❌ Fuente BCV_Alternativo falló o tasa inválida: 0
+2026-01-19 10:40:55 [::1][1][-][error][tasa-dolar] Error Yahoo Finance: fopen(https://query1.finance.yahoo.com/v8/finance/chart/USDVES=X): Failed to open stream: Se produjo un error durante el intento de conexión ya que la parte conectada no respondió adecuadamente tras un periodo de tiempo, o bien se produjo un error en la conexión establecida ya que el host conectado no ha podido responder
+2026-01-19 10:40:55 [::1][1][-][warning][tasa-dolar] ❌ Fuente EnParalelo falló o tasa inválida: 0
+2026-01-19 10:41:10 [::1][1][-][error][tasa-dolar] Error ExchangeRate-API: fopen(https://api.exchangerate-api.com/v4/latest/USD): Failed to open stream: Se produjo un error durante el intento de conexión ya que la parte conectada no respondió adecuadamente tras un periodo de tiempo, o bien se produjo un error en la conexión establecida ya que el host conectado no ha podido responder
+2026-01-19 10:41:10 [::1][1][-][warning][tasa-dolar] ❌ Fuente API_Respaldo falló o tasa inválida: 0
+2026-01-19 10:41:10 [::1][1][-][error][tasa-dolar] ❌ Todas las fuentes fallaron
+2026-01-19 10:39:53 [::1][1][-][info][application] $_GET = []
+
+$_POST = []
+
+$_FILES = []
+
+$_COOKIE = [
+    '_ga' => 'GA1.1.1679908835.1749223008'
+    'PHPSESSID' => 'rgeriltv49hvpqikkathcggkkk'
+    '_csrf' => 'dbde5b1a0ac035dea6582fee59fe415e24bc635f99eac2a0d1d58bd0f1475a25a:2:{i:0;s:5:\"_csrf\";i:1;s:32:\"sUSc6CUunvV3OADJlbxTuIIQkUBJAUCv\";}'
+]
+
+$_SESSION = [
+    '__flash' => []
+    '__returnUrl' => 'http://localhost/planealo.sytes.net/web/tienda/registro-vendedor'
+    '__id' => 1
+    '__authKey' => 'FCxNRGJia25jro30ecX5r8yVk7nCuaOY'
+    'id_escuela' => 2
+    'nombre_escuela' => 'Club Aves Voladoras'
+    'escuela_activa' => true
+    'escuela_ultima_actualizacion' => 1768833157
+    'idEscuela' => 2
+    'nombreEscuela' => 'Club Aves Voladoras'
+]
+
+$_SERVER = [
+    'REDIRECT_MIBDIRS' => 'C:/xampp/php/extras/mibs'
+    'REDIRECT_MYSQL_HOME' => '\\xampp\\mysql\\bin'
+    'REDIRECT_OPENSSL_CONF' => 'C:/xampp/apache/bin/openssl.cnf'
+    'REDIRECT_PHP_PEAR_SYSCONF_DIR' => '\\xampp\\php'
+    'REDIRECT_PHPRC' => '\\xampp\\php'
+    'REDIRECT_TMP' => '\\xampp\\tmp'
+    'REDIRECT_STATUS' => '200'
+    'MIBDIRS' => 'C:/xampp/php/extras/mibs'
+    'MYSQL_HOME' => '\\xampp\\mysql\\bin'
+    'OPENSSL_CONF' => 'C:/xampp/apache/bin/openssl.cnf'
+    'PHP_PEAR_SYSCONF_DIR' => '\\xampp\\php'
+    'PHPRC' => '\\xampp\\php'
+    'TMP' => '\\xampp\\tmp'
+    'HTTP_HOST' => 'localhost'
+    'HTTP_CONNECTION' => 'keep-alive'
+    'HTTP_PRAGMA' => 'no-cache'
+    'HTTP_CACHE_CONTROL' => 'no-cache'
+    'HTTP_SEC_CH_UA' => '\"Chromium\";v=\"140\", \"Not=A?Brand\";v=\"24\", \"Opera GX\";v=\"124\"'
+    'HTTP_SEC_CH_UA_MOBILE' => '?1'
+    'HTTP_SEC_CH_UA_PLATFORM' => '\"Android\"'
+    'HTTP_UPGRADE_INSECURE_REQUESTS' => '1'
+    'HTTP_USER_AGENT' => 'Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Mobile Safari/537.36'
+    'HTTP_ACCEPT' => 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7'
+    'HTTP_SEC_FETCH_SITE' => 'same-origin'
+    'HTTP_SEC_FETCH_MODE' => 'navigate'
+    'HTTP_SEC_FETCH_USER' => '?1'
+    'HTTP_SEC_FETCH_DEST' => 'document'
+    'HTTP_REFERER' => 'http://localhost/planealo.sytes.net/web/ged/default/index'
+    'HTTP_ACCEPT_ENCODING' => 'gzip, deflate, br, zstd'
+    'HTTP_ACCEPT_LANGUAGE' => 'en,id;q=0.9,tr;q=0.8,ru;q=0.7'
+    'HTTP_COOKIE' => '_ga=GA1.1.1679908835.1749223008; PHPSESSID=rgeriltv49hvpqikkathcggkkk; _csrf=dbde5b1a0ac035dea6582fee59fe415e24bc635f99eac2a0d1d58bd0f1475a25a%3A2%3A%7Bi%3A0%3Bs%3A5%3A%22_csrf%22%3Bi%3A1%3Bs%3A32%3A%22sUSc6CUunvV3OADJlbxTuIIQkUBJAUCv%22%3B%7D'
+    'PATH' => 'C:\\WINDOWS\\system32;C:\\WINDOWS;C:\\WINDOWS\\System32\\Wbem;C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\;C:\\WINDOWS\\System32\\OpenSSH\\;C:\\xampp\\php;C:\\ProgramData\\ComposerSetup\\bin;C:\\Program Files\\PuTTY\\;C:\\Program Files\\Git\\cmd;C:\\Program Files\\nodejs\\;C:\\Program Files (x86)\\Microsoft SQL Server\\160\\Tools\\Binn\\;C:\\Program Files\\Microsoft SQL Server\\160\\Tools\\Binn\\;C:\\Program Files\\Microsoft SQL Server\\Client SDK\\ODBC\\170\\Tools\\Binn\\;C:\\Program Files\\Microsoft SQL Server\\160\\DTS\\Binn\\;C:\\Program Files (x86)\\Microsoft SQL Server\\160\\DTS\\Binn\\;C:\\Users\\Otic-Sistemas\\AppData\\Local\\Microsoft\\WindowsApps;;C:\\Users\\Otic-Sistemas\\AppData\\Local\\Programs\\Microsoft VS Code\\bin;C:\\Users\\Otic-Sistemas\\AppData\\Roaming\\Composer\\vendor\\bin;C:\\Users\\Otic-Sistemas\\AppData\\Roaming\\npm'
+    'SystemRoot' => 'C:\\WINDOWS'
+    'COMSPEC' => 'C:\\WINDOWS\\system32\\cmd.exe'
+    'PATHEXT' => '.COM;.EXE;.BAT;.CMD;.VBS;.VBE;.JS;.JSE;.WSF;.WSH;.MSC'
+    'WINDIR' => 'C:\\WINDOWS'
+    'SERVER_SIGNATURE' => '<address>Apache/2.4.54 (Win64) OpenSSL/1.1.1p PHP/8.2.0 Server at localhost Port 80</address>
+'
+    'SERVER_SOFTWARE' => 'Apache/2.4.54 (Win64) OpenSSL/1.1.1p PHP/8.2.0'
+    'SERVER_NAME' => 'localhost'
+    'SERVER_ADDR' => '::1'
+    'SERVER_PORT' => '80'
+    'REMOTE_ADDR' => '::1'
+    'DOCUMENT_ROOT' => 'C:/xampp/htdocs'
+    'REQUEST_SCHEME' => 'http'
+    'CONTEXT_PREFIX' => ''
+    'CONTEXT_DOCUMENT_ROOT' => 'C:/xampp/htdocs'
+    'SERVER_ADMIN' => 'postmaster@localhost'
+    'SCRIPT_FILENAME' => 'C:/xampp/htdocs/planealo.sytes.net/web/index.php'
+    'REMOTE_PORT' => '55516'
+    'REDIRECT_URL' => '/planealo.sytes.net/web/aportes/aportes/index'
+    'GATEWAY_INTERFACE' => 'CGI/1.1'
+    'SERVER_PROTOCOL' => 'HTTP/1.1'
+    'REQUEST_METHOD' => 'GET'
+    'QUERY_STRING' => ''
+    'REQUEST_URI' => '/planealo.sytes.net/web/aportes/aportes/index'
+    'SCRIPT_NAME' => '/planealo.sytes.net/web/index.php'
+    'PHP_SELF' => '/planealo.sytes.net/web/index.php'
+    'REQUEST_TIME_FLOAT' => 1768833593.2164
+    'REQUEST_TIME' => 1768833593
+]
+2026-01-19 10:41:12 [::1][1][rgeriltv49hvpqikkathcggkkk][error][yii\web\HttpException:404] yii\base\InvalidRouteException: Unable to resolve the request "js/escuela-selector.js". in C:\xampp\htdocs\planealo.sytes.net\vendor\yiisoft\yii2\base\Module.php:564
+Stack trace:
+#0 C:\xampp\htdocs\planealo.sytes.net\vendor\yiisoft\yii2\web\Application.php(103): yii\base\Module->runAction('js/escuela-sele...', Array)
+#1 C:\xampp\htdocs\planealo.sytes.net\vendor\yiisoft\yii2\base\Application.php(387): yii\web\Application->handleRequest(Object(yii\web\Request))
+#2 C:\xampp\htdocs\planealo.sytes.net\web\index.php(12): yii\base\Application->run()
+#3 {main}
+
+Next yii\web\NotFoundHttpException: Página no encontrada. in C:\xampp\htdocs\planealo.sytes.net\vendor\yiisoft\yii2\web\Application.php:115
+Stack trace:
+#0 C:\xampp\htdocs\planealo.sytes.net\vendor\yiisoft\yii2\base\Application.php(387): yii\web\Application->handleRequest(Object(yii\web\Request))
+#1 C:\xampp\htdocs\planealo.sytes.net\web\index.php(12): yii\base\Application->run()
+#2 {main}
+2026-01-19 10:41:12 [::1][1][rgeriltv49hvpqikkathcggkkk][info][application] $_GET = []
+
+$_POST = []
+
+$_FILES = []
+
+$_COOKIE = [
+    '_ga' => 'GA1.1.1679908835.1749223008'
+    'PHPSESSID' => 'rgeriltv49hvpqikkathcggkkk'
+    '_csrf' => 'dbde5b1a0ac035dea6582fee59fe415e24bc635f99eac2a0d1d58bd0f1475a25a:2:{i:0;s:5:\"_csrf\";i:1;s:32:\"sUSc6CUunvV3OADJlbxTuIIQkUBJAUCv\";}'
+]
+
+$_SESSION = [
+    '__flash' => []
+    '__returnUrl' => 'http://localhost/planealo.sytes.net/web/tienda/registro-vendedor'
+    '__id' => 1
+    '__authKey' => 'FCxNRGJia25jro30ecX5r8yVk7nCuaOY'
+    'id_escuela' => 2
+    'nombre_escuela' => 'Club Aves Voladoras'
+    'escuela_activa' => true
+    'escuela_ultima_actualizacion' => 1768833157
+    'idEscuela' => 2
+    'nombreEscuela' => 'Club Aves Voladoras'
+]
+
+$_SERVER = [
+    'REDIRECT_MIBDIRS' => 'C:/xampp/php/extras/mibs'
+    'REDIRECT_MYSQL_HOME' => '\\xampp\\mysql\\bin'
+    'REDIRECT_OPENSSL_CONF' => 'C:/xampp/apache/bin/openssl.cnf'
+    'REDIRECT_PHP_PEAR_SYSCONF_DIR' => '\\xampp\\php'
+    'REDIRECT_PHPRC' => '\\xampp\\php'
+    'REDIRECT_TMP' => '\\xampp\\tmp'
+    'REDIRECT_STATUS' => '200'
+    'MIBDIRS' => 'C:/xampp/php/extras/mibs'
+    'MYSQL_HOME' => '\\xampp\\mysql\\bin'
+    'OPENSSL_CONF' => 'C:/xampp/apache/bin/openssl.cnf'
+    'PHP_PEAR_SYSCONF_DIR' => '\\xampp\\php'
+    'PHPRC' => '\\xampp\\php'
+    'TMP' => '\\xampp\\tmp'
+    'HTTP_HOST' => 'localhost'
+    'HTTP_CONNECTION' => 'keep-alive'
+    'HTTP_PRAGMA' => 'no-cache'
+    'HTTP_CACHE_CONTROL' => 'no-cache'
+    'HTTP_SEC_CH_UA_PLATFORM' => '\"Android\"'
+    'HTTP_USER_AGENT' => 'Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Mobile Safari/537.36'
+    'HTTP_SEC_CH_UA' => '\"Chromium\";v=\"140\", \"Not=A?Brand\";v=\"24\", \"Opera GX\";v=\"124\"'
+    'HTTP_SEC_CH_UA_MOBILE' => '?1'
+    'HTTP_ACCEPT' => '*/*'
+    'HTTP_SEC_FETCH_SITE' => 'same-origin'
+    'HTTP_SEC_FETCH_MODE' => 'no-cors'
+    'HTTP_SEC_FETCH_DEST' => 'script'
+    'HTTP_REFERER' => 'http://localhost/planealo.sytes.net/web/aportes/aportes/index'
+    'HTTP_ACCEPT_ENCODING' => 'gzip, deflate, br, zstd'
+    'HTTP_ACCEPT_LANGUAGE' => 'en,id;q=0.9,tr;q=0.8,ru;q=0.7'
+    'HTTP_COOKIE' => '_ga=GA1.1.1679908835.1749223008; PHPSESSID=rgeriltv49hvpqikkathcggkkk; _csrf=dbde5b1a0ac035dea6582fee59fe415e24bc635f99eac2a0d1d58bd0f1475a25a%3A2%3A%7Bi%3A0%3Bs%3A5%3A%22_csrf%22%3Bi%3A1%3Bs%3A32%3A%22sUSc6CUunvV3OADJlbxTuIIQkUBJAUCv%22%3B%7D'
+    'PATH' => 'C:\\WINDOWS\\system32;C:\\WINDOWS;C:\\WINDOWS\\System32\\Wbem;C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\;C:\\WINDOWS\\System32\\OpenSSH\\;C:\\xampp\\php;C:\\ProgramData\\ComposerSetup\\bin;C:\\Program Files\\PuTTY\\;C:\\Program Files\\Git\\cmd;C:\\Program Files\\nodejs\\;C:\\Program Files (x86)\\Microsoft SQL Server\\160\\Tools\\Binn\\;C:\\Program Files\\Microsoft SQL Server\\160\\Tools\\Binn\\;C:\\Program Files\\Microsoft SQL Server\\Client SDK\\ODBC\\170\\Tools\\Binn\\;C:\\Program Files\\Microsoft SQL Server\\160\\DTS\\Binn\\;C:\\Program Files (x86)\\Microsoft SQL Server\\160\\DTS\\Binn\\;C:\\Users\\Otic-Sistemas\\AppData\\Local\\Microsoft\\WindowsApps;;C:\\Users\\Otic-Sistemas\\AppData\\Local\\Programs\\Microsoft VS Code\\bin;C:\\Users\\Otic-Sistemas\\AppData\\Roaming\\Composer\\vendor\\bin;C:\\Users\\Otic-Sistemas\\AppData\\Roaming\\npm'
+    'SystemRoot' => 'C:\\WINDOWS'
+    'COMSPEC' => 'C:\\WINDOWS\\system32\\cmd.exe'
+    'PATHEXT' => '.COM;.EXE;.BAT;.CMD;.VBS;.VBE;.JS;.JSE;.WSF;.WSH;.MSC'
+    'WINDIR' => 'C:\\WINDOWS'
+    'SERVER_SIGNATURE' => '<address>Apache/2.4.54 (Win64) OpenSSL/1.1.1p PHP/8.2.0 Server at localhost Port 80</address>
+'
+    'SERVER_SOFTWARE' => 'Apache/2.4.54 (Win64) OpenSSL/1.1.1p PHP/8.2.0'
+    'SERVER_NAME' => 'localhost'
+    'SERVER_ADDR' => '::1'
+    'SERVER_PORT' => '80'
+    'REMOTE_ADDR' => '::1'
+    'DOCUMENT_ROOT' => 'C:/xampp/htdocs'
+    'REQUEST_SCHEME' => 'http'
+    'CONTEXT_PREFIX' => ''
+    'CONTEXT_DOCUMENT_ROOT' => 'C:/xampp/htdocs'
+    'SERVER_ADMIN' => 'postmaster@localhost'
+    'SCRIPT_FILENAME' => 'C:/xampp/htdocs/planealo.sytes.net/web/index.php'
+    'REMOTE_PORT' => '55516'
+    'REDIRECT_URL' => '/planealo.sytes.net/web/js/escuela-selector.js'
+    'GATEWAY_INTERFACE' => 'CGI/1.1'
+    'SERVER_PROTOCOL' => 'HTTP/1.1'
+    'REQUEST_METHOD' => 'GET'
+    'QUERY_STRING' => ''
+    'REQUEST_URI' => '/planealo.sytes.net/web/js/escuela-selector.js'
+    'SCRIPT_NAME' => '/planealo.sytes.net/web/index.php'
+    'PHP_SELF' => '/planealo.sytes.net/web/index.php'
+    'REQUEST_TIME_FLOAT' => 1768833672.2155
+    'REQUEST_TIME' => 1768833672
+]
+2026-01-19 10:45:15 [::1][1][-][error][tasa-dolar] Error BCV Directo: fopen(https://www.bcv.org.ve/): Failed to open stream: Se produjo un error durante el intento de conexión ya que la parte conectada no respondió adecuadamente tras un periodo de tiempo, o bien se produjo un error en la conexión establecida ya que el host conectado no ha podido responder
+2026-01-19 10:45:15 [::1][1][-][warning][tasa-dolar] ❌ Fuente BCV_Directo falló o tasa inválida: 0
+2026-01-19 10:45:35 [::1][1][-][error][tasa-dolar] Error BCV Alternativo: fopen(https://www.bcv.org.ve/tasas-informativas-sistema-bancario): Failed to open stream: Se produjo un error durante el intento de conexión ya que la parte conectada no respondió adecuadamente tras un periodo de tiempo, o bien se produjo un error en la conexión establecida ya que el host conectado no ha podido responder
+2026-01-19 10:45:35 [::1][1][-][warning][tasa-dolar] ❌ Fuente BCV_Alternativo falló o tasa inválida: 0
+2026-01-19 10:45:50 [::1][1][-][error][tasa-dolar] Error Yahoo Finance: fopen(https://query1.finance.yahoo.com/v8/finance/chart/USDVES=X): Failed to open stream: Se produjo un error durante el intento de conexión ya que la parte conectada no respondió adecuadamente tras un periodo de tiempo, o bien se produjo un error en la conexión establecida ya que el host conectado no ha podido responder
+2026-01-19 10:45:50 [::1][1][-][warning][tasa-dolar] ❌ Fuente EnParalelo falló o tasa inválida: 0
+2026-01-19 10:46:05 [::1][1][-][error][tasa-dolar] Error ExchangeRate-API: fopen(https://api.exchangerate-api.com/v4/latest/USD): Failed to open stream: Se produjo un error durante el intento de conexión ya que la parte conectada no respondió adecuadamente tras un periodo de tiempo, o bien se produjo un error en la conexión establecida ya que el host conectado no ha podido responder
+2026-01-19 10:46:05 [::1][1][-][warning][tasa-dolar] ❌ Fuente API_Respaldo falló o tasa inválida: 0
+2026-01-19 10:46:05 [::1][1][-][error][tasa-dolar] ❌ Todas las fuentes fallaron
+2026-01-19 10:44:49 [::1][1][-][info][application] $_GET = []
+
+$_POST = []
+
+$_FILES = []
+
+$_COOKIE = [
+    '_ga' => 'GA1.1.1679908835.1749223008'
+    'PHPSESSID' => 'rgeriltv49hvpqikkathcggkkk'
+    '_csrf' => 'dbde5b1a0ac035dea6582fee59fe415e24bc635f99eac2a0d1d58bd0f1475a25a:2:{i:0;s:5:\"_csrf\";i:1;s:32:\"sUSc6CUunvV3OADJlbxTuIIQkUBJAUCv\";}'
+]
+
+$_SESSION = [
+    '__flash' => []
+    '__returnUrl' => 'http://localhost/planealo.sytes.net/web/tienda/registro-vendedor'
+    '__id' => 1
+    '__authKey' => 'FCxNRGJia25jro30ecX5r8yVk7nCuaOY'
+    'id_escuela' => 2
+    'nombre_escuela' => 'Club Aves Voladoras'
+    'escuela_activa' => true
+    'escuela_ultima_actualizacion' => 1768833157
+    'idEscuela' => 2
+    'nombreEscuela' => 'Club Aves Voladoras'
+]
+
+$_SERVER = [
+    'REDIRECT_MIBDIRS' => 'C:/xampp/php/extras/mibs'
+    'REDIRECT_MYSQL_HOME' => '\\xampp\\mysql\\bin'
+    'REDIRECT_OPENSSL_CONF' => 'C:/xampp/apache/bin/openssl.cnf'
+    'REDIRECT_PHP_PEAR_SYSCONF_DIR' => '\\xampp\\php'
+    'REDIRECT_PHPRC' => '\\xampp\\php'
+    'REDIRECT_TMP' => '\\xampp\\tmp'
+    'REDIRECT_STATUS' => '200'
+    'MIBDIRS' => 'C:/xampp/php/extras/mibs'
+    'MYSQL_HOME' => '\\xampp\\mysql\\bin'
+    'OPENSSL_CONF' => 'C:/xampp/apache/bin/openssl.cnf'
+    'PHP_PEAR_SYSCONF_DIR' => '\\xampp\\php'
+    'PHPRC' => '\\xampp\\php'
+    'TMP' => '\\xampp\\tmp'
+    'HTTP_HOST' => 'localhost'
+    'HTTP_CONNECTION' => 'keep-alive'
+    'HTTP_PRAGMA' => 'no-cache'
+    'HTTP_CACHE_CONTROL' => 'no-cache'
+    'HTTP_SEC_CH_UA' => '\"Chromium\";v=\"140\", \"Not=A?Brand\";v=\"24\", \"Opera GX\";v=\"124\"'
+    'HTTP_SEC_CH_UA_MOBILE' => '?1'
+    'HTTP_SEC_CH_UA_PLATFORM' => '\"Android\"'
+    'HTTP_UPGRADE_INSECURE_REQUESTS' => '1'
+    'HTTP_USER_AGENT' => 'Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Mobile Safari/537.36'
+    'HTTP_ACCEPT' => 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7'
+    'HTTP_SEC_FETCH_SITE' => 'same-origin'
+    'HTTP_SEC_FETCH_MODE' => 'navigate'
+    'HTTP_SEC_FETCH_USER' => '?1'
+    'HTTP_SEC_FETCH_DEST' => 'document'
+    'HTTP_REFERER' => 'http://localhost/planealo.sytes.net/web/ged/default/index'
+    'HTTP_ACCEPT_ENCODING' => 'gzip, deflate, br, zstd'
+    'HTTP_ACCEPT_LANGUAGE' => 'en,id;q=0.9,tr;q=0.8,ru;q=0.7'
+    'HTTP_COOKIE' => '_ga=GA1.1.1679908835.1749223008; PHPSESSID=rgeriltv49hvpqikkathcggkkk; _csrf=dbde5b1a0ac035dea6582fee59fe415e24bc635f99eac2a0d1d58bd0f1475a25a%3A2%3A%7Bi%3A0%3Bs%3A5%3A%22_csrf%22%3Bi%3A1%3Bs%3A32%3A%22sUSc6CUunvV3OADJlbxTuIIQkUBJAUCv%22%3B%7D'
+    'PATH' => 'C:\\WINDOWS\\system32;C:\\WINDOWS;C:\\WINDOWS\\System32\\Wbem;C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\;C:\\WINDOWS\\System32\\OpenSSH\\;C:\\xampp\\php;C:\\ProgramData\\ComposerSetup\\bin;C:\\Program Files\\PuTTY\\;C:\\Program Files\\Git\\cmd;C:\\Program Files\\nodejs\\;C:\\Program Files (x86)\\Microsoft SQL Server\\160\\Tools\\Binn\\;C:\\Program Files\\Microsoft SQL Server\\160\\Tools\\Binn\\;C:\\Program Files\\Microsoft SQL Server\\Client SDK\\ODBC\\170\\Tools\\Binn\\;C:\\Program Files\\Microsoft SQL Server\\160\\DTS\\Binn\\;C:\\Program Files (x86)\\Microsoft SQL Server\\160\\DTS\\Binn\\;C:\\Users\\Otic-Sistemas\\AppData\\Local\\Microsoft\\WindowsApps;;C:\\Users\\Otic-Sistemas\\AppData\\Local\\Programs\\Microsoft VS Code\\bin;C:\\Users\\Otic-Sistemas\\AppData\\Roaming\\Composer\\vendor\\bin;C:\\Users\\Otic-Sistemas\\AppData\\Roaming\\npm'
+    'SystemRoot' => 'C:\\WINDOWS'
+    'COMSPEC' => 'C:\\WINDOWS\\system32\\cmd.exe'
+    'PATHEXT' => '.COM;.EXE;.BAT;.CMD;.VBS;.VBE;.JS;.JSE;.WSF;.WSH;.MSC'
+    'WINDIR' => 'C:\\WINDOWS'
+    'SERVER_SIGNATURE' => '<address>Apache/2.4.54 (Win64) OpenSSL/1.1.1p PHP/8.2.0 Server at localhost Port 80</address>
+'
+    'SERVER_SOFTWARE' => 'Apache/2.4.54 (Win64) OpenSSL/1.1.1p PHP/8.2.0'
+    'SERVER_NAME' => 'localhost'
+    'SERVER_ADDR' => '::1'
+    'SERVER_PORT' => '80'
+    'REMOTE_ADDR' => '::1'
+    'DOCUMENT_ROOT' => 'C:/xampp/htdocs'
+    'REQUEST_SCHEME' => 'http'
+    'CONTEXT_PREFIX' => ''
+    'CONTEXT_DOCUMENT_ROOT' => 'C:/xampp/htdocs'
+    'SERVER_ADMIN' => 'postmaster@localhost'
+    'SCRIPT_FILENAME' => 'C:/xampp/htdocs/planealo.sytes.net/web/index.php'
+    'REMOTE_PORT' => '55707'
+    'REDIRECT_URL' => '/planealo.sytes.net/web/aportes/aportes/index'
+    'GATEWAY_INTERFACE' => 'CGI/1.1'
+    'SERVER_PROTOCOL' => 'HTTP/1.1'
+    'REQUEST_METHOD' => 'GET'
+    'QUERY_STRING' => ''
+    'REQUEST_URI' => '/planealo.sytes.net/web/aportes/aportes/index'
+    'SCRIPT_NAME' => '/planealo.sytes.net/web/index.php'
+    'PHP_SELF' => '/planealo.sytes.net/web/index.php'
+    'REQUEST_TIME_FLOAT' => 1768833889.0351
+    'REQUEST_TIME' => 1768833889
+]
+2026-01-19 10:46:28 [::1][1][rgeriltv49hvpqikkathcggkkk][error][tasa-dolar] Error BCV Directo: fopen(https://www.bcv.org.ve/): Failed to open stream: Se produjo un error durante el intento de conexión ya que la parte conectada no respondió adecuadamente tras un periodo de tiempo, o bien se produjo un error en la conexión establecida ya que el host conectado no ha podido responder
+2026-01-19 10:46:28 [::1][1][rgeriltv49hvpqikkathcggkkk][warning][tasa-dolar] ❌ Fuente BCV_Directo falló o tasa inválida: 0
+2026-01-19 10:46:48 [::1][1][rgeriltv49hvpqikkathcggkkk][error][tasa-dolar] Error BCV Alternativo: fopen(https://www.bcv.org.ve/tasas-informativas-sistema-bancario): Failed to open stream: Se produjo un error durante el intento de conexión ya que la parte conectada no respondió adecuadamente tras un periodo de tiempo, o bien se produjo un error en la conexión establecida ya que el host conectado no ha podido responder
+2026-01-19 10:46:48 [::1][1][rgeriltv49hvpqikkathcggkkk][warning][tasa-dolar] ❌ Fuente BCV_Alternativo falló o tasa inválida: 0
+2026-01-19 10:47:03 [::1][1][rgeriltv49hvpqikkathcggkkk][error][yii\base\ErrorException:1] yii\base\ErrorException: Maximum execution time of 120 seconds exceeded in C:\xampp\htdocs\planealo.sytes.net\vendor\yiisoft\yii2\base\ErrorHandler.php:248
+Stack trace:
+#0 [internal function]: yii\base\ErrorHandler->handleFatalError()
+#1 {main}
+2026-01-19 10:44:49 [::1][1][rgeriltv49hvpqikkathcggkkk][info][application] $_GET = []
+
+$_POST = []
+
+$_FILES = []
+
+$_COOKIE = [
+    '_ga' => 'GA1.1.1679908835.1749223008'
+    'PHPSESSID' => 'rgeriltv49hvpqikkathcggkkk'
+    '_csrf' => 'dbde5b1a0ac035dea6582fee59fe415e24bc635f99eac2a0d1d58bd0f1475a25a:2:{i:0;s:5:\"_csrf\";i:1;s:32:\"sUSc6CUunvV3OADJlbxTuIIQkUBJAUCv\";}'
+]
+
+$_SESSION = [
+    '__flash' => []
+    '__returnUrl' => 'http://localhost/planealo.sytes.net/web/tienda/registro-vendedor'
+    '__id' => 1
+    '__authKey' => 'FCxNRGJia25jro30ecX5r8yVk7nCuaOY'
+    'id_escuela' => 2
+    'nombre_escuela' => 'Club Aves Voladoras'
+    'escuela_activa' => true
+    'escuela_ultima_actualizacion' => 1768833157
+    'idEscuela' => 2
+    'nombreEscuela' => 'Club Aves Voladoras'
+]
+
+$_SERVER = [
+    'REDIRECT_MIBDIRS' => 'C:/xampp/php/extras/mibs'
+    'REDIRECT_MYSQL_HOME' => '\\xampp\\mysql\\bin'
+    'REDIRECT_OPENSSL_CONF' => 'C:/xampp/apache/bin/openssl.cnf'
+    'REDIRECT_PHP_PEAR_SYSCONF_DIR' => '\\xampp\\php'
+    'REDIRECT_PHPRC' => '\\xampp\\php'
+    'REDIRECT_TMP' => '\\xampp\\tmp'
+    'REDIRECT_STATUS' => '200'
+    'MIBDIRS' => 'C:/xampp/php/extras/mibs'
+    'MYSQL_HOME' => '\\xampp\\mysql\\bin'
+    'OPENSSL_CONF' => 'C:/xampp/apache/bin/openssl.cnf'
+    'PHP_PEAR_SYSCONF_DIR' => '\\xampp\\php'
+    'PHPRC' => '\\xampp\\php'
+    'TMP' => '\\xampp\\tmp'
+    'HTTP_HOST' => 'localhost'
+    'HTTP_CONNECTION' => 'keep-alive'
+    'HTTP_PRAGMA' => 'no-cache'
+    'HTTP_CACHE_CONTROL' => 'no-cache'
+    'HTTP_SEC_CH_UA' => '\"Chromium\";v=\"140\", \"Not=A?Brand\";v=\"24\", \"Opera GX\";v=\"124\"'
+    'HTTP_SEC_CH_UA_MOBILE' => '?1'
+    'HTTP_SEC_CH_UA_PLATFORM' => '\"Android\"'
+    'HTTP_UPGRADE_INSECURE_REQUESTS' => '1'
+    'HTTP_USER_AGENT' => 'Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Mobile Safari/537.36'
+    'HTTP_ACCEPT' => 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7'
+    'HTTP_SEC_FETCH_SITE' => 'same-origin'
+    'HTTP_SEC_FETCH_MODE' => 'navigate'
+    'HTTP_SEC_FETCH_USER' => '?1'
+    'HTTP_SEC_FETCH_DEST' => 'document'
+    'HTTP_REFERER' => 'http://localhost/planealo.sytes.net/web/ged/default/index'
+    'HTTP_ACCEPT_ENCODING' => 'gzip, deflate, br, zstd'
+    'HTTP_ACCEPT_LANGUAGE' => 'en,id;q=0.9,tr;q=0.8,ru;q=0.7'
+    'HTTP_COOKIE' => '_ga=GA1.1.1679908835.1749223008; PHPSESSID=rgeriltv49hvpqikkathcggkkk; _csrf=dbde5b1a0ac035dea6582fee59fe415e24bc635f99eac2a0d1d58bd0f1475a25a%3A2%3A%7Bi%3A0%3Bs%3A5%3A%22_csrf%22%3Bi%3A1%3Bs%3A32%3A%22sUSc6CUunvV3OADJlbxTuIIQkUBJAUCv%22%3B%7D'
+    'PATH' => 'C:\\WINDOWS\\system32;C:\\WINDOWS;C:\\WINDOWS\\System32\\Wbem;C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\;C:\\WINDOWS\\System32\\OpenSSH\\;C:\\xampp\\php;C:\\ProgramData\\ComposerSetup\\bin;C:\\Program Files\\PuTTY\\;C:\\Program Files\\Git\\cmd;C:\\Program Files\\nodejs\\;C:\\Program Files (x86)\\Microsoft SQL Server\\160\\Tools\\Binn\\;C:\\Program Files\\Microsoft SQL Server\\160\\Tools\\Binn\\;C:\\Program Files\\Microsoft SQL Server\\Client SDK\\ODBC\\170\\Tools\\Binn\\;C:\\Program Files\\Microsoft SQL Server\\160\\DTS\\Binn\\;C:\\Program Files (x86)\\Microsoft SQL Server\\160\\DTS\\Binn\\;C:\\Users\\Otic-Sistemas\\AppData\\Local\\Microsoft\\WindowsApps;;C:\\Users\\Otic-Sistemas\\AppData\\Local\\Programs\\Microsoft VS Code\\bin;C:\\Users\\Otic-Sistemas\\AppData\\Roaming\\Composer\\vendor\\bin;C:\\Users\\Otic-Sistemas\\AppData\\Roaming\\npm'
+    'SystemRoot' => 'C:\\WINDOWS'
+    'COMSPEC' => 'C:\\WINDOWS\\system32\\cmd.exe'
+    'PATHEXT' => '.COM;.EXE;.BAT;.CMD;.VBS;.VBE;.JS;.JSE;.WSF;.WSH;.MSC'
+    'WINDIR' => 'C:\\WINDOWS'
+    'SERVER_SIGNATURE' => '<address>Apache/2.4.54 (Win64) OpenSSL/1.1.1p PHP/8.2.0 Server at localhost Port 80</address>
+'
+    'SERVER_SOFTWARE' => 'Apache/2.4.54 (Win64) OpenSSL/1.1.1p PHP/8.2.0'
+    'SERVER_NAME' => 'localhost'
+    'SERVER_ADDR' => '::1'
+    'SERVER_PORT' => '80'
+    'REMOTE_ADDR' => '::1'
+    'DOCUMENT_ROOT' => 'C:/xampp/htdocs'
+    'REQUEST_SCHEME' => 'http'
+    'CONTEXT_PREFIX' => ''
+    'CONTEXT_DOCUMENT_ROOT' => 'C:/xampp/htdocs'
+    'SERVER_ADMIN' => 'postmaster@localhost'
+    'SCRIPT_FILENAME' => 'C:/xampp/htdocs/planealo.sytes.net/web/index.php'
+    'REMOTE_PORT' => '55706'
+    'REDIRECT_URL' => '/planealo.sytes.net/web/aportes/aportes/index'
+    'GATEWAY_INTERFACE' => 'CGI/1.1'
+    'SERVER_PROTOCOL' => 'HTTP/1.1'
+    'REQUEST_METHOD' => 'GET'
+    'QUERY_STRING' => ''
+    'REQUEST_URI' => '/planealo.sytes.net/web/aportes/aportes/index'
+    'SCRIPT_NAME' => '/planealo.sytes.net/web/index.php'
+    'PHP_SELF' => '/planealo.sytes.net/web/index.php'
+    'REQUEST_TIME_FLOAT' => 1768833888.9194
+    'REQUEST_TIME' => 1768833888
+]
+2026-01-19 10:46:07 [::1][1][rgeriltv49hvpqikkathcggkkk][error][yii\web\HttpException:404] yii\base\InvalidRouteException: Unable to resolve the request "js/escuela-selector.js". in C:\xampp\htdocs\planealo.sytes.net\vendor\yiisoft\yii2\base\Module.php:564
+Stack trace:
+#0 C:\xampp\htdocs\planealo.sytes.net\vendor\yiisoft\yii2\web\Application.php(103): yii\base\Module->runAction('js/escuela-sele...', Array)
+#1 C:\xampp\htdocs\planealo.sytes.net\vendor\yiisoft\yii2\base\Application.php(387): yii\web\Application->handleRequest(Object(yii\web\Request))
+#2 C:\xampp\htdocs\planealo.sytes.net\web\index.php(12): yii\base\Application->run()
+#3 {main}
+
+Next yii\web\NotFoundHttpException: Página no encontrada. in C:\xampp\htdocs\planealo.sytes.net\vendor\yiisoft\yii2\web\Application.php:115
+Stack trace:
+#0 C:\xampp\htdocs\planealo.sytes.net\vendor\yiisoft\yii2\base\Application.php(387): yii\web\Application->handleRequest(Object(yii\web\Request))
+#1 C:\xampp\htdocs\planealo.sytes.net\web\index.php(12): yii\base\Application->run()
+#2 {main}
+2026-01-19 10:46:07 [::1][1][rgeriltv49hvpqikkathcggkkk][info][application] $_GET = []
+
+$_POST = []
+
+$_FILES = []
+
+$_COOKIE = [
+    '_ga' => 'GA1.1.1679908835.1749223008'
+    'PHPSESSID' => 'rgeriltv49hvpqikkathcggkkk'
+    '_csrf' => 'dbde5b1a0ac035dea6582fee59fe415e24bc635f99eac2a0d1d58bd0f1475a25a:2:{i:0;s:5:\"_csrf\";i:1;s:32:\"sUSc6CUunvV3OADJlbxTuIIQkUBJAUCv\";}'
+]
+
+$_SESSION = [
+    '__flash' => []
+    '__returnUrl' => 'http://localhost/planealo.sytes.net/web/tienda/registro-vendedor'
+    '__id' => 1
+    '__authKey' => 'FCxNRGJia25jro30ecX5r8yVk7nCuaOY'
+    'id_escuela' => 2
+    'nombre_escuela' => 'Club Aves Voladoras'
+    'escuela_activa' => true
+    'escuela_ultima_actualizacion' => 1768833157
+    'idEscuela' => 2
+    'nombreEscuela' => 'Club Aves Voladoras'
+]
+
+$_SERVER = [
+    'REDIRECT_MIBDIRS' => 'C:/xampp/php/extras/mibs'
+    'REDIRECT_MYSQL_HOME' => '\\xampp\\mysql\\bin'
+    'REDIRECT_OPENSSL_CONF' => 'C:/xampp/apache/bin/openssl.cnf'
+    'REDIRECT_PHP_PEAR_SYSCONF_DIR' => '\\xampp\\php'
+    'REDIRECT_PHPRC' => '\\xampp\\php'
+    'REDIRECT_TMP' => '\\xampp\\tmp'
+    'REDIRECT_STATUS' => '200'
+    'MIBDIRS' => 'C:/xampp/php/extras/mibs'
+    'MYSQL_HOME' => '\\xampp\\mysql\\bin'
+    'OPENSSL_CONF' => 'C:/xampp/apache/bin/openssl.cnf'
+    'PHP_PEAR_SYSCONF_DIR' => '\\xampp\\php'
+    'PHPRC' => '\\xampp\\php'
+    'TMP' => '\\xampp\\tmp'
+    'HTTP_HOST' => 'localhost'
+    'HTTP_CONNECTION' => 'keep-alive'
+    'HTTP_PRAGMA' => 'no-cache'
+    'HTTP_CACHE_CONTROL' => 'no-cache'
+    'HTTP_SEC_CH_UA_PLATFORM' => '\"Android\"'
+    'HTTP_USER_AGENT' => 'Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Mobile Safari/537.36'
+    'HTTP_SEC_CH_UA' => '\"Chromium\";v=\"140\", \"Not=A?Brand\";v=\"24\", \"Opera GX\";v=\"124\"'
+    'HTTP_SEC_CH_UA_MOBILE' => '?1'
+    'HTTP_ACCEPT' => '*/*'
+    'HTTP_SEC_FETCH_SITE' => 'same-origin'
+    'HTTP_SEC_FETCH_MODE' => 'no-cors'
+    'HTTP_SEC_FETCH_DEST' => 'script'
+    'HTTP_REFERER' => 'http://localhost/planealo.sytes.net/web/aportes/aportes/index'
+    'HTTP_ACCEPT_ENCODING' => 'gzip, deflate, br, zstd'
+    'HTTP_ACCEPT_LANGUAGE' => 'en,id;q=0.9,tr;q=0.8,ru;q=0.7'
+    'HTTP_COOKIE' => '_ga=GA1.1.1679908835.1749223008; PHPSESSID=rgeriltv49hvpqikkathcggkkk; _csrf=dbde5b1a0ac035dea6582fee59fe415e24bc635f99eac2a0d1d58bd0f1475a25a%3A2%3A%7Bi%3A0%3Bs%3A5%3A%22_csrf%22%3Bi%3A1%3Bs%3A32%3A%22sUSc6CUunvV3OADJlbxTuIIQkUBJAUCv%22%3B%7D'
+    'PATH' => 'C:\\WINDOWS\\system32;C:\\WINDOWS;C:\\WINDOWS\\System32\\Wbem;C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\;C:\\WINDOWS\\System32\\OpenSSH\\;C:\\xampp\\php;C:\\ProgramData\\ComposerSetup\\bin;C:\\Program Files\\PuTTY\\;C:\\Program Files\\Git\\cmd;C:\\Program Files\\nodejs\\;C:\\Program Files (x86)\\Microsoft SQL Server\\160\\Tools\\Binn\\;C:\\Program Files\\Microsoft SQL Server\\160\\Tools\\Binn\\;C:\\Program Files\\Microsoft SQL Server\\Client SDK\\ODBC\\170\\Tools\\Binn\\;C:\\Program Files\\Microsoft SQL Server\\160\\DTS\\Binn\\;C:\\Program Files (x86)\\Microsoft SQL Server\\160\\DTS\\Binn\\;C:\\Users\\Otic-Sistemas\\AppData\\Local\\Microsoft\\WindowsApps;;C:\\Users\\Otic-Sistemas\\AppData\\Local\\Programs\\Microsoft VS Code\\bin;C:\\Users\\Otic-Sistemas\\AppData\\Roaming\\Composer\\vendor\\bin;C:\\Users\\Otic-Sistemas\\AppData\\Roaming\\npm'
+    'SystemRoot' => 'C:\\WINDOWS'
+    'COMSPEC' => 'C:\\WINDOWS\\system32\\cmd.exe'
+    'PATHEXT' => '.COM;.EXE;.BAT;.CMD;.VBS;.VBE;.JS;.JSE;.WSF;.WSH;.MSC'
+    'WINDIR' => 'C:\\WINDOWS'
+    'SERVER_SIGNATURE' => '<address>Apache/2.4.54 (Win64) OpenSSL/1.1.1p PHP/8.2.0 Server at localhost Port 80</address>
+'
+    'SERVER_SOFTWARE' => 'Apache/2.4.54 (Win64) OpenSSL/1.1.1p PHP/8.2.0'
+    'SERVER_NAME' => 'localhost'
+    'SERVER_ADDR' => '::1'
+    'SERVER_PORT' => '80'
+    'REMOTE_ADDR' => '::1'
+    'DOCUMENT_ROOT' => 'C:/xampp/htdocs'
+    'REQUEST_SCHEME' => 'http'
+    'CONTEXT_PREFIX' => ''
+    'CONTEXT_DOCUMENT_ROOT' => 'C:/xampp/htdocs'
+    'SERVER_ADMIN' => 'postmaster@localhost'
+    'SCRIPT_FILENAME' => 'C:/xampp/htdocs/planealo.sytes.net/web/index.php'
+    'REMOTE_PORT' => '55755'
+    'REDIRECT_URL' => '/planealo.sytes.net/web/js/escuela-selector.js'
+    'GATEWAY_INTERFACE' => 'CGI/1.1'
+    'SERVER_PROTOCOL' => 'HTTP/1.1'
+    'REQUEST_METHOD' => 'GET'
+    'QUERY_STRING' => ''
+    'REQUEST_URI' => '/planealo.sytes.net/web/js/escuela-selector.js'
+    'SCRIPT_NAME' => '/planealo.sytes.net/web/index.php'
+    'PHP_SELF' => '/planealo.sytes.net/web/index.php'
+    'REQUEST_TIME_FLOAT' => 1768833967.1457
+    'REQUEST_TIME' => 1768833967
+]
+2026-01-19 11:24:27 [::1][1][-][error][tasa-dolar] Error BCV Directo: fopen(https://www.bcv.org.ve/): Failed to open stream: Se produjo un error durante el intento de conexión ya que la parte conectada no respondió adecuadamente tras un periodo de tiempo, o bien se produjo un error en la conexión establecida ya que el host conectado no ha podido responder
+2026-01-19 11:24:27 [::1][1][-][warning][tasa-dolar] ❌ Fuente BCV_Directo falló o tasa inválida: 0
+2026-01-19 11:24:47 [::1][1][-][error][tasa-dolar] Error BCV Alternativo: fopen(https://www.bcv.org.ve/tasas-informativas-sistema-bancario): Failed to open stream: Se produjo un error durante el intento de conexión ya que la parte conectada no respondió adecuadamente tras un periodo de tiempo, o bien se produjo un error en la conexión establecida ya que el host conectado no ha podido responder
+2026-01-19 11:24:47 [::1][1][-][warning][tasa-dolar] ❌ Fuente BCV_Alternativo falló o tasa inválida: 0
+2026-01-19 11:25:02 [::1][1][-][error][tasa-dolar] Error Yahoo Finance: fopen(https://query1.finance.yahoo.com/v8/finance/chart/USDVES=X): Failed to open stream: Se produjo un error durante el intento de conexión ya que la parte conectada no respondió adecuadamente tras un periodo de tiempo, o bien se produjo un error en la conexión establecida ya que el host conectado no ha podido responder
+2026-01-19 11:25:02 [::1][1][-][warning][tasa-dolar] ❌ Fuente EnParalelo falló o tasa inválida: 0
+2026-01-19 11:25:17 [::1][1][-][error][tasa-dolar] Error ExchangeRate-API: fopen(https://api.exchangerate-api.com/v4/latest/USD): Failed to open stream: Se produjo un error durante el intento de conexión ya que la parte conectada no respondió adecuadamente tras un periodo de tiempo, o bien se produjo un error en la conexión establecida ya que el host conectado no ha podido responder
+2026-01-19 11:25:17 [::1][1][-][warning][tasa-dolar] ❌ Fuente API_Respaldo falló o tasa inválida: 0
+2026-01-19 11:25:17 [::1][1][-][error][tasa-dolar] ❌ Todas las fuentes fallaron
+2026-01-19 11:24:03 [::1][1][-][info][application] $_GET = []
+
+$_POST = []
+
+$_FILES = []
+
+$_COOKIE = [
+    '_ga' => 'GA1.1.1679908835.1749223008'
+    'PHPSESSID' => 'rgeriltv49hvpqikkathcggkkk'
+    '_csrf' => 'dbde5b1a0ac035dea6582fee59fe415e24bc635f99eac2a0d1d58bd0f1475a25a:2:{i:0;s:5:\"_csrf\";i:1;s:32:\"sUSc6CUunvV3OADJlbxTuIIQkUBJAUCv\";}'
+]
+
+$_SESSION = [
+    '__flash' => []
+    '__returnUrl' => 'http://localhost/planealo.sytes.net/web/tienda/registro-vendedor'
+    '__id' => 1
+    '__authKey' => 'FCxNRGJia25jro30ecX5r8yVk7nCuaOY'
+    'id_escuela' => 2
+    'nombre_escuela' => 'Club Aves Voladoras'
+    'escuela_activa' => true
+    'escuela_ultima_actualizacion' => 1768833157
+    'idEscuela' => 2
+    'nombreEscuela' => 'Club Aves Voladoras'
+]
+
+$_SERVER = [
+    'REDIRECT_MIBDIRS' => 'C:/xampp/php/extras/mibs'
+    'REDIRECT_MYSQL_HOME' => '\\xampp\\mysql\\bin'
+    'REDIRECT_OPENSSL_CONF' => 'C:/xampp/apache/bin/openssl.cnf'
+    'REDIRECT_PHP_PEAR_SYSCONF_DIR' => '\\xampp\\php'
+    'REDIRECT_PHPRC' => '\\xampp\\php'
+    'REDIRECT_TMP' => '\\xampp\\tmp'
+    'REDIRECT_STATUS' => '200'
+    'MIBDIRS' => 'C:/xampp/php/extras/mibs'
+    'MYSQL_HOME' => '\\xampp\\mysql\\bin'
+    'OPENSSL_CONF' => 'C:/xampp/apache/bin/openssl.cnf'
+    'PHP_PEAR_SYSCONF_DIR' => '\\xampp\\php'
+    'PHPRC' => '\\xampp\\php'
+    'TMP' => '\\xampp\\tmp'
+    'HTTP_HOST' => 'localhost'
+    'HTTP_CONNECTION' => 'keep-alive'
+    'HTTP_SEC_CH_UA' => '\"Chromium\";v=\"140\", \"Not=A?Brand\";v=\"24\", \"Opera GX\";v=\"124\"'
+    'HTTP_SEC_CH_UA_MOBILE' => '?1'
+    'HTTP_SEC_CH_UA_PLATFORM' => '\"Android\"'
+    'HTTP_UPGRADE_INSECURE_REQUESTS' => '1'
+    'HTTP_USER_AGENT' => 'Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Mobile Safari/537.36'
+    'HTTP_ACCEPT' => 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7'
+    'HTTP_SEC_FETCH_SITE' => 'same-origin'
+    'HTTP_SEC_FETCH_MODE' => 'navigate'
+    'HTTP_SEC_FETCH_USER' => '?1'
+    'HTTP_SEC_FETCH_DEST' => 'document'
+    'HTTP_REFERER' => 'http://localhost/planealo.sytes.net/web/'
+    'HTTP_ACCEPT_ENCODING' => 'gzip, deflate, br, zstd'
+    'HTTP_ACCEPT_LANGUAGE' => 'en,id;q=0.9,tr;q=0.8,ru;q=0.7'
+    'HTTP_COOKIE' => '_ga=GA1.1.1679908835.1749223008; PHPSESSID=rgeriltv49hvpqikkathcggkkk; _csrf=dbde5b1a0ac035dea6582fee59fe415e24bc635f99eac2a0d1d58bd0f1475a25a%3A2%3A%7Bi%3A0%3Bs%3A5%3A%22_csrf%22%3Bi%3A1%3Bs%3A32%3A%22sUSc6CUunvV3OADJlbxTuIIQkUBJAUCv%22%3B%7D'
+    'PATH' => 'C:\\WINDOWS\\system32;C:\\WINDOWS;C:\\WINDOWS\\System32\\Wbem;C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\;C:\\WINDOWS\\System32\\OpenSSH\\;C:\\xampp\\php;C:\\ProgramData\\ComposerSetup\\bin;C:\\Program Files\\PuTTY\\;C:\\Program Files\\Git\\cmd;C:\\Program Files\\nodejs\\;C:\\Program Files (x86)\\Microsoft SQL Server\\160\\Tools\\Binn\\;C:\\Program Files\\Microsoft SQL Server\\160\\Tools\\Binn\\;C:\\Program Files\\Microsoft SQL Server\\Client SDK\\ODBC\\170\\Tools\\Binn\\;C:\\Program Files\\Microsoft SQL Server\\160\\DTS\\Binn\\;C:\\Program Files (x86)\\Microsoft SQL Server\\160\\DTS\\Binn\\;C:\\Users\\Otic-Sistemas\\AppData\\Local\\Microsoft\\WindowsApps;;C:\\Users\\Otic-Sistemas\\AppData\\Local\\Programs\\Microsoft VS Code\\bin;C:\\Users\\Otic-Sistemas\\AppData\\Roaming\\Composer\\vendor\\bin;C:\\Users\\Otic-Sistemas\\AppData\\Roaming\\npm'
+    'SystemRoot' => 'C:\\WINDOWS'
+    'COMSPEC' => 'C:\\WINDOWS\\system32\\cmd.exe'
+    'PATHEXT' => '.COM;.EXE;.BAT;.CMD;.VBS;.VBE;.JS;.JSE;.WSF;.WSH;.MSC'
+    'WINDIR' => 'C:\\WINDOWS'
+    'SERVER_SIGNATURE' => '<address>Apache/2.4.54 (Win64) OpenSSL/1.1.1p PHP/8.2.0 Server at localhost Port 80</address>
+'
+    'SERVER_SOFTWARE' => 'Apache/2.4.54 (Win64) OpenSSL/1.1.1p PHP/8.2.0'
+    'SERVER_NAME' => 'localhost'
+    'SERVER_ADDR' => '::1'
+    'SERVER_PORT' => '80'
+    'REMOTE_ADDR' => '::1'
+    'DOCUMENT_ROOT' => 'C:/xampp/htdocs'
+    'REQUEST_SCHEME' => 'http'
+    'CONTEXT_PREFIX' => ''
+    'CONTEXT_DOCUMENT_ROOT' => 'C:/xampp/htdocs'
+    'SERVER_ADMIN' => 'postmaster@localhost'
+    'SCRIPT_FILENAME' => 'C:/xampp/htdocs/planealo.sytes.net/web/index.php'
+    'REMOTE_PORT' => '57352'
+    'REDIRECT_URL' => '/planealo.sytes.net/web/aportes/aportes/index'
+    'GATEWAY_INTERFACE' => 'CGI/1.1'
+    'SERVER_PROTOCOL' => 'HTTP/1.1'
+    'REQUEST_METHOD' => 'GET'
+    'QUERY_STRING' => ''
+    'REQUEST_URI' => '/planealo.sytes.net/web/aportes/aportes/index'
+    'SCRIPT_NAME' => '/planealo.sytes.net/web/index.php'
+    'PHP_SELF' => '/planealo.sytes.net/web/index.php'
+    'REQUEST_TIME_FLOAT' => 1768836243.2108
+    'REQUEST_TIME' => 1768836243
+]
+2026-01-19 11:25:20 [::1][1][rgeriltv49hvpqikkathcggkkk][error][yii\web\HttpException:404] yii\base\InvalidRouteException: Unable to resolve the request "js/escuela-selector.js". in C:\xampp\htdocs\planealo.sytes.net\vendor\yiisoft\yii2\base\Module.php:564
+Stack trace:
+#0 C:\xampp\htdocs\planealo.sytes.net\vendor\yiisoft\yii2\web\Application.php(103): yii\base\Module->runAction('js/escuela-sele...', Array)
+#1 C:\xampp\htdocs\planealo.sytes.net\vendor\yiisoft\yii2\base\Application.php(387): yii\web\Application->handleRequest(Object(yii\web\Request))
+#2 C:\xampp\htdocs\planealo.sytes.net\web\index.php(12): yii\base\Application->run()
+#3 {main}
+
+Next yii\web\NotFoundHttpException: Página no encontrada. in C:\xampp\htdocs\planealo.sytes.net\vendor\yiisoft\yii2\web\Application.php:115
+Stack trace:
+#0 C:\xampp\htdocs\planealo.sytes.net\vendor\yiisoft\yii2\base\Application.php(387): yii\web\Application->handleRequest(Object(yii\web\Request))
+#1 C:\xampp\htdocs\planealo.sytes.net\web\index.php(12): yii\base\Application->run()
+#2 {main}
+2026-01-19 11:25:19 [::1][1][rgeriltv49hvpqikkathcggkkk][info][application] $_GET = []
+
+$_POST = []
+
+$_FILES = []
+
+$_COOKIE = [
+    '_ga' => 'GA1.1.1679908835.1749223008'
+    'PHPSESSID' => 'rgeriltv49hvpqikkathcggkkk'
+    '_csrf' => 'dbde5b1a0ac035dea6582fee59fe415e24bc635f99eac2a0d1d58bd0f1475a25a:2:{i:0;s:5:\"_csrf\";i:1;s:32:\"sUSc6CUunvV3OADJlbxTuIIQkUBJAUCv\";}'
+]
+
+$_SESSION = [
+    '__flash' => []
+    '__returnUrl' => 'http://localhost/planealo.sytes.net/web/tienda/registro-vendedor'
+    '__id' => 1
+    '__authKey' => 'FCxNRGJia25jro30ecX5r8yVk7nCuaOY'
+    'id_escuela' => 2
+    'nombre_escuela' => 'Club Aves Voladoras'
+    'escuela_activa' => true
+    'escuela_ultima_actualizacion' => 1768833157
+    'idEscuela' => 2
+    'nombreEscuela' => 'Club Aves Voladoras'
+]
+
+$_SERVER = [
+    'REDIRECT_MIBDIRS' => 'C:/xampp/php/extras/mibs'
+    'REDIRECT_MYSQL_HOME' => '\\xampp\\mysql\\bin'
+    'REDIRECT_OPENSSL_CONF' => 'C:/xampp/apache/bin/openssl.cnf'
+    'REDIRECT_PHP_PEAR_SYSCONF_DIR' => '\\xampp\\php'
+    'REDIRECT_PHPRC' => '\\xampp\\php'
+    'REDIRECT_TMP' => '\\xampp\\tmp'
+    'REDIRECT_STATUS' => '200'
+    'MIBDIRS' => 'C:/xampp/php/extras/mibs'
+    'MYSQL_HOME' => '\\xampp\\mysql\\bin'
+    'OPENSSL_CONF' => 'C:/xampp/apache/bin/openssl.cnf'
+    'PHP_PEAR_SYSCONF_DIR' => '\\xampp\\php'
+    'PHPRC' => '\\xampp\\php'
+    'TMP' => '\\xampp\\tmp'
+    'HTTP_HOST' => 'localhost'
+    'HTTP_CONNECTION' => 'keep-alive'
+    'HTTP_SEC_CH_UA_PLATFORM' => '\"Android\"'
+    'HTTP_USER_AGENT' => 'Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Mobile Safari/537.36'
+    'HTTP_SEC_CH_UA' => '\"Chromium\";v=\"140\", \"Not=A?Brand\";v=\"24\", \"Opera GX\";v=\"124\"'
+    'HTTP_SEC_CH_UA_MOBILE' => '?1'
+    'HTTP_ACCEPT' => '*/*'
+    'HTTP_SEC_FETCH_SITE' => 'same-origin'
+    'HTTP_SEC_FETCH_MODE' => 'no-cors'
+    'HTTP_SEC_FETCH_DEST' => 'script'
+    'HTTP_REFERER' => 'http://localhost/planealo.sytes.net/web/aportes/aportes/index'
+    'HTTP_ACCEPT_ENCODING' => 'gzip, deflate, br, zstd'
+    'HTTP_ACCEPT_LANGUAGE' => 'en,id;q=0.9,tr;q=0.8,ru;q=0.7'
+    'HTTP_COOKIE' => '_ga=GA1.1.1679908835.1749223008; PHPSESSID=rgeriltv49hvpqikkathcggkkk; _csrf=dbde5b1a0ac035dea6582fee59fe415e24bc635f99eac2a0d1d58bd0f1475a25a%3A2%3A%7Bi%3A0%3Bs%3A5%3A%22_csrf%22%3Bi%3A1%3Bs%3A32%3A%22sUSc6CUunvV3OADJlbxTuIIQkUBJAUCv%22%3B%7D'
+    'PATH' => 'C:\\WINDOWS\\system32;C:\\WINDOWS;C:\\WINDOWS\\System32\\Wbem;C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\;C:\\WINDOWS\\System32\\OpenSSH\\;C:\\xampp\\php;C:\\ProgramData\\ComposerSetup\\bin;C:\\Program Files\\PuTTY\\;C:\\Program Files\\Git\\cmd;C:\\Program Files\\nodejs\\;C:\\Program Files (x86)\\Microsoft SQL Server\\160\\Tools\\Binn\\;C:\\Program Files\\Microsoft SQL Server\\160\\Tools\\Binn\\;C:\\Program Files\\Microsoft SQL Server\\Client SDK\\ODBC\\170\\Tools\\Binn\\;C:\\Program Files\\Microsoft SQL Server\\160\\DTS\\Binn\\;C:\\Program Files (x86)\\Microsoft SQL Server\\160\\DTS\\Binn\\;C:\\Users\\Otic-Sistemas\\AppData\\Local\\Microsoft\\WindowsApps;;C:\\Users\\Otic-Sistemas\\AppData\\Local\\Programs\\Microsoft VS Code\\bin;C:\\Users\\Otic-Sistemas\\AppData\\Roaming\\Composer\\vendor\\bin;C:\\Users\\Otic-Sistemas\\AppData\\Roaming\\npm'
+    'SystemRoot' => 'C:\\WINDOWS'
+    'COMSPEC' => 'C:\\WINDOWS\\system32\\cmd.exe'
+    'PATHEXT' => '.COM;.EXE;.BAT;.CMD;.VBS;.VBE;.JS;.JSE;.WSF;.WSH;.MSC'
+    'WINDIR' => 'C:\\WINDOWS'
+    'SERVER_SIGNATURE' => '<address>Apache/2.4.54 (Win64) OpenSSL/1.1.1p PHP/8.2.0 Server at localhost Port 80</address>
+'
+    'SERVER_SOFTWARE' => 'Apache/2.4.54 (Win64) OpenSSL/1.1.1p PHP/8.2.0'
+    'SERVER_NAME' => 'localhost'
+    'SERVER_ADDR' => '::1'
+    'SERVER_PORT' => '80'
+    'REMOTE_ADDR' => '::1'
+    'DOCUMENT_ROOT' => 'C:/xampp/htdocs'
+    'REQUEST_SCHEME' => 'http'
+    'CONTEXT_PREFIX' => ''
+    'CONTEXT_DOCUMENT_ROOT' => 'C:/xampp/htdocs'
+    'SERVER_ADMIN' => 'postmaster@localhost'
+    'SCRIPT_FILENAME' => 'C:/xampp/htdocs/planealo.sytes.net/web/index.php'
+    'REMOTE_PORT' => '57352'
+    'REDIRECT_URL' => '/planealo.sytes.net/web/js/escuela-selector.js'
+    'GATEWAY_INTERFACE' => 'CGI/1.1'
+    'SERVER_PROTOCOL' => 'HTTP/1.1'
+    'REQUEST_METHOD' => 'GET'
+    'QUERY_STRING' => ''
+    'REQUEST_URI' => '/planealo.sytes.net/web/js/escuela-selector.js'
+    'SCRIPT_NAME' => '/planealo.sytes.net/web/index.php'
+    'PHP_SELF' => '/planealo.sytes.net/web/index.php'
+    'REQUEST_TIME_FLOAT' => 1768836319.937
+    'REQUEST_TIME' => 1768836319
+]
+2026-01-19 18:50:51 [-][-][-][error][yii\console\UnknownCommandException] yii\base\InvalidRouteException: Unable to resolve the request "migration-fix/mark-existing". in C:\xampp\htdocs\planealo.sytes.net\vendor\yiisoft\yii2\base\Module.php:564
+Stack trace:
+#0 C:\xampp\htdocs\planealo.sytes.net\vendor\yiisoft\yii2\console\Application.php(180): yii\base\Module->runAction('migration-fix/m...', Array)
+#1 C:\xampp\htdocs\planealo.sytes.net\vendor\yiisoft\yii2\console\Application.php(147): yii\console\Application->runAction('migration-fix/m...', Array)
+#2 C:\xampp\htdocs\planealo.sytes.net\vendor\yiisoft\yii2\base\Application.php(387): yii\console\Application->handleRequest(Object(yii\console\Request))
+#3 C:\xampp\htdocs\planealo.sytes.net\yii(20): yii\base\Application->run()
+#4 {main}
+
+Next yii\console\UnknownCommandException: Unknown command "migration-fix/mark-existing". in C:\xampp\htdocs\planealo.sytes.net\vendor\yiisoft\yii2\console\Application.php:183
+Stack trace:
+#0 C:\xampp\htdocs\planealo.sytes.net\vendor\yiisoft\yii2\console\Application.php(147): yii\console\Application->runAction('migration-fix/m...', Array)
+#1 C:\xampp\htdocs\planealo.sytes.net\vendor\yiisoft\yii2\base\Application.php(387): yii\console\Application->handleRequest(Object(yii\console\Request))
+#2 C:\xampp\htdocs\planealo.sytes.net\yii(20): yii\base\Application->run()
+#3 {main}
+2026-01-19 18:50:50 [-][-][-][info][application] $_GET = []
+
+$_POST = []
+
+$_FILES = []
+
+$_COOKIE = []
+
+$_SERVER = [
+    'ACLOCAL_PATH' => '/mingw64/share/aclocal:/usr/share/aclocal'
+    'ALLUSERSPROFILE' => 'C:\\ProgramData'
+    'APPDATA' => 'C:\\Users\\Otic-Sistemas\\AppData\\Roaming'
+    'COMMONPROGRAMFILES' => 'C:\\Program Files\\Common Files'
+    'CommonProgramFiles(x86)' => 'C:\\Program Files (x86)\\Common Files'
+    'CommonProgramW6432' => 'C:\\Program Files\\Common Files'
+    'COMPUTERNAME' => 'DESKTOP-BTFRP89'
+    'COMSPEC' => 'C:\\WINDOWS\\system32\\cmd.exe'
+    'CONFIG_SITE' => '/etc/config.site'
+    'DISPLAY' => 'needs-to-be-defined'
+    'DriverData' => 'C:\\Windows\\System32\\Drivers\\DriverData'
+    'EXEPATH' => 'C:\\Program Files\\Git'
+    'HOME' => 'C:\\Users\\Otic-Sistemas'
+    'HOMEDRIVE' => 'C:'
+    'HOMEPATH' => '\\Users\\Otic-Sistemas'
+    'HOSTNAME' => 'DESKTOP-BTFRP89'
+    'http_proxy' => '10.29.65.35:8080'
+    'INFOPATH' => '/mingw64/local/info:/mingw64/share/info:/usr/local/info:/usr/share/info:/usr/info:/share/info'
+    'LC_CTYPE' => 'es_ES.UTF-8'
+    'LOCALAPPDATA' => 'C:\\Users\\Otic-Sistemas\\AppData\\Local'
+    'LOGONSERVER' => '\\\\DESKTOP-BTFRP89'
+    'MANPATH' => '/mingw64/local/man:/mingw64/share/man:/usr/local/man:/usr/share/man:/usr/man:/share/man'
+    'MINGW_CHOST' => 'x86_64-w64-mingw32'
+    'MINGW_PACKAGE_PREFIX' => 'mingw-w64-x86_64'
+    'MINGW_PREFIX' => '/mingw64'
+    'MSYSTEM' => 'MINGW64'
+    'MSYSTEM_CARCH' => 'x86_64'
+    'MSYSTEM_CHOST' => 'x86_64-w64-mingw32'
+    'MSYSTEM_PREFIX' => '/mingw64'
+    'NUMBER_OF_PROCESSORS' => '4'
+    'OLDPWD' => '/c/xampp/htdocs'
+    'OneDrive' => 'C:\\Users\\Otic-Sistemas\\OneDrive'
+    'ORIGINAL_PATH' => 'C:\\Program Files\\Git\\mingw64\\bin;C:\\Program Files\\Git\\usr\\bin;C:\\Users\\Otic-Sistemas\\bin;C:\\WINDOWS\\system32;C:\\WINDOWS;C:\\WINDOWS\\System32\\Wbem;C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0;C:\\WINDOWS\\System32\\OpenSSH;C:\\xampp\\php;C:\\ProgramData\\ComposerSetup\\bin;C:\\Program Files\\PuTTY;C:\\Program Files\\Git\\cmd;C:\\Program Files\\nodejs;C:\\Program Files (x86)\\Microsoft SQL Server\\160\\Tools\\Binn;C:\\Program Files\\Microsoft SQL Server\\160\\Tools\\Binn;C:\\Program Files\\Microsoft SQL Server\\Client SDK\\ODBC\\170\\Tools\\Binn;C:\\Program Files\\Microsoft SQL Server\\160\\DTS\\Binn;C:\\Program Files (x86)\\Microsoft SQL Server\\160\\DTS\\Binn;C:\\Users\\Otic-Sistemas\\AppData\\Local\\Microsoft\\WindowsApps;C:\\Users\\Otic-Sistemas\\AppData\\Local\\Programs\\Microsoft VS Code\\bin;C:\\Users\\Otic-Sistemas\\AppData\\Roaming\\Composer\\vendor\\bin;C:\\Users\\Otic-Sistemas\\AppData\\Roaming\\npm'
+    'ORIGINAL_TEMP' => '/tmp'
+    'ORIGINAL_TMP' => '/tmp'
+    'OS' => 'Windows_NT'
+    'PATH' => 'C:\\Users\\Otic-Sistemas\\bin;C:\\Program Files\\Git\\mingw64\\bin;C:\\Program Files\\Git\\usr\\local\\bin;C:\\Program Files\\Git\\usr\\bin;C:\\Program Files\\Git\\usr\\bin;C:\\Program Files\\Git\\mingw64\\bin;C:\\Program Files\\Git\\usr\\bin;C:\\Users\\Otic-Sistemas\\bin;C:\\WINDOWS\\system32;C:\\WINDOWS;C:\\WINDOWS\\System32\\Wbem;C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0;C:\\WINDOWS\\System32\\OpenSSH;C:\\xampp\\php;C:\\ProgramData\\ComposerSetup\\bin;C:\\Program Files\\PuTTY;C:\\Program Files\\Git\\cmd;C:\\Program Files\\nodejs;C:\\Program Files (x86)\\Microsoft SQL Server\\160\\Tools\\Binn;C:\\Program Files\\Microsoft SQL Server\\160\\Tools\\Binn;C:\\Program Files\\Microsoft SQL Server\\Client SDK\\ODBC\\170\\Tools\\Binn;C:\\Program Files\\Microsoft SQL Server\\160\\DTS\\Binn;C:\\Program Files (x86)\\Microsoft SQL Server\\160\\DTS\\Binn;C:\\Users\\Otic-Sistemas\\AppData\\Local\\Microsoft\\WindowsApps;C:\\Users\\Otic-Sistemas\\AppData\\Local\\Programs\\Microsoft VS Code\\bin;C:\\Users\\Otic-Sistemas\\AppData\\Roaming\\Composer\\vendor\\bin;C:\\Users\\Otic-Sistemas\\AppData\\Roaming\\npm;C:\\Program Files\\Git\\usr\\bin\\vendor_perl;C:\\Program Files\\Git\\usr\\bin\\core_perl'
+    'PATHEXT' => '.COM;.EXE;.BAT;.CMD;.VBS;.VBE;.JS;.JSE;.WSF;.WSH;.MSC'
+    'PKG_CONFIG_PATH' => '/mingw64/lib/pkgconfig:/mingw64/share/pkgconfig'
+    'PKG_CONFIG_SYSTEM_INCLUDE_PATH' => '/mingw64/include'
+    'PKG_CONFIG_SYSTEM_LIBRARY_PATH' => '/mingw64/lib'
+    'PLINK_PROTOCOL' => 'ssh'
+    'PROCESSOR_ARCHITECTURE' => 'AMD64'
+    'PROCESSOR_IDENTIFIER' => 'Intel64 Family 6 Model 42 Stepping 7, GenuineIntel'
+    'PROCESSOR_LEVEL' => '6'
+    'PROCESSOR_REVISION' => '2a07'
+    'ProgramData' => 'C:\\ProgramData'
+    'PROGRAMFILES' => 'C:\\Program Files'
+    'ProgramFiles(x86)' => 'C:\\Program Files (x86)'
+    'ProgramW6432' => 'C:\\Program Files'
+    'PS1' => '\\[\\033]0;$TITLEPREFIX:$PWD\\007\\]\\n\\[\\033[32m\\]\\u@\\h \\[\\033[35m\\]$MSYSTEM \\[\\033[33m\\]\\w\\[\\033[36m\\]`__git_ps1`\\[\\033[0m\\]\\n$ '
+    'PSModulePath' => 'C:\\Program Files\\WindowsPowerShell\\Modules;C:\\WINDOWS\\system32\\WindowsPowerShell\\v1.0\\Modules;C:\\Program Files (x86)\\Microsoft SQL Server\\160\\Tools\\PowerShell\\Modules\\'
+    'PUBLIC' => 'C:\\Users\\Public'
+    'PWD' => '/c/xampp/htdocs/planealo.sytes.net'
+    'SHELL' => 'C:\\Program Files\\Git\\usr\\bin\\bash.exe'
+    'SHLVL' => '1'
+    'SSH_ASKPASS' => '/mingw64/bin/git-askpass.exe'
+    'SYSTEMDRIVE' => 'C:'
+    'SYSTEMROOT' => 'C:\\WINDOWS'
+    'TEMP' => 'C:\\Users\\OTIC-S~1\\AppData\\Local\\Temp'
+    'TERM_PROGRAM' => 'mintty'
+    'TERM_PROGRAM_VERSION' => '3.6.4'
+    'TMP' => 'C:\\Users\\OTIC-S~1\\AppData\\Local\\Temp'
+    'TMPDIR' => 'C:\\Users\\OTIC-S~1\\AppData\\Local\\Temp'
+    'USERDOMAIN' => 'DESKTOP-BTFRP89'
+    'USERDOMAIN_ROAMINGPROFILE' => 'DESKTOP-BTFRP89'
+    'USERNAME' => 'Otic-Sistemas'
+    'USERPROFILE' => 'C:\\Users\\Otic-Sistemas'
+    'VBOX_MSI_INSTALL_PATH' => 'C:\\Program Files\\Oracle\\VirtualBox\\'
+    'WINDIR' => 'C:\\WINDOWS'
+    '_' => '/usr/bin/winpty'
+    '__COMPAT_LAYER' => 'RunAsAdmin'
+    'PHP_SELF' => 'yii'
+    'SCRIPT_NAME' => 'yii'
+    'SCRIPT_FILENAME' => 'yii'
+    'PATH_TRANSLATED' => 'yii'
+    'DOCUMENT_ROOT' => ''
+    'REQUEST_TIME_FLOAT' => 1768845050.6619
+    'REQUEST_TIME' => 1768845050
+    'argv' => [
+        0 => 'yii'
+        1 => 'migration-fix/mark-existing'
+    ]
+    'argc' => 2
+]
+2026-01-19 18:55:47 [-][-][-][error][yii\base\UnknownClassException] yii\base\UnknownClassException: Unable to find 'app\commands\MigrationFixController' in file: C:\xampp\htdocs\planealo.sytes.net/commands/MigrationFixController.php. Namespace missing? in C:\xampp\htdocs\planealo.sytes.net\vendor\yiisoft\yii2\BaseYii.php:299
+Stack trace:
+#0 [internal function]: yii\BaseYii::autoload('app\\commands\\Mi...')
+#1 C:\xampp\htdocs\planealo.sytes.net\vendor\yiisoft\yii2\base\Module.php(664): class_exists('app\\commands\\Mi...')
+#2 C:\xampp\htdocs\planealo.sytes.net\vendor\yiisoft\yii2\base\Module.php(623): yii\base\Module->createControllerByID('migration-fix')
+#3 C:\xampp\htdocs\planealo.sytes.net\vendor\yiisoft\yii2\base\Module.php(549): yii\base\Module->createController('run-security-on...')
+#4 C:\xampp\htdocs\planealo.sytes.net\vendor\yiisoft\yii2\console\Application.php(180): yii\base\Module->runAction('migration-fix/r...', Array)
+#5 C:\xampp\htdocs\planealo.sytes.net\vendor\yiisoft\yii2\console\Application.php(147): yii\console\Application->runAction('migration-fix/r...', Array)
+#6 C:\xampp\htdocs\planealo.sytes.net\vendor\yiisoft\yii2\base\Application.php(387): yii\console\Application->handleRequest(Object(yii\console\Request))
+#7 C:\xampp\htdocs\planealo.sytes.net\yii(20): yii\base\Application->run()
+#8 {main}
+2026-01-19 18:55:47 [-][-][-][info][application] $_GET = []
+
+$_POST = []
+
+$_FILES = []
+
+$_COOKIE = []
+
+$_SERVER = [
+    'ACLOCAL_PATH' => '/mingw64/share/aclocal:/usr/share/aclocal'
+    'ALLUSERSPROFILE' => 'C:\\ProgramData'
+    'APPDATA' => 'C:\\Users\\Otic-Sistemas\\AppData\\Roaming'
+    'COMMONPROGRAMFILES' => 'C:\\Program Files\\Common Files'
+    'CommonProgramFiles(x86)' => 'C:\\Program Files (x86)\\Common Files'
+    'CommonProgramW6432' => 'C:\\Program Files\\Common Files'
+    'COMPUTERNAME' => 'DESKTOP-BTFRP89'
+    'COMSPEC' => 'C:\\WINDOWS\\system32\\cmd.exe'
+    'CONFIG_SITE' => '/etc/config.site'
+    'DISPLAY' => 'needs-to-be-defined'
+    'DriverData' => 'C:\\Windows\\System32\\Drivers\\DriverData'
+    'EXEPATH' => 'C:\\Program Files\\Git'
+    'HOME' => 'C:\\Users\\Otic-Sistemas'
+    'HOMEDRIVE' => 'C:'
+    'HOMEPATH' => '\\Users\\Otic-Sistemas'
+    'HOSTNAME' => 'DESKTOP-BTFRP89'
+    'http_proxy' => '10.29.65.35:8080'
+    'INFOPATH' => '/mingw64/local/info:/mingw64/share/info:/usr/local/info:/usr/share/info:/usr/info:/share/info'
+    'LC_CTYPE' => 'es_ES.UTF-8'
+    'LOCALAPPDATA' => 'C:\\Users\\Otic-Sistemas\\AppData\\Local'
+    'LOGONSERVER' => '\\\\DESKTOP-BTFRP89'
+    'MANPATH' => '/mingw64/local/man:/mingw64/share/man:/usr/local/man:/usr/share/man:/usr/man:/share/man'
+    'MINGW_CHOST' => 'x86_64-w64-mingw32'
+    'MINGW_PACKAGE_PREFIX' => 'mingw-w64-x86_64'
+    'MINGW_PREFIX' => '/mingw64'
+    'MSYSTEM' => 'MINGW64'
+    'MSYSTEM_CARCH' => 'x86_64'
+    'MSYSTEM_CHOST' => 'x86_64-w64-mingw32'
+    'MSYSTEM_PREFIX' => '/mingw64'
+    'NUMBER_OF_PROCESSORS' => '4'
+    'OLDPWD' => '/c/xampp/htdocs'
+    'OneDrive' => 'C:\\Users\\Otic-Sistemas\\OneDrive'
+    'ORIGINAL_PATH' => 'C:\\Program Files\\Git\\mingw64\\bin;C:\\Program Files\\Git\\usr\\bin;C:\\Users\\Otic-Sistemas\\bin;C:\\WINDOWS\\system32;C:\\WINDOWS;C:\\WINDOWS\\System32\\Wbem;C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0;C:\\WINDOWS\\System32\\OpenSSH;C:\\xampp\\php;C:\\ProgramData\\ComposerSetup\\bin;C:\\Program Files\\PuTTY;C:\\Program Files\\Git\\cmd;C:\\Program Files\\nodejs;C:\\Program Files (x86)\\Microsoft SQL Server\\160\\Tools\\Binn;C:\\Program Files\\Microsoft SQL Server\\160\\Tools\\Binn;C:\\Program Files\\Microsoft SQL Server\\Client SDK\\ODBC\\170\\Tools\\Binn;C:\\Program Files\\Microsoft SQL Server\\160\\DTS\\Binn;C:\\Program Files (x86)\\Microsoft SQL Server\\160\\DTS\\Binn;C:\\Users\\Otic-Sistemas\\AppData\\Local\\Microsoft\\WindowsApps;C:\\Users\\Otic-Sistemas\\AppData\\Local\\Programs\\Microsoft VS Code\\bin;C:\\Users\\Otic-Sistemas\\AppData\\Roaming\\Composer\\vendor\\bin;C:\\Users\\Otic-Sistemas\\AppData\\Roaming\\npm'
+    'ORIGINAL_TEMP' => '/tmp'
+    'ORIGINAL_TMP' => '/tmp'
+    'OS' => 'Windows_NT'
+    'PATH' => 'C:\\Users\\Otic-Sistemas\\bin;C:\\Program Files\\Git\\mingw64\\bin;C:\\Program Files\\Git\\usr\\local\\bin;C:\\Program Files\\Git\\usr\\bin;C:\\Program Files\\Git\\usr\\bin;C:\\Program Files\\Git\\mingw64\\bin;C:\\Program Files\\Git\\usr\\bin;C:\\Users\\Otic-Sistemas\\bin;C:\\WINDOWS\\system32;C:\\WINDOWS;C:\\WINDOWS\\System32\\Wbem;C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0;C:\\WINDOWS\\System32\\OpenSSH;C:\\xampp\\php;C:\\ProgramData\\ComposerSetup\\bin;C:\\Program Files\\PuTTY;C:\\Program Files\\Git\\cmd;C:\\Program Files\\nodejs;C:\\Program Files (x86)\\Microsoft SQL Server\\160\\Tools\\Binn;C:\\Program Files\\Microsoft SQL Server\\160\\Tools\\Binn;C:\\Program Files\\Microsoft SQL Server\\Client SDK\\ODBC\\170\\Tools\\Binn;C:\\Program Files\\Microsoft SQL Server\\160\\DTS\\Binn;C:\\Program Files (x86)\\Microsoft SQL Server\\160\\DTS\\Binn;C:\\Users\\Otic-Sistemas\\AppData\\Local\\Microsoft\\WindowsApps;C:\\Users\\Otic-Sistemas\\AppData\\Local\\Programs\\Microsoft VS Code\\bin;C:\\Users\\Otic-Sistemas\\AppData\\Roaming\\Composer\\vendor\\bin;C:\\Users\\Otic-Sistemas\\AppData\\Roaming\\npm;C:\\Program Files\\Git\\usr\\bin\\vendor_perl;C:\\Program Files\\Git\\usr\\bin\\core_perl'
+    'PATHEXT' => '.COM;.EXE;.BAT;.CMD;.VBS;.VBE;.JS;.JSE;.WSF;.WSH;.MSC'
+    'PKG_CONFIG_PATH' => '/mingw64/lib/pkgconfig:/mingw64/share/pkgconfig'
+    'PKG_CONFIG_SYSTEM_INCLUDE_PATH' => '/mingw64/include'
+    'PKG_CONFIG_SYSTEM_LIBRARY_PATH' => '/mingw64/lib'
+    'PLINK_PROTOCOL' => 'ssh'
+    'PROCESSOR_ARCHITECTURE' => 'AMD64'
+    'PROCESSOR_IDENTIFIER' => 'Intel64 Family 6 Model 42 Stepping 7, GenuineIntel'
+    'PROCESSOR_LEVEL' => '6'
+    'PROCESSOR_REVISION' => '2a07'
+    'ProgramData' => 'C:\\ProgramData'
+    'PROGRAMFILES' => 'C:\\Program Files'
+    'ProgramFiles(x86)' => 'C:\\Program Files (x86)'
+    'ProgramW6432' => 'C:\\Program Files'
+    'PS1' => '\\[\\033]0;$TITLEPREFIX:$PWD\\007\\]\\n\\[\\033[32m\\]\\u@\\h \\[\\033[35m\\]$MSYSTEM \\[\\033[33m\\]\\w\\[\\033[36m\\]`__git_ps1`\\[\\033[0m\\]\\n$ '
+    'PSModulePath' => 'C:\\Program Files\\WindowsPowerShell\\Modules;C:\\WINDOWS\\system32\\WindowsPowerShell\\v1.0\\Modules;C:\\Program Files (x86)\\Microsoft SQL Server\\160\\Tools\\PowerShell\\Modules\\'
+    'PUBLIC' => 'C:\\Users\\Public'
+    'PWD' => '/c/xampp/htdocs/planealo.sytes.net'
+    'SHELL' => 'C:\\Program Files\\Git\\usr\\bin\\bash.exe'
+    'SHLVL' => '1'
+    'SSH_ASKPASS' => '/mingw64/bin/git-askpass.exe'
+    'SYSTEMDRIVE' => 'C:'
+    'SYSTEMROOT' => 'C:\\WINDOWS'
+    'TEMP' => 'C:\\Users\\OTIC-S~1\\AppData\\Local\\Temp'
+    'TERM_PROGRAM' => 'mintty'
+    'TERM_PROGRAM_VERSION' => '3.6.4'
+    'TMP' => 'C:\\Users\\OTIC-S~1\\AppData\\Local\\Temp'
+    'TMPDIR' => 'C:\\Users\\OTIC-S~1\\AppData\\Local\\Temp'
+    'USERDOMAIN' => 'DESKTOP-BTFRP89'
+    'USERDOMAIN_ROAMINGPROFILE' => 'DESKTOP-BTFRP89'
+    'USERNAME' => 'Otic-Sistemas'
+    'USERPROFILE' => 'C:\\Users\\Otic-Sistemas'
+    'VBOX_MSI_INSTALL_PATH' => 'C:\\Program Files\\Oracle\\VirtualBox\\'
+    'WINDIR' => 'C:\\WINDOWS'
+    '_' => '/usr/bin/winpty'
+    '__COMPAT_LAYER' => 'RunAsAdmin'
+    'PHP_SELF' => 'yii'
+    'SCRIPT_NAME' => 'yii'
+    'SCRIPT_FILENAME' => 'yii'
+    'PATH_TRANSLATED' => 'yii'
+    'DOCUMENT_ROOT' => ''
+    'REQUEST_TIME_FLOAT' => 1768845346.9954
+    'REQUEST_TIME' => 1768845346
+    'argv' => [
+        0 => 'yii'
+        1 => 'migration-fix/run-security-only'
+    ]
+    'argc' => 2
+]
