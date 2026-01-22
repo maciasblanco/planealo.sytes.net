@@ -1,17 +1,17 @@
 /* =================================================================
  * _navigation.css - NAVEGACIÓN Y MENÚS GED
- * Versión: 3.4.0 - SOLUCIÓN DEFINITIVA PARA UNA LÍNEA + 45vh
- * Fecha: 2026-01-16
- * Última modificación: 2026-01-16 (Solución definitiva una línea)
+ * Versión: 3.5.0 - VIEWPORT 95% + MENÚ 45.5%
+ * Fecha: 2026-01-22
+ * Última modificación: 2026-01-22 (Viewport 95%, Menú 45.5%)
  * 
  * DISTRIBUCIÓN EXACTA DEL VIEWPORT (100%):
- *  1. Navbar: 90% del viewport (con 10% de margen derecho visual)
+ *  1. Navbar: 95% del viewport (con 5% de margen derecho visual)
  *  2. Secciones dentro del navbar:
- *     - Logo: 12% del viewport (13.33% del navbar)
- *     - Menú: 40.5% del viewport (45% del navbar)
- *     - Social: 4.5% del viewport (5% del navbar)
- *     - Control: 18% del viewport (20% del navbar)
- *  TOTAL: 75% del viewport (83.33% del navbar) + 15% para gaps
+ *     - Logo: 12% del viewport (12.63% del navbar)
+ *     - Menú: 45.5% del viewport (47.89% del navbar)
+ *     - Social: 4.5% del viewport (4.74% del navbar)
+ *     - Control: 18% del viewport (18.95% del navbar)
+ *  TOTAL: 80% del viewport (84.21% del navbar) + 15% para gaps
  * ================================================================= */
 
 /* Variables específicas de navegación */
@@ -28,21 +28,21 @@
   --navbar-shadow-medium: 0 4px 20px rgba(0,0,0,0.15);
   --navbar-transition-speed: 0.3s;
   
-  /* ✅ VARIABLES OPTIMIZADAS - CONTROL AL 18% DEL VIEWPORT */
-  --viewport-margin-right: 10%;      /* 10% del viewport (margen visual) */
-  --viewport-navbar-width: 90%;      /* 90% del viewport */
-  --viewport-padding-left: 2.7%;     /* 3% de 90% = 2.7% del viewport */
-  --viewport-padding-right: 2.7%;    /* 3% de 90% = 2.7% del viewport */
-  --viewport-brand: 12%;             /* 13.33% de 90% = 12% del viewport */
-  --viewport-menu: 40.5%;            /* 45% de 90% = 40.5% del viewport */
-  --viewport-social: 4.5%;           /* 5% de 90% = 4.5% del viewport */
-  --viewport-control: 18%;           /* 20% de 90% = 18% del viewport */
-  --viewport-gap: 1.35%;             /* 1.5% de 90% = 1.35% del viewport */
-  --navbar-section-gap: 1.35%;       /* 1.35% del viewport */
+  /* ✅ VARIABLES ACTUALIZADAS - VIEWPORT 95%, MENÚ 45.5% */
+  --viewport-margin-right: 5%;            /* 5% del viewport (margen visual) */
+  --viewport-navbar-width: 95%;           /* 95% del viewport */
+  --viewport-padding-left: 2.85%;         /* 3% de 95% = 2.85% del viewport */
+  --viewport-padding-right: 2.85%;        /* 3% de 95% = 2.85% del viewport */
+  --viewport-brand: 12%;                  /* 12% del viewport */
+  --viewport-menu: 45.5%;                 /* ✅ AUMENTADO: 45.5% del viewport */
+  --viewport-social: 4.5%;                /* 4.5% del viewport */
+  --viewport-control: 18%;                /* 18% del viewport */
+  --viewport-gap: 1.425%;                 /* 1.5% de 95% = 1.425% del viewport */
+  --navbar-section-gap: 1.425%;           /* 1.425% del viewport */
   
   /* ✅ NUEVAS VARIABLES PARA SOLUCIÓN UNA LÍNEA */
-  --navbar-container-height: 45vh;   /* Altura fija del navbar */
-  --navbar-section-height: 100%;     /* Todas las secciones ocupan 100% de altura */
+  --navbar-container-height: 45vh;        /* Altura fija del navbar */
+  --navbar-section-height: 100%;          /* Todas las secciones ocupan 100% de altura */
 }
 
 /* ===== RESET DE ANCHO COMPLETO ===== */
@@ -124,9 +124,9 @@ body {
 
 .navbar-contextual {
   /* ✅ ANCHO Y POSICIÓN EXACTOS */
-  width: var(--viewport-navbar-width) !important;      /* 90% del viewport */
+  width: var(--viewport-navbar-width) !important;      /* 95% del viewport */
   max-width: var(--viewport-navbar-width) !important;
-  margin: 0 0 0 auto !important;                     /* Alineado a la izquierda con 10% de margen derecho */
+  margin: 0 0 0 auto !important;                     /* Alineado a la izquierda con 5% de margen derecho */
   position: fixed !important;
   top: 0 !important;
   left: 0 !important;
@@ -149,8 +149,8 @@ body {
   align-items: center !important;
   justify-content: flex-start !important;
   
-  /* ✅ PADDING INTERNO EXACTO: 3% de 90% = 2.7% del viewport a cada lado */
-  padding: 0 3% !important;                          /* 3% del navbar (2.7% del viewport) */
+  /* ✅ PADDING INTERNO EXACTO: 3% de 95% = 2.85% del viewport a cada lado */
+  padding: 0 3% !important;                          /* 3% del navbar (2.85% del viewport) */
   box-sizing: border-box !important;
   
   /* ✅ TRANSICIONES */
@@ -196,7 +196,7 @@ body {
 /* ✅ SECCIONES DEL NAVBAR - DISTRIBUCIÓN OPTIMIZADA = */
 /* ================================================== */
 
-/* ✅ LOGO: 12% del viewport (13.33% del navbar) */
+/* ✅ LOGO: 12% del viewport (12.63% del navbar) */
 .navbar-brand-section {
   flex: 0 0 var(--viewport-brand) !important;        /* 12% del viewport */
   max-width: var(--viewport-brand) !important;       /* 12% del viewport */
@@ -211,10 +211,10 @@ body {
   margin: 0 !important;
 }
 
-/* ✅ MENÚ PRINCIPAL: 40.5% del viewport (45% del navbar) */
+/* ✅ MENÚ PRINCIPAL: 45.5% del viewport (47.89% del navbar) */
 .navbar-menu-section {
-  flex: 0 0 var(--viewport-menu) !important;         /* 40.5% del viewport */
-  max-width: var(--viewport-menu) !important;        /* 40.5% del viewport */
+  flex: 0 0 var(--viewport-menu) !important;         /* 45.5% del viewport */
+  max-width: var(--viewport-menu) !important;        /* 45.5% del viewport */
   display: flex !important;
   align-items: center !important;
   justify-content: flex-start !important;
@@ -225,7 +225,7 @@ body {
   margin: 0 !important;
 }
 
-/* ✅ REDES SOCIALES: 4.5% del viewport (5% del navbar) */
+/* ✅ REDES SOCIALES: 4.5% del viewport (4.74% del navbar) */
 .navbar-social-section {
   flex: 0 0 var(--viewport-social) !important;       /* 4.5% del viewport */
   max-width: var(--viewport-social) !important;      /* 4.5% del viewport */
@@ -240,7 +240,7 @@ body {
   margin: 0 !important;
 }
 
-/* ✅ CONTROL DE USUARIO: 18% del viewport (20% del navbar) */
+/* ✅ CONTROL DE USUARIO: 18% del viewport (18.95% del navbar) */
 .navbar-control-section {
   flex: 0 0 var(--viewport-control) !important;      /* 18% del viewport */
   max-width: var(--viewport-control) !important;     /* 18% del viewport */
@@ -317,12 +317,13 @@ body {
 }
 
 .main-navigation .nav-link {
+  /* ✅ ACTUALIZADO: TEXTO BLANCO Y NEGRITA */
   color: white !important;
-  font-weight: 500 !important;
-  padding: 12px 16px !important; /* ✅ AJUSTE: padding mayor para 45vh */
+  font-weight: bolder !important;
+  padding: 12px 16px !important;
   transition: all 0.3s ease !important;
   white-space: nowrap !important;
-  font-size: 1rem !important; /* ✅ AJUSTE: tamaño de fuente mayor */
+  font-size: 1rem !important;
   text-decoration: none !important;
   border-radius: 4px !important;
   position: relative !important;
@@ -337,6 +338,8 @@ body {
   background: rgba(255, 255, 255, 0.15) !important;
   transform: translateY(-1px) !important;
   box-shadow: 0 2px 8px rgba(0,0,0,0.1) !important;
+  /* ✅ MANTENER TEXTO BLANCO EN HOVER */
+  color: white !important;
 }
 
 .main-navigation .nav-link.active::after {
@@ -449,7 +452,7 @@ body {
 }
 
 .social-icon-circle {
-  width: 32px !important; /* ✅ AJUSTE: iconos más grandes */
+  width: 32px !important;
   height: 32px !important;
   border-radius: 50% !important;
   background: rgba(255, 255, 255, 0.12) !important;
@@ -459,7 +462,7 @@ body {
   justify-content: center !important;
   transition: all 0.3s ease !important;
   text-decoration: none !important;
-  font-size: 0.9rem !important; /* ✅ AJUSTE: fuente más grande */
+  font-size: 0.9rem !important;
   border: 1px solid rgba(255,255,255,0.2) !important;
 }
 
@@ -484,10 +487,10 @@ body {
 /* ✅ INFORMACIÓN DE ESCUELA OPTIMIZADA */
 .school-info {
   background: rgba(0, 0, 0, 0.18) !important;
-  padding: 10px 12px !important; /* ✅ AJUSTE: padding mayor */
+  padding: 10px 12px !important;
   border-radius: 6px !important;
   border: 1px solid rgba(255, 255, 255, 0.15) !important;
-  font-size: 0.9rem !important; /* ✅ AJUSTE: fuente mayor */
+  font-size: 0.9rem !important;
   width: 100% !important;
   box-sizing: border-box !important;
   text-align: left !important;
@@ -496,7 +499,7 @@ body {
 
 .escuela-activa-indicator {
   background: rgba(52, 152, 219, 0.2) !important;
-  padding: 10px 12px !important; /* ✅ AJUSTE: padding mayor */
+  padding: 10px 12px !important;
   border-radius: 4px !important;
   border-left: 3px solid #3498db !important;
   text-align: left !important;
@@ -508,7 +511,7 @@ body {
 .escuela-activa-indicator small {
   display: block !important;
   line-height: 1.4 !important;
-  font-size: 0.9rem !important; /* ✅ AJUSTE: fuente mayor */
+  font-size: 0.9rem !important;
   text-align: left !important;
 }
 
@@ -530,8 +533,8 @@ body {
   background: rgba(255,255,255,0.1) !important;
   border: 1px solid rgba(255,255,255,0.2) !important;
   color: white !important;
-  font-size: 0.9rem !important; /* ✅ AJUSTE: fuente mayor */
-  height: 38px !important; /* ✅ AJUSTE: altura mayor */
+  font-size: 0.9rem !important;
+  height: 38px !important;
   width: 100% !important;
   margin-bottom: 5px !important;
   box-sizing: border-box !important;
@@ -544,9 +547,9 @@ body {
 .school-search-container .btn-outline-light {
   border-color: rgba(255,255,255,0.3) !important;
   color: white !important;
-  height: 38px !important; /* ✅ AJUSTE: altura mayor */
+  height: 38px !important;
   padding: 0 10px !important;
-  font-size: 0.9rem !important; /* ✅ AJUSTE: fuente mayor */
+  font-size: 0.9rem !important;
   width: 100% !important;
   box-sizing: border-box !important;
 }
@@ -560,7 +563,7 @@ body {
   width: 100% !important;
   text-align: left !important;
   background: rgba(0, 0, 0, 0.18) !important;
-  padding: 10px 12px !important; /* ✅ AJUSTE: padding mayor */
+  padding: 10px 12px !important;
   border-radius: 6px !important;
   border: 1px solid rgba(255, 255, 255, 0.15) !important;
   box-sizing: border-box !important;
@@ -570,7 +573,7 @@ body {
 .user-info small {
   display: block !important;
   line-height: 1.5 !important;
-  font-size: 0.9rem !important; /* ✅ AJUSTE: fuente mayor */
+  font-size: 0.9rem !important;
   margin-bottom: 5px !important;
   text-align: left !important;
 }
@@ -584,8 +587,8 @@ body {
 .session-controls .btn {
   width: 100% !important;
   transition: all 0.3s ease !important;
-  padding: 8px 12px !important; /* ✅ AJUSTE: padding mayor */
-  font-size: 0.9rem !important; /* ✅ AJUSTE: fuente mayor */
+  padding: 8px 12px !important;
+  font-size: 0.9rem !important;
   border-radius: 6px !important;
   white-space: nowrap !important;
   margin-bottom: 6px !important;
@@ -783,9 +786,9 @@ body {
   
   /* ✅ CONTENEDOR CON DISTRIBUCIÓN EXACTA */
   .navbar-contextual {
-    width: var(--viewport-navbar-width) !important;  /* 90% del viewport */
-    margin: 0 0 0 auto !important;                   /* Alineado a la izquierda con 10% de margen derecho */
-    padding: 0 3% !important;                        /* 3% del navbar (2.7% del viewport) */
+    width: var(--viewport-navbar-width) !important;  /* 95% del viewport */
+    margin: 0 0 0 auto !important;                   /* Alineado a la izquierda con 5% de margen derecho */
+    padding: 0 3% !important;                        /* 3% del navbar (2.85% del viewport) */
     min-height: var(--navbar-container-height) !important;
     height: var(--navbar-container-height) !important;
   }
@@ -906,7 +909,7 @@ body {
   }
   
   .navbar-menu-section {
-    flex: 0 0 var(--viewport-menu) !important;     /* 40.5% del viewport */
+    flex: 0 0 var(--viewport-menu) !important;     /* 45.5% del viewport */
     max-width: var(--viewport-menu) !important;
     min-width: var(--viewport-menu) !important;
     justify-content: flex-start !important;
@@ -921,7 +924,7 @@ body {
   
   /* ✅ SECCIÓN DE CONTROL - DISTRIBUCIÓN EXACTA OPTIMIZADA */
   .navbar-control-section {
-    flex: 0 0 var(--viewport-control) !important;  /* 18% del viewport (20% del navbar) */
+    flex: 0 0 var(--viewport-control) !important;  /* 18% del viewport (18.95% del navbar) */
     max-width: var(--viewport-control) !important;
     min-width: var(--viewport-control) !important;
     display: flex !important;
@@ -1200,17 +1203,17 @@ body {
 
 /* Tablets y pantallas medianas (1199px a 992px) */
 @media (max-width: 1199.98px) and (min-width: 992px) {
-  /* ✅ VARIABLES AJUSTADAS PARA TABLETS - PROPORCIONALES */
+  /* ✅ VARIABLES AJUSTADAS PARA TABLETS - PROPORCIONALES A 95% */
   :root {
-    --viewport-navbar-width: 92% !important;      /* 92% del viewport (+2%) */
-    --viewport-padding-left: 2.76% !important;    /* 3% de 92% = 2.76% del viewport */
-    --viewport-padding-right: 2.76% !important;   /* 3% de 92% = 2.76% del viewport */
-    --viewport-brand: 11.04% !important;          /* 12% de 92% = 11.04% del viewport */
-    --viewport-menu: 37.26% !important;           /* 40.5% de 92% = 37.26% del viewport */
-    --viewport-social: 4.14% !important;          /* 4.5% de 92% = 4.14% del viewport */
-    --viewport-control: 16.56% !important;        /* 18% de 92% = 16.56% del viewport */
-    --viewport-gap: 1.38% !important;             /* 1.5% de 92% = 1.38% del viewport */
-    --navbar-section-gap: 1.5% !important;        /* 1.5% del navbar */
+    --viewport-navbar-width: 95% !important;      /* Mantener 95% en tablets */
+    --viewport-padding-left: 2.85% !important;    /* 3% de 95% = 2.85% del viewport */
+    --viewport-padding-right: 2.85% !important;   /* 3% de 95% = 2.85% del viewport */
+    --viewport-brand: 12% !important;             /* 12% del viewport */
+    --viewport-menu: 45.5% !important;            /* ✅ 45.5% del viewport */
+    --viewport-social: 4.5% !important;           /* 4.5% del viewport */
+    --viewport-control: 18% !important;           /* 18% del viewport */
+    --viewport-gap: 1.425% !important;            /* 1.5% de 95% = 1.425% del viewport */
+    --navbar-section-gap: 1.5% !important;
     --navbar-container-height: 45vh !important;
   }
   
@@ -1229,7 +1232,7 @@ body {
   
   /* ✅ TABLETS: DISTRIBUCIÓN AJUSTADA */
   .navbar-contextual {
-    width: var(--viewport-navbar-width) !important; /* 92% del viewport */
+    width: var(--viewport-navbar-width) !important; /* 95% del viewport */
     padding: 0 3% !important; /* 3% del navbar */
   }
   
@@ -1268,13 +1271,16 @@ body {
   }
   
   .navbar-logo {
-    max-height: 70% !important; /* ✅ AJUSTE: 70% de la altura del navbar */
+    max-height: 70% !important;
     height: auto !important;
   }
   
   .main-navigation .nav-link {
-    padding: 10px 14px !important; /* ✅ AJUSTE: padding mayor */
-    font-size: 0.95rem !important; /* ✅ AJUSTE: fuente mayor */
+    /* ✅ TEXTO BLANCO Y NEGRITA EN TABLETS TAMBIÉN */
+    color: white !important;
+    font-weight: bolder !important;
+    padding: 10px 14px !important;
+    font-size: 0.95rem !important;
   }
   
   .social-icons-vertical {
@@ -1283,9 +1289,9 @@ body {
   }
   
   .social-icon-circle {
-    width: 30px !important; /* ✅ AJUSTE: iconos más grandes */
+    width: 30px !important;
     height: 30px !important;
-    font-size: 0.85rem !important; /* ✅ AJUSTE: fuente mayor */
+    font-size: 0.85rem !important;
   }
   
   .session-controls {
@@ -1294,14 +1300,14 @@ body {
   }
   
   .session-controls .btn {
-    padding: 7px 10px !important; /* ✅ AJUSTE: padding mayor */
-    font-size: 0.85rem !important; /* ✅ AJUSTE: fuente mayor */
+    padding: 7px 10px !important;
+    font-size: 0.85rem !important;
   }
   
   .school-info,
   .user-info {
-    padding: 8px 10px !important; /* ✅ AJUSTE: padding mayor */
-    font-size: 0.85rem !important; /* ✅ AJUSTE: fuente mayor */
+    padding: 8px 10px !important;
+    font-size: 0.85rem !important;
     text-align: left !important;
   }
   
@@ -1436,6 +1442,9 @@ body {
   }
   
   .nav-link {
+    /* ✅ TEXTO BLANCO Y NEGRITA EN MÓVIL */
+    color: white !important;
+    font-weight: bolder !important;
     padding: 15px 20px !important;
     background: rgba(255,255,255,0.1);
     display: block;
@@ -1681,8 +1690,8 @@ body {
 @media (min-width: 992px) {
     .navbar-contextual {
         display: flex !important;
-        width: var(--viewport-navbar-width) !important; /* 90% del viewport */
-        margin: 0 0 0 auto !important; /* Alineado a la izquierda con 10% de margen derecho */
+        width: var(--viewport-navbar-width) !important; /* 95% del viewport */
+        margin: 0 0 0 auto !important; /* Alineado a la izquierda con 5% de margen derecho */
     }
     
     .navbar-brand-section { 
@@ -1693,7 +1702,7 @@ body {
     }
     
     .navbar-menu-section { 
-        flex: 0 0 var(--viewport-menu) !important;      /* 40.5% del viewport */
+        flex: 0 0 var(--viewport-menu) !important;      /* 45.5% del viewport */
         max-width: var(--viewport-menu) !important; 
         margin: 0 !important;
         justify-content: flex-start !important;
@@ -1709,7 +1718,7 @@ body {
     
     /* ✅ SECCIÓN DE CONTROL - DISTRIBUCIÓN EXACTA OPTIMIZADA */
     .navbar-control-section { 
-        flex: 0 0 var(--viewport-control) !important;   /* 18% del viewport (20% del navbar) */
+        flex: 0 0 var(--viewport-control) !important;   /* 18% del viewport (18.95% del navbar) */
         max-width: var(--viewport-control) !important; 
         display: flex !important;
         align-items: stretch !important;
@@ -1912,10 +1921,10 @@ main#main {
 @media (min-width: 1400px) {
   /* ✅ RE-CALCULAR VARIABLES PARA PANTALLAS GRANDES */
   :root {
-    --viewport-brand: 13.33% !important;    /* 13.33% de 90% = 12% del viewport */
-    --viewport-menu: 45% !important;        /* 45% de 90% = 40.5% del viewport */
-    --viewport-social: 5% !important;       /* 5% de 90% = 4.5% del viewport */
-    --viewport-control: 20% !important;     /* 20% de 90% = 18% del viewport */
+    --viewport-brand: 12% !important;        /* 12% del viewport */
+    --viewport-menu: 45.5% !important;       /* ✅ 45.5% del viewport */
+    --viewport-social: 4.5% !important;      /* 4.5% del viewport */
+    --viewport-control: 18% !important;      /* 18% del viewport */
     --navbar-section-gap: 1.5% !important;
   }
   
@@ -1924,21 +1933,21 @@ main#main {
   }
   
   .session-controls .btn {
-    padding: 10px 14px !important; /* ✅ AJUSTE: padding mayor */
-    font-size: 1rem !important; /* ✅ AJUSTE: fuente mayor */
+    padding: 10px 14px !important;
+    font-size: 1rem !important;
   }
   
   .school-info,
   .user-info {
-    padding: 12px 14px !important; /* ✅ AJUSTE: padding mayor */
-    font-size: 1rem !important; /* ✅ AJUSTE: fuente mayor */
+    padding: 12px 14px !important;
+    font-size: 1rem !important;
     text-align: left !important;
   }
   
   .social-icon-circle {
-    width: 36px !important; /* ✅ AJUSTE: iconos más grandes */
+    width: 36px !important;
     height: 36px !important;
-    font-size: 1rem !important; /* ✅ AJUSTE: fuente mayor */
+    font-size: 1.1rem !important;
   }
 }
 
@@ -1949,9 +1958,9 @@ main#main {
   }
   
   .social-icon-circle {
-    width: 32px !important; /* ✅ AJUSTE: iconos más grandes */
+    width: 32px !important;
     height: 32px !important;
-    font-size: 0.9rem !important; /* ✅ AJUSTE: fuente mayor */
+    font-size: 0.9rem !important;
   }
   
   .social-icons-vertical {
@@ -1993,17 +2002,18 @@ main#main {
 
 .debug-structure .navbar-contextual {
     background: linear-gradient(90deg, 
-        rgba(255,0,0,0.1) var(--viewport-brand), 
-        rgba(0,255,0,0.1) calc(var(--viewport-brand) + var(--viewport-menu)), 
-        rgba(0,0,255,0.1) calc(var(--viewport-brand) + var(--viewport-menu) + var(--viewport-social)), 
-        rgba(255,255,0,0.1) calc(var(--viewport-brand) + var(--viewport-menu) + var(--viewport-social) + var(--viewport-control))
+        rgba(255,0,0,0.1) 12%,                           /* Logo: 12% */
+        rgba(0,255,0,0.1) calc(12% + 45.5%),             /* Menú: 45.5% */
+        rgba(0,0,255,0.1) calc(12% + 45.5% + 4.5%),     /* Social: 4.5% */
+        rgba(255,255,0,0.1) calc(12% + 45.5% + 4.5% + 18%)  /* Control: 18% */
     ) !important;
+    width: 95% !important;  /* ✅ 95% del viewport */
+    margin-left: auto !important; /* ✅ 5% de margen derecho visual */
 }
 
-.debug-structure .navbar-brand-section { background: rgba(255,0,0,0.3) !important; }
-.debug-structure .navbar-menu-section { background: rgba(0,255,0,0.3) !important; }
-.debug-structure .navbar-social-section { background: rgba(0,0,255,0.3) !important; }
-.debug-structure .navbar-control-section { background: rgba(255,255,0,0.3) !important; }
+.debug-structure .navbar-menu-section { 
+  background: rgba(0,255,0,0.3) !important; 
+}
 
 /* ================================================== */
 /* ✅ PADDING INTERNO PARA SECCIÓN CONTROL OPTIMIZADO == */
@@ -2079,7 +2089,7 @@ main#main {
     .session-controls .btn:last-child {
         margin-bottom: 0 !important;
     }
-    
+  
     /* Corrección específica para tablets (1199px a 992px) */
     @media (max-width: 1199.98px) and (min-width: 992px) {
         .navbar-control-section {
@@ -2091,19 +2101,19 @@ main#main {
         .escuela-activa-indicator,
         .school-search-container,
         .user-info {
-            padding: 8px 10px !important; /* ✅ AJUSTE: padding mayor */
-            font-size: 0.85rem !important; /* ✅ AJUSTE: fuente mayor */
+            padding: 8px 10px !important;
+            font-size: 0.85rem !important;
         }
         
         .session-controls .btn {
-            padding: 7px 10px !important; /* ✅ AJUSTE: padding mayor */
-            font-size: 0.85rem !important; /* ✅ AJUSTE: fuente mayor */
+            padding: 7px 10px !important;
+            font-size: 0.85rem !important;
         }
         
         .social-icon-circle {
-            width: 30px !important; /* ✅ AJUSTE: iconos más grandes */
+            width: 30px !important;
             height: 30px !important;
-            font-size: 0.85rem !important; /* ✅ AJUSTE: fuente mayor */
+            font-size: 0.85rem !important;
         }
     }
 }
@@ -2169,7 +2179,7 @@ main#main {
         flex-direction: column !important;
         gap: 6px !important;
         width: 100% !important;
-        min-height: 40vh !important; /* ✅ AJUSTE: 40vh (un poco menos que el navbar) */
+        min-height: 40vh !important;
     }
 }
 
@@ -2277,30 +2287,34 @@ main#main {
 
 /* ✅ MEDIA QUERY PARA PANTALLAS EXTRA GRANDES */
 @media (min-width: 1600px) {
-    .main-navigation .nav-link {
-        padding: 12px 18px !important; /* ✅ AJUSTE: padding mayor */
-        font-size: 1.1rem !important; /* ✅ AJUSTE: fuente mayor */
-    }
-    
-    .social-icon-circle {
-        width: 38px !important; /* ✅ AJUSTE: iconos más grandes */
-        height: 38px !important;
-        font-size: 1.1rem !important; /* ✅ AJUSTE: fuente mayor */
-    }
-    
-    .session-controls .btn {
-        padding: 12px 16px !important; /* ✅ AJUSTE: padding mayor */
-        font-size: 1rem !important; /* ✅ AJUSTE: fuente mayor */
-    }
+  .main-navigation .nav-link {
+    /* ✅ TEXTO BLANCO Y NEGRITA EN PANTALLAS GRANDES */
+    color: white !important;
+    font-weight: bolder !important;
+    padding: 12px 18px !important;
+    font-size: 1.1rem !important;
+  }
+  
+  .social-icon-circle {
+    width: 38px !important;
+    height: 38px !important;
+    font-size: 1.1rem !important;
+  }
+  
+  .session-controls .btn {
+    padding: 12px 16px !important;
+    font-size: 1rem !important;
+  }
 }
 
 /* ✅ VERSIÓN DEL ARCHIVO EN COMENTARIO FINAL */
 /* 
  * DISTRIBUCIÓN VERIFICADA:
  * - Viewport total: 100%
- * - Navbar: 90% del viewport
- * - Sección Control: 20% del navbar (18% del viewport)
+ * - Navbar: 95% del viewport (con 5% margen derecho visual)
+ * - Menú Principal: 45.5% del viewport
  * - Altura mínima del navbar: 45vh
+ * - Texto del menú: blanco y bolder
  * - Todas las secciones en una sola línea en desktop
  * - Optimización para todos los dispositivos
  */
@@ -2453,6 +2467,7 @@ main#main {
         max-width: 100% !important;
     }
 }
+
 /* ================================================== */
 /* ✅ SOLUCIÓN DEFINITIVA Z-INDEX PARA SUBMENÚS ====== */
 /* ================================================== */
@@ -2597,6 +2612,7 @@ main#main {
     background: rgba(0, 0, 255, 0.05) !important;
 }
 */
+
 /* ================================================== */
 /* ✅ SIDEBAR MÓVIL (OFFCANVAS)                       */
 /* ================================================== */
@@ -2649,7 +2665,9 @@ main#main {
 }
 
 .mobile-nav-menu .nav-link {
-    color: rgba(255,255,255,0.9) !important;
+    /* ✅ TEXTO BLANCO Y NEGRITA EN MÓVIL TAMBIÉN */
+    color: white !important;
+    font-weight: bolder !important;
     padding: 12px 20px !important;
     border-radius: 0 !important;
     border-left: 3px solid transparent !important;
@@ -2835,3 +2853,22 @@ main#main {
 .ged-mobile-sidebar .offcanvas-body::-webkit-scrollbar-thumb:hover {
     background: rgba(255,255,255,0.3) !important;
 }
+
+/* ================================================== */
+/* ✅ ACTUALIZACIÓN DE COMENTARIO FINAL              */
+/* ================================================== */
+
+/* 
+ * NUEVA DISTRIBUCIÓN (ACTUALIZADA 2026-01-22):
+ * - Viewport total: 100%
+ * - Navbar: 95% del viewport (con 5% de margen derecho visual)
+ * - Secciones dentro del navbar:
+ *   • Logo: 12% del viewport (12.63% del navbar)
+ *   • Menú: 45.5% del viewport (47.89% del navbar) 
+ *   • Social: 4.5% del viewport (4.74% del navbar)
+ *   • Control: 18% del viewport (18.95% del navbar)
+ * - Texto del menú: blanco y font-weight: bolder
+ * - Altura mínima del navbar: 45vh
+ * - Todas las secciones en una sola línea en desktop
+ * - Optimización para todos los dispositivos
+ */

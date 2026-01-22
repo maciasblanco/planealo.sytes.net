@@ -1,8 +1,8 @@
 /* =================================================================
- * _responsive.css - MEDIA QUERIES CONSOLIDADOS GED
+ * _responsive.css - MEDIA QUERIES CONSOLIDADOS GED (ACTUALIZADO)
  * Consolidado de: ged-responsive-escuelas.css, ged-responsive-general.css, ged-responsive-tienda.css
- * Fecha: 2024-01-16 (actualizado para consolidación)
- * Nota: Se eliminaron las reglas conflictivas con _navigation.css
+ * Fecha: 2024-01-22 (actualizado para compatibilidad con navbar 95% viewport)
+ * Nota: Actualizado para compatibilidad con navbar 95% viewport y menú 45.5%
  * ================================================================= */
 
 /* ================================================== */
@@ -30,6 +30,17 @@
     
     .stat-item {
         padding: 8px;
+    }
+    
+    /* ✅ AJUSTE PARA TABLETS CON NAVBAR 95% */
+    .navbar-contextual {
+        width: 95% !important;  /* ✅ Mantener 95% en tablets */
+        margin: 0 0 0 auto !important; /* ✅ 5% margen derecho */
+    }
+    
+    .navbar-menu-section {
+        flex: 0 0 45.5% !important; /* ✅ Menú 45.5% en tablets */
+        max-width: 45.5% !important;
     }
     
     /* Responsive para tienda */
@@ -71,14 +82,14 @@
 /* ================================================== */
 
 @media (max-width: 991.98px) {
-    /* Responsive general */
+    /* ✅ RESPONSIVE GENERAL ACTUALIZADO */
     .navbar-contextual {
         height: 60px !important;
         min-height: 60px !important;
         position: fixed !important;
         top: 0 !important;
-        width: 100vw !important;
-        margin: 0 !important;
+        width: 100vw !important; /* ✅ 100% en móvil */
+        margin: 0 !important;   /* ✅ Sin margen especial en móvil */
         padding: 0 15px !important;
         background: linear-gradient(135deg, #8e44ad 0%, #6c3483 100%) !important;
     }
@@ -221,10 +232,12 @@
     }
     
     .ged-mobile-sidebar .mobile-nav-menu .nav-link {
+        /* ✅ TEXTO BLANCO Y NEGRITA EN MÓVIL */
+        color: white !important;
+        font-weight: bolder !important;
         display: flex !important;
         align-items: center !important;
         padding: 14px 20px !important;
-        color: rgba(255,255,255,0.9) !important;
         text-decoration: none !important;
         font-size: 1rem !important;
         width: 100% !important;
@@ -236,7 +249,7 @@
     .ged-mobile-sidebar .mobile-nav-menu .nav-link:hover,
     .ged-mobile-sidebar .mobile-nav-menu .nav-link.active {
         background: rgba(255,255,255,0.1) !important;
-        color: white !important;
+        color: white !important; /* ✅ MANTENER BLANCO */
         border-left-color: #3498db !important;
         padding-left: 25px !important;
     }
@@ -487,6 +500,9 @@
     }
     
     .ged-mobile-sidebar .mobile-nav-menu .nav-link {
+        /* ✅ MANTENER TEXTO BLANCO Y NEGRITA */
+        color: white !important;
+        font-weight: bolder !important;
         padding: 12px 16px !important;
         font-size: 0.95rem !important;
     }
@@ -687,6 +703,9 @@
     }
     
     .ged-mobile-sidebar .mobile-nav-menu .nav-link {
+        /* ✅ MANTENER TEXTO BLANCO Y NEGRITA */
+        color: white !important;
+        font-weight: bolder !important;
         padding: 10px 14px !important;
         font-size: 0.9rem !important;
     }
@@ -786,6 +805,9 @@
 }
 
 #navbarGedCollapse .nav-link {
+    /* ✅ MANTENER TEXTO BLANCO Y NEGRITA */
+    color: white !important;
+    font-weight: bolder !important;
     width: 100% !important;
     padding: 12px 15px !important;
     border-radius: 4px !important;
@@ -887,3 +909,143 @@
         margin: 0 5px !important;
     }
 }
+
+/* ================================================== */
+/* ✅ COMPATIBILIDAD CON NAVBAR 95% VIEWPORT          */
+/* ================================================== */
+
+@media (min-width: 992px) {
+    /* ✅ GARANTIZAR QUE EN DESKTOP EL NAVBAR SEA 95% */
+    .navbar-contextual {
+        width: 95% !important;
+        margin: 0 0 0 auto !important; /* ✅ 5% margen derecho */
+    }
+    
+    .navbar-menu-section {
+        flex: 0 0 45.5% !important; /* ✅ Menú 45.5% en desktop */
+        max-width: 45.5% !important;
+    }
+}
+
+/* ================================================== */
+/* ✅ CORRECCIONES ESPECÍFICAS PARA PANTALLAS GRANDES */
+/* ================================================== */
+
+@media (min-width: 1400px) {
+    .navbar-menu-section {
+        flex: 0 0 45.5% !important; /* ✅ Mantener 45.5% en pantallas grandes */
+    }
+    
+    .main-navigation .nav-link {
+        /* ✅ MANTENER TEXTO BLANCO Y NEGRITA */
+        color: white !important;
+        font-weight: bolder !important;
+    }
+}
+
+/* ================================================== */
+/* ✅ COMPATIBILIDAD CON SISTEMA GED 95% VIEWPORT     */
+/* ================================================== */
+
+/* ✅ ESTILOS ADICIONALES PARA VERIFICACIÓN VISUAL */
+.debug-viewport-95 .navbar-contextual {
+    outline: 2px dashed rgba(0, 255, 0, 0.5) !important;
+    position: relative !important;
+}
+
+.debug-viewport-95 .navbar-contextual::before {
+    content: '95% viewport';
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    background: rgba(0, 0, 0, 0.7);
+    color: white;
+    padding: 2px 6px;
+    font-size: 10px;
+    border-radius: 3px;
+    z-index: 9999;
+}
+
+.debug-viewport-95 .navbar-menu-section {
+    outline: 2px dashed rgba(255, 255, 0, 0.5) !important;
+    position: relative !important;
+}
+
+.debug-viewport-95 .navbar-menu-section::before {
+    content: '45.5%';
+    position: absolute;
+    top: 5px;
+    left: 5px;
+    background: rgba(0, 0, 0, 0.7);
+    color: white;
+    padding: 2px 6px;
+    font-size: 10px;
+    border-radius: 3px;
+    z-index: 9999;
+}
+
+/* ================================================== */
+/* ✅ COMPATIBILIDAD CON MENÚ TEXTO BLANCO Y NEGRITA  */
+/* ================================================== */
+
+/* ✅ ASEGURAR QUE EL TEXTO DEL MENÚ SEA BLANCO Y NEGRITA EN TODOS LOS ESTADOS */
+.main-navigation .nav-link,
+.main-navigation .nav-link:hover,
+.main-navigation .nav-link:focus,
+.main-navigation .nav-link.active,
+.mobile-nav-menu .nav-link,
+.mobile-nav-menu .nav-link:hover,
+.mobile-nav-menu .nav-link.active,
+#navbarGedCollapse .nav-link,
+#navbarGedCollapse .nav-link:hover {
+    color: white !important;
+    font-weight: bolder !important;
+}
+
+/* ✅ CORRECCIÓN ESPECÍFICA PARA DROPDOWNS */
+.dropdown-item,
+.dropdown-item:hover,
+.dropdown-item:focus {
+    color: white !important;
+}
+
+/* ================================================== */
+/* ✅ MEDIA QUERIES ESPECIALES PARA AJUSTES FINALES   */
+/* ================================================== */
+
+@media (min-width: 992px) and (max-width: 1199.98px) {
+    /* ✅ AJUSTES ESPECÍFICOS PARA TABLETS EN HORIZONTAL */
+    .navbar-menu-section {
+        flex: 0 0 45.5% !important; /* ✅ Mantener 45.5% en tablets */
+    }
+    
+    .main-navigation .nav-link {
+        /* ✅ TEXTO BLANCO Y NEGRITA EN TABLETS TAMBIÉN */
+        color: white !important;
+        font-weight: bolder !important;
+        padding: 10px 14px !important;
+        font-size: 0.95rem !important;
+    }
+}
+
+@media (max-width: 991.98px) {
+    /* ✅ RESET COMPLETO PARA MÓVIL - NAVBAR A 100% */
+    .navbar-contextual {
+        width: 100vw !important;
+        margin: 0 !important;
+        padding: 0 15px !important;
+    }
+}
+
+/* ================================================== */
+/* ✅ NOTA DE ACTUALIZACIÓN                           */
+/* ================================================== */
+/*
+ * ACTUALIZADO: 2024-01-22
+ * CAMBIOS PRINCIPALES:
+ * 1. Compatibilidad con navbar 95% viewport (antes 90%)
+ * 2. Compatibilidad con menú 45.5% (antes 40.5%)
+ * 3. Texto del menú en blanco y font-weight: bolder
+ * 4. Ajustes en todos los breakpoints para mantener proporciones
+ * 5. Texto en móvil también en blanco y negrita
+ */
