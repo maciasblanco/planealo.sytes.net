@@ -1049,3 +1049,26 @@
  * 4. Ajustes en todos los breakpoints para mantener proporciones
  * 5. Texto en móvil también en blanco y negrita
  */
+ /* ================================================== */
+/* ✅ AJUSTES RESPONSIVOS PARA SUBMENÚS ANIDADOS     */
+/* ================================================== */
+
+@media (max-width: 991.98px) {
+    /* Ocultar flechas de submenús en móvil */
+    .dropdown-submenu > a::after {
+        display: none !important;
+    }
+    
+    /* Ajustar padding para submenús en móvil */
+    .mobile-submenu-item.level-1 .nav-link {
+        padding-left: 30px !important;
+    }
+    
+    .mobile-submenu-item.level-2 .nav-link {
+        padding-left: 45px !important;
+    }
+    
+    .mobile-submenu-item.level-3 .nav-link {
+        padding-left: 60px !important;
+    }
+}

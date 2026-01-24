@@ -2872,3 +2872,116 @@ main#main {
  * - Todas las secciones en una sola línea en desktop
  * - Optimización para todos los dispositivos
  */
+ /* ================================================== */
+/* ESTILOS PARA SUBMENÚS ANIDADOS (MULTINIVEL)       */
+/* ================================================== */
+
+/* Estilos para submenús anidados en desktop */
+.dropdown-submenu {
+    position: relative;
+}
+
+.dropdown-submenu > .dropdown-menu {
+    top: 0;
+    left: 100%;
+    margin-top: -6px;
+    margin-left: -1px;
+    border-radius: 0 6px 6px 6px;
+    display: none;
+}
+
+/* Mostrar submenú al hover */
+.dropdown-submenu:hover > .dropdown-menu {
+    display: block;
+}
+
+/* Flecha para submenús */
+.dropdown-submenu > a::after {
+    display: block;
+    content: " ";
+    float: right;
+    width: 0;
+    height: 0;
+    border-color: transparent;
+    border-style: solid;
+    border-width: 5px 0 5px 5px;
+    border-left-color: #ccc;
+    margin-top: 5px;
+    margin-right: -10px;
+}
+
+/* Para menús móviles */
+.mobile-submenu {
+    padding-left: 20px;
+    background-color: rgba(0,0,0,0.02);
+}
+
+.mobile-submenu-item.level-1 {
+    padding-left: 20px;
+}
+
+.mobile-submenu-item.level-2 {
+    padding-left: 40px;
+}
+
+.mobile-submenu-item.level-3 {
+    padding-left: 60px;
+}
+
+/* Ajustes específicos para el menú en desktop */
+.navbar-nav .dropdown-menu {
+    background-color: #8e44ad; /* Fondo morado para dropdowns */
+}
+
+.navbar-nav .dropdown-submenu .dropdown-menu {
+    background-color: #6c3483; /* Fondo más oscuro para subdropdowns */
+}
+
+.navbar-nav .dropdown-item {
+    color: white !important;
+    font-weight: bolder !important;
+}
+
+.navbar-nav .dropdown-item:hover {
+    background-color: rgba(255,255,255,0.1);
+}
+
+/* Asegurar que los submenús no se salgan de la pantalla en desktop */
+@media (min-width: 992px) {
+    .dropdown-submenu .dropdown-menu {
+        position: absolute;
+        left: 100%;
+        top: 0;
+    }
+}
+
+/* Compatibilidad con Bootstrap 5 */
+.dropdown-submenu.dropend .dropdown-menu {
+    left: 100%;
+    top: 0;
+}
+
+/* Efecto hover para submenús */
+.dropdown-submenu:hover > .dropdown-toggle {
+    background-color: rgba(255,255,255,0.1);
+}
+
+/* Ajustar padding para subitems */
+.dropdown-menu .dropdown-item {
+    padding: 8px 20px;
+}
+
+/* Submenús dentro de submenús */
+.dropdown-submenu .dropdown-submenu .dropdown-menu {
+    top: -6px;
+    left: 100%;
+}
+
+/* Estilos para el menú de escritorio con subniveles */
+.main-navigation .dropdown-menu {
+    min-width: 220px;
+}
+
+.main-navigation .dropdown-submenu .dropdown-menu {
+    min-width: 200px;
+}
