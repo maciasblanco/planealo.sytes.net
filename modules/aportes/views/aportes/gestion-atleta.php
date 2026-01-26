@@ -10,9 +10,9 @@ use yii\helpers\Url;
 /** @var app\models\AtletasRegistro $atleta */
 /** @var array $atletas */
 /** @var array $historialDeudas */
-/** @var int $semanasDeuda */
+/** @var int $quincenasDeuda */
 /** @var float $montoDeuda */
-/** @var array $semanasPendientes */
+/** @var array $quincenasPendientes */
 /** @var int $posicionTop */
 
 // ✅ VALIDACIÓN DE SESIÓN - BLINDAJE GED
@@ -30,15 +30,15 @@ if (empty($id_escuela)) {
 }
 
 $this->title = 'Gestión Integral de Aportes - ' . $nombre_escuela;
-$this->params['breadcrumbs'][] = ['label' => 'Aportes Semanales', 'url' => ['index']];
+$this->params['breadcrumbs'][] = ['label' => 'Aportes Quincenales', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 
 // Obtener tasa actual del dólar desde la base de datos
 $tasaDolarActual = \app\models\TasaDolar::getTasaActual();
 
 // Pre-calcular valores para JavaScript
-$montoSemanalDolares = \app\models\AportesSemanales::MONTO_SEMANAL;
-$montoSemanalBolivares = $tasaDolarActual * $montoSemanalDolares;
+$montoQuincenalDolares = \app\models\AportesSemanales::MONTO_QUINCENAL;
+$montoQuincenalBolivares = $tasaDolarActual * $montoQuincenalDolares;
 
 // ✅ CORREGIDO - Filtrar atletas por escuela actual
 $atletasFiltrados = \app\models\AtletasRegistro::find()
@@ -155,18 +155,18 @@ $atletasFiltrados = \app\models\AtletasRegistro::find()
             <div class="col-md-3">
                 <div class="info-box bg-success">
                     <div class="info-box-content">
-                        <span class="info-box-text">Semanas Pagadas</span>
-                        <span class="info-box-number"><?= count($historialDeudas) - $semanasDeuda ?></span>
-                        <span class="info-box-detail">Total: <?= count($historialDeudas) ?> semanas</span>
+                        <span class="info-box-text">Quincenas Pagadas</span>
+                        <span class="info-box-number"><?= count($historialDeudas) - $quincenasDeuda ?></span>
+                        <span class="info-box-detail">Total: <?= count($historialDeudas) ?> quincenas</span>
                     </div>
                 </div>
             </div>
             <div class="col-md-3">
                 <div class="info-box bg-warning">
                     <div class="info-box-content">
-                        <span class="info-box-text">Semanas Deuda</span>
-                        <span class="info-box-number"><?= $semanasDeuda ?></span>
-                        <span class="info-box-detail">Desde: 15 Sep 2024</span>
+                        <span class="info-box-text">Quincenas Deuda</span>
+                        <span class="info-box-number"><?= $quincenasDeuda ?></span>
+                        <span class="info-box-detail">Desde: 15/01/2026</span>
                     </div>
                 </div>
             </div>
@@ -175,7 +175,7 @@ $atletasFiltrados = \app\models\AtletasRegistro::find()
                     <div class="info-box-content">
                         <span class="info-box-text">Monto Deuda</span>
                         <span class="info-box-number">$<?= number_format($montoDeuda, 2) ?></span>
-                        <span class="info-box-detail">$<?= number_format(\app\models\AportesSemanales::MONTO_SEMANAL, 2) ?> por semana</span>
+                        <span class="info-box-detail">$<?= number_format(\app\models\AportesSemanales::MONTO_QUINCENAL, 2) ?> por quincena</span>
                     </div>
                 </div>
             </div>
@@ -192,8 +192,8 @@ $atletasFiltrados = \app\models\AtletasRegistro::find()
                             <br><small class="text-muted">Obtenida automáticamente del sistema</small>
                         </div>
                         <div class="col-md-6">
-                            <strong>Aporte Semanal Equivalente:</strong> 
-                            Bs. <?= number_format($montoSemanalBolivares, 2) ?>
+                            <strong>Aporte Quincenal Equivalente:</strong> 
+                            Bs. <?= number_format($montoQuincenalBolivares, 2) ?>
                         </div>
                     </div>
                 </div>
@@ -220,11 +220,11 @@ $atletasFiltrados = \app\models\AtletasRegistro::find()
                             
                             <div class="row">
                                 <div class="col-md-6">
-                                    <?= $form->field($model, 'fecha_viernes')->textInput([
+                                    <?= $form->field($model, 'fecha_quincena')->textInput([
                                         'type' => 'date',
                                         'class' => 'form-control',
                                         'required' => true
-                                    ])->label('Fecha Viernes') ?>
+                                    ])->label('Fecha Quincena') ?>
                                 </div>
                                 <div class="col-md-6">
                                     <?= $form->field($model, 'monto')->textInput([
@@ -232,7 +232,7 @@ $atletasFiltrados = \app\models\AtletasRegistro::find()
                                         'step' => '0.01',
                                         'class' => 'form-control',
                                         'id' => 'monto-dolares-individual',
-                                        'value' => \app\models\AportesSemanales::MONTO_SEMANAL,
+                                        'value' => \app\models\AportesSemanales::MONTO_QUINCENAL,
                                         'required' => true
                                     ])->label('Monto ($)') ?>
                                 </div>
@@ -312,11 +312,11 @@ $atletasFiltrados = \app\models\AtletasRegistro::find()
                                 <div class="col-md-12">
                                     <div class="form-group">
                                         <label>Monto Total a Aportar ($) *</label>
-                                        <input type="number" step="0.01" min="2" class="form-control" 
+                                        <input type="number" step="0.01" min="4" class="form-control" 
                                                name="monto_flexible" id="monto-flexible" 
-                                               value="<?= \app\models\AportesSemanales::MONTO_SEMANAL ?>" required>
+                                               value="<?= \app\models\AportesSemanales::MONTO_QUINCENAL ?>" required>
                                         <small class="form-text text-muted">
-                                            Mínimo: $<?= number_format(\app\models\AportesSemanales::MONTO_SEMANAL, 2) ?> (1 semana)
+                                            Mínimo: $<?= number_format(\app\models\AportesSemanales::MONTO_QUINCENAL, 2) ?> (1 quincena)
                                         </small>
                                     </div>
                                 </div>
@@ -345,9 +345,9 @@ $atletasFiltrados = \app\models\AtletasRegistro::find()
                             <div class="row">
                                 <div class="col-md-12">
                                     <div class="form-group">
-                                        <label>Semanas Equivalentes</label>
-                                        <div class="form-control-plaintext border rounded p-2 bg-light" id="semanas-equivalentes">
-                                            1 semana completa
+                                        <label>Quincenas Equivalentes</label>
+                                        <div class="form-control-plaintext border rounded p-2 bg-light" id="quincenas-equivalentes">
+                                            1 quincena completa
                                         </div>
                                     </div>
                                 </div>
@@ -394,20 +394,20 @@ $atletasFiltrados = \app\models\AtletasRegistro::find()
                         <h5 class="mb-0"><i class="fas fa-calendar-check"></i> Pago Múltiple</h5>
                     </div>
                     <div class="card-body">
-                        <?php if (!empty($semanasPendientes)): ?>
+                        <?php if (!empty($quincenasPendientes)): ?>
                             <?php $form = ActiveForm::begin(['action' => ['/aportes/aportes/gestion-atleta', 'atleta_id' => $atleta->id]]); ?>
                                 <input type="hidden" name="tipo_accion" value="multiple">
                                 <input type="hidden" name="id_escuela" value="<?= $id_escuela ?>">
                                 
                                 <div class="form-group">
-                                    <label>Seleccionar Semanas Pendientes:</label>
+                                    <label>Seleccionar Quincenas Pendientes:</label>
                                     <div style="max-height: 200px; overflow-y: auto; border: 1px solid #ddd; padding: 10px; border-radius: 4px;">
-                                        <?php foreach ($semanasPendientes as $semana): ?>
+                                        <?php foreach ($quincenasPendientes as $quincena): ?>
                                             <div class="checkbox">
                                                 <label>
-                                                    <input type="checkbox" name="semanas[]" value="<?= $semana['fecha_viernes'] ?>" checked>
-                                                    <?= Yii::$app->formatter->asDate($semana['fecha_viernes'], 'medium') ?>
-                                                    (Semana <?= $semana['numero_semana'] ?>)
+                                                    <input type="checkbox" name="quincenas[]" value="<?= $quincena['fecha_quincena'] ?>" checked>
+                                                    <?= Yii::$app->formatter->asDate($quincena['fecha_quincena'], 'medium') ?>
+                                                    (Quincena <?= $quincena['numero_quincena'] ?>) - $<?= number_format($quincena['monto'], 2) ?>
                                                 </label>
                                             </div>
                                         <?php endforeach; ?>
@@ -463,7 +463,7 @@ $atletasFiltrados = \app\models\AtletasRegistro::find()
                         <?php else: ?>
                             <div class="alert alert-info text-center">
                                 <i class="fas fa-check-circle"></i><br>
-                                No hay semanas pendientes para pago múltiple.
+                                No hay quincenas pendientes para pago múltiple.
                             </div>
                         <?php endif; ?>
                     </div>
@@ -480,13 +480,13 @@ $atletasFiltrados = \app\models\AtletasRegistro::find()
                             <input type="hidden" name="id_escuela" value="<?= $id_escuela ?>">
                             
                             <div class="form-group">
-                                <label>Semanas a Adelantar *</label>
-                                <select name="semanas_adelanto" class="form-control" id="semanas-adelanto" required>
-                                    <option value="1">1 semana</option>
-                                    <option value="2">2 semanas</option>
-                                    <option value="3">3 semanas</option>
-                                    <option value="4">4 semanas</option>
-                                    <option value="5">5 semanas</option>
+                                <label>Quincenas a Adelantar *</label>
+                                <select name="quincenas_adelanto" class="form-control" id="quincenas-adelanto" required>
+                                    <option value="1">1 quincena</option>
+                                    <option value="2">2 quincenas</option>
+                                    <option value="3">3 quincenas</option>
+                                    <option value="4">4 quincenas</option>
+                                    <option value="5">5 quincenas</option>
                                 </select>
                             </div>
 
@@ -546,10 +546,10 @@ $atletasFiltrados = \app\models\AtletasRegistro::find()
                     <div class="card-header bg-info text-white">
                         <div class="row align-items-center">
                             <div class="col-md-8">
-                                <h5 class="mb-0"><i class="fas fa-history"></i> Historial Completo (Desde 15 Sep 2024)</h5>
+                                <h5 class="mb-0"><i class="fas fa-history"></i> Historial Completo (Desde 15/01/2026)</h5>
                             </div>
                             <div class="col-md-4 text-right">
-                                <span class="badge badge-light">Total: <?= count($historialDeudas) ?> semanas</span>
+                                <span class="badge badge-light">Total: <?= count($historialDeudas) ?> quincenas</span>
                             </div>
                         </div>
                     </div>
@@ -564,8 +564,8 @@ $atletasFiltrados = \app\models\AtletasRegistro::find()
                                 <table class="table table-striped table-bordered table-hover">
                                     <thead class="thead-dark">
                                         <tr>
-                                            <th>Fecha Viernes</th>
-                                            <th>Semana</th>
+                                            <th>Fecha Quincena</th>
+                                            <th>Quincena #</th>
                                             <th>Estado</th>
                                             <th>Fecha Pago</th>
                                             <th>Método</th>
@@ -577,42 +577,42 @@ $atletasFiltrados = \app\models\AtletasRegistro::find()
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <?php foreach ($historialDeudas as $semana): ?>
-                                            <tr class="<?= $semana['estado'] == 'pendiente' ? 'table-warning' : 'table-success' ?>">
-                                                <td><?= Yii::$app->formatter->asDate($semana['fecha_viernes'], 'long') ?></td>
-                                                <td class="text-center"><?= $semana['numero_semana'] ?></td>
+                                        <?php foreach ($historialDeudas as $quincena): ?>
+                                            <tr class="<?= $quincena['estado'] == 'pendiente' ? 'table-warning' : 'table-success' ?>">
+                                                <td><?= Yii::$app->formatter->asDate($quincena['fecha_quincena'], 'long') ?></td>
+                                                <td class="text-center"><?= $quincena['numero_quincena'] ?></td>
                                                 <td class="text-center">
-                                                    <?php if ($semana['estado'] == 'pagado'): ?>
+                                                    <?php if ($quincena['estado'] == 'pagado'): ?>
                                                         <span class="badge badge-success">Pagado</span>
                                                     <?php else: ?>
                                                         <span class="badge badge-warning">Pendiente</span>
                                                     <?php endif; ?>
                                                 </td>
                                                 <td>
-                                                    <?= isset($semana['fecha_pago']) && $semana['fecha_pago'] ? Yii::$app->formatter->asDate($semana['fecha_pago'], 'medium') : '-' ?>
+                                                    <?= isset($quincena['fecha_pago']) && $quincena['fecha_pago'] ? Yii::$app->formatter->asDate($quincena['fecha_pago'], 'medium') : '-' ?>
                                                 </td>
                                                 <td>
-                                                    <?= isset($semana['metodo_pago']) ? ucfirst($semana['metodo_pago']) : '-' ?>
+                                                    <?= isset($quincena['metodo_pago']) ? ucfirst($quincena['metodo_pago']) : '-' ?>
                                                 </td>
                                                 <td class="text-right">
-                                                    <strong>$<?= number_format($semana['monto'], 2) ?></strong>
-                                                    <?php if (isset($semana['es_parcial']) && $semana['es_parcial']): ?>
+                                                    <strong>$<?= number_format($quincena['monto'], 2) ?></strong>
+                                                    <?php if (isset($quincena['es_parcial']) && $quincena['es_parcial']): ?>
                                                         <br><small class="text-muted">Parcial</small>
                                                     <?php endif; ?>
                                                 </td>
                                                 <td class="text-right">
-                                                    <?= isset($semana['monto_bs']) && $semana['monto_bs'] ? 'Bs. ' . number_format($semana['monto_bs'], 2) : '-' ?>
+                                                    <?= isset($quincena['monto_bs']) && $quincena['monto_bs'] ? 'Bs. ' . number_format($quincena['monto_bs'], 2) : '-' ?>
                                                 </td>
                                                 <td class="text-right">
-                                                    <?= isset($semana['tasa_cambio']) && $semana['tasa_cambio'] ? number_format($semana['tasa_cambio'], 2) : '-' ?>
+                                                    <?= isset($quincena['tasa_cambio']) && $quincena['tasa_cambio'] ? number_format($quincena['tasa_cambio'], 2) : '-' ?>
                                                 </td>
                                                 <td class="text-center">
-                                                    <?php if (isset($semana['tipo_aporte'])): ?>
-                                                        <?php if ($semana['tipo_aporte'] == 'adelantado'): ?>
+                                                    <?php if (isset($quincena['tipo_aporte'])): ?>
+                                                        <?php if ($quincena['tipo_aporte'] == 'adelantado'): ?>
                                                             <span class="badge badge-info">Adelantado</span>
-                                                        <?php elseif ($semana['tipo_aporte'] == 'flexible'): ?>
+                                                        <?php elseif ($quincena['tipo_aporte'] == 'flexible'): ?>
                                                             <span class="badge badge-primary">Flexible</span>
-                                                        <?php elseif ($semana['tipo_aporte'] == 'parcial'): ?>
+                                                        <?php elseif ($quincena['tipo_aporte'] == 'parcial'): ?>
                                                             <span class="badge badge-secondary">Parcial</span>
                                                         <?php else: ?>
                                                             <span class="badge badge-light">Normal</span>
@@ -622,7 +622,7 @@ $atletasFiltrados = \app\models\AtletasRegistro::find()
                                                     <?php endif; ?>
                                                 </td>
                                                 <td>
-                                                    <small><?= isset($semana['comentarios']) ? Html::encode($semana['comentarios']) : '-' ?></small>
+                                                    <small><?= isset($quincena['comentarios']) ? Html::encode($quincena['comentarios']) : '-' ?></small>
                                                 </td>
                                             </tr>
                                         <?php endforeach; ?>
@@ -635,9 +635,9 @@ $atletasFiltrados = \app\models\AtletasRegistro::find()
                                                 <strong>
                                                     <?php
                                                     $totalBs = 0;
-                                                    foreach ($historialDeudas as $semana) {
-                                                        if (isset($semana['monto_bs']) && $semana['monto_bs']) {
-                                                            $totalBs += $semana['monto_bs'];
+                                                    foreach ($historialDeudas as $quincena) {
+                                                        if (isset($quincena['monto_bs']) && $quincena['monto_bs']) {
+                                                            $totalBs += $quincena['monto_bs'];
                                                         }
                                                     }
                                                     echo $totalBs > 0 ? 'Bs. ' . number_format($totalBs, 2) : '-';
@@ -654,20 +654,20 @@ $atletasFiltrados = \app\models\AtletasRegistro::find()
                             <div class="row mt-4">
                                 <div class="col-md-3">
                                     <div class="stat-card text-center">
-                                        <h3 class="text-success"><?= count($historialDeudas) - $semanasDeuda ?></h3>
-                                        <p class="text-muted">Semanas Pagadas</p>
+                                        <h3 class="text-success"><?= count($historialDeudas) - $quincenasDeuda ?></h3>
+                                        <p class="text-muted">Quincenas Pagadas</p>
                                     </div>
                                 </div>
                                 <div class="col-md-3">
                                     <div class="stat-card text-center">
-                                        <h3 class="text-warning"><?= $semanasDeuda ?></h3>
-                                        <p class="text-muted">Semanas Pendientes</p>
+                                        <h3 class="text-warning"><?= $quincenasDeuda ?></h3>
+                                        <p class="text-muted">Quincenas Pendientes</p>
                                     </div>
                                 </div>
                                 <div class="col-md-3">
                                     <div class="stat-card text-center">
                                         <h3 class="text-info"><?= count($historialDeudas) ?></h3>
-                                        <p class="text-muted">Total Semanas</p>
+                                        <p class="text-muted">Total Quincenas</p>
                                     </div>
                                 </div>
                                 <div class="col-md-3">
@@ -692,11 +692,11 @@ $atletasFiltrados = \app\models\AtletasRegistro::find()
 </div>
 
 <?php
-// JavaScript para conversión de moneda y cálculos - VERSIÓN MEJORADA
+// JavaScript para conversión de moneda y cálculos - VERSIÓN MEJORADA PARA QUINCENAS
 $js = <<<JS
 $(document).ready(function() {
-    const MONTO_SEMANAL = parseFloat('$montoSemanalBolivares');
-    const MONTO_SEMANAL_DOLARES = parseFloat('$montoSemanalDolares');
+    const MONTO_QUINCENAL = parseFloat('$montoQuincenalBolivares');
+    const MONTO_QUINCENAL_DOLARES = parseFloat('$montoQuincenalDolares');
     const TASA_ACTUAL = parseFloat('$tasaDolarActual');
     
     // ===== FUNCIONES DE CONVERSIÓN =====
@@ -711,11 +711,11 @@ $(document).ready(function() {
             $('#monto-bolivares-hidden').val(nuevoMontoBs.toFixed(2));
             $('#monto-bolivares-display').val('Bs. ' + nuevoMontoBs.toFixed(2));
             
-            // Mostrar semanas equivalentes
-            var semanas = montoDolares / MONTO_SEMANAL_DOLARES;
-            if (semanas > 1) {
+            // Mostrar quincenas equivalentes
+            var quincenas = montoDolares / MONTO_QUINCENAL_DOLARES;
+            if (quincenas > 1) {
                 $('#monto-dolares-individual').next('.help-block').remove();
-                $('#monto-dolares-individual').after('<div class="help-block text-info"><small>Equivale a ' + semanas.toFixed(1) + ' semanas</small></div>');
+                $('#monto-dolares-individual').after('<div class="help-block text-info"><small>Equivale a ' + quincenas.toFixed(1) + ' quincenas</small></div>');
             }
         }
     }
@@ -724,21 +724,21 @@ $(document).ready(function() {
     function calcularDesgloseFlexible() {
         const montoDolares = parseFloat($('#monto-flexible').val()) || 0;
         
-        // Calcular semanas equivalentes
-        const semanasEquivalentes = montoDolares / MONTO_SEMANAL_DOLARES;
-        const semanasCompletas = Math.floor(semanasEquivalentes);
-        const montoRestante = montoDolares - (semanasCompletas * MONTO_SEMANAL_DOLARES);
+        // Calcular quincenas equivalentes
+        const quincenasEquivalentes = montoDolares / MONTO_QUINCENAL_DOLARES;
+        const quincenasCompletas = Math.floor(quincenasEquivalentes);
+        const montoRestante = montoDolares - (quincenasCompletas * MONTO_QUINCENAL_DOLARES);
         
         // Actualizar display
         let texto = '';
-        if (semanasCompletas > 0) {
-            texto += semanasCompletas + ' semana(s) completa(s)'; 
+        if (quincenasCompletas > 0) {
+            texto += quincenasCompletas + ' quincena(s) completa(s)'; 
         }
         if (montoRestante > 0) {
             if (texto) texto += ' + ';
             texto += '$' + montoRestante.toFixed(2) + ' (parcial)';
         }
-        $('#semanas-equivalentes').text(texto || '0 semanas');
+        $('#quincenas-equivalentes').text(texto || '0 quincenas');
         
         // Calcular monto en bolívares
         if (TASA_ACTUAL > 0) {
@@ -747,14 +747,14 @@ $(document).ready(function() {
         }
         
         // Mostrar desglose detallado
-        if (montoDolares >= MONTO_SEMANAL_DOLARES) {
+        if (montoDolares >= MONTO_QUINCENAL_DOLARES) {
             let desglose = '<ul class="mb-0">';
-            if (semanasCompletas > 0) {
-                desglose += '<li>' + semanasCompletas + ' semana(s) × $' + MONTO_SEMANAL_DOLARES.toFixed(2) + ' = $' + (semanasCompletas * MONTO_SEMANAL_DOLARES).toFixed(2) + '</li>';
+            if (quincenasCompletas > 0) {
+                desglose += '<li>' + quincenasCompletas + ' quincena(s) × $' + MONTO_QUINCENAL_DOLARES.toFixed(2) + ' = $' + (quincenasCompletas * MONTO_QUINCENAL_DOLARES).toFixed(2) + '</li>';
             }
             if (montoRestante > 0) {
                 desglose += '<li>Aporte parcial: $' + montoRestante.toFixed(2) + '</li>';
-                desglose += '<li><small>Saldo disponible para próxima semana: $' + (MONTO_SEMANAL_DOLARES - montoRestante).toFixed(2) + '</small></li>';
+                desglose += '<li><small>Saldo disponible para próxima quincena: $' + (MONTO_QUINCENAL_DOLARES - montoRestante).toFixed(2) + '</small></li>';
             }
             desglose += '<li><strong>Total: $' + montoDolares.toFixed(2) + '</strong></li>';
             desglose += '</ul>';
@@ -768,8 +768,8 @@ $(document).ready(function() {
     
     // Calcular monto total en bolívares para pago múltiple
     function calcularMontoTotalMultiple() {
-        var semanas = $('input[name="semanas[]"]:checked').length;
-        var montoTotalDolares = semanas * MONTO_SEMANAL_DOLARES;
+        var quincenas = $('input[name="quincenas[]"]:checked').length;
+        var montoTotalDolares = quincenas * MONTO_QUINCENAL_DOLARES;
         var montoTotalBs = montoTotalDolares * TASA_ACTUAL;
         
         $('#monto-bolivares-multiple').val(montoTotalBs.toFixed(2));
@@ -777,8 +777,8 @@ $(document).ready(function() {
     
     // Calcular monto total en bolívares para pago adelantado
     function calcularMontoTotalAdelanto() {
-        var semanas = parseInt($('#semanas-adelanto').val()) || 0;
-        var montoTotalDolares = semanas * MONTO_SEMANAL_DOLARES;
+        var quincenas = parseInt($('#quincenas-adelanto').val()) || 0;
+        var montoTotalDolares = quincenas * MONTO_QUINCENAL_DOLARES;
         var montoTotalBs = montoTotalDolares * TASA_ACTUAL;
         
         $('#monto-bolivares-adelanto').val(montoTotalBs.toFixed(2));
@@ -793,12 +793,12 @@ $(document).ready(function() {
     $('#monto-flexible').on('input', calcularDesgloseFlexible);
     
     // Pago Múltiple
-    $('input[name="semanas[]"]').change(function() {
+    $('input[name="quincenas[]"]').change(function() {
         calcularMontoTotalMultiple();
     });
     
     // Pago Adelantado
-    $('#semanas-adelanto').on('change', function() {
+    $('#quincenas-adelanto').on('change', function() {
         calcularMontoTotalAdelanto();
     });
     

@@ -16,9 +16,9 @@ class AportesSemanalesSearch extends AportesSemanales
     public function rules()
     {
         return [
-            [['id', 'atleta_id', 'escuela_id', 'numero_semana'], 'integer'],
+            [['id', 'atleta_id', 'escuela_id', 'numero_quincena'], 'integer'],
             [['monto'], 'number'],
-            [['fecha_viernes', 'fecha_pago', 'estado', 'metodo_pago', 'comentarios', 'created_at'], 'safe'],
+            [['fecha_quincena', 'fecha_pago', 'estado', 'metodo_pago', 'comentarios', 'created_at'], 'safe'],
         ];
     }
 
@@ -60,8 +60,8 @@ class AportesSemanalesSearch extends AportesSemanales
             'id' => $this->id,
             'atleta_id' => $this->atleta_id,
             'escuela_id' => $this->escuela_id,
-            'fecha_viernes' => $this->fecha_viernes,
-            'numero_semana' => $this->numero_semana,
+            'fecha_quincena' => $this->fecha_quincena,
+            'numero_quincena' => $this->numero_quincena,
             'monto' => $this->monto,
             'fecha_pago' => $this->fecha_pago,
             'created_at' => $this->created_at,

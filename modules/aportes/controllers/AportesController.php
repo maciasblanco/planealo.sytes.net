@@ -17,7 +17,9 @@ use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
 
 /**
- * AportesController implements the CRUD actions for AportesSemanales model.
+ * AportesController implementa el CRUD para el modelo AportesSemanales.
+ * ACTUALIZADO: Sistema quincenal ($4.00 cada 15 días) con manejo dual de moneda (Bs/USD)
+ * SOLO DESDE 15/01/2026
  */
 class AportesController extends Controller
 {
@@ -50,6 +52,7 @@ class AportesController extends Controller
 
     /**
      * Lists all AportesSemanales models.
+     * FILTRADO SOLO DESDE 15/01/2026
      *
      * @return string
      */
@@ -86,7 +89,7 @@ class AportesController extends Controller
             ]);
         }
 
-        // Calcular estadísticas para cada atleta
+        // Calcular estadísticas para cada atleta (SOLO DESDE 15/01/2026)
         $atletasConEstadisticas = [];
         $totalRecaudado = 0;
         $deudaTotal = 0;
@@ -107,22 +110,23 @@ class AportesController extends Controller
                 $fechaCreacion = $atleta->fecha_creacion ?? 'No especificada';
                 Yii::info("Fecha creación atleta: " . $fechaCreacion);
 
-                // GENERAR SEMANAS AUTOMÁTICAMENTE desde la fecha de creación
-                $semanasGeneradas = 0;
+                // GENERAR QUINCENAS AUTOMÁTICAMENTE desde la fecha de inicio (15/01/2026)
+                $quincenasGeneradas = 0;
                 try {
-                    $semanasGeneradas = AportesSemanales::generarSemanasParaAtleta($atleta->id);
-                    Yii::info("Semanas generadas para atleta {$atleta->id}: {$semanasGeneradas}");
+                    $quincenasGeneradas = AportesSemanales::generarQuincenasParaAtleta($atleta->id);
+                    Yii::info("Quincenas generadas para atleta {$atleta->id}: {$quincenasGeneradas}");
                 } catch (\Exception $e) {
-                    $errorMsg = "Error generando semanas para atleta {$atleta->id}: " . $e->getMessage();
+                    $errorMsg = "Error generando quincenas para atleta {$atleta->id}: " . $e->getMessage();
                     Yii::error($errorMsg);
                     $erroresProcesamiento[] = $errorMsg;
                 }
                 
-                // Calcular montos PAGADOS
+                // Calcular montos PAGADOS (SOLO DESDE 15/01/2026)
                 $montoPagado = 0;
                 try {
                     $montoPagado = AportesSemanales::find()
                         ->where(['atleta_id' => $atleta->id, 'estado' => 'pagado'])
+                        ->andWhere(['>=', 'fecha_quincena', '2026-01-15']) // FILTRO CRÍTICO
                         ->sum('monto');
                     $montoPagado = $montoPagado ? floatval($montoPagado) : 0;
                     Yii::info("Monto pagado atleta {$atleta->id}: {$montoPagado}");
@@ -132,11 +136,12 @@ class AportesController extends Controller
                     $erroresProcesamiento[] = $errorMsg;
                 }
 
-                // Calcular montos PENDIENTES (deuda)
+                // Calcular montos PENDIENTES (deuda) (SOLO DESDE 15/01/2026)
                 $montoDeuda = 0;
                 try {
                     $montoDeuda = AportesSemanales::find()
                         ->where(['atleta_id' => $atleta->id, 'estado' => 'pendiente'])
+                        ->andWhere(['>=', 'fecha_quincena', '2026-01-15']) // FILTRO CRÍTICO
                         ->sum('monto');
                     $montoDeuda = $montoDeuda ? floatval($montoDeuda) : 0;
                     Yii::info("Monto deuda atleta {$atleta->id}: {$montoDeuda}");
@@ -146,17 +151,18 @@ class AportesController extends Controller
                     $erroresProcesamiento[] = $errorMsg;
                 }
 
-                // Calcular adelantados (pagos con fecha_viernes futura)
+                // Calcular adelantados (pagos con fecha_quincena futura) (SOLO DESDE 15/01/2026)
                 $montoAdelantado = 0;
-                $semanasAdelantadas = 0;
+                $quincenasAdelantadas = 0;
                 try {
                     $hoy = date('Y-m-d');
                     $montoAdelantado = AportesSemanales::find()
                         ->where(['atleta_id' => $atleta->id, 'estado' => 'pagado'])
-                        ->andWhere(['>', 'fecha_viernes', $hoy])
+                        ->andWhere(['>', 'fecha_quincena', $hoy])
+                        ->andWhere(['>=', 'fecha_quincena', '2026-01-15']) // FILTRO CRÍTICO
                         ->sum('monto');
                     $montoAdelantado = $montoAdelantado ? floatval($montoAdelantado) : 0;
-                    $semanasAdelantadas = $montoAdelantado / AportesSemanales::MONTO_SEMANAL;
+                    $quincenasAdelantadas = $montoAdelantado / AportesSemanales::MONTO_QUINCENAL_USD;
                     Yii::info("Monto adelantado atleta {$atleta->id}: {$montoAdelantado}");
                 } catch (\Exception $e) {
                     $errorMsg = "Error calculando adelantados para atleta {$atleta->id}: " . $e->getMessage();
@@ -164,23 +170,32 @@ class AportesController extends Controller
                     $erroresProcesamiento[] = $errorMsg;
                 }
 
-                // Información detallada del atleta
-                $totalSemanas = AportesSemanales::find()->where(['atleta_id' => $atleta->id])->count();
-                $semanasPagadas = AportesSemanales::find()->where(['atleta_id' => $atleta->id, 'estado' => 'pagado'])->count();
-                $semanasPendientes = AportesSemanales::find()->where(['atleta_id' => $atleta->id, 'estado' => 'pendiente'])->count();
+                // Información detallada del atleta (SOLO DESDE 15/01/2026)
+                $totalQuincenas = AportesSemanales::find()
+                    ->where(['atleta_id' => $atleta->id])
+                    ->andWhere(['>=', 'fecha_quincena', '2026-01-15']) // FILTRO CRÍTICO
+                    ->count();
+                $quincenasPagadas = AportesSemanales::find()
+                    ->where(['atleta_id' => $atleta->id, 'estado' => 'pagado'])
+                    ->andWhere(['>=', 'fecha_quincena', '2026-01-15']) // FILTRO CRÍTICO
+                    ->count();
+                $quincenasPendientes = AportesSemanales::find()
+                    ->where(['atleta_id' => $atleta->id, 'estado' => 'pendiente'])
+                    ->andWhere(['>=', 'fecha_quincena', '2026-01-15']) // FILTRO CRÍTICO
+                    ->count();
                 
-                Yii::info("RESUMEN ATLETA {$atleta->id}: Total semanas: {$totalSemanas}, Pagadas: {$semanasPagadas}, Pendientes: {$semanasPendientes}");
+                Yii::info("RESUMEN ATLETA {$atleta->id}: Total quincenas: {$totalQuincenas}, Pagadas: {$quincenasPagadas}, Pendientes: {$quincenasPendientes}");
 
                 $atletasConEstadisticas[] = [
                     'atleta' => $atleta,
                     'montoPagado' => $montoPagado,
                     'montoDeuda' => $montoDeuda,
                     'montoAdelantado' => $montoAdelantado,
-                    'semanasAdelantadas' => $semanasAdelantadas,
-                    'semanasGeneradas' => $semanasGeneradas,
-                    'totalSemanas' => $totalSemanas,
-                    'semanasPagadas' => $semanasPagadas,
-                    'semanasPendientes' => $semanasPendientes,
+                    'quincenasAdelantadas' => $quincenasAdelantadas,
+                    'quincenasGeneradas' => $quincenasGeneradas,
+                    'totalQuincenas' => $totalQuincenas,
+                    'quincenasPagadas' => $quincenasPagadas,
+                    'quincenasPendientes' => $quincenasPendientes,
                     'error' => false
                 ];
 
@@ -202,11 +217,11 @@ class AportesController extends Controller
                     'montoPagado' => 0,
                     'montoDeuda' => 0,
                     'montoAdelantado' => 0,
-                    'semanasAdelantadas' => 0,
-                    'semanasGeneradas' => 0,
-                    'totalSemanas' => 0,
-                    'semanasPagadas' => 0,
-                    'semanasPendientes' => 0,
+                    'quincenasAdelantadas' => 0,
+                    'quincenasGeneradas' => 0,
+                    'totalQuincenas' => 0,
+                    'quincenasPagadas' => 0,
+                    'quincenasPendientes' => 0,
                     'error' => true
                 ];
             }
@@ -221,13 +236,14 @@ class AportesController extends Controller
         Yii::info("Atletas con deuda: " . $atletasConDeuda);
         Yii::info("Errores durante procesamiento: " . count($erroresProcesamiento));
 
-        // Estadísticas generales
+        // Estadísticas generales (SOLO DESDE 15/01/2026)
         $pendientes = 0;
         try {
             $atletasPermitidosIds = array_map(function($a) { return $a->id; }, $atletas);
             $pendientes = AportesSemanales::find()
                 ->where(['estado' => 'pendiente', 'escuela_id' => $id_escuela])
                 ->andWhere(['in', 'atleta_id', $atletasPermitidosIds])
+                ->andWhere(['>=', 'fecha_quincena', '2026-01-15']) // FILTRO CRÍTICO
                 ->count();
             Yii::info("Total aportes pendientes en escuela: " . $pendientes);
         } catch (\Exception $e) {
@@ -258,6 +274,7 @@ class AportesController extends Controller
 
     /**
      * Vista unificada para gestión de aportes del atleta
+     * SOLO DESDE 15/01/2026
      * @param int $atleta_id
      * @return string
      */
@@ -275,9 +292,9 @@ class AportesController extends Controller
         $model = new AportesSemanales();
         $atleta = null;
         $historialDeudas = [];
-        $semanasDeuda = 0;
+        $quincenasDeuda = 0;
         $montoDeuda = 0;
-        $semanasPendientes = [];
+        $quincenasPendientes = [];
         $posicionTop = null;
 
         // Si se seleccionó un atleta
@@ -295,15 +312,30 @@ class AportesController extends Controller
                     return $this->redirect(['gestion-atleta']);
                 }
                 
-                // Generar semanas automáticamente
-                AportesSemanales::generarSemanasParaAtleta($atleta_id);
+                // Generar quincenas automáticamente (SOLO DESDE 15/01/2026)
+                AportesSemanales::generarQuincenasParaAtleta($atleta_id);
                 
-                // Obtener información de deudas
-                $historialDeudas = AportesSemanales::obtenerHistorialDeudas($atleta_id);
-                $semanasDeuda = AportesSemanales::calcularDeudaAtleta($atleta_id);
-                $montoDeuda = AportesSemanales::calcularMontoDeuda($atleta_id);
-                $semanasPendientes = array_filter($historialDeudas, function($semana) {
-                    return $semana['estado'] == 'pendiente';
+                // Obtener información de deudas (SOLO DESDE 15/01/2026)
+                $historialDeudas = AportesSemanales::find()
+                    ->where(['atleta_id' => $atleta_id])
+                    ->andWhere(['>=', 'fecha_quincena', '2026-01-15']) // FILTRO CRÍTICO
+                    ->orderBy(['fecha_quincena' => SORT_ASC])
+                    ->asArray()
+                    ->all();
+                    
+                $quincenasDeuda = AportesSemanales::find()
+                    ->where(['atleta_id' => $atleta_id, 'estado' => 'pendiente'])
+                    ->andWhere(['>=', 'fecha_quincena', '2026-01-15']) // FILTRO CRÍTICO
+                    ->count();
+                    
+                $montoDeuda = AportesSemanales::find()
+                    ->where(['atleta_id' => $atleta_id, 'estado' => 'pendiente'])
+                    ->andWhere(['>=', 'fecha_quincena', '2026-01-15']) // FILTRO CRÍTICO
+                    ->sum('monto');
+                $montoDeuda = $montoDeuda ? floatval($montoDeuda) : 0;
+                    
+                $quincenasPendientes = array_filter($historialDeudas, function($quincena) {
+                    return $quincena['estado'] == 'pendiente';
                 });
             }
         }
@@ -327,24 +359,33 @@ class AportesController extends Controller
                             $model->escuela_id = $id_escuela;
                         }
                         
-                        // CORRECCIÓN: Usar monto fijo en dólares, no calcular monto_bs
-                        $model->monto = AportesSemanales::MONTO_SEMANAL;
+                        // CORRECCIÓN: Manejo dual de moneda Bs/USD
+                        if (!empty($model->monto_bs)) {
+                            // Convertir Bs a USD usando tipo_cambio
+                            $tipoCambio = !empty($model->tipo_cambio) ? floatval($model->tipo_cambio) : 36.50;
+                            $model->monto = $model->monto_bs / $tipoCambio;
+                            $model->monto_bs_original = $model->monto_bs;
+                        } else {
+                            // Si no viene monto_bs, usar monto en USD
+                            $model->monto = AportesSemanales::MONTO_QUINCENAL_USD;
+                        }
                         
-                        // Calcular número de semana si no viene del formulario
-                        if (empty($model->numero_semana) && !empty($model->fecha_viernes)) {
-                            $model->numero_semana = AportesSemanales::calcularNumeroSemana($model->fecha_viernes);
+                        // Calcular número de quincena si no viene del formulario
+                        if (empty($model->numero_quincena) && !empty($model->fecha_quincena)) {
+                            $model->numero_quincena = AportesSemanales::calcularNumeroQuincena($model->fecha_quincena);
                         }
                         
                         // ✅ NUEVA LÓGICA: PAGO INTELIGENTE CON LIQUIDACIÓN DE DEUDAS
                         $transaction = Yii::$app->db->beginTransaction();
                         try {
-                            // 1. Primero verificar si hay deudas pendientes
+                            // 1. Primero verificar si hay deudas pendientes (SOLO DESDE 15/01/2026)
                             $deudasPendientes = AportesSemanales::find()
                                 ->where([
                                     'atleta_id' => $model->atleta_id,
                                     'estado' => 'pendiente'
                                 ])
-                                ->orderBy(['fecha_viernes' => SORT_ASC]) // Pagar las más antiguas primero
+                                ->andWhere(['>=', 'fecha_quincena', '2026-01-15']) // FILTRO CRÍTICO
+                                ->orderBy(['fecha_quincena' => SORT_ASC]) // Pagar las más antiguas primero
                                 ->all();
                             
                             $deudasLiquidadas = 0;
@@ -361,7 +402,7 @@ class AportesController extends Controller
                                     
                                     if ($deuda->save()) {
                                         $deudasLiquidadas++;
-                                        Yii::info("Deuda liquidada: Atleta {$model->atleta_id}, Semana {$deuda->fecha_viernes}");
+                                        Yii::info("Deuda liquidada: Atleta {$model->atleta_id}, Quincena {$deuda->fecha_quincena}");
                                     } else {
                                         throw new \Exception("Error al liquidar deuda: " . implode(', ', $deuda->getErrors()));
                                     }
@@ -372,11 +413,16 @@ class AportesController extends Controller
                                     ($deudasLiquidadas == 1 ? 'La deuda ha sido saldada.' : 'Las deudas han sido saldadas.')
                                 );
                             } 
-                            // 3. Si NO hay deudas, crear nuevo registro
+                            // 3. Si NO hay deudas, crear nuevo registro (SOLO SI ES POSTERIOR A 15/01/2026)
                             else {
+                                // Verificar que la fecha de quincena sea >= 15/01/2026
+                                if (strtotime($model->fecha_quincena) < strtotime('2026-01-15')) {
+                                    throw new \Exception('No se pueden registrar aportes anteriores al 15 de enero de 2026.');
+                                }
+                                
                                 if ($model->save()) {
                                     $nuevoRegistroCreado = true;
-                                    Yii::$app->session->setFlash('success', 'Aporte individual registrado exitosamente.');
+                                    Yii::$app->session->setFlash('success', 'Aporte quincenal registrado exitosamente.');
                                 } else {
                                     throw new \Exception('Error al guardar el aporte: ' . implode(', ', $model->getErrorSummary(true)));
                                 }
@@ -396,8 +442,9 @@ class AportesController extends Controller
                     break;
                     
                 case 'flexible':
-                    // Aporte flexible - CÓDIGO CORREGIDO
-                    $monto_flexible = Yii::$app->request->post('monto_flexible');
+                    // Aporte flexible - CÓDIGO ACTUALIZADO para sistema dual
+                    $monto_flexible = floatval(Yii::$app->request->post('monto_flexible'));
+                    $tipo_cambio_flexible = floatval(Yii::$app->request->post('tipo_cambio_flexible', 36.50));
                     $fecha_pago_flexible = Yii::$app->request->post('fecha_pago_flexible');
                     $metodo_pago_flexible = Yii::$app->request->post('metodo_pago_flexible');
                     $comentarios_flexible = Yii::$app->request->post('comentarios_flexible');
@@ -419,32 +466,41 @@ class AportesController extends Controller
                         break;
                     }
 
-                    // ✅ NUEVA LÓGICA PARA PAGO FLEXIBLE: LIQUIDAR DEUDAS PRIMERO
+                    // Convertir monto flexible a USD si se ingresó en Bs
+                    $moneda_flexible = Yii::$app->request->post('moneda_flexible', 'bs');
+                    if ($moneda_flexible === 'bs') {
+                        $monto_flexible_usd = $monto_flexible / $tipo_cambio_flexible;
+                    } else {
+                        $monto_flexible_usd = $monto_flexible;
+                    }
+
+                    // ✅ NUEVA LÓGICA PARA PAGO FLEXIBLE: LIQUIDAR DEUDAS PRIMERO (SOLO DESDE 15/01/2026)
                     $transaction = Yii::$app->db->beginTransaction();
                     try {
-                        // 1. Calcular deudas pendientes
+                        // 1. Calcular deudas pendientes (SOLO DESDE 15/01/2026)
                         $deudasPendientes = AportesSemanales::find()
                             ->where([
                                 'atleta_id' => $atleta_id_flexible,
                                 'estado' => 'pendiente'
                             ])
-                            ->orderBy(['fecha_viernes' => SORT_ASC])
+                            ->andWhere(['>=', 'fecha_quincena', '2026-01-15']) // FILTRO CRÍTICO
+                            ->orderBy(['fecha_quincena' => SORT_ASC])
                             ->all();
                         
-                        $montoDisponible = $monto_flexible;
+                        $montoDisponibleUsd = $monto_flexible_usd;
                         $deudasLiquidadas = 0;
-                        $semanasNuevas = 0;
+                        $quincenasNuevas = 0;
                         
                         // 2. Liquidar deudas pendientes con el monto flexible
                         foreach ($deudasPendientes as $deuda) {
-                            if ($montoDisponible >= AportesSemanales::MONTO_SEMANAL) {
+                            if ($montoDisponibleUsd >= AportesSemanales::MONTO_QUINCENAL_USD) {
                                 $deuda->estado = 'pagado';
                                 $deuda->fecha_pago = $fecha_pago_flexible;
                                 $deuda->metodo_pago = $metodo_pago_flexible;
                                 $deuda->comentarios = $comentarios_flexible . " (Liquidación flexible de deuda)";
                                 
                                 if ($deuda->save()) {
-                                    $montoDisponible -= AportesSemanales::MONTO_SEMANAL;
+                                    $montoDisponibleUsd -= AportesSemanales::MONTO_QUINCENAL_USD;
                                     $deudasLiquidadas++;
                                 } else {
                                     throw new \Exception("Error al liquidar deuda flexible: " . implode(', ', $deuda->getErrors()));
@@ -454,84 +510,114 @@ class AportesController extends Controller
                             }
                         }
                         
-                        // 3. Con el monto restante, crear nuevos aportes (adelantados)
-                        if ($montoDisponible > 0) {
-                            // Calcular semanas equivalentes del monto restante
-                            $semanas_completas = floor($montoDisponible / AportesSemanales::MONTO_SEMANAL);
-                            $monto_restante = $montoDisponible - ($semanas_completas * AportesSemanales::MONTO_SEMANAL);
+                        // 3. Con el monto restante, crear nuevos aportes (adelantados) SOLO FUTUROS
+                        if ($montoDisponibleUsd > 0) {
+                            // Calcular quincenas equivalentes del monto restante
+                            $quincenas_completas = floor($montoDisponibleUsd / AportesSemanales::MONTO_QUINCENAL_USD);
+                            $monto_restante = $montoDisponibleUsd - ($quincenas_completas * AportesSemanales::MONTO_QUINCENAL_USD);
 
-                            $semanas_procesadas = 0;
+                            $quincenas_procesadas = 0;
                             
-                            // Obtener la última fecha de viernes registrada
+                            // Obtener la última fecha de quincena registrada (SOLO DESDE 15/01/2026)
                             $ultimo_aporte = AportesSemanales::find()
                                 ->where(['atleta_id' => $atleta_id_flexible])
-                                ->orderBy(['fecha_viernes' => SORT_DESC])
+                                ->andWhere(['>=', 'fecha_quincena', '2026-01-15']) // FILTRO CRÍTICO
+                                ->orderBy(['fecha_quincena' => SORT_DESC])
                                 ->one();
                             
+                            $fecha_actual = new \DateTime();
                             if ($ultimo_aporte) {
-                                $fecha_actual = new \DateTime($ultimo_aporte->fecha_viernes);
-                                $fecha_actual->modify('+1 week');
-                            } else {
-                                $fecha_actual = new \DateTime();
-                                if ($fecha_actual->format('N') != 5) {
-                                    $fecha_actual->modify('next friday');
+                                $fecha_actual = new \DateTime($ultimo_aporte->fecha_quincena);
+                                // Asegurar que sea >= 15/01/2026
+                                if ($fecha_actual < new \DateTime('2026-01-15')) {
+                                    $fecha_actual = new \DateTime('2026-01-15');
                                 }
+                            } else {
+                                $fecha_actual = new \DateTime('2026-01-15');
+                            }
+                            
+                            // Calcular próxima quincena (asegurar que sea >= 15/01/2026)
+                            $fecha_actual = new \DateTime(AportesSemanales::calcularProximaQuincena($fecha_actual));
+                            if ($fecha_actual < new \DateTime('2026-01-15')) {
+                                $fecha_actual = new \DateTime('2026-01-15');
                             }
 
-                            // Procesar semanas completas con el monto restante
-                            for ($i = 0; $i < $semanas_completas; $i++) {
-                                $fecha_viernes = $fecha_actual->format('Y-m-d');
+                            // Procesar quincenas completas con el monto restante
+                            for ($i = 0; $i < $quincenas_completas; $i++) {
+                                $fecha_quincena = $fecha_actual->format('Y-m-d');
+                                
+                                // Verificar que la fecha sea >= 15/01/2026
+                                if (strtotime($fecha_quincena) < strtotime('2026-01-15')) {
+                                    break;
+                                }
                                 
                                 $aporte_existente = AportesSemanales::find()
-                                    ->where(['atleta_id' => $atleta_id_flexible, 'fecha_viernes' => $fecha_viernes])
+                                    ->where(['atleta_id' => $atleta_id_flexible, 'fecha_quincena' => $fecha_quincena])
                                     ->one();
 
                                 if (!$aporte_existente) {
                                     $aporte = new AportesSemanales();
                                     $aporte->atleta_id = $atleta_id_flexible;
                                     $aporte->escuela_id = $atleta->id_escuela;
-                                    $aporte->fecha_viernes = $fecha_viernes;
-                                    $aporte->numero_semana = (int)$fecha_actual->format('W');
-                                    $aporte->monto = AportesSemanales::MONTO_SEMANAL;
+                                    $aporte->fecha_quincena = $fecha_quincena;
+                                    $aporte->numero_quincena = AportesSemanales::calcularNumeroQuincena($fecha_quincena);
+                                    $aporte->monto = AportesSemanales::MONTO_QUINCENAL_USD;
                                     $aporte->estado = 'pagado';
                                     $aporte->fecha_pago = $fecha_pago_flexible;
                                     $aporte->metodo_pago = $metodo_pago_flexible;
-                                    $aporte->comentarios = $comentarios_flexible . " - Aporte flexible semana completa (después de liquidar deudas)";
+                                    $aporte->comentarios = $comentarios_flexible . " - Aporte flexible quincena completa (después de liquidar deudas)";
                                     $aporte->tipo_aporte = 'flexible';
+                                    
+                                    // Guardar tasa de cambio y monto original en Bs
+                                    if ($moneda_flexible === 'bs') {
+                                        $aporte->tipo_cambio = $tipo_cambio_flexible;
+                                        $aporte->monto_bs_original = $monto_flexible / $quincenas_completas * AportesSemanales::MONTO_QUINCENAL_USD / $monto_flexible_usd;
+                                    }
 
                                     if ($aporte->save()) {
-                                        $semanas_procesadas++;
-                                        $semanasNuevas++;
+                                        $quincenas_procesadas++;
+                                        $quincenasNuevas++;
                                     }
                                 }
 
-                                $fecha_actual->modify('+1 week');
+                                // Avanzar a la siguiente quincena
+                                $fecha_actual->modify('+15 days');
+                                $fecha_actual = new \DateTime(AportesSemanales::calcularProximaQuincena($fecha_actual));
                             }
 
-                            // Procesar monto restante como aporte parcial
+                            // Procesar monto restante como aporte parcial (SOLO SI ES >= 15/01/2026)
                             if ($monto_restante > 0) {
-                                $fecha_viernes = $fecha_actual->format('Y-m-d');
+                                $fecha_quincena = $fecha_actual->format('Y-m-d');
                                 
-                                $aporte_existente = AportesSemanales::find()
-                                    ->where(['atleta_id' => $atleta_id_flexible, 'fecha_viernes' => $fecha_viernes])
-                                    ->one();
-                                
-                                if (!$aporte_existente) {
-                                    $aporte_parcial = new AportesSemanales();
-                                    $aporte_parcial->atleta_id = $atleta_id_flexible;
-                                    $aporte_parcial->escuela_id = $atleta->id_escuela;
-                                    $aporte_parcial->fecha_viernes = $fecha_viernes;
-                                    $aporte_parcial->numero_semana = (int)$fecha_actual->format('W');
-                                    $aporte_parcial->monto = $monto_restante;
-                                    $aporte_parcial->estado = 'pagado';
-                                    $aporte_parcial->fecha_pago = $fecha_pago_flexible;
-                                    $aporte_parcial->metodo_pago = $metodo_pago_flexible;
-                                    $aporte_parcial->comentarios = $comentarios_flexible . " - Aporte flexible parcial (después de liquidar deudas)";
-                                    $aporte_parcial->tipo_aporte = 'flexible';
-                                    $aporte_parcial->es_parcial = true;
+                                // Verificar que la fecha sea >= 15/01/2026
+                                if (strtotime($fecha_quincena) >= strtotime('2026-01-15')) {
+                                    $aporte_existente = AportesSemanales::find()
+                                        ->where(['atleta_id' => $atleta_id_flexible, 'fecha_quincena' => $fecha_quincena])
+                                        ->one();
+                                    
+                                    if (!$aporte_existente) {
+                                        $aporte_parcial = new AportesSemanales();
+                                        $aporte_parcial->atleta_id = $atleta_id_flexible;
+                                        $aporte_parcial->escuela_id = $atleta->id_escuela;
+                                        $aporte_parcial->fecha_quincena = $fecha_quincena;
+                                        $aporte_parcial->numero_quincena = AportesSemanales::calcularNumeroQuincena($fecha_quincena);
+                                        $aporte_parcial->monto = $monto_restante;
+                                        $aporte_parcial->estado = 'pagado';
+                                        $aporte_parcial->fecha_pago = $fecha_pago_flexible;
+                                        $aporte_parcial->metodo_pago = $metodo_pago_flexible;
+                                        $aporte_parcial->comentarios = $comentarios_flexible . " - Aporte flexible parcial (después de liquidar deudas)";
+                                        $aporte_parcial->tipo_aporte = 'flexible';
+                                        $aporte_parcial->pago_parcial = true;
+                                        
+                                        // Guardar tasa de cambio y monto original en Bs
+                                        if ($moneda_flexible === 'bs') {
+                                            $aporte_parcial->tipo_cambio = $tipo_cambio_flexible;
+                                            $aporte_parcial->monto_bs_original = $monto_flexible / $quincenas_completas * $monto_restante / $monto_flexible_usd;
+                                        }
 
-                                    if ($aporte_parcial->save()) {
-                                        $semanasNuevas++;
+                                        if ($aporte_parcial->save()) {
+                                            $quincenasNuevas++;
+                                        }
                                     }
                                 }
                             }
@@ -544,10 +630,10 @@ class AportesController extends Controller
                         if ($deudasLiquidadas > 0) {
                             $mensaje .= "{$deudasLiquidadas} deudas liquidadas";
                         }
-                        if ($semanasNuevas > 0) {
-                            $mensaje .= ($deudasLiquidadas > 0 ? " + " : "") . "{$semanasNuevas} semanas nuevas";
+                        if ($quincenasNuevas > 0) {
+                            $mensaje .= ($deudasLiquidadas > 0 ? " + " : "") . "{$quincenasNuevas} quincenas nuevas";
                         }
-                        if ($deudasLiquidadas == 0 && $semanasNuevas == 0) {
+                        if ($deudasLiquidadas == 0 && $quincenasNuevas == 0) {
                             $mensaje .= "No se realizaron cambios (posible duplicación)";
                         }
                         
@@ -562,8 +648,8 @@ class AportesController extends Controller
                     break;
                     
                 case 'multiple':
-                    // Pago múltiple - CÓDIGO MEJORADO
-                    $semanasSeleccionadas = Yii::$app->request->post('semanas', []);
+                    // Pago múltiple - CÓDIGO MEJORADO para sistema quincenal (SOLO DESDE 15/01/2026)
+                    $quincenasSeleccionadas = Yii::$app->request->post('quincenas', []);
                     $fechaPago = Yii::$app->request->post('fecha_pago', date('Y-m-d'));
                     $metodoPago = Yii::$app->request->post('metodo_pago', 'efectivo');
                     $comentarios = Yii::$app->request->post('comentarios', '');
@@ -585,18 +671,23 @@ class AportesController extends Controller
                         break;
                     }
 
-                    if (empty($semanasSeleccionadas)) {
-                        Yii::$app->session->setFlash('warning', 'No se seleccionaron semanas para pagar.');
+                    if (empty($quincenasSeleccionadas)) {
+                        Yii::$app->session->setFlash('warning', 'No se seleccionaron quincenas para pagar.');
                         break;
                     }
 
-                    $semanasPagadas = 0;
+                    $quincenasPagadas = 0;
 
-                    foreach ($semanasSeleccionadas as $fechaViernes) {
+                    foreach ($quincenasSeleccionadas as $fechaQuincena) {
+                        // Verificar que la fecha sea >= 15/01/2026
+                        if (strtotime($fechaQuincena) < strtotime('2026-01-15')) {
+                            continue; // Saltar quincenas anteriores
+                        }
+                        
                         $aporte = AportesSemanales::find()
                             ->where([
                                 'atleta_id' => $atleta_id_multiple,
-                                'fecha_viernes' => $fechaViernes
+                                'fecha_quincena' => $fechaQuincena
                             ])
                             ->one();
 
@@ -604,11 +695,11 @@ class AportesController extends Controller
                             $aporte = new AportesSemanales();
                             $aporte->atleta_id = $atleta_id_multiple;
                             $aporte->escuela_id = $atleta->id_escuela;
-                            $aporte->fecha_viernes = $fechaViernes;
+                            $aporte->fecha_quincena = $fechaQuincena;
                             
-                            $fechaObj = new \DateTime($fechaViernes);
-                            $aporte->numero_semana = (int)$fechaObj->format('W');
-                            $aporte->monto = AportesSemanales::MONTO_SEMANAL;
+                            $fechaObj = new \DateTime($fechaQuincena);
+                            $aporte->numero_quincena = AportesSemanales::calcularNumeroQuincena($fechaQuincena);
+                            $aporte->monto = AportesSemanales::MONTO_QUINCENAL_USD;
                         }
 
                         $aporte->estado = 'pagado';
@@ -617,14 +708,14 @@ class AportesController extends Controller
                         $aporte->comentarios = $comentarios;
 
                         if ($aporte->save()) {
-                            $semanasPagadas++;
+                            $quincenasPagadas++;
                         } else {
                             Yii::error("Error al guardar aporte múltiple: " . implode(', ', $aporte->getErrors()));
                         }
                     }
 
-                    if ($semanasPagadas > 0) {
-                        Yii::$app->session->setFlash('success', "Se registró el pago de {$semanasPagadas} semanas mediante pago múltiple.");
+                    if ($quincenasPagadas > 0) {
+                        Yii::$app->session->setFlash('success', "Se registró el pago de {$quincenasPagadas} quincenas mediante pago múltiple.");
                     } else {
                         Yii::$app->session->setFlash('warning', 'No se pudo registrar ningún pago.');
                     }
@@ -632,8 +723,8 @@ class AportesController extends Controller
                     break;
                     
                 case 'adelantado':
-                    // Pago adelantado - CÓDIGO MEJORADO
-                    $semanasAdelanto = Yii::$app->request->post('semanas_adelanto', 1);
+                    // Pago adelantado - CÓDIGO MEJORADO para sistema quincenal (SOLO DESDE 15/01/2026)
+                    $quincenasAdelanto = Yii::$app->request->post('quincenas_adelanto', 1);
                     $fechaPago = Yii::$app->request->post('fecha_pago_adelanto', date('Y-m-d'));
                     $metodoPago = Yii::$app->request->post('metodo_pago_adelanto', 'efectivo');
                     $comentarios = Yii::$app->request->post('comentarios_adelanto', 'Pago por adelantado');
@@ -656,21 +747,22 @@ class AportesController extends Controller
                     }
 
                     $fechaActual = new \DateTime();
-                    // Ajustar al próximo viernes si no es viernes
-                    if ($fechaActual->format('N') != 5) {
-                        $fechaActual->modify('next friday');
+                    // Calcular próxima quincena, asegurando que sea >= 15/01/2026
+                    $fechaActual = new \DateTime(AportesSemanales::calcularProximaQuincena($fechaActual));
+                    if ($fechaActual < new \DateTime('2026-01-15')) {
+                        $fechaActual = new \DateTime('2026-01-15');
                     }
 
-                    $semanasPagadas = 0;
+                    $quincenasPagadas = 0;
 
-                    for ($i = 0; $i < $semanasAdelanto; $i++) {
-                        $fechaViernes = $fechaActual->format('Y-m-d');
+                    for ($i = 0; $i < $quincenasAdelanto; $i++) {
+                        $fechaQuincena = $fechaActual->format('Y-m-d');
 
                         // Verificar si ya existe un aporte para esta fecha
                         $existeAporte = AportesSemanales::find()
                             ->where([
                                 'atleta_id' => $atleta_id_adelanto,
-                                'fecha_viernes' => $fechaViernes
+                                'fecha_quincena' => $fechaQuincena
                             ])
                             ->exists();
 
@@ -678,29 +770,31 @@ class AportesController extends Controller
                             $aporte = new AportesSemanales();
                             $aporte->atleta_id = $atleta_id_adelanto;
                             $aporte->escuela_id = $atleta->id_escuela;
-                            $aporte->fecha_viernes = $fechaViernes;
-                            $aporte->numero_semana = (int)$fechaActual->format('W');
-                            $aporte->monto = AportesSemanales::MONTO_SEMANAL;
+                            $aporte->fecha_quincena = $fechaQuincena;
+                            $aporte->numero_quincena = AportesSemanales::calcularNumeroQuincena($fechaQuincena);
+                            $aporte->monto = AportesSemanales::MONTO_QUINCENAL_USD;
                             $aporte->estado = 'pagado';
                             $aporte->fecha_pago = $fechaPago;
                             $aporte->metodo_pago = $metodoPago;
-                            $aporte->comentarios = $comentarios . " - Semana {$fechaViernes} (Adelantado)";
+                            $aporte->comentarios = $comentarios . " - Quincena {$fechaQuincena} (Adelantado)";
                             $aporte->tipo_aporte = 'adelantado';
 
                             if ($aporte->save()) {
-                                $semanasPagadas++;
+                                $quincenasPagadas++;
                             } else {
                                 Yii::error("Error al guardar aporte adelantado: " . implode(', ', $aporte->getErrors()));
                             }
                         }
 
-                        $fechaActual->modify('+1 week');
+                        // Avanzar a la siguiente quincena
+                        $fechaActual->modify('+15 days');
+                        $fechaActual = new \DateTime(AportesSemanales::calcularProximaQuincena($fechaActual));
                     }
 
-                    if ($semanasPagadas > 0) {
-                        Yii::$app->session->setFlash('success', "Se registró el pago por adelantado de {$semanasPagadas} semanas.");
+                    if ($quincenasPagadas > 0) {
+                        Yii::$app->session->setFlash('success', "Se registró el pago por adelantado de {$quincenasPagadas} quincenas.");
                     } else {
-                        Yii::$app->session->setFlash('warning', 'No se pudo registrar ningún pago adelantado. Puede que las semanas ya estén pagadas.');
+                        Yii::$app->session->setFlash('warning', 'No se pudo registrar ningún pago adelantado. Puede que las quincenas ya estén pagadas.');
                     }
                     return $this->redirect(['gestion-atleta', 'atleta_id' => $atleta_id_adelanto]);
                     break;
@@ -714,18 +808,17 @@ class AportesController extends Controller
                 $model->atleta_id = $atleta_id;
                 $model->escuela_id = $atleta->id_escuela;
             }
-            $model->monto = AportesSemanales::MONTO_SEMANAL;
+            $model->monto = AportesSemanales::MONTO_QUINCENAL_USD;
             $model->estado = 'pendiente';
             
-            // Establecer fecha del último viernes
+            // Establecer fecha de la próxima quincena (asegurar >= 15/01/2026)
             $hoy = new \DateTime();
-            $diaSemana = $hoy->format('w');
-            $diasHastaViernes = ($diaSemana <= 5) ? (5 - $diaSemana) : (5 - $diaSemana + 7);
-            $viernes = clone $hoy;
-            $viernes->modify("+{$diasHastaViernes} days");
-            $model->fecha_viernes = $viernes->format('Y-m-d');
-            
-            $model->numero_semana = (int)$viernes->format('W');
+            $model->fecha_quincena = AportesSemanales::calcularProximaQuincena($hoy);
+            // Si la fecha calculada es anterior a 15/01/2026, usar 15/01/2026
+            if (strtotime($model->fecha_quincena) < strtotime('2026-01-15')) {
+                $model->fecha_quincena = '2026-01-15';
+            }
+            $model->numero_quincena = AportesSemanales::calcularNumeroQuincena($model->fecha_quincena);
         }
 
         return $this->render('gestion-atleta', [
@@ -733,9 +826,9 @@ class AportesController extends Controller
             'atletas' => $atletas,
             'atleta' => $atleta,
             'historialDeudas' => $historialDeudas,
-            'semanasDeuda' => $semanasDeuda,
+            'quincenasDeuda' => $quincenasDeuda,
             'montoDeuda' => $montoDeuda,
-            'semanasPendientes' => $semanasPendientes,
+            'quincenasPendientes' => $quincenasPendientes,
             'posicionTop' => $posicionTop,
         ]);
     }
@@ -793,11 +886,34 @@ class AportesController extends Controller
                     $model->escuela_id = $id_escuela;
                 }
                 
-                // CORRECCIÓN: Usar monto fijo en dólares
-                $model->monto = AportesSemanales::MONTO_SEMANAL;
+                // Verificar que la fecha sea >= 15/01/2026
+                if (strtotime($model->fecha_quincena) < strtotime('2026-01-15')) {
+                    Yii::$app->session->setFlash('error', 'No se pueden crear aportes con fecha anterior al 15 de enero de 2026.');
+                    return $this->render('create', [
+                        'model' => $model,
+                        'atletas' => $atletas,
+                        'escuelas' => $escuelas,
+                    ]);
+                }
+                
+                // CORRECCIÓN: Manejo dual de moneda
+                if (!empty($model->monto_bs)) {
+                    // Convertir Bs a USD usando tipo_cambio
+                    $tipoCambio = !empty($model->tipo_cambio) ? floatval($model->tipo_cambio) : 36.50;
+                    $model->monto = $model->monto_bs / $tipoCambio;
+                    $model->monto_bs_original = $model->monto_bs;
+                } else {
+                    // Si no viene monto_bs, usar monto en USD
+                    $model->monto = AportesSemanales::MONTO_QUINCENAL_USD;
+                }
+                
+                // Calcular número de quincena automáticamente
+                if (empty($model->numero_quincena) && !empty($model->fecha_quincena)) {
+                    $model->numero_quincena = AportesSemanales::calcularNumeroQuincena($model->fecha_quincena);
+                }
                 
                 if ($model->save()) {
-                    Yii::$app->session->setFlash('success', 'Aporte semanal registrado exitosamente.');
+                    Yii::$app->session->setFlash('success', 'Aporte quincenal registrado exitosamente.');
                     return $this->redirect(['view', 'id' => $model->id]);
                 } else {
                     Yii::$app->session->setFlash('error', 'Error al guardar el aporte: ' . json_encode($model->getErrors()));
@@ -807,19 +923,19 @@ class AportesController extends Controller
             $model->loadDefaultValues();
             // Establecer valores por defecto
             $model->escuela_id = $id_escuela;
-            $model->monto = AportesSemanales::MONTO_SEMANAL;
+            $model->monto = AportesSemanales::MONTO_QUINCENAL_USD;
             $model->estado = 'pendiente';
             
-            // Establecer fecha del último viernes
+            // Establecer fecha de la próxima quincena (asegurar >= 15/01/2026)
             $hoy = new \DateTime();
-            $diaSemana = $hoy->format('w');
-            $diasHastaViernes = ($diaSemana <= 5) ? (5 - $diaSemana) : (5 - $diaSemana + 7);
-            $viernes = clone $hoy;
-            $viernes->modify("+{$diasHastaViernes} days");
-            $model->fecha_viernes = $viernes->format('Y-m-d');
+            $model->fecha_quincena = AportesSemanales::calcularProximaQuincena($hoy);
+            // Si la fecha calculada es anterior a 15/01/2026, usar 15/01/2026
+            if (strtotime($model->fecha_quincena) < strtotime('2026-01-15')) {
+                $model->fecha_quincena = '2026-01-15';
+            }
             
-            // Calcular número de semana
-            $model->numero_semana = (int)$viernes->format('W');
+            // Calcular número de quincena
+            $model->numero_quincena = AportesSemanales::calcularNumeroQuincena($model->fecha_quincena);
         }
 
         return $this->render('create', [
@@ -845,9 +961,28 @@ class AportesController extends Controller
             throw new ForbiddenHttpException('No tiene permisos para actualizar este aporte.');
         }
 
-        if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
-            Yii::$app->session->setFlash('success', 'Aporte semanal actualizado exitosamente.');
-            return $this->redirect(['view', 'id' => $model->id]);
+        if ($this->request->isPost && $model->load($this->request->post())) {
+            // Verificar que la fecha sea >= 15/01/2026
+            if (strtotime($model->fecha_quincena) < strtotime('2026-01-15')) {
+                Yii::$app->session->setFlash('error', 'No se pueden actualizar aportes con fecha anterior al 15 de enero de 2026.');
+                return $this->render('update', [
+                    'model' => $model,
+                ]);
+            }
+            
+            // Manejo dual de moneda
+            if (!empty($model->monto_bs)) {
+                $tipoCambio = !empty($model->tipo_cambio) ? floatval($model->tipo_cambio) : 36.50;
+                $model->monto = $model->monto_bs / $tipoCambio;
+                $model->monto_bs_original = $model->monto_bs;
+            }
+            
+            if ($model->save()) {
+                Yii::$app->session->setFlash('success', 'Aporte quincenal actualizado exitosamente.');
+                return $this->redirect(['view', 'id' => $model->id]);
+            } else {
+                Yii::$app->session->setFlash('error', 'Error al actualizar el aporte quincenal.');
+            }
         }
 
         return $this->render('update', [
@@ -872,7 +1007,7 @@ class AportesController extends Controller
         }
 
         $model->delete();
-        Yii::$app->session->setFlash('success', 'Aporte semanal eliminado exitosamente.');
+        Yii::$app->session->setFlash('success', 'Aporte quincenal eliminado exitosamente.');
 
         return $this->redirect(['index']);
     }
@@ -1010,7 +1145,7 @@ class AportesController extends Controller
     }
 
     /**
-     * Obtiene top atletas permitidos según RBAC
+     * Obtiene top atletas permitidos según RBAC (SOLO DESDE 15/01/2026)
      * @param int $id_escuela
      * @param array $atletasPermitidos
      * @return array
@@ -1027,18 +1162,20 @@ class AportesController extends Controller
             ->select(['atleta_id', 'COUNT(*) as total_aportes', 'SUM(monto) as total_pagado'])
             ->where(['estado' => 'pagado', 'escuela_id' => $id_escuela])
             ->andWhere(['in', 'atleta_id', $atletasIds])
+            ->andWhere(['>=', 'fecha_quincena', '2026-01-15']) // FILTRO CRÍTICO
             ->groupBy(['atleta_id'])
             ->orderBy(['total_pagado' => SORT_DESC])
             ->limit(5)
+            ->asArray()
             ->all();
     }
 
     // =========================================================================
-    // MÉTODOS EXISTENTES (sin cambios significativos)
+    // MÉTODOS EXISTENTES (actualizados para sistema quincenal)
     // =========================================================================
 
     /**
-     * Pago múltiple de semanas para un atleta
+     * Pago múltiple de quincenas para un atleta (SOLO DESDE 15/01/2026)
      * @return string|\yii\web\Response
      */
     public function actionPagoMultiple()
@@ -1051,10 +1188,15 @@ class AportesController extends Controller
         $atletas = $this->getAtletasPermitidos($id_escuela);
 
         foreach ($atletas as $atleta) {
-            // Generar semanas automáticamente
-            AportesSemanales::generarSemanasParaAtleta($atleta->id);
+            // Generar quincenas automáticamente (SOLO DESDE 15/01/2026)
+            AportesSemanales::generarQuincenasParaAtleta($atleta->id);
             
-            $deuda = AportesSemanales::calcularDeudaAtleta($atleta->id);
+            // Calcular deuda (SOLO DESDE 15/01/2026)
+            $deuda = AportesSemanales::find()
+                ->where(['atleta_id' => $atleta->id, 'estado' => 'pendiente'])
+                ->andWhere(['>=', 'fecha_quincena', '2026-01-15']) // FILTRO CRÍTICO
+                ->count();
+                
             if ($deuda > 0) {
                 $atletasConDeuda[] = $atleta;
             }
@@ -1062,7 +1204,7 @@ class AportesController extends Controller
 
         if ($this->request->isPost) {
             $atleta_id = $this->request->post('atleta_id');
-            $semanas = $this->request->post('semanas', []);
+            $quincenas = $this->request->post('quincenas', []);
             $fecha_pago = $this->request->post('fecha_pago', date('Y-m-d'));
             $metodo_pago = $this->request->post('metodo_pago', 'efectivo');
             $comentarios = $this->request->post('comentarios', 'Pago múltiple');
@@ -1077,27 +1219,30 @@ class AportesController extends Controller
                 throw new NotFoundHttpException('Atleta no encontrado.');
             }
 
-            $semanasPagadas = 0;
+            $quincenasPagadas = 0;
 
-            foreach ($semanas as $fecha_viernes) {
-                // Buscar si ya existe un aporte para esta fecha
+            foreach ($quincenas as $fecha_quincena) {
+                // Verificar que la fecha sea >= 15/01/2026
+                if (strtotime($fecha_quincena) < strtotime('2026-01-15')) {
+                    continue; // Saltar quincenas anteriores
+                }
+                
                 $aporte = AportesSemanales::find()
                     ->where([
                         'atleta_id' => $atleta_id,
-                        'fecha_viernes' => $fecha_viernes
+                        'fecha_quincena' => $fecha_quincena
                     ])
                     ->one();
 
                 if (!$aporte) {
-                    // Crear nuevo aporte
                     $aporte = new AportesSemanales();
                     $aporte->atleta_id = $atleta_id;
                     $aporte->escuela_id = $atleta->id_escuela;
-                    $aporte->fecha_viernes = $fecha_viernes;
+                    $aporte->fecha_quincena = $fecha_quincena;
                     
-                    $fechaObj = new \DateTime($fecha_viernes);
-                    $aporte->numero_semana = (int)$fechaObj->format('W');
-                    $aporte->monto = AportesSemanales::MONTO_SEMANAL;
+                    $fechaObj = new \DateTime($fecha_quincena);
+                    $aporte->numero_quincena = AportesSemanales::calcularNumeroQuincena($fecha_quincena);
+                    $aporte->monto = AportesSemanales::MONTO_QUINCENAL_USD;
                 }
 
                 $aporte->estado = 'pagado';
@@ -1106,13 +1251,13 @@ class AportesController extends Controller
                 $aporte->comentarios = $comentarios;
 
                 if ($aporte->save()) {
-                    $semanasPagadas++;
+                    $quincenasPagadas++;
                 }
             }
 
-            if ($semanasPagadas > 0) {
+            if ($quincenasPagadas > 0) {
                 Yii::$app->session->setFlash('success', 
-                    "Se registró el pago de {$semanasPagadas} semanas para {$atleta->p_nombre} {$atleta->p_apellido}."
+                    "Se registró el pago de {$quincenasPagadas} quincenas para {$atleta->p_nombre} {$atleta->p_apellido}."
                 );
             } else {
                 Yii::$app->session->setFlash('warning', 'No se pudo registrar ningún pago.');
@@ -1127,7 +1272,7 @@ class AportesController extends Controller
     }
 
     /**
-     * Pago por adelantado
+     * Pago por adelantado (SOLO DESDE 15/01/2026)
      * @return string|\yii\web\Response
      */
     public function actionPagoAdelantado()
@@ -1140,7 +1285,7 @@ class AportesController extends Controller
 
         if ($this->request->isPost) {
             $atleta_id = $this->request->post('atleta_id');
-            $semanas_adelanto = $this->request->post('semanas_adelanto', 1);
+            $quincenas_adelanto = $this->request->post('quincenas_adelanto', 1);
             $fecha_pago = $this->request->post('fecha_pago', date('Y-m-d'));
             $metodo_pago = $this->request->post('metodo_pago', 'efectivo');
             $comentarios = $this->request->post('comentarios', 'Pago por adelantado');
@@ -1156,20 +1301,22 @@ class AportesController extends Controller
             }
 
             $fechaActual = new \DateTime();
-            if ($fechaActual->format('N') != 5) {
-                $fechaActual->modify('next friday');
+            $fechaActual = new \DateTime(AportesSemanales::calcularProximaQuincena($fechaActual));
+            // Asegurar que sea >= 15/01/2026
+            if ($fechaActual < new \DateTime('2026-01-15')) {
+                $fechaActual = new \DateTime('2026-01-15');
             }
 
-            $semanasPagadas = 0;
+            $quincenasPagadas = 0;
 
-            for ($i = 0; $i < $semanas_adelanto; $i++) {
-                $fechaViernes = $fechaActual->format('Y-m-d');
+            for ($i = 0; $i < $quincenas_adelanto; $i++) {
+                $fechaQuincena = $fechaActual->format('Y-m-d');
 
                 // Verificar si ya existe un aporte para esta fecha
                 $existeAporte = AportesSemanales::find()
                     ->where([
                         'atleta_id' => $atleta_id,
-                        'fecha_viernes' => $fechaViernes
+                        'fecha_quincena' => $fechaQuincena
                     ])
                     ->exists();
 
@@ -1177,25 +1324,26 @@ class AportesController extends Controller
                     $aporte = new AportesSemanales();
                     $aporte->atleta_id = $atleta_id;
                     $aporte->escuela_id = $atleta->id_escuela;
-                    $aporte->fecha_viernes = $fechaViernes;
-                    $aporte->numero_semana = (int)$fechaActual->format('W');
-                    $aporte->monto = AportesSemanales::MONTO_SEMANAL;
+                    $aporte->fecha_quincena = $fechaQuincena;
+                    $aporte->numero_quincena = AportesSemanales::calcularNumeroQuincena($fechaQuincena);
+                    $aporte->monto = AportesSemanales::MONTO_QUINCENAL_USD;
                     $aporte->estado = 'pagado';
                     $aporte->fecha_pago = $fecha_pago;
                     $aporte->metodo_pago = $metodo_pago;
-                    $aporte->comentarios = $comentarios . " - Semana {$fechaViernes}";
+                    $aporte->comentarios = $comentarios . " - Quincena {$fechaQuincena}";
 
                     if ($aporte->save()) {
-                        $semanasPagadas++;
+                        $quincenasPagadas++;
                     }
                 }
 
-                $fechaActual->modify('+1 week');
+                // Avanzar a la siguiente quincena
+                $fechaActual->modify('+15 days');
             }
 
-            if ($semanasPagadas > 0) {
+            if ($quincenasPagadas > 0) {
                 Yii::$app->session->setFlash('success', 
-                    "Se registró el pago por adelantado de {$semanasPagadas} semanas para {$atleta->p_nombre} {$atleta->p_apellido}."
+                    "Se registró el pago por adelantado de {$quincenasPagadas} quincenas para {$atleta->p_nombre} {$atleta->p_apellido}."
                 );
             } else {
                 Yii::$app->session->setFlash('warning', 'No se pudo registrar ningún pago adelantado.');
@@ -1210,7 +1358,7 @@ class AportesController extends Controller
     }
 
     /**
-     * Registro masivo MEJORADO de aportes
+     * Registro masivo MEJORADO de aportes (SOLO DESDE 15/01/2026)
      * @return string|\yii\web\Response
      */
     public function actionRegistroMasivo()
@@ -1223,19 +1371,25 @@ class AportesController extends Controller
         // OBTENER LOS ATLETAS PERMITIDOS SEGÚN RBAC
         $atletas = $this->getAtletasPermitidos($id_escuela);
 
-        // Calcular fecha del viernes y número de semana
+        // Calcular fecha de la próxima quincena (asegurar >= 15/01/2026)
         $hoy = new \DateTime();
-        $diaSemana = $hoy->format('w');
-        $diasHastaViernes = ($diaSemana <= 5) ? (5 - $diaSemana) : (5 - $diaSemana + 7);
-        $viernes = clone $hoy;
-        $viernes->modify("+{$diasHastaViernes} days");
-        $fechaViernes = $viernes->format('Y-m-d');
-        $numeroSemana = (int)$viernes->format('W');
+        $fechaQuincena = AportesSemanales::calcularProximaQuincena($hoy);
+        // Si la fecha calculada es anterior a 15/01/2026, usar 15/01/2026
+        if (strtotime($fechaQuincena) < strtotime('2026-01-15')) {
+            $fechaQuincena = '2026-01-15';
+        }
+        $numeroQuincena = AportesSemanales::calcularNumeroQuincena($fechaQuincena);
 
         if ($this->request->isPost) {
             $atletasSeleccionados = $this->request->post('atletas', []);
-            $fechaViernes = $this->request->post('AportesSemanales')['fecha_viernes'] ?? $fechaViernes;
-            $monto = $this->request->post('AportesSemanales')['monto'] ?? AportesSemanales::MONTO_SEMANAL;
+            $fechaQuincena = $this->request->post('AportesSemanales')['fecha_quincena'] ?? $fechaQuincena;
+            $monto = $this->request->post('AportesSemanales')['monto'] ?? AportesSemanales::MONTO_QUINCENAL_USD;
+            
+            // Verificar que la fecha sea >= 15/01/2026
+            if (strtotime($fechaQuincena) < strtotime('2026-01-15')) {
+                Yii::$app->session->setFlash('error', 'No se pueden registrar aportes con fecha anterior al 15 de enero de 2026.');
+                return $this->redirect(['registro-masivo']);
+            }
             
             $registrosCreados = 0;
             
@@ -1249,7 +1403,7 @@ class AportesController extends Controller
                 $existeAporte = AportesSemanales::find()
                     ->where([
                         'atleta_id' => $atletaId,
-                        'fecha_viernes' => $fechaViernes,
+                        'fecha_quincena' => $fechaQuincena,
                         'escuela_id' => $id_escuela
                     ])
                     ->exists();
@@ -1258,13 +1412,13 @@ class AportesController extends Controller
                     $nuevoAporte = new AportesSemanales();
                     $nuevoAporte->atleta_id = $atletaId;
                     $nuevoAporte->escuela_id = $id_escuela;
-                    $nuevoAporte->fecha_viernes = $fechaViernes;
-                    $nuevoAporte->numero_semana = $numeroSemana;
+                    $nuevoAporte->fecha_quincena = $fechaQuincena;
+                    $nuevoAporte->numero_quincena = $numeroQuincena;
                     $nuevoAporte->monto = $monto;
                     $nuevoAporte->estado = 'pagado'; // En registro masivo se marca como pagado automáticamente
                     $nuevoAporte->fecha_pago = date('Y-m-d');
                     $nuevoAporte->metodo_pago = 'efectivo';
-                    $nuevoAporte->comentarios = 'Registro masivo semanal';
+                    $nuevoAporte->comentarios = 'Registro masivo quincenal';
                     
                     if ($nuevoAporte->save()) {
                         $registrosCreados++;
@@ -1273,7 +1427,7 @@ class AportesController extends Controller
             }
             
             if ($registrosCreados > 0) {
-                Yii::$app->session->setFlash('success', "Se crearon {$registrosCreados} nuevos aportes semanales.");
+                Yii::$app->session->setFlash('success', "Se crearon {$registrosCreados} nuevos aportes quincenales.");
             } else {
                 Yii::$app->session->setFlash('info', "No se crearon nuevos aportes. Puede que ya existan registros para la fecha seleccionada.");
             }
@@ -1284,8 +1438,8 @@ class AportesController extends Controller
         return $this->render('registro-masivo', [
             'model' => $model,
             'atletas' => $atletas,
-            'fechaViernes' => $fechaViernes,
-            'numeroSemana' => $numeroSemana,
+            'fechaQuincena' => $fechaQuincena,
+            'numeroQuincena' => $numeroQuincena,
         ]);
     }
 
@@ -1332,7 +1486,7 @@ class AportesController extends Controller
     }
 
     /**
-     * Reporte ejecutivo MEJORADO
+     * Reporte ejecutivo MEJORADO (SOLO DESDE 15/01/2026)
      * @return string
      */
     public function actionReporteEjecutivo()
@@ -1344,13 +1498,14 @@ class AportesController extends Controller
 
         $id_escuela = Yii::$app->session->get('id_escuela');
         
-        $fechaInicio = Yii::$app->request->get('fecha_inicio', '2024-09-15');
+        $fechaInicio = Yii::$app->request->get('fecha_inicio', '2026-01-15'); // CAMBIADO: Inicio desde 15/01/2026
         $fechaFin = Yii::$app->request->get('fecha_fin', date('Y-m-d'));
 
-        // Estadísticas financieras
+        // Estadísticas financieras (SOLO DESDE 15/01/2026)
         $totalRecaudado = AportesSemanales::find()
             ->where(['estado' => 'pagado', 'escuela_id' => $id_escuela])
             ->andWhere(['between', 'fecha_pago', $fechaInicio, $fechaFin])
+            ->andWhere(['>=', 'fecha_quincena', '2026-01-15']) // FILTRO CRÍTICO
             ->sum('monto') ?? 0;
 
         $totalCompras = ComprasEscuela::find()
@@ -1360,21 +1515,21 @@ class AportesController extends Controller
 
         $balance = $totalRecaudado - $totalCompras;
 
-        // Atletas morosos
+        // Atletas morosos (SOLO DESDE 15/01/2026)
         $atletasMorosos = AtletasRegistro::find()
-            ->select(['atleta.*', 'COUNT(aportes.id) as semanas_deuda', 'SUM(aportes.monto) as monto_deuda'])
+            ->select(['atleta.*', 'COUNT(aportes.id) as quincenas_deuda', 'SUM(aportes.monto) as monto_deuda'])
             ->from('atletas.registro atleta')
-            ->leftJoin('contabilidad.aportes_semanales aportes', 'aportes.atleta_id = atleta.id AND aportes.estado = \'pendiente\'')
+            ->leftJoin('contabilidad.aportes_semanales aportes', 'aportes.atleta_id = atleta.id AND aportes.estado = \'pendiente\' AND aportes.fecha_quincena >= \'2026-01-15\'') // FILTRO CRÍTICO
             ->where(['atleta.id_escuela' => $id_escuela, 'atleta.eliminado' => false])
             ->groupBy(['atleta.id'])
             ->having('COUNT(aportes.id) > 0')
             ->asArray()
             ->all();
 
-        // Top atletas
+        // Top atletas (SOLO DESDE 15/01/2026)
         $topAtletas = AportesSemanales::getTopAtletas($id_escuela);
 
-        // Evolución mensual
+        // Evolución mensual (SOLO DESDE 15/01/2026)
         $evolucionMensual = AportesSemanales::find()
             ->select([
                 "TO_CHAR(fecha_pago, 'YYYY-MM') as mes",
@@ -1383,6 +1538,7 @@ class AportesController extends Controller
             ])
             ->where(['estado' => 'pagado', 'escuela_id' => $id_escuela])
             ->andWhere(['between', 'fecha_pago', $fechaInicio, $fechaFin])
+            ->andWhere(['>=', 'fecha_quincena', '2026-01-15']) // FILTRO CRÍTICO
             ->groupBy(["TO_CHAR(fecha_pago, 'YYYY-MM')"])
             ->orderBy(['mes' => SORT_ASC])
             ->asArray()
@@ -1401,7 +1557,7 @@ class AportesController extends Controller
     }
 
     /**
-     * Reporte de atletas morosos
+     * Reporte de atletas morosos (SOLO DESDE 15/01/2026)
      * @return string
      */
     public function actionAtletasMorosos()
@@ -1414,25 +1570,27 @@ class AportesController extends Controller
         // OBTENER LA ESCUELA ACTUAL DEL USUARIO
         $id_escuela = Yii::$app->session->get('id_escuela');
         
-        // Primero generar semanas para todos los atletas
+        // Primero generar quincenas para todos los atletas (SOLO DESDE 15/01/2026)
         $atletasEscuela = AtletasRegistro::find()
             ->where(['id_escuela' => $id_escuela, 'eliminado' => false])
             ->all();
             
         foreach ($atletasEscuela as $atleta) {
-            AportesSemanales::generarSemanasParaAtleta($atleta->id);
+            AportesSemanales::generarQuincenasParaAtleta($atleta->id);
         }
         
-        // Consulta para obtener atletas morosos de la escuela actual
+        // Consulta para obtener atletas morosos de la escuela actual (SOLO DESDE 15/01/2026)
         $sql = "
             SELECT 
                 ar.id,
                 ar.p_nombre || ' ' || ar.p_apellido as nombre_completo,
                 e.nombre as escuela_nombre,
-                COUNT(asem.id) as semanas_deuda,
+                COUNT(asem.id) as quincenas_deuda,
                 COALESCE(SUM(asem.monto), 0) as total_deuda
             FROM atletas.registro ar
-            LEFT JOIN contabilidad.aportes_semanales asem ON asem.atleta_id = ar.id AND asem.estado = 'pendiente'
+            LEFT JOIN contabilidad.aportes_semanales asem ON asem.atleta_id = ar.id 
+                AND asem.estado = 'pendiente' 
+                AND asem.fecha_quincena >= '2026-01-15'  -- FILTRO CRÍTICO: SOLO DESDE 15/01/2026
             LEFT JOIN atletas.escuela e ON e.id = ar.id_escuela
             WHERE ar.id_escuela = :id_escuela 
             AND ar.eliminado = false
@@ -1449,7 +1607,7 @@ class AportesController extends Controller
     }
 
     /**
-     * Procesar pago múltiple desde AJAX
+     * Procesar pago múltiple desde AJAX (SOLO DESDE 15/01/2026)
      */
     public function actionProcesarPagoMultiple()
     {
@@ -1457,7 +1615,7 @@ class AportesController extends Controller
 
         if (Yii::$app->request->isPost) {
             $atleta_id = Yii::$app->request->post('atleta_id');
-            $semanas = Yii::$app->request->post('semanas', []);
+            $quincenas = Yii::$app->request->post('quincenas', []);
             $fecha_pago = Yii::$app->request->post('fecha_pago');
             $metodo_pago = Yii::$app->request->post('metodo_pago');
             $comentarios = Yii::$app->request->post('comentarios', 'Pago múltiple');
@@ -1472,13 +1630,18 @@ class AportesController extends Controller
                 return ['success' => false, 'message' => 'Atleta no encontrado.'];
             }
 
-            $semanasPagadas = 0;
+            $quincenasPagadas = 0;
 
-            foreach ($semanas as $fecha_viernes) {
+            foreach ($quincenas as $fecha_quincena) {
+                // Verificar que la fecha sea >= 15/01/2026
+                if (strtotime($fecha_quincena) < strtotime('2026-01-15')) {
+                    continue; // Saltar quincenas anteriores
+                }
+                
                 $aporte = AportesSemanales::find()
                     ->where([
                         'atleta_id' => $atleta_id,
-                        'fecha_viernes' => $fecha_viernes
+                        'fecha_quincena' => $fecha_quincena
                     ])
                     ->one();
 
@@ -1486,11 +1649,11 @@ class AportesController extends Controller
                     $aporte = new AportesSemanales();
                     $aporte->atleta_id = $atleta_id;
                     $aporte->escuela_id = $atleta->id_escuela;
-                    $aporte->fecha_viernes = $fecha_viernes;
+                    $aporte->fecha_quincena = $fecha_quincena;
                     
-                    $fechaObj = new \DateTime($fecha_viernes);
-                    $aporte->numero_semana = (int)$fechaObj->format('W');
-                    $aporte->monto = AportesSemanales::MONTO_SEMANAL;
+                    $fechaObj = new \DateTime($fecha_quincena);
+                    $aporte->numero_quincena = AportesSemanales::calcularNumeroQuincena($fecha_quincena);
+                    $aporte->monto = AportesSemanales::MONTO_QUINCENAL_USD;
                 }
 
                 $aporte->estado = 'pagado';
@@ -1499,14 +1662,14 @@ class AportesController extends Controller
                 $aporte->comentarios = $comentarios;
 
                 if ($aporte->save()) {
-                    $semanasPagadas++;
+                    $quincenasPagadas++;
                 }
             }
 
             return [
                 'success' => true,
-                'message' => "Se registró el pago de {$semanasPagadas} semanas.",
-                'semanasPagadas' => $semanasPagadas
+                'message' => "Se registró el pago de {$quincenasPagadas} quincenas.",
+                'quincenasPagadas' => $quincenasPagadas
             ];
         }
 
@@ -1514,7 +1677,7 @@ class AportesController extends Controller
     }
 
     /**
-     * Procesar pago adelantado desde AJAX
+     * Procesar pago adelantado desde AJAX (SOLO DESDE 15/01/2026)
      */
     public function actionProcesarPagoAdelantado()
     {
@@ -1522,7 +1685,7 @@ class AportesController extends Controller
 
         if (Yii::$app->request->isPost) {
             $atleta_id = Yii::$app->request->post('atleta_id');
-            $semanas_adelanto = Yii::$app->request->post('semanas_adelanto', 1);
+            $quincenas_adelanto = Yii::$app->request->post('quincenas_adelanto', 1);
             $fecha_pago = Yii::$app->request->post('fecha_pago');
             $metodo_pago = Yii::$app->request->post('metodo_pago');
             $comentarios = Yii::$app->request->post('comentarios', 'Pago por adelantado');
@@ -1538,19 +1701,21 @@ class AportesController extends Controller
             }
 
             $fechaActual = new \DateTime();
-            if ($fechaActual->format('N') != 5) {
-                $fechaActual->modify('next friday');
+            $fechaActual = new \DateTime(AportesSemanales::calcularProximaQuincena($fechaActual));
+            // Asegurar que sea >= 15/01/2026
+            if ($fechaActual < new \DateTime('2026-01-15')) {
+                $fechaActual = new \DateTime('2026-01-15');
             }
 
-            $semanasPagadas = 0;
+            $quincenasPagadas = 0;
 
-            for ($i = 0; $i < $semanas_adelanto; $i++) {
-                $fechaViernes = $fechaActual->format('Y-m-d');
+            for ($i = 0; $i < $quincenas_adelanto; $i++) {
+                $fechaQuincena = $fechaActual->format('Y-m-d');
 
                 $existeAporte = AportesSemanales::find()
                     ->where([
                         'atleta_id' => $atleta_id,
-                        'fecha_viernes' => $fechaViernes
+                        'fecha_quincena' => $fechaQuincena
                     ])
                     ->exists();
 
@@ -1558,26 +1723,27 @@ class AportesController extends Controller
                     $aporte = new AportesSemanales();
                     $aporte->atleta_id = $atleta_id;
                     $aporte->escuela_id = $atleta->id_escuela;
-                    $aporte->fecha_viernes = $fechaViernes;
-                    $aporte->numero_semana = (int)$fechaActual->format('W');
-                    $aporte->monto = AportesSemanales::MONTO_SEMANAL;
+                    $aporte->fecha_quincena = $fechaQuincena;
+                    $aporte->numero_quincena = AportesSemanales::calcularNumeroQuincena($fechaQuincena);
+                    $aporte->monto = AportesSemanales::MONTO_QUINCENAL_USD;
                     $aporte->estado = 'pagado';
                     $aporte->fecha_pago = $fecha_pago;
                     $aporte->metodo_pago = $metodo_pago;
-                    $aporte->comentarios = $comentarios . " - Semana {$fechaViernes}";
+                    $aporte->comentarios = $comentarios . " - Quincena {$fechaQuincena}";
 
                     if ($aporte->save()) {
-                        $semanasPagadas++;
+                        $quincenasPagadas++;
                     }
                 }
 
-                $fechaActual->modify('+1 week');
+                // Avanzar a la siguiente quincena
+                $fechaActual->modify('+15 days');
             }
 
             return [
                 'success' => true,
-                'message' => "Se registró el pago por adelantado de {$semanasPagadas} semanas.",
-                'semanasPagadas' => $semanasPagadas
+                'message' => "Se registró el pago por adelantado de {$quincenasPagadas} quincenas.",
+                'quincenasPagadas' => $quincenasPagadas
             ];
         }
 
@@ -1585,15 +1751,15 @@ class AportesController extends Controller
     }
 
     /**
-     * Obtener semanas pendientes para un atleta (AJAX)
+     * Obtener quincenas pendientes para un atleta (AJAX) (SOLO DESDE 15/01/2026)
      */
-    public function actionObtenerSemanasPendientes($atleta_id)
+    public function actionObtenerQuincenasPendientes($atleta_id)
     {
         Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
 
         // VERIFICAR PERMISOS
         if (!$this->tienePermisoVerAtletaId($atleta_id)) {
-            return ['success' => false, 'message' => 'No tiene permisos para ver las semanas de este atleta.'];
+            return ['success' => false, 'message' => 'No tiene permisos para ver las quincenas de este atleta.'];
         }
 
         $atleta = AtletasRegistro::findOne($atleta_id);
@@ -1601,20 +1767,108 @@ class AportesController extends Controller
             return ['success' => false, 'message' => 'Atleta no encontrado.'];
         }
 
-        // Generar semanas automáticamente
-        AportesSemanales::generarSemanasParaAtleta($atleta_id);
+        // Generar quincenas automáticamente (SOLO DESDE 15/01/2026)
+        AportesSemanales::generarQuincenasParaAtleta($atleta_id);
 
-        $historial = AportesSemanales::obtenerHistorialDeudas($atleta_id);
-        $semanasPendientes = array_filter($historial, function($semana) {
-            return $semana['estado'] == 'pendiente';
+        // Obtener historial (SOLO DESDE 15/01/2026)
+        $historial = AportesSemanales::find()
+            ->where(['atleta_id' => $atleta_id])
+            ->andWhere(['>=', 'fecha_quincena', '2026-01-15']) // FILTRO CRÍTICO
+            ->orderBy(['fecha_quincena' => SORT_ASC])
+            ->asArray()
+            ->all();
+            
+        $quincenasPendientes = array_filter($historial, function($quincena) {
+            return $quincena['estado'] == 'pendiente';
         });
 
         return [
             'success' => true,
-            'semanasPendientes' => array_values($semanasPendientes),
-            'totalSemanas' => count($semanasPendientes),
-            'montoTotal' => count($semanasPendientes) * AportesSemanales::MONTO_SEMANAL
+            'quincenasPendientes' => array_values($quincenasPendientes),
+            'totalQuincenas' => count($quincenasPendientes),
+            'montoTotal' => count($quincenasPendientes) * AportesSemanales::MONTO_QUINCENAL_USD
         ];
+    }
+
+    /**
+     * Acción para limpiar quincenas anteriores al 15/01/2026
+     */
+    public function actionLimpiarQuincenasAnteriores()
+    {
+        // Solo admin puede limpiar datos
+        if (!Yii::$app->user->can('admin')) {
+            throw new ForbiddenHttpException('No tiene permisos para limpiar datos.');
+        }
+
+        $id_escuela = Yii::$app->session->get('id_escuela');
+        
+        if (!$id_escuela) {
+            Yii::$app->session->setFlash('error', 'No se ha seleccionado una escuela.');
+            return $this->redirect(['index']);
+        }
+        
+        $eliminadas = AportesSemanales::deleteAll([
+            'and',
+            ['escuela_id' => $id_escuela],
+            ['<', 'fecha_quincena', '2026-01-15']
+        ]);
+        
+        Yii::$app->session->setFlash('success', "Se eliminaron {$eliminadas} quincenas anteriores al 15/01/2026.");
+        return $this->redirect(['index']);
+    }
+
+    /**
+     * Acción para migrar datos existentes al nuevo sistema quincenal
+     * Nota: Esto solo creará quincenas desde 15/01/2026
+     */
+    public function actionMigrarDatos()
+    {
+        // Solo admin puede migrar datos
+        if (!Yii::$app->user->can('admin')) {
+            throw new ForbiddenHttpException('No tiene permisos para migrar datos.');
+        }
+
+        $id_escuela = Yii::$app->session->get('id_escuela');
+        
+        $transaction = Yii::$app->db->beginTransaction();
+        try {
+            // 1. Primero limpiar quincenas anteriores al 15/01/2026
+            $eliminadas = AportesSemanales::deleteAll([
+                'and',
+                ['escuela_id' => $id_escuela],
+                ['<', 'fecha_quincena', '2026-01-15']
+            ]);
+            
+            Yii::info("Eliminadas {$eliminadas} quincenas anteriores al 15/01/2026");
+            
+            // 2. Generar quincenas para todos los atletas de la escuela (SOLO DESDE 15/01/2026)
+            $atletasEscuela = AtletasRegistro::find()
+                ->where(['id_escuela' => $id_escuela, 'eliminado' => false])
+                ->all();
+            
+            $atletasProcesados = 0;
+            $quincenasGeneradas = 0;
+            
+            foreach ($atletasEscuela as $atleta) {
+                $generadas = AportesSemanales::generarQuincenasParaAtleta($atleta->id);
+                $quincenasGeneradas += $generadas;
+                $atletasProcesados++;
+            }
+            
+            $transaction->commit();
+            
+            Yii::$app->session->setFlash('success', 
+                "Migración completada: {$atletasProcesados} atletas procesados, {$quincenasGeneradas} quincenas generadas desde 15/01/2026. "
+                . "Se eliminaron {$eliminadas} quincenas antiguas."
+            );
+            
+        } catch (\Exception $e) {
+            $transaction->rollBack();
+            Yii::$app->session->setFlash('error', "Error en migración: " . $e->getMessage());
+            Yii::error('Error en migración: ' . $e->getMessage());
+        }
+        
+        return $this->redirect(['index']);
     }
 
     /**

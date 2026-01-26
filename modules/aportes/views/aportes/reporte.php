@@ -31,8 +31,8 @@ if (empty($id_escuela)) {
     return;
 }
 
-$this->title = 'Reporte General de Aportes Semanales - ' . $nombre_escuela;
-$this->params['breadcrumbs'][] = ['label' => 'Aportes Semanales', 'url' => ['index']];
+$this->title = 'Reporte General de Aportes Quincenales - ' . $nombre_escuela;
+$this->params['breadcrumbs'][] = ['label' => 'Aportes Quincenales', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 
@@ -271,6 +271,8 @@ $this->params['breadcrumbs'][] = $this->title;
                     <strong>Período analizado:</strong> <?= Yii::$app->formatter->asDate($fechaInicio, 'long') ?> 
                     al <?= Yii::$app->formatter->asDate($fechaFin, 'long') ?> |
                     <strong>Escuela:</strong> <?= Html::encode($nombre_escuela) ?> (ID: <?= $id_escuela ?>) |
+                    <strong>Monto quincenal:</strong> $<?= number_format(app\models\AportesSemanales::MONTO_QUINCENAL, 2) ?> por quincena |
+                    <strong>Inicio sistema:</strong> 15/01/2026 |
                     <strong>Generado el:</strong> <?= Yii::$app->formatter->asDatetime(time(), 'long') ?>
                 </p>
             </div>

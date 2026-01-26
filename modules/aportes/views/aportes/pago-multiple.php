@@ -21,8 +21,8 @@ if (empty($id_escuela)) {
     return;
 }
 
-$this->title = 'Pago Múltiple de Semanas - ' . $nombre_escuela;
-$this->params['breadcrumbs'][] = ['label' => 'Aportes Semanales', 'url' => ['index']];
+$this->title = 'Pago Múltiple de Quincenas - ' . $nombre_escuela;
+$this->params['breadcrumbs'][] = ['label' => 'Aportes Quincenales', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 
@@ -76,7 +76,7 @@ $this->params['breadcrumbs'][] = $this->title;
                                             data-deuda="<?= $deuda ?>" 
                                             data-monto="<?= $montoDeuda ?>">
                                         <?= Html::encode($atleta->p_nombre . ' ' . $atleta->p_apellido) ?>
-                                        (<?= $deuda ?> semanas - $<?= number_format($montoDeuda, 2) ?>)
+                                        (<?= $deuda ?> quincenas - $<?= number_format($montoDeuda, 2) ?>)
                                     </option>
                                 <?php endforeach; ?>
                             </select>
@@ -101,15 +101,15 @@ $this->params['breadcrumbs'][] = $this->title;
                     </div>
                 </div>
 
-                <!-- Panel de semanas pendientes (se mostrará cuando seleccione un atleta) -->
-                <div id="panel-semanas" style="display: none;">
+                <!-- Panel de quincenas pendientes (se mostrará cuando seleccione un atleta) -->
+                <div id="panel-quincenas" style="display: none;">
                     <div class="form-group">
-                        <label>Semanas Pendientes:</label>
+                        <label>Quincenas Pendientes:</label>
                         <div class="alert alert-warning">
                             <i class="fas fa-info-circle"></i> 
-                            El atleta seleccionado tiene <span id="total-semanas">0</span> semanas pendientes 
+                            El atleta seleccionado tiene <span id="total-quincenas">0</span> quincenas pendientes 
                             por un total de $<span id="total-monto">0.00</span>.
-                            Todas las semanas pendientes serán marcadas como pagadas.
+                            Todas las quincenas pendientes serán marcadas como pagadas.
                         </div>
                     </div>
                 </div>
@@ -143,12 +143,12 @@ $this->registerJs(<<<JS
             const monto = selectedOption.data('monto');
             
             if (atletaId) {
-                $('#panel-semanas').show();
-                $('#total-semanas').text(deuda);
+                $('#panel-quincenas').show();
+                $('#total-quincenas').text(deuda);
                 $('#total-monto').text(monto.toFixed(2));
                 $('#btn-pagar').prop('disabled', false);
             } else {
-                $('#panel-semanas').hide();
+                $('#panel-quincenas').hide();
                 $('#btn-pagar').prop('disabled', true);
             }
         });

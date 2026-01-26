@@ -1,10 +1,9 @@
 <?php
-// widgets/TasaDolarWidget.php
 
 namespace app\widgets;
 
 use yii\base\Widget;
-use yii\helpers\Html;
+use app\models\TasaDolar;
 
 class TasaDolarWidget extends Widget
 {
@@ -13,8 +12,8 @@ class TasaDolarWidget extends Widget
 
     public function run()
     {
-        $tasaActual = \app\models\TasaDolar::getTasaActual();
-        
+        $tasaActual = TasaDolar::getTasaActual();
+
         return $this->render('tasaDolarWidget', [
             'tasaActual' => $tasaActual,
             'showCalculator' => $this->showCalculator,

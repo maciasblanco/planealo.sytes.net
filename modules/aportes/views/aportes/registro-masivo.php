@@ -9,8 +9,8 @@ use app\models\Escuela;
 /** @var yii\web\View $this */
 /** @var app\models\AportesSemanales $model */
 /** @var array $atletas */
-/** @var string $fechaViernes */
-/** @var int $numeroSemana */
+/** @var string $fechaQuincena */
+/** @var int $numeroQuincena */
 
 // ✅ VALIDACIÓN DE SESIÓN - BLINDAJE GED
 $session = Yii::$app->session;
@@ -27,12 +27,15 @@ if (empty($id_escuela)) {
     return;
 }
 
-$this->title = 'Registro Masivo de Aportes Semanales - ' . $nombre_escuela;
-$this->params['breadcrumbs'][] = ['label' => 'Aportes Semanales', 'url' => ['index']];
+$this->title = 'Registro Masivo de Aportes Quincenales - ' . $nombre_escuela;
+$this->params['breadcrumbs'][] = ['label' => 'Aportes Quincenales', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
+
+// Obtener monto quincenal para usar en JavaScript
+$montoQuincenal = $model::MONTO_QUINCENAL;
 ?>
 
-<div class="aportes-semanales-registro-masivo">
+<div class="aportes-quincenales-registro-masivo">
     <div class="row">
         <div class="col-md-8">
             <h1><?= Html::encode($this->title) ?></h1>
@@ -58,8 +61,8 @@ $this->params['breadcrumbs'][] = $this->title;
     <div class="card">
         <div class="card-header bg-info text-white">
             <h4 class="mb-0">
-                <i class="fas fa-calendar-week"></i> 
-                Semana #<?= $numeroSemana ?> - Viernes: <?= Yii::$app->formatter->asDate($fechaViernes, 'long') ?>
+                <i class="fas fa-calendar-alt"></i> 
+                Quincena #<?= $numeroQuincena ?> - Fecha: <?= Yii::$app->formatter->asDate($fechaQuincena, 'long') ?>
             </h4>
         </div>
         <div class="card-body">
@@ -72,25 +75,25 @@ $this->params['breadcrumbs'][] = $this->title;
 
             <div class="row">
                 <div class="col-md-4">
-                    <?= $form->field($model, 'fecha_viernes')->textInput([
+                    <?= $form->field($model, 'fecha_quincena')->textInput([
                         'type' => 'date',
-                        'value' => $fechaViernes,
+                        'value' => $fechaQuincena,
                         'class' => 'form-control'
-                    ])->label('Fecha del Viernes') ?>
+                    ])->label('Fecha de la Quincena') ?>
                 </div>
                 <div class="col-md-4">
                     <?= $form->field($model, 'monto')->textInput([
                         'type' => 'number',
                         'step' => '0.01',
-                        'value' => $model::MONTO_SEMANAL,
+                        'value' => $model::MONTO_QUINCENAL,
                         'class' => 'form-control',
                         'readonly' => true
                     ])->label('Monto por Atleta ($)') ?>
                 </div>
                 <div class="col-md-4">
                     <div class="form-group">
-                        <label class="control-label">Número de Semana</label>
-                        <input type="text" class="form-control" value="<?= $numeroSemana ?>" readonly>
+                        <label class="control-label">Número de Quincena</label>
+                        <input type="text" class="form-control" value="<?= $numeroQuincena ?>" readonly>
                         <div class="help-block">Calculado automáticamente</div>
                     </div>
                 </div>
@@ -100,9 +103,10 @@ $this->params['breadcrumbs'][] = $this->title;
                 <div class="col-md-12">
                     <div class="alert alert-warning">
                         <i class="fas fa-info-circle"></i> 
-                        <strong>Información:</strong> Se registrarán aportes de <strong>$<?= number_format($model::MONTO_SEMANAL, 2) ?></strong> 
+                        <strong>Información:</strong> Se registrarán aportes de <strong>$<?= number_format($model::MONTO_QUINCENAL, 2) ?></strong> 
                         para cada atleta seleccionado de la escuela <strong><?= Html::encode($nombre_escuela) ?></strong>. 
                         Solo se crearán registros nuevos si no existen aportes para la fecha especificada.
+                        <br><small>Nota: El sistema comenzó a generar quincenas desde el 15/01/2026.</small>
                     </div>
                 </div>
             </div>
@@ -210,74 +214,118 @@ $this->params['breadcrumbs'][] = $this->title;
 </div>
 
 <?php
-// JavaScript para la interactividad
-$this->registerJs(<<<JS
-    $(document).ready(function() {
-        // Contador de seleccionados
-        function actualizarContador() {
-            var seleccionados = $('.check-atleta:checked').length;
-            $('#contador-seleccionados').text(seleccionados + ' seleccionados');
-            $('#btn-registrar').prop('disabled', seleccionados === 0);
+// JavaScript para la interactividad - VERSIÓN CORREGIDA
+$js = <<<JS
+$(document).ready(function() {
+    // Contador de seleccionados
+    function actualizarContador() {
+        var seleccionados = $('.check-atleta:checked').length;
+        $('#contador-seleccionados').text(seleccionados + ' seleccionados');
+        $('#btn-registrar').prop('disabled', seleccionados === 0);
+        
+        // Calcular monto total - USANDO LA VARIABLE PHP
+        var montoQuincenal = parseFloat('$montoQuincenal');
+        var montoTotal = seleccionados * montoQuincenal;
+        
+        // Mostrar información del monto total
+        if (seleccionados > 0) {
+            if (!$('#info-monto-total').length) {
+                $('#btn-registrar').before('<div class="alert alert-info" id="info-monto-total">' +
+                    '<i class="fas fa-calculator"></i> ' +
+                    '<strong>Monto total a registrar:</strong> \$' + montoTotal.toFixed(2) + ' (' + seleccionados + ' atletas × \$' + montoQuincenal.toFixed(2) + ')' +
+                    '</div>');
+            } else {
+                $('#info-monto-total').html('<i class="fas fa-calculator"></i> ' +
+                    '<strong>Monto total a registrar:</strong> \$' + montoTotal.toFixed(2) + ' (' + seleccionados + ' atletas × \$' + montoQuincenal.toFixed(2) + ')');
+            }
+        } else {
+            $('#info-monto-total').remove();
         }
+    }
 
-        // Selección/deselección masiva
-        $('#check-all').change(function() {
-            $('.check-atleta').prop('checked', this.checked);
-            actualizarContador();
-        });
-
-        $('.check-atleta').change(function() {
-            actualizarContador();
-            $('#check-all').prop('checked', 
-                $('.check-atleta').length === $('.check-atleta:checked').length
-            );
-        });
-
-        $('#seleccionar-todos').click(function() {
-            $('.check-atleta').prop('checked', true);
-            actualizarContador();
-            $('#check-all').prop('checked', true);
-        });
-
-        $('#deseleccionar-todos').click(function() {
-            $('.check-atleta').prop('checked', false);
-            actualizarContador();
-            $('#check-all').prop('checked', false);
-        });
-
-        // Filtros
-        $('#filtro-nombre').on('keyup', function() {
-            var value = $(this).val().toLowerCase();
-            $('#tabla-atletas tbody tr').filter(function() {
-                var texto = $(this).find('td:eq(1)').text().toLowerCase();
-                $(this).toggle(texto.indexOf(value) > -1);
-            });
-        });
-
-        $('#limpiar-filtros').click(function() {
-            $('#filtro-nombre').val('');
-            $('#tabla-atletas tbody tr').show();
-        });
-
-        // Validación antes de enviar
-        $('#registro-masivo-form').on('submit', function(e) {
-            var seleccionados = $('.check-atleta:checked').length;
-            if (seleccionados === 0) {
-                e.preventDefault();
-                alert('Por favor seleccione al menos un atleta.');
-                return false;
-            }
-            
-            if (!confirm('¿Está seguro de registrar ' + seleccionados + ' aportes semanales para ' + seleccionados + ' atletas?')) {
-                e.preventDefault();
-                return false;
-            }
-            
-            return true;
-        });
-
-        // Inicializar contador
+    // Selección/deselección masiva
+    $('#check-all').change(function() {
+        $('.check-atleta').prop('checked', this.checked);
         actualizarContador();
     });
-JS
-);
+
+    $('.check-atleta').change(function() {
+        actualizarContador();
+        $('#check-all').prop('checked', 
+            $('.check-atleta').length === $('.check-atleta:checked').length
+        );
+    });
+
+    $('#seleccionar-todos').click(function() {
+        $('.check-atleta').prop('checked', true);
+        actualizarContador();
+        $('#check-all').prop('checked', true);
+    });
+
+    $('#deseleccionar-todos').click(function() {
+        $('.check-atleta').prop('checked', false);
+        actualizarContador();
+        $('#check-all').prop('checked', false);
+    });
+
+    // Filtros
+    $('#filtro-nombre').on('keyup', function() {
+        var value = $(this).val().toLowerCase();
+        $('#tabla-atletas tbody tr').filter(function() {
+            var texto = $(this).find('td:eq(1)').text().toLowerCase();
+            $(this).toggle(texto.indexOf(value) > -1);
+        });
+    });
+
+    $('#limpiar-filtros').click(function() {
+        $('#filtro-nombre').val('');
+        $('#tabla-atletas tbody tr').show();
+    });
+
+    // Validación antes de enviar
+    $('#registro-masivo-form').on('submit', function(e) {
+        var seleccionados = $('.check-atleta:checked').length;
+        if (seleccionados === 0) {
+            e.preventDefault();
+            alert('Por favor seleccione al menos un atleta.');
+            return false;
+        }
+        
+        if (!confirm('¿Está seguro de registrar ' + seleccionados + ' aportes quincenales para ' + seleccionados + ' atletas?')) {
+            e.preventDefault();
+            return false;
+        }
+        
+        return true;
+    });
+
+    // Inicializar contador
+    actualizarContador();
+});
+JS;
+
+$this->registerJs($js);
+?>
+
+<style>
+    .table-responsive {
+        border: 1px solid #dee2e6;
+        border-radius: 4px;
+    }
+    
+    .table th, .table td {
+        vertical-align: middle;
+    }
+    
+    .check-atleta {
+        transform: scale(1.2);
+    }
+    
+    #check-all {
+        transform: scale(1.2);
+    }
+    
+    .fila-atleta:hover {
+        background-color: #f8f9fa;
+    }
+</style>

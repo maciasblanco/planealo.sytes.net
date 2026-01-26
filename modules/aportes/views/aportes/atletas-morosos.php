@@ -2,273 +2,250 @@
 
 use yii\helpers\Html;
 use yii\grid\GridView;
-use yii\widgets\Pjax;
+use yii\helpers\ArrayHelper;
+use app\models\Escuela;
+use yii\widgets\ActiveForm;
 
 /* @var $this yii\web\View */
-/* @var $atletasMorosos array */
+/* @var $searchModel app\models\AportesSemanalesSearch */
+/* @var $dataProvider yii\data\ActiveDataProvider */
 
-// ✅ VALIDACIÓN DE SESIÓN - BLINDAJE GED
-$session = Yii::$app->session;
-$id_escuela = $session->get('id_escuela');
-$nombre_escuela = $session->get('nombre_escuela');
-
-if (empty($id_escuela)) {
-    // ❌ MOSTRAR ERROR Y REDIRECCIÓN
-    echo '<div class="alert alert-danger text-center">
-            <h4><i class="fa fa-exclamation-triangle"></i> Escuela No Seleccionada</h4>
-            <p>Debe seleccionar una escuela antes de ver reportes de morosos.</p>
-            ' . Html::a('Seleccionar Escuela', ['/ged/default/index'], ['class' => 'btn btn-primary']) . '
-          </div>';
-    return;
-}
-
-$this->title = 'Reporte de Atletas Morosos - ' . $nombre_escuela;
-$this->params['breadcrumbs'][] = ['label' => 'Aportes Semanales', 'url' => ['index']];
+$this->title = 'Reporte de Atletas Morosos';
 $this->params['breadcrumbs'][] = $this->title;
+
+// Calcular totales
+$totalDeuda = 0;
+$totalAtletas = 0;
+$promedioDeuda = 0;
+
+if ($dataProvider->models) {
+    $totalAtletas = count($dataProvider->models);
+    foreach ($dataProvider->models as $model) {
+        $totalDeuda += $model->getMontoDeuda();
+    }
+    $promedioDeuda = $totalAtletas > 0 ? $totalDeuda / $totalAtletas : 0;
+}
 ?>
 
-<div class="atletas-morosos-index">
+<div class="aportes-semanales-index">
+
+    <h1><?= Html::encode($this->title) ?></h1>
+
+    <?php $form = ActiveForm::begin([
+        'action' => ['atletas-morosos'],
+        'method' => 'get',
+        'options' => ['class' => 'form-inline'],
+    ]); ?>
+
     <div class="row">
-        <div class="col-md-8">
-            <h1>
-                <i class="fas fa-exclamation-triangle text-danger"></i>
-                <?= Html::encode($this->title) ?>
-            </h1>
+        <div class="col-md-3">
+            <?= $form->field($searchModel, 'escuela_id')->dropDownList(
+                ArrayHelper::map(Escuela::find()->orderBy('nombre')->all(), 'id', 'nombre'),
+                ['prompt' => 'Todas las Escuelas', 'class' => 'form-control']
+            )->label(false) ?>
         </div>
-        <div class="col-md-4 text-right">
-            <?= Html::a('<i class="fas fa-arrow-left"></i> Volver al Listado', ['index'], ['class' => 'btn btn-default']) ?>
-            <?= Html::a('<i class="fas fa-file-pdf"></i> Exportar PDF', ['reporte-morosos-pdf'], [
-                'class' => 'btn btn-danger',
-                'target' => '_blank',
-                'data' => ['method' => 'post']
-            ]) ?>
-        </div>
-    </div>
-
-    <!-- Información de la Escuela -->
-    <div class="alert alert-info mb-4">
-        <div class="row">
-            <div class="col-md-6">
-                <strong><i class="fas fa-school"></i> Escuela Activa:</strong> <?= Html::encode($nombre_escuela) ?>
-                <span class="badge bg-primary ms-2">ID: <?= $id_escuela ?></span>
-            </div>
-            <div class="col-md-6 text-right">
-                <small class="text-muted">Sistema GED - Reporte de Morosos</small>
-            </div>
-        </div>
-    </div>
-
-    <div class="card">
-        <div class="card-header bg-danger text-white">
-            <h4 class="mb-0">
-                <i class="fas fa-list"></i>
-                Lista de Atletas con Aportes Pendientes - <?= Html::encode($nombre_escuela) ?>
-            </h4>
-        </div>
-        <div class="card-body">
-            <?php if (empty($atletasMorosos)): ?>
-                <div class="alert alert-success text-center">
-                    <i class="fas fa-check-circle fa-2x"></i>
-                    <h4>¡Excelente! No hay atletas morosos</h4>
-                    <p>Todos los aportes de <?= Html::encode($nombre_escuela) ?> están al día.</p>
-                </div>
-            <?php else: ?>
-                <div class="table-responsive">
-                    <table class="table table-striped table-hover table-bordered">
-                        <thead class="thead-dark">
-                            <tr>
-                                <th width="50px">#</th>
-                                <th>Atleta</th>
-                                <th>Identificación</th>
-                                <th class="text-center">Semanas en Deuda</th>
-                                <th class="text-right">Total Deuda</th>
-                                <th class="text-center">Acciones</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php 
-                            $totalGeneralDeuda = 0;
-                            $totalGeneralSemanas = 0;
-                            ?>
-                            <?php foreach ($atletasMorosos as $index => $moroso): ?>
-                                <?php 
-                                $totalGeneralDeuda += floatval($moroso['total_deuda']);
-                                $totalGeneralSemanas += intval($moroso['semanas_deuda']);
-                                ?>
-                                <tr>
-                                    <td class="text-center"><?= $index + 1 ?></td>
-                                    <td>
-                                        <strong><?= Html::encode($moroso['nombre_completo']) ?></strong>
-                                    </td>
-                                    <td><?= Html::encode($moroso['identificacion']) ?></td>
-                                    <td class="text-center">
-                                        <span class="badge badge-warning badge-pill">
-                                            <?= $moroso['semanas_deuda'] ?> semana(s)
-                                        </span>
-                                    </td>
-                                    <td class="text-right">
-                                        <span class="text-danger font-weight-bold">
-                                            $<?= number_format($moroso['total_deuda'], 2) ?>
-                                        </span>
-                                    </td>
-                                    <td class="text-center">
-                                        <?= Html::a('<i class="fas fa-eye"></i>', ['gestion-atleta', 'atleta_id' => $moroso['atleta_id']], [
-                                            'class' => 'btn btn-sm btn-info',
-                                            'title' => 'Ver detalles del atleta',
-                                            'data-toggle' => 'tooltip'
-                                        ]) ?>
-                                        <?= Html::a('<i class="fas fa-money-bill-wave"></i>', ['gestion-atleta', 'atleta_id' => $moroso['atleta_id']], [
-                                            'class' => 'btn btn-sm btn-success',
-                                            'title' => 'Registrar pago',
-                                            'data-toggle' => 'tooltip'
-                                        ]) ?>
-                                    </td>
-                                </tr>
-                            <?php endforeach; ?>
-                        </tbody>
-                        <tfoot class="bg-light">
-                            <tr>
-                                <th colspan="3" class="text-right"><strong>TOTALES GENERALES:</strong></th>
-                                <th class="text-center">
-                                    <span class="badge badge-dark badge-pill">
-                                        <?= $totalGeneralSemanas ?> semana(s)
-                                    </span>
-                                </th>
-                                <th class="text-right">
-                                    <span class="text-danger font-weight-bold">
-                                        $<?= number_format($totalGeneralDeuda, 2) ?>
-                                    </span>
-                                </th>
-                                <th></th>
-                            </tr>
-                        </tfoot>
-                    </table>
-                </div>
-
-                <!-- Resumen Estadístico -->
-                <div class="row mt-4">
-                    <div class="col-md-4">
-                        <div class="info-box bg-danger">
-                            <span class="info-box-icon"><i class="fas fa-users"></i></span>
-                            <div class="info-box-content">
-                                <span class="info-box-text">Total Atletas Morosos</span>
-                                <span class="info-box-number"><?= count($atletasMorosos) ?></span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="info-box bg-warning">
-                            <span class="info-box-icon"><i class="fas fa-calendar-week"></i></span>
-                            <div class="info-box-content">
-                                <span class="info-box-text">Total Semanas Deuda</span>
-                                <span class="info-box-number"><?= $totalGeneralSemanas ?></span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="info-box bg-dark">
-                            <span class="info-box-icon"><i class="fas fa-money-bill-wave"></i></span>
-                            <div class="info-box-content">
-                                <span class="info-box-text">Deuda Total</span>
-                                <span class="info-box-number">$<?= number_format($totalGeneralDeuda, 2) ?></span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            <?php endif; ?>
-        </div>
-    </div>
-
-    <!-- Información adicional -->
-    <div class="row mt-4">
-        <div class="col-md-12">
-            <div class="alert alert-info">
-                <h5><i class="fas fa-info-circle"></i> Información del Reporte</h5>
-                <ul class="mb-0">
-                    <li>Este reporte muestra los atletas de <strong><?= Html::encode($nombre_escuela) ?></strong> que tienen aportes semanales con estado "Pendiente"</li>
-                    <li>El monto de cada aporte semanal es de <strong>$2.00</strong> por semana</li>
-                    <li>La deuda se calcula sumando todos los aportes pendientes de cada atleta</li>
-                    <li>Los datos se actualizan automáticamente según los registros en el sistema</li>
-                    <li><strong>Escuela:</strong> <?= Html::encode($nombre_escuela) ?> (ID: <?= $id_escuela ?>)</li>
-                </ul>
-            </div>
-        </div>
-    </div>
-</div>
-
-<?php
-// JavaScript para mejorar la interactividad
-$this->registerJs(<<<JS
-    $(document).ready(function() {
-        // Inicializar tooltips
-        $('[data-toggle="tooltip"]').tooltip();
         
-        // Ordenar la tabla por deuda total (descendente) por defecto
-        $('table').DataTable({
-            "order": [[4, "desc"]],
-            "language": {
-                "url": "//cdn.datatables.net/plug-ins/1.10.24/i18n/Spanish.json"
-            },
-            "responsive": true,
-            "dom": '<"row"<"col-sm-12 col-md-6"l><"col-sm-12 col-md-6"f>>rt<"row"<"col-sm-12 col-md-6"i><"col-sm-12 col-md-6"p>>',
-            "pageLength": 25
-        });
-    });
-JS
-);
+        <div class="col-md-2">
+            <?= $form->field($searchModel, 'minDeuda')->dropDownList([
+                1 => '1+ quincenas',
+                2 => '2+ quincenas', 
+                3 => '3+ quincenas',
+                4 => '4+ quincenas',
+                5 => '5+ quincenas'
+            ], ['prompt' => 'Mín. deuda', 'class' => 'form-control'])->label(false) ?>
+        </div>
+        
+        <div class="col-md-2">
+            <?= $form->field($searchModel, 'searchGlobal')->textInput([
+                'placeholder' => 'Buscar atleta...',
+                'class' => 'form-control'
+            ])->label(false) ?>
+        </div>
+        
+        <div class="col-md-2">
+            <?= Html::submitButton('Filtrar', ['class' => 'btn btn-primary']) ?>
+            <?= Html::a('Limpiar', ['atletas-morosos'], ['class' => 'btn btn-default']) ?>
+        </div>
+    </div>
 
-// CSS adicional para mejorar la apariencia
-$this->registerCss(<<<CSS
-    .info-box {
-        box-shadow: 0 0 1px rgba(0,0,0,.125), 0 1px 3px rgba(0,0,0,.2);
-        border-radius: 0.25rem;
-        background: #fff;
-        display: flex;
-        margin-bottom: 1rem;
-        min-height: 80px;
-        padding: 0.5rem;
-        position: relative;
-    }
-    .info-box .info-box-icon {
-        border-radius: 0.25rem;
-        align-items: center;
-        display: flex;
-        font-size: 1.875rem;
-        justify-content: center;
-        text-align: center;
-        width: 70px;
-    }
-    .info-box .info-box-content {
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        line-height: 1.8;
-        flex: 1;
-        padding: 0 10px;
-    }
-    .info-box .info-box-text {
-        display: block;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-        text-transform: uppercase;
-        font-weight: bold;
-        font-size: 0.875rem;
-    }
-    .info-box .info-box-number {
-        display: block;
-        font-weight: bold;
-        font-size: 1.5rem;
-    }
-    .table th {
-        border-top: none;
-        font-weight: 600;
-    }
-    .badge-pill {
-        border-radius: 10rem;
-        padding: 0.25em 0.6em;
-        font-size: 0.75em;
-    }
-CSS
-);
-?>
+    <?php ActiveForm::end(); ?>
+
+    <hr>
+
+    <!-- Resumen Estadístico -->
+    <div class="panel panel-info">
+        <div class="panel-heading">
+            <h3 class="panel-title">Resumen de Morosidad</h3>
+        </div>
+        <div class="panel-body">
+            <div class="row">
+                <div class="col-md-3 text-center">
+                    <h4><?= $totalAtletas ?></h4>
+                    <p class="text-muted">Atletas Morosos</p>
+                </div>
+                <div class="col-md-3 text-center">
+                    <h4>$<?= number_format($totalDeuda, 2) ?></h4>
+                    <p class="text-muted">Deuda Total</p>
+                </div>
+                <div class="col-md-3 text-center">
+                    <h4>$<?= number_format($promedioDeuda, 2) ?></h4>
+                    <p class="text-muted">Deuda Promedio</p>
+                </div>
+                <div class="col-md-3 text-center">
+                    <h4><?= $totalAtletas > 0 ? number_format(($totalAtletas / $totalAtletasGeneral) * 100, 1) : 0 ?>%</h4>
+                    <p class="text-muted">Porcentaje Morosos</p>
+                </div>
+            </div>
+            <div class="alert alert-warning" style="margin-top: 15px; margin-bottom: 0;">
+                <strong>Nota:</strong> El sistema quincenal opera con pagos de <strong>$4.00 por quincena</strong>. 
+                La morosidad se calcula desde la fecha de inscripción del atleta.
+            </div>
+        </div>
+    </div>
+
+    <?= GridView::widget([
+        'dataProvider' => $dataProvider,
+        'filterModel' => $searchModel,
+        'columns' => [
+            ['class' => 'yii\grid\SerialColumn'],
+
+            [
+                'attribute' => 'atleta.nombreCompleto',
+                'label' => 'Atleta',
+                'value' => function($model) {
+                    return $model->atleta->nombreCompleto;
+                }
+            ],
+            
+            [
+                'attribute' => 'atleta.escuela.nombre',
+                'label' => 'Escuela',
+                'filter' => ArrayHelper::map(Escuela::find()->orderBy('nombre')->all(), 'nombre', 'nombre'),
+                'value' => function($model) {
+                    return $model->atleta->escuela->nombre;
+                }
+            ],
+            
+            [
+                'attribute' => 'atleta.fecha_inscripcion',
+                'label' => 'Fecha Inscripción',
+                'format' => ['date', 'php:d/m/Y'],
+                'contentOptions' => ['class' => 'text-center']
+            ],
+            
+            [
+                'attribute' => 'quincenas_deuda',
+                'label' => 'Quincenas en Deuda',
+                'value' => function($model) {
+                    $deuda = $model->getQuincenasDeuda();
+                    $clase = $deuda >= 4 ? 'danger' : ($deuda >= 2 ? 'warning' : 'info');
+                    return Html::tag('span', $deuda, ['class' => 'label label-' . $clase]);
+                },
+                'format' => 'raw',
+                'contentOptions' => ['class' => 'text-center']
+            ],
+            
+            [
+                'attribute' => 'monto_deuda',
+                'label' => 'Monto Deuda',
+                'value' => function($model) {
+                    $monto = $model->getMontoDeuda();
+                    $clase = $monto >= 16.00 ? 'danger' : ($monto >= 8.00 ? 'warning' : 'info');
+                    return Html::tag('span', '$' . number_format($monto, 2), 
+                        ['class' => 'label label-' . $clase]);
+                },
+                'format' => 'raw',
+                'contentOptions' => ['class' => 'text-center']
+            ],
+            
+            [
+                'attribute' => 'ultimo_pago',
+                'label' => 'Último Pago',
+                'value' => function($model) {
+                    return $model->getFechaUltimoPagoFormatted();
+                },
+                'contentOptions' => ['class' => 'text-center']
+            ],
+            
+            [
+                'attribute' => 'dias_sin_pagar',
+                'label' => 'Días sin Pagar',
+                'value' => function($model) {
+                    $dias = $model->getDiasSinPagar();
+                    $clase = $dias > 45 ? 'danger' : ($dias > 30 ? 'warning' : 'info');
+                    return Html::tag('span', $dias . ' días', ['class' => 'label label-' . $clase]);
+                },
+                'format' => 'raw',
+                'contentOptions' => ['class' => 'text-center']
+            ],
+            
+            [
+                'class' => 'yii\grid\ActionColumn',
+                'template' => '{gestion}',
+                'buttons' => [
+                    'gestion' => function($url, $model) {
+                        return Html::a(
+                            '<span class="glyphicon glyphicon-usd"></span> Gestionar',
+                            ['gestion-atleta', 'id' => $model->atleta_id],
+                            ['class' => 'btn btn-xs btn-primary']
+                        );
+                    }
+                ],
+                'contentOptions' => ['class' => 'text-center']
+            ],
+        ],
+        'tableOptions' => ['class' => 'table table-striped table-bordered table-hover'],
+        'summary' => 'Mostrando <b>{begin}-{end}</b> de <b>{totalCount}</b> atletas morosos.',
+    ]); ?>
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h4 class="panel-title">Información Importante</h4>
+                </div>
+                <div class="panel-body">
+                    <ul>
+                        <li>El sistema quincenal requiere pagos de <strong>$4.00 cada 15 días</strong></li>
+                        <li>Las fechas de corte son los días <strong>15 y 30 de cada mes</strong></li>
+                        <li>Se considera moroso después de <strong>2 quincenas sin pagar</strong></li>
+                        <li>Para atletas nuevos, si se inscriben con menos de 8 días para la próxima quincena, 
+                            pagan solo <strong>$2.00 (mitad de quincena)</strong></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-6">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h4 class="panel-title">Acciones Disponibles</h4>
+                </div>
+                <div class="panel-body">
+                    <div class="btn-group-vertical" style="width: 100%;">
+                        <?= Html::a('<i class="glyphicon glyphicon-print"></i> Imprimir Reporte', 
+                            ['reporte', 'tipo' => 'morosos'], 
+                            ['class' => 'btn btn-default', 'target' => '_blank']) ?>
+                            
+                        <?= Html::a('<i class="glyphicon glyphicon-envelope"></i> Enviar Recordatorios', 
+                            ['enviar-recordatorios'], 
+                            ['class' => 'btn btn-info', 
+                             'data' => [
+                                 'confirm' => '¿Enviar recordatorios a todos los atletas morosos?',
+                                 'method' => 'post'
+                             ]]) ?>
+                             
+                        <?= Html::a('<i class="glyphicon glyphicon-refresh"></i> Actualizar Cálculos', 
+                            ['actualizar-deudas'], 
+                            ['class' => 'btn btn-warning',
+                             'data' => [
+                                 'confirm' => '¿Recalcular todas las deudas quincenales?',
+                                 'method' => 'post'
+                             ]]) ?>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>

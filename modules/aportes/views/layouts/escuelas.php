@@ -87,6 +87,32 @@ $logoSidebar = $usarLogoEscuela ? $logoEscuelaPath : $logoGed;
 <head>
     <title><?= Html::encode($this->title) ?> - <?= Html::encode($nombreEscuela) ?></title>
     <?php $this->head() ?>
+        <style>
+        /* ESTILOS PARA EL LOGO EN EL SIDEBAR */
+        .sidebar-left .team-info .team-logo {
+            max-width: 100%;
+            height: auto;
+            max-height: 150px; /* Altura máxima */
+            object-fit: contain;
+            border-radius: 8px;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.05);
+            padding: 5px;
+            box-sizing: border-box;
+        }
+        
+        /* Asegurar que el contenedor también esté controlado */
+        .team-info {
+            text-align: center;
+            padding: 15px;
+            overflow: hidden; /* Evita que contenido se salga */
+        }
+        
+        .team-info img {
+            display: block;
+            margin: 0 auto;
+        }
+    </style>
 </head>
 <body class="d-flex flex-column h-100 escuela-layout">
 
