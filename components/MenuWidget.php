@@ -333,12 +333,24 @@ class MenuWidget extends Widget
             $linkClass .= ' active';
         }
         
-        // Si es submenu y no tiene clase específica, agregar clase genérica
-        if ($isSubmenu && !str_contains($liClass, 'dropdown-submenu')) {
-            $liClass .= ' dropdown-submenu dropend';
+        // ✅ AGREGAR CLASE POR ID - SOLUCIÓN PRECISA
+        $liClass .= ' menu-id-' . ($item['id'] ?? '0');
+        
+        // ✅ ESPECÍFICO PARA HERRAMIENTAS (ID 162)
+        if (($item['id'] ?? 0) == 162) {
+            $liClass .= ' menu-herramientas menu-herramientas-id-162';
         }
         
-        $html = Html::beginTag('li', ['class' => trim($liClass)]);
+        // ✅ AGREGAR ATRIBUTO data-menu-id PARA JAVASCRIPT
+        $liAttributes = ['class' => trim($liClass), 'data-menu-id' => $item['id'] ?? '0'];
+        
+        // Si es Herramientas, agregar atributo específico
+        if (($item['id'] ?? 0) == 162) {
+            $liAttributes['data-menu-name'] = 'herramientas';
+            $liAttributes['data-menu-tools'] = 'true';
+        }
+        
+        $html = Html::beginTag('li', $liAttributes);
         
         $linkOptions = [
             'class' => $linkClass,
@@ -357,13 +369,28 @@ class MenuWidget extends Widget
             }
         }
         
+        // ✅ Agregar atributos data al enlace también
+        $linkOptions['data-menu-id'] = $item['id'] ?? '0';
+        if (($item['id'] ?? 0) == 162) {
+            $linkOptions['data-menu-tools'] = 'true';
+            $linkOptions['data-menu-herramientas'] = 'true';
+        }
+        
         $html .= Html::a($item['label'], $item['url'], $linkOptions);
         
         // Renderizar hijos si existen (RECURSIVO)
         if ($hasChildren) {
             $dropdownClass = $isSubmenu ? 'dropdown-menu dropdown-submenu' : 'dropdown-menu';
             
-            $html .= Html::beginTag('ul', ['class' => $dropdownClass]);
+            // ✅ Agregar atributo data al dropdown
+            $dropdownAttributes = ['class' => $dropdownClass];
+            $dropdownAttributes['data-parent-menu-id'] = $item['id'] ?? '0';
+            
+            if (($item['id'] ?? 0) == 162) {
+                $dropdownAttributes['data-parent-menu-tools'] = 'true';
+            }
+            
+            $html .= Html::beginTag('ul', $dropdownAttributes);
             
             foreach ($item['items'] as $child) {
                 $html .= $this->renderDesktopMenuItem($child, true);
@@ -411,12 +438,37 @@ class MenuWidget extends Widget
             $linkClass .= ' mobile-submenu-link';
         }
         
-        $html = Html::beginTag('div', ['class' => $itemClass]);
+        // ✅ AGREGAR CLASE POR ID
+        $itemClass .= ' menu-id-' . ($item['id'] ?? '0');
+        
+        // ✅ ESPECÍFICO PARA HERRAMIENTAS (ID 162)
+        if (($item['id'] ?? 0) == 162) {
+            $itemClass .= ' menu-herramientas menu-herramientas-id-162';
+        }
+        
+        $divAttributes = [
+            'class' => $itemClass,
+            'data-menu-id' => $item['id'] ?? '0'
+        ];
+        
+        if (($item['id'] ?? 0) == 162) {
+            $divAttributes['data-menu-name'] = 'herramientas';
+            $divAttributes['data-menu-tools'] = 'true';
+        }
+        
+        $html = Html::beginTag('div', $divAttributes);
         
         $linkOptions = [
             'class' => $linkClass,
             'title' => strip_tags($item['label'])
         ];
+        
+        // ✅ Agregar atributos data al enlace móvil
+        $linkOptions['data-menu-id'] = $item['id'] ?? '0';
+        if (($item['id'] ?? 0) == 162) {
+            $linkOptions['data-menu-tools'] = 'true';
+            $linkOptions['data-menu-herramientas'] = 'true';
+        }
         
         if ($hasChildren) {
             $uniqueId = uniqid();
@@ -431,11 +483,19 @@ class MenuWidget extends Widget
         // Renderizar subitems recursivamente
         if ($hasChildren) {
             $uniqueId = uniqid();
-            $html .= Html::beginTag('div', [
+            $submenuAttributes = [
                 'id' => 'mobile-submenu-' . $item['id'] . '-' . $uniqueId,
                 'class' => 'collapse mobile-submenu',
                 'data-bs-parent' => $level > 0 ? '#mobile-submenu-' . $item['parent'] : null
-            ]);
+            ];
+            
+            // ✅ Agregar atributo data al submenú móvil
+            $submenuAttributes['data-parent-menu-id'] = $item['id'] ?? '0';
+            if (($item['id'] ?? 0) == 162) {
+                $submenuAttributes['data-parent-menu-tools'] = 'true';
+            }
+            
+            $html .= Html::beginTag('div', $submenuAttributes);
             
             foreach ($item['items'] as $child) {
                 $html .= $this->renderMobileMenuItem($child, $level + 1);

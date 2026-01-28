@@ -301,12 +301,59 @@ $showSignupButton = !Yii::$app->user->isGuest ? false : (!$isSignupRoute && !$is
     </div>
 </div>
 
-<!-- ✅ SCRIPT DE VERIFICACIÓN Y CORRECCIÓN -->
+<!-- ✅ SCRIPT DE VERIFICACIÓN Y CORRECCIÓN (MODIFICADO PARA NO INTERFERIR CON DROPDOWNS) -->
 <script>
 document.addEventListener('DOMContentLoaded', function() {
+    // ==================================================
+    // ✅ SEGURIDAD EXTRA PARA HERRAMIENTAS ID 162
+    // ==================================================
+    function asegurarHerramientasSoloDesktop() {
+        const isMobile = window.innerWidth < 992;
+        const selectores = [
+            '.menu-id-162',
+            '[data-menu-id="162"]',
+            '.menu-herramientas',
+            '.menu-herramientas-id-162'
+        ];
+        
+        selectores.forEach(selector => {
+            const elementos = document.querySelectorAll(selector);
+            elementos.forEach(el => {
+                if (isMobile) {
+                    // OCULTAR en móvil
+                    el.style.display = 'none';
+                    el.style.visibility = 'hidden';
+                    el.style.opacity = '0';
+                    el.style.height = '0';
+                    el.style.overflow = 'hidden';
+                    el.style.pointerEvents = 'none';
+                } else {
+                    // MOSTRAR en desktop
+                    el.style.display = '';
+                    el.style.visibility = '';
+                    el.style.opacity = '';
+                    el.style.height = '';
+                    el.style.overflow = '';
+                    el.style.pointerEvents = '';
+                }
+            });
+        });
+    }
+
+    // ✅ EJECUTAR SEGURIDAD EXTRA
+    asegurarHerramientasSoloDesktop();
+    
+    // ✅ EJECUTAR EN RESIZE
+    window.addEventListener('resize', function() {
+        setTimeout(asegurarHerramientasSoloDesktop, 50);
+    });
+    
+    // ✅ EJECUTAR CADA SEGUNDO POR SI HAY CARGA DINÁMICA
+    setInterval(asegurarHerramientasSoloDesktop, 1000);
+    
     console.log('🔍 Verificando estructura del navbar...');
     
-    // Función para forzar navbar en una línea (solo en desktop)
+    // ✅ FUNCIÓN MODIFICADA: SOLO AJUSTES DE DISPLAY, NO INTERFERIR CON DROPDOWNS
     function forceSingleLineNavbar() {
         if (window.innerWidth >= 992) {
             const navbar = document.querySelector('.navbar-contextual');
@@ -314,7 +361,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const sectionsContainer = document.querySelector('.navbar-sections-container');
             
             if (container) {
-                // Forzar display flex en línea
+                // SOLO AJUSTES DE DISPLAY Y FLEX, SIN TOCAR DROPDOWNS
                 container.style.display = 'flex';
                 container.style.flexDirection = 'row';
                 container.style.flexWrap = 'nowrap';
@@ -325,12 +372,14 @@ document.addEventListener('DOMContentLoaded', function() {
                 container.style.padding = '0';
                 container.style.gap = '0';
                 
-                // Asegurar que todos los hijos sean flex
+                // Asegurar que todos los hijos sean flex (sin afectar dropdowns)
                 Array.from(container.children).forEach(child => {
-                    child.style.display = 'flex';
-                    child.style.flexShrink = '0';
-                    child.style.margin = '0';
-                    child.style.padding = '0';
+                    if (!child.classList.contains('dropdown-menu')) { // NO MODIFICAR DROPDOWNS
+                        child.style.display = 'flex';
+                        child.style.flexShrink = '0';
+                        child.style.margin = '0';
+                        child.style.padding = '0';
+                    }
                 });
             }
             
@@ -343,20 +392,20 @@ document.addEventListener('DOMContentLoaded', function() {
                 sectionsContainer.style.margin = '0';
                 sectionsContainer.style.padding = '0';
                 sectionsContainer.style.gap = '0';
+                
+                // NO MODIFICAR DROPDOWNS DENTRO DE LAS SECCIONES
+                const dropdowns = sectionsContainer.querySelectorAll('.dropdown-menu');
+                dropdowns.forEach(dropdown => {
+                    // Mantener los estilos originales de Bootstrap
+                    dropdown.style.display = '';
+                    dropdown.style.position = '';
+                    dropdown.style.zIndex = '';
+                });
             }
             
-            // Verificar que el collapse ocupe espacio
-            const collapse = document.querySelector('.navbar-collapse');
-            if (collapse) {
-                collapse.style.display = 'flex';
-                collapse.style.flexGrow = '1';
-                collapse.style.margin = '0';
-                collapse.style.padding = '0';
-            }
+            console.log('✅ Navbar forzado a una línea (sin interferir menús)');
             
-            console.log('✅ Navbar forzado a una línea');
-            
-            // Verificar anchos
+            // Verificar anchos (solo lectura)
             const brandSection = document.querySelector('.navbar-brand-section');
             const menuSection = document.querySelector('.navbar-menu-section');
             const socialSection = document.querySelector('.navbar-social-section');
@@ -392,7 +441,7 @@ document.addEventListener('DOMContentLoaded', function() {
         resizeTimer = setTimeout(forceSingleLineNavbar, 250);
     });
     
-    // Verificar altura de 45vh
+    // Verificar altura de 45vh (solo lectura, sin modificar)
     function verifyNavbarHeight() {
         const navbar = document.querySelector('.navbar-contextual');
         if (navbar) {
@@ -406,6 +455,7 @@ document.addEventListener('DOMContentLoaded', function() {
             console.log('• 45vh requerido:', Math.round(minRequiredHeight), 'px');
             console.log('• Cumple:', navbarHeight >= minRequiredHeight ? '✅ SÍ' : '❌ NO');
             
+            // SOLO APLICAR AJUSTES SI ES NECESARIO Y NO INTERFIERE
             if (window.innerWidth >= 992 && navbarHeight < minRequiredHeight) {
                 console.log('🔄 Ajustando altura a 45vh...');
                 navbar.style.height = minRequiredHeight + 'px';
@@ -417,7 +467,7 @@ document.addEventListener('DOMContentLoaded', function() {
     
     verifyNavbarHeight();
     
-    // Script para manejar el sidebar móvil
+    // ✅ SCRIPT PARA MANEJAR EL SIDEBAR MÓVIL (SIN MODIFICACIONES)
     function setupMobileSidebar() {
         const offcanvas = document.getElementById('mobileMenuOffcanvas');
         if (offcanvas) {

@@ -1,8 +1,8 @@
 /* =================================================================
  * _navigation.css - NAVEGACIÓN Y MENÚS GED
- * Versión: 3.5.0 - VIEWPORT 95% + MENÚ 45.5%
+ * Versión: 3.6.0 - VIEWPORT 95% + MENÚ 45.5% + HERRAMIENTAS SOLO DESKTOP
  * Fecha: 2026-01-22
- * Última modificación: 2026-01-22 (Viewport 95%, Menú 45.5%)
+ * Última modificación: 2026-01-22 (Herramientas solo en desktop, ID:162)
  * 
  * DISTRIBUCIÓN EXACTA DEL VIEWPORT (100%):
  *  1. Navbar: 95% del viewport (con 5% de margen derecho visual)
@@ -366,6 +366,8 @@ body {
   box-shadow: 0 10px 30px rgba(0,0,0,0.3) !important;
   overflow: visible !important;
   min-width: 200px !important;
+  /* ✅ AGREGAR: transición solo para opacity/visibility */
+  transition: opacity 0.2s ease, visibility 0.2s ease !important;
 }
 
 .dropdown-menu.show {
@@ -437,6 +439,19 @@ body {
     left: 100% !important;
     top: 0 !important;
     margin-top: 0 !important;
+  }
+}
+
+/* ✅ AGREGAR ESTILO ESPECÍFICO PARA SUBMENÚS */
+.dropdown-menu .dropdown-menu {
+  margin-top: -6px !important;
+  margin-left: 0 !important;
+}
+
+@media (min-width: 992px) {
+  .dropdown-menu .dropdown-menu {
+    left: 100% !important;
+    top: 0 !important;
   }
 }
 
@@ -2522,37 +2537,37 @@ main#main {
 
 /* ✅ HOVER EN DESKTOP */
 @media (min-width: 992px) {
-    .navbar-nav .dropdown:hover > .dropdown-menu {
-        opacity: 1 !important;
-        visibility: visible !important;
-        transform: translateY(0) !important;
-        pointer-events: auto !important;
-        display: block !important;
-    }
-    
-    /* ✅ SUBMENÚS ANIDADOS (SEGUNDO NIVEL) */
-    .dropdown-menu .dropdown-menu {
-        z-index: 1120 !important;
-        position: absolute !important;
-        left: 100% !important;
-        top: 0 !important;
-        margin-left: 0 !important;
-        margin-top: 0 !important;
-    }
-    
-    /* ✅ TERCER NIVEL */
-    .dropdown-menu .dropdown-menu .dropdown-menu {
-        z-index: 1130 !important;
-    }
-    
-    /* ✅ ANIMACIÓN SUAVE */
-    .navbar-nav .dropdown-menu {
-        animation: dropdownFadeIn 0.3s ease-out !important;
-    }
-    
-    .dropdown-menu .dropdown-menu {
-        animation: dropdownFadeIn 0.2s ease-out !important;
-    }
+  .navbar-nav .dropdown:hover > .dropdown-menu {
+      opacity: 1 !important;
+      visibility: visible !important;
+      transform: translateY(0) !important;
+      pointer-events: auto !important;
+      display: block !important;
+  }
+  
+  /* ✅ SUBMENÚS ANIDADOS (SEGUNDO NIVEL) */
+  .dropdown-menu .dropdown-menu {
+      z-index: 1120 !important;
+      position: absolute !important;
+      left: 100% !important;
+      top: 0 !important;
+      margin-left: 0 !important;
+      margin-top: 0 !important;
+  }
+  
+  /* ✅ TERCER NIVEL */
+  .dropdown-menu .dropdown-menu .dropdown-menu {
+      z-index: 1130 !important;
+  }
+  
+  /* ✅ ANIMACIÓN SUAVE */
+  .navbar-nav .dropdown-menu {
+      animation: dropdownFadeIn 0.3s ease-out !important;
+  }
+  
+  .dropdown-menu .dropdown-menu {
+      animation: dropdownFadeIn 0.2s ease-out !important;
+  }
 }
 
 /* ✅ ANIMACIÓN PERSONALIZADA */
@@ -2665,7 +2680,7 @@ main#main {
 }
 
 .mobile-nav-menu .nav-link {
-    /* ✅ TEXTO BLANCO Y NEGRITA EN MÓVIL TAMBIÉN */
+    /* ✅ TEXTO BLANCO Y NEGRITA EN MÓVIL */
     color: white !important;
     font-weight: bolder !important;
     padding: 12px 20px !important;
@@ -2768,7 +2783,6 @@ main#main {
 .mobile-social-section h6 {
     font-size: 0.9rem !important;
     color: rgba(255,255,255,0.7) !important;
-    text-align: center !important;
 }
 
 .mobile-social-section .social-icon-circle {
@@ -2872,7 +2886,8 @@ main#main {
  * - Todas las secciones en una sola línea en desktop
  * - Optimización para todos los dispositivos
  */
- /* ================================================== */
+
+/* ================================================== */
 /* ESTILOS PARA SUBMENÚS ANIDADOS (MULTINIVEL)       */
 /* ================================================== */
 
@@ -2985,3 +3000,291 @@ main#main {
 .main-navigation .dropdown-submenu .dropdown-menu {
     min-width: 200px;
 }
+
+/* ================================================== */
+/* ✅ SOLUCIÓN DEFINITIVA PARA MENÚ DESKTOP (≥992px) - PASO 3 */
+/* ================================================== */
+
+@media (min-width: 992px) {
+    /* ✅ ÁREA DE TRANSICIÓN ENTRE MENÚ Y SUBMENÚ */
+    .dropdown-menu {
+        margin-top: 0 !important;
+        border-top-left-radius: 0 !important;
+        border-top-right-radius: 0 !important;
+        transition: opacity 0.15s ease, visibility 0.15s ease !important;
+        pointer-events: auto !important;
+    }
+    
+    /* ✅ CONECTOR INVISIBLE PARA MANTENER HOVER */
+    .dropdown > .dropdown-menu::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -10px;
+        width: 20px;
+        height: 100%;
+        background: transparent;
+        z-index: 1109;
+    }
+    
+    /* ✅ SUBMENÚS ANIDADOS - POSICIÓN CORRECTA */
+    .dropdown-menu .dropdown-menu {
+        top: 0 !important;
+        left: 100% !important;
+        margin-top: -1px !important;
+        margin-left: 0 !important;
+        border-top-left-radius: 0 !important;
+    }
+    
+    /* ✅ PREVENIR DESAPARICIÓN BRUSCA */
+    .dropdown:hover > .dropdown-menu,
+    .dropdown.show > .dropdown-menu {
+        display: block !important;
+        opacity: 1 !important;
+        visibility: visible !important;
+    }
+    
+    /* ✅ MEJORAR VISIBILIDAD DE ITEMS */
+    .dropdown-item {
+        position: relative;
+        transition: background-color 0.1s ease !important;
+        white-space: nowrap;
+        min-width: 180px;
+    }
+    
+    .dropdown-item:hover {
+        background-color: rgba(255, 255, 255, 0.2) !important;
+        padding-left: 20px !important;
+    }
+    
+    /* ✅ INDICADOR DE SUBMENÚ */
+    .dropdown-toggle[data-bs-toggle="dropdown"]::after {
+        margin-left: 5px;
+        vertical-align: 0.15em;
+    }
+    
+    /* ✅ GARANTIZAR QUE LOS SUBMENÚS NO SE SALGAN DE LA PANTALLA */
+    .dropdown-menu .dropdown-menu {
+        transform: none !important;
+    }
+    
+    /* ✅ FIX PARA BOOTSTRAP 5 - MANTENER COMPATIBILIDAD */
+    .dropdown-menu[data-bs-popper] {
+        margin-top: 0 !important;
+        left: auto !important;
+    }
+    
+    /* ✅ EVITAR QUE EL SCROLL INTERFIERA */
+    .navbar-menu-section {
+        overflow: visible !important;
+    }
+    
+    .main-navigation {
+        overflow: visible !important;
+    }
+    
+    /* ✅ HABILITAR CLICS Y HOVER EN TODOS LOS NIVELES */
+    .navbar-nav .dropdown-menu,
+    .navbar-nav .dropdown-menu .dropdown-menu,
+    .navbar-nav .dropdown-menu .dropdown-menu .dropdown-menu {
+        pointer-events: auto !important;
+    }
+    
+    /* ✅ PREVENIR CIERRE PREMATURO DE SUBMENÚS */
+    .dropdown-submenu {
+        position: relative;
+    }
+    
+    .dropdown-submenu > .dropdown-menu {
+        top: 0;
+        left: 100%;
+        margin-top: -6px;
+        margin-left: 1px;
+        border-top-left-radius: 0;
+    }
+    
+    /* ✅ EXTENDER EL ÁREA DE HOVER ENTRE MENÚ Y SUBMENÚ */
+    .dropdown-submenu > .dropdown-toggle::after {
+        content: "▸";
+        border: none !important;
+        font-size: 0.9em;
+        vertical-align: 0;
+        margin-left: 0.5em;
+    }
+    
+    /* ✅ CONECTOR INVISIBLE ENTRE NIVELES */
+    .dropdown-submenu::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        right: -5px;
+        width: 10px;
+        height: 100%;
+        background: transparent;
+        z-index: 1120;
+    }
+    
+    /* ✅ MANTENER SUBMENÚ ABIERTO DURANTE TRANSICIÓN */
+    .dropdown-submenu:hover > .dropdown-menu,
+    .dropdown-submenu > .dropdown-menu.show {
+        display: block !important;
+        opacity: 1 !important;
+        visibility: visible !important;
+    }
+    
+    /* ✅ RETRASO PARA CIERRE (SOLO EN DESKTOP) */
+    .dropdown-menu {
+        transition: opacity 0.2s ease-out, visibility 0.2s ease-out 0.1s !important;
+    }
+    
+    /* ✅ ÁREA DE HOVER MEJORADA PARA ITEMS */
+    .dropdown-item {
+        position: relative;
+        transition: background-color 0.15s ease !important;
+    }
+    
+    .dropdown-item:hover {
+        background-color: rgba(255, 255, 255, 0.2) !important;
+    }
+    
+    /* ✅ FIX DE EMERGENCIA PARA GARANTIZAR FUNCIONAMIENTO */
+    .dropdown:hover > .dropdown-menu,
+    .dropdown.show > .dropdown-menu,
+    .dropdown-submenu:hover > .dropdown-menu {
+        display: block !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+    }
+}
+
+/* ================================================== */
+/* ✅ SOLUCIÓN DEFINITIVA - HERRAMIENTAS (ID:162) SOLO DESKTOP */
+/* ================================================== */
+
+/* 1. OCULTAR HERRAMIENTAS EN MÓVIL - MÚLTIPLES SELECTORES PARA GARANTIZAR */
+@media (max-width: 991.98px) {
+    /* Por ID específico (162) */
+    .menu-id-162,
+    .menu-herramientas-id-162,
+    
+    /* Por atributos data */
+    [data-menu-id="162"],
+    [data-menu-name="herramientas"],
+    [data-menu-tools="true"],
+    [data-menu-herramientas="true"],
+    
+    /* Por clases específicas */
+    .menu-herramientas,
+    
+    /* Para dropdowns hijos */
+    [data-parent-menu-id="162"],
+    [data-parent-menu-tools="true"],
+    
+    /* Selectores de respaldo por texto */
+    .nav-link:contains("Herramientas"),
+    .dropdown-item:contains("Herramientas") {
+        display: none !important;
+        visibility: hidden !important;
+        opacity: 0 !important;
+        height: 0 !important;
+        min-height: 0 !important;
+        max-height: 0 !important;
+        width: 0 !important;
+        overflow: hidden !important;
+        pointer-events: none !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        border: none !important;
+        transform: scale(0) !important;
+        position: absolute !important;
+        left: -9999px !important;
+    }
+    
+    /* Asegurar que el menú principal no tenga espacios vacíos */
+    .main-navigation .nav-item:empty {
+        display: none !important;
+    }
+    
+    .main-navigation {
+        gap: 0 !important;
+    }
+}
+
+/* 2. GARANTIZAR VISIBILIDAD EN DESKTOP */
+@media (min-width: 992px) {
+    .menu-id-162,
+    .menu-herramientas,
+    .menu-herramientas-id-162,
+    [data-menu-id="162"] {
+        display: flex !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+        height: auto !important;
+        width: auto !important;
+        overflow: visible !important;
+        pointer-events: auto !important;
+        transform: scale(1) !important;
+        position: relative !important;
+        left: 0 !important;
+    }
+}
+
+/* 3. CORRECCIÓN ESPECÍFICA PARA DROPDOWNS DE HERRAMIENTAS */
+.dropdown-menu[data-parent-menu-id="162"],
+.dropdown-menu[data-parent-menu-tools="true"] {
+    background: linear-gradient(135deg, #7d3c98, #6c3483) !important;
+    border: 1px solid rgba(255,255,255,0.3) !important;
+}
+
+/* 4. ANIMACIÓN SUAVE PARA TRANSICIÓN */
+.menu-id-162,
+.menu-herramientas {
+    transition: opacity 0.3s ease, transform 0.3s ease !important;
+}
+
+/* 5. ESTILOS DE DEBUG (OPCIONAL) - ELIMINAR EN PRODUCCIÓN */
+/*
+.debug-herramientas .menu-id-162 {
+    outline: 3px solid #ff0000 !important;
+    background: rgba(255, 0, 0, 0.1) !important;
+}
+
+.debug-herramientas .menu-herramientas::before {
+    content: 'ID:162 - Solo Desktop';
+    position: absolute;
+    top: -20px;
+    right: 0;
+    background: rgba(0, 0, 0, 0.8);
+    color: white;
+    padding: 2px 6px;
+    font-size: 10px;
+    border-radius: 3px;
+    z-index: 9999;
+}
+*/
+
+/* 6. CORRECCIÓN PARA MÓVIL - EVITAR FLICKERING */
+@media (max-width: 991.98px) {
+    .navbar-menu-section .nav-item.menu-id-162 {
+        animation: none !important;
+        transition: none !important;
+    }
+}
+
+/* 7. GARANTIZAR QUE NO AFECTE A OTROS ELEMENTOS */
+.menu-id-162:not(.nav-item):not(.mobile-menu-item) {
+    all: unset !important;
+}
+
+/* ================================================== */
+/* ✅ NOTA FINAL DE ACTUALIZACIÓN                     */
+/* ================================================== */
+/*
+ * ACTUALIZADO: 2026-01-22
+ * CAMBIOS PRINCIPALES:
+ * 1. Agregado soporte para ocultar "Herramientas" (ID:162) solo en móvil
+ * 2. Múltiples selectores CSS para garantizar funcionamiento
+ * 3. Compatibilidad con las clases agregadas en MenuWidget.php
+ * 4. No afecta la funcionalidad en desktop
+ * 5. Solución limpia y mantenible
+ */

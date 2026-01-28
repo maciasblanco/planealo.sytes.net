@@ -2,358 +2,426 @@
 
 use yii\helpers\Html;
 use yii\helpers\Url;
-use yii\widgets\ActiveForm;
+use app\models\AportesSemanales;
+use app\models\Asistencia;
 
-$this->title = $esRepresentante ? 'Mis Atletas Representados' : 'Mi Información';
+$this->title = 'Mi Información de Atleta';
 $this->params['breadcrumbs'][] = $this->title;
 
-// Registrar el asset del módulo de reportes para cargar CSS y JS
-\app\assets\AppAsset::register($this);
+// Obtener el ID del usuario actual
+$user_id = Yii::$app->user->id;
+
+// Buscar al atleta por el user_id
+$atleta = \app\models\AtletasRegistro::find()
+    ->where(['user_id' => $user_id])
+    ->andWhere(['eliminado' => false])
+    ->with(['representante', 'escuela', 'categoria'])
+    ->one();
+
+// Si no se encuentra el atleta
+if (!$atleta) {
+    echo '<div class="alert alert-danger">No se encontró información del atleta.</div>';
+    return;
+}
+
+// Obtener datos de aportes del atleta
+$aportes = AportesSemanales::find()
+    ->where(['atleta_id' => $atleta->id])
+    ->andWhere(['eliminado' => false])
+    ->orderBy(['fecha' => SORT_DESC])
+    ->all();
+
+// Calcular deuda total
+$deudaTotal = 0;
+$deudasPendientes = [];
+foreach ($aportes as $aporte) {
+    if (!$aporte->pagado) {
+        $deudaTotal += $aporte->monto;
+        $deudasPendientes[] = $aporte;
+    }
+}
+
+// Obtener asistencias recientes
+$asistenciasRecientes = Asistencia::find()
+    ->where(['id_atleta' => $atleta->id])
+    ->andWhere(['eliminado' => false])
+    ->orderBy(['fecha' => SORT_DESC])
+    ->limit(10)
+    ->all();
+
+// Calcular porcentaje de asistencia del último mes
+$fechaInicio = date('Y-m-01');
+$fechaFin = date('Y-m-t');
+
+$asistenciasMes = Asistencia::find()
+    ->where(['id_atleta' => $atleta->id])
+    ->andWhere(['>=', 'fecha', $fechaInicio])
+    ->andWhere(['<=', 'fecha', $fechaFin])
+    ->andWhere(['eliminado' => false])
+    ->all();
+
+$totalAsistenciasMes = count($asistenciasMes);
+$asistenciasCount = 0;
+foreach ($asistenciasMes as $asistencia) {
+    if ($asistencia->asistio) {
+        $asistenciasCount++;
+    }
+}
+
+$porcentajeAsistencia = $totalAsistenciasMes > 0 ? 
+    round(($asistenciasCount / $totalAsistenciasMes) * 100, 2) : 0;
+
+// Tasa de cambio aproximada (puedes cambiar esto por una API real)
+$tasaCambio = 36.5; // 1 USD = 36.5 Bs
+$deudaDolares = $deudaTotal / $tasaCambio;
 ?>
 
 <div class="reportes-atletas">
     <div class="container-fluid">
-        <!-- Información del Representante -->
-        <?php if ($esRepresentante && $representante): ?>
+        <!-- Título principal -->
         <div class="row mb-4">
             <div class="col-md-12">
                 <div class="card border-primary">
-                    <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
-                        <h4 class="card-title mb-0">
-                            <i class="fas fa-user-tie mr-2"></i> 
-                            Información del Representante
-                        </h4>
-                        <span class="badge badge-light">
-                            <i class="fas fa-users mr-1"></i>
-                            <?= count($datosAtletas) ?> atleta(s)
-                        </span>
+                    <div class="card-header bg-primary text-white">
+                        <h3 class="card-title mb-0">
+                            <i class="fas fa-user-circle mr-2"></i> 
+                            Información Personal del Atleta
+                        </h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sección 1: Información del Atleta -->
+        <div class="row mb-4">
+            <div class="col-md-6">
+                <div class="card border-info">
+                    <div class="card-header bg-info text-white">
+                        <h5 class="card-title mb-0">
+                            <i class="fas fa-id-card mr-2"></i> 
+                            Datos del Atleta
+                        </h5>
                     </div>
                     <div class="card-body">
                         <div class="row">
-                            <div class="col-md-3">
-                                <strong><i class="fas fa-id-card mr-1"></i>Nombre:</strong><br>
-                                <?= Html::encode($representante->p_nombre . ' ' . 
-                                    ($representante->s_nombre ? $representante->s_nombre . ' ' : '') . 
-                                    $representante->p_apellido . ' ' . 
-                                    ($representante->s_apellido ? $representante->s_apellido : '')) ?>
+                            <div class="col-md-6 mb-3">
+                                <strong><i class="fas fa-user mr-1"></i> Nombre Completo:</strong><br>
+                                <?= Html::encode($atleta->p_nombre . ' ' . 
+                                    ($atleta->s_nombre ? $atleta->s_nombre . ' ' : '') . 
+                                    $atleta->p_apellido . ' ' . 
+                                    ($atleta->s_apellido ? $atleta->s_apellido : '')) ?>
                             </div>
-                            <div class="col-md-2">
-                                <strong><i class="fas fa-fingerprint mr-1"></i>Cédula:</strong><br>
-                                <?= Html::encode($representante->identificacion) ?>
+                            <div class="col-md-6 mb-3">
+                                <strong><i class="fas fa-fingerprint mr-1"></i> Cédula:</strong><br>
+                                <code class="bg-light p-1 rounded"><?= Html::encode($atleta->identificacion) ?></code>
                             </div>
-                            <div class="col-md-2">
-                                <strong><i class="fas fa-phone mr-1"></i>Teléfono:</strong><br>
-                                <?= Html::encode($representante->cell) ?>
+                            <div class="col-md-6 mb-3">
+                                <strong><i class="fas fa-phone mr-1"></i> Teléfono:</strong><br>
+                                <?= Html::encode($atleta->cell ?: 'No registrado') ?>
                             </div>
-                            <div class="col-md-3">
-                                <strong><i class="fas fa-school mr-1"></i>Escuela:</strong><br>
-                                <?= $representante->escuela ? Html::encode($representante->escuela->nombre) : 'No asignada' ?>
+                            <div class="col-md-6 mb-3">
+                                <strong><i class="fas fa-envelope mr-1"></i> Correo:</strong><br>
+                                <?= Html::encode($atleta->email ?: 'No registrado') ?>
                             </div>
-                            <div class="col-md-2">
-                                <strong><i class="fas fa-calendar-day mr-1"></i>Actualizado:</strong><br>
-                                <?= date('d/m/Y H:i') ?>
+                            <div class="col-md-6 mb-3">
+                                <strong><i class="fas fa-school mr-1"></i> Escuela:</strong><br>
+                                <?= $atleta->escuela ? Html::encode($atleta->escuela->nombre) : 'No asignada' ?>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <strong><i class="fas fa-tag mr-1"></i> Categoría:</strong><br>
+                                <?= $atleta->categoria ? 
+                                    Html::encode($atleta->categoria->nombre_venezuela) : 
+                                    Html::encode($atleta->categoriaCalculada ?: 'No asignada') ?>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-        <?php endif; ?>
 
-        <!-- Panel de Estadísticas Rápidas -->
-        <?php if (!empty($datosAtletas) && $esRepresentante): ?>
-        <div class="row mb-4">
-            <div class="col-md-3">
-                <div class="info-box bg-success" onclick="filtrarPorEstado('al-dia')">
-                    <span class="info-box-icon"><i class="fas fa-check-circle"></i></span>
-                    <div class="info-box-content">
-                        <span class="info-box-text">Atletas al Día</span>
-                        <span class="info-box-number">
-                            <?= count(array_filter($datosAtletas, function($d) { return $d['deudaPendiente'] == 0; })) ?>
-                        </span>
-                        <div class="progress">
-                            <div class="progress-bar" style="width: <?= count($datosAtletas) > 0 ? (count(array_filter($datosAtletas, function($d) { return $d['deudaPendiente'] == 0; })) / count($datosAtletas)) * 100 : 0 ?>%"></div>
-                        </div>
+            <!-- Sección 2: Información del Representante -->
+            <div class="col-md-6">
+                <div class="card border-warning">
+                    <div class="card-header bg-warning text-white">
+                        <h5 class="card-title mb-0">
+                            <i class="fas fa-user-tie mr-2"></i> 
+                            Datos del Representante
+                        </h5>
                     </div>
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="info-box bg-warning" onclick="filtrarPorEstado('con-deuda')">
-                    <span class="info-box-icon"><i class="fas fa-exclamation-triangle"></i></span>
-                    <div class="info-box-content">
-                        <span class="info-box-text">Con Deuda</span>
-                        <span class="info-box-number">
-                            <?= count(array_filter($datosAtletas, function($d) { return $d['deudaPendiente'] > 0; })) ?>
-                        </span>
-                        <div class="progress">
-                            <div class="progress-bar" style="width: <?= count($datosAtletas) > 0 ? (count(array_filter($datosAtletas, function($d) { return $d['deudaPendiente'] > 0; })) / count($datosAtletas)) * 100 : 0 ?>%"></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="info-box bg-info" onclick="filtrarPorEstado('buena-asistencia')">
-                    <span class="info-box-icon"><i class="fas fa-chart-line"></i></span>
-                    <div class="info-box-content">
-                        <span class="info-box-text">Buena Asistencia</span>
-                        <span class="info-box-number">
-                            <?= count(array_filter($datosAtletas, function($d) { return $d['porcentajeAsistencia'] >= 70; })) ?>
-                        </span>
-                        <div class="progress">
-                            <div class="progress-bar" style="width: <?= count($datosAtletas) > 0 ? (count(array_filter($datosAtletas, function($d) { return $d['porcentajeAsistencia'] >= 70; })) / count($datosAtletas)) * 100 : 0 ?>%"></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="info-box bg-danger" onclick="filtrarPorEstado('baja-asistencia')">
-                    <span class="info-box-icon"><i class="fas fa-user-slash"></i></span>
-                    <div class="info-box-content">
-                        <span class="info-box-text">Baja Asistencia</span>
-                        <span class="info-box-number">
-                            <?= count(array_filter($datosAtletas, function($d) { return $d['porcentajeAsistencia'] < 70; })) ?>
-                        </span>
-                        <div class="progress">
-                            <div class="progress-bar" style="width: <?= count($datosAtletas) > 0 ? (count(array_filter($datosAtletas, function($d) { return $d['porcentajeAsistencia'] < 70; })) / count($datosAtletas)) * 100 : 0 ?>%"></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <?php endif; ?>
-
-        <!-- Tabla Principal de Atletas -->
-        <div class="row">
-            <div class="col-md-12">
-                <div class="card">
-                    <div class="card-header d-flex justify-content-between align-items-center">
-                        <h3 class="card-title">
-                            <i class="fas fa-table mr-2"></i> 
-                            <?= $esRepresentante ? 'Atletas Representados' : 'Mi Información' ?>
-                        </h3>
-                        <div class="card-tools">
-                            <span class="badge badge-primary">
-                                <i class="fas fa-users mr-1"></i>
-                                <?= count($datosAtletas) ?> registro(s)
-                            </span>
-                            <?php if ($esRepresentante): ?>
-                            <button class="btn btn-sm btn-outline-primary ml-2" onclick="exportarTabla()">
-                                <i class="fas fa-download mr-1"></i>Exportar
-                            </button>
-                            <?php endif; ?>
-                        </div>
-                    </div>
-                    <div class="card-body p-0">
-                        <?php if (empty($datosAtletas)): ?>
-                            <div class="text-center p-5">
-                                <i class="fas fa-users fa-4x text-muted mb-3"></i>
-                                <h4 class="text-muted">No hay atletas para mostrar</h4>
-                                <p class="text-muted">
-                                    <?= $esRepresentante ? 
-                                        'No tiene atletas representados actualmente.' : 
-                                        'No se encontró su información de atleta.' ?>
-                                </p>
+                    <div class="card-body">
+                        <?php if ($atleta->representante): ?>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <strong><i class="fas fa-user-tie mr-1"></i> Nombre:</strong><br>
+                                    <?= Html::encode($atleta->representante->p_nombre . ' ' . 
+                                        ($atleta->representante->s_nombre ? $atleta->representante->s_nombre . ' ' : '') . 
+                                        $atleta->representante->p_apellido . ' ' . 
+                                        ($atleta->representante->s_apellido ? $atleta->representante->s_apellido : '')) ?>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <strong><i class="fas fa-fingerprint mr-1"></i> Cédula:</strong><br>
+                                    <code class="bg-light p-1 rounded"><?= Html::encode($atleta->representante->identificacion) ?></code>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <strong><i class="fas fa-phone mr-1"></i> Teléfono:</strong><br>
+                                    <?= Html::encode($atleta->representante->cell ?: 'No registrado') ?>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <strong><i class="fas fa-envelope mr-1"></i> Correo:</strong><br>
+                                    <?= Html::encode($atleta->representante->email ?: 'No registrado') ?>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <strong><i class="fas fa-home mr-1"></i> Dirección:</strong><br>
+                                    <?= Html::encode($atleta->representante->direccion ?: 'No registrada') ?>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <strong><i class="fas fa-calendar-alt mr-1"></i> Relación:</strong><br>
+                                    <?= Html::encode($atleta->representante->parentesco ?: 'No especificada') ?>
+                                </div>
                             </div>
                         <?php else: ?>
-                            <div class="table-responsive">
-                                <table class="table table-bordered table-hover table-striped mb-0" id="tabla-atletas">
-                                    <thead class="thead-light">
-                                        <tr>
-                                            <th width="16%">Atleta</th>
-                                            <th width="8%" class="text-center">Cédula</th>
-                                            <th width="6%" class="text-center">Edad</th>
-                                            <th width="12%">Categoría</th>
-                                            <th width="14%">Asistencias (Este Mes)</th>
-                                            <th width="8%" class="text-center">% Asist.</th>
-                                            <th width="12%" class="text-center">Deuda Pendiente</th>
-                                            <th width="12%" class="text-center">Última Asistencia</th>
-                                            <th width="12%" class="text-center">Estado General</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <?php foreach ($datosAtletas as $datos): 
-                                            $atleta = $datos['atleta'];
-                                            // Determinar clase de la fila según estado
-                                            $claseFila = '';
-                                            $tooltip = '';
-                                            if ($datos['deudaPendiente'] > 0 && $datos['porcentajeAsistencia'] < 70) {
-                                                $claseFila = 'table-danger';
-                                                $tooltip = 'title="Deuda pendiente y baja asistencia"';
-                                            } elseif ($datos['deudaPendiente'] > 0) {
-                                                $claseFila = 'table-warning';
-                                                $tooltip = 'title="Deuda pendiente"';
-                                            } elseif ($datos['porcentajeAsistencia'] < 70) {
-                                                $claseFila = 'table-warning';
-                                                $tooltip = 'title="Baja asistencia"';
-                                            }
-                                        ?>
-                                            <tr class="<?= $claseFila ?>" <?= $tooltip ?> data-estado="<?= 
-                                                $datos['deudaPendiente'] > 0 ? 'con-deuda' : 'al-dia' ?> <?= 
-                                                $datos['porcentajeAsistencia'] >= 70 ? 'buena-asistencia' : 'baja-asistencia' ?>">
-                                                <!-- Columna Atleta -->
-                                                <td>
-                                                    <div class="d-flex align-items-center">
-                                                        <div class="mr-3">
-                                                            <i class="fas fa-user-circle fa-2x text-muted"></i>
-                                                        </div>
-                                                        <div>
-                                                            <div class="font-weight-bold text-primary">
-                                                                <?= Html::encode($atleta->p_nombre . ' ' . $atleta->p_apellido) ?>
-                                                            </div>
-                                                            <small class="text-muted">
-                                                                <i class="fas fa-school mr-1"></i>
-                                                                <?= $atleta->escuela ? Html::encode($atleta->escuela->nombre) : 'Sin escuela' ?>
-                                                            </small>
-                                                        </div>
-                                                    </div>
-                                                </td>
-                                                
-                                                <!-- Cédula -->
-                                                <td class="text-center">
-                                                    <code class="bg-light p-1 rounded"><?= Html::encode($atleta->identificacion) ?></code>
-                                                </td>
-                                                
-                                                <!-- Edad -->
-                                                <td class="text-center">
-                                                    <span class="badge badge-info badge-status">
-                                                        <?= $atleta->edad ?> años
-                                                    </span>
-                                                </td>
-                                                
-                                                <!-- Categoría -->
-                                                <td>
-                                                    <span class="badge badge-secondary badge-status">
-                                                        <?= $atleta->categoria ? 
-                                                            Html::encode($atleta->categoria->nombre_venezuela) : 
-                                                            Html::encode($atleta->categoriaCalculada) ?>
-                                                    </span>
-                                                </td>
-                                                
-                                                <!-- Asistencias -->
-                                                <td>
-                                                    <div class="progress-bar-container mb-1">
-                                                        <div class="progress" style="height: 24px;">
-                                                            <div class="progress-bar bg-success" 
-                                                                 role="progressbar" 
-                                                                 style="width: <?= $datos['porcentajeAsistencia'] ?>%"
-                                                                 aria-valuenow="<?= $datos['porcentajeAsistencia'] ?>">
-                                                            </div>
-                                                            <div class="progress-bar bg-danger" 
-                                                                 role="progressbar" 
-                                                                 style="width: <?= 100 - $datos['porcentajeAsistencia'] ?>%"
-                                                                 aria-valuenow="<?= 100 - $datos['porcentajeAsistencia'] ?>">
-                                                            </div>
-                                                        </div>
-                                                        <div class="progress-text">
-                                                            <?= $datos['asistenciasCount'] ?>/<?= $datos['totalAsistencias'] ?>
-                                                        </div>
-                                                    </div>
-                                                    <small class="text-muted d-block text-center">
-                                                        <?= $datos['asistenciasCount'] ?> asist. | <?= $datos['inasistenciasCount'] ?> faltas
-                                                    </small>
-                                                </td>
-                                                
-                                                <!-- Porcentaje Asistencia -->
-                                                <td class="text-center">
-                                                    <span class="badge badge-<?= 
-                                                        $datos['porcentajeAsistencia'] >= 90 ? 'success' : 
-                                                        ($datos['porcentajeAsistencia'] >= 70 ? 'warning' : 'danger') 
-                                                    ?> badge-status">
-                                                        <?= $datos['porcentajeAsistencia'] ?>%
-                                                    </span>
-                                                </td>
-                                                
-                                                <!-- Deuda Pendiente -->
-                                                <td class="text-center">
-                                                    <?php if ($datos['deudaPendiente'] > 0): ?>
-                                                        <div class="text-danger font-weight-bold">
-                                                            <i class="fas fa-exclamation-triangle mr-1"></i>
-                                                            <?= Yii::$app->formatter->asCurrency($datos['deudaPendiente']) ?>
-                                                        </div>
-                                                        <?php if ($datos['proximoAporte']): ?>
-                                                            <small class="text-muted">
-                                                                Vence: <?= Yii::$app->formatter->asDate($datos['proximoAporte']->fecha, 'php:d/m/Y') ?>
-                                                            </small>
-                                                        <?php endif; ?>
-                                                    <?php else: ?>
-                                                        <span class="text-success">
-                                                            <i class="fas fa-check-circle mr-1"></i>
-                                                            Al día
-                                                        </span>
-                                                    <?php endif; ?>
-                                                </td>
-                                                
-                                                <!-- Última Asistencia -->
-                                                <td class="text-center">
-                                                    <?php if ($datos['ultimaAsistencia']): ?>
-                                                        <div class="<?= $datos['ultimaAsistencia']->asistio ? 'text-success' : 'text-danger' ?>">
-                                                            <?= Yii::$app->formatter->asDate($datos['ultimaAsistencia']->fecha, 'php:d/m/Y') ?>
-                                                        </div>
-                                                        <small class="text-muted">
-                                                            <?= $datos['ultimaAsistencia']->asistio ? '✅ Asistió' : '❌ Faltó' ?>
-                                                        </small>
-                                                    <?php else: ?>
-                                                        <span class="text-muted">Sin registro</span>
-                                                    <?php endif; ?>
-                                                </td>
-                                                
-                                                <!-- Estado General -->
-                                                <td class="text-center">
-                                                    <?php
-                                                    $estado = 'success';
-                                                    $texto = 'Excelente';
-                                                    $icono = 'check-circle';
-                                                    $descripcion = 'Al día y buena asistencia';
-                                                    
-                                                    if ($datos['deudaPendiente'] > 0 && $datos['porcentajeAsistencia'] < 70) {
-                                                        $estado = 'danger';
-                                                        $texto = 'Crítico';
-                                                        $icono = 'exclamation-triangle';
-                                                        $descripcion = 'Deuda y baja asistencia';
-                                                    } elseif ($datos['deudaPendiente'] > 0) {
-                                                        $estado = 'warning';
-                                                        $texto = 'Atención';
-                                                        $icono = 'exclamation-triangle';
-                                                        $descripcion = 'Deuda pendiente';
-                                                    } elseif ($datos['porcentajeAsistencia'] < 70) {
-                                                        $estado = 'warning';
-                                                        $texto = 'Regular';
-                                                        $icono = 'exclamation-circle';
-                                                        $descripcion = 'Baja asistencia';
-                                                    }
-                                                    ?>
-                                                    <span class="badge badge-<?= $estado ?> badge-status" title="<?= $descripcion ?>">
-                                                        <i class="fas fa-<?= $icono ?> mr-1"></i>
-                                                        <?= $texto ?>
-                                                    </span>
-                                                </td>
-                                            </tr>
-                                        <?php endforeach; ?>
-                                    </tbody>
-                                </table>
+                            <div class="text-center p-4">
+                                <i class="fas fa-user-slash fa-3x text-muted mb-3"></i>
+                                <h5 class="text-muted">Sin Representante Asignado</h5>
+                                <p class="text-muted">No tienes un representante registrado en el sistema.</p>
                             </div>
                         <?php endif; ?>
                     </div>
-                    <div class="card-footer">
+                </div>
+            </div>
+        </div>
+
+        <!-- Sección 3: Estado de Pagos/Aportes -->
+        <div class="row mb-4">
+            <div class="col-md-12">
+                <div class="card <?= $deudaTotal > 0 ? 'border-danger' : 'border-success' ?>">
+                    <div class="card-header <?= $deudaTotal > 0 ? 'bg-danger text-white' : 'bg-success text-white' ?>">
+                        <h5 class="card-title mb-0">
+                            <i class="fas fa-money-bill-wave mr-2"></i> 
+                            Estado de Pagos y Aportes
+                        </h5>
+                    </div>
+                    <div class="card-body">
                         <div class="row">
-                            <div class="col-md-6">
-                                <small class="text-muted">
-                                    <i class="fas fa-info-circle mr-1"></i>
-                                    Información actualizada al: <?= date('d/m/Y H:i') ?>
-                                </small>
+                            <!-- Estado General -->
+                            <div class="col-md-4 mb-3">
+                                <div class="text-center p-3 rounded <?= $deudaTotal > 0 ? 'bg-danger-light' : 'bg-success-light' ?>">
+                                    <h2 class="<?= $deudaTotal > 0 ? 'text-danger' : 'text-success' ?>">
+                                        <i class="fas fa-<?= $deudaTotal > 0 ? 'exclamation-triangle' : 'check-circle' ?>"></i>
+                                    </h2>
+                                    <h4 class="<?= $deudaTotal > 0 ? 'text-danger' : 'text-success' ?>">
+                                        <?= $deudaTotal > 0 ? 'EN MORA' : 'AL DÍA' ?>
+                                    </h4>
+                                    <p class="text-muted">Estado de Pagos</p>
+                                </div>
                             </div>
-                            <div class="col-md-6 text-right">
-                                <?php if ($esRepresentante): ?>
-                                    <span class="badge badge-primary">
-                                        <i class="fas fa-user-tie mr-1"></i>
-                                        Modo Representante
-                                    </span>
-                                <?php else: ?>
-                                    <span class="badge badge-info">
-                                        <i class="fas fa-user mr-1"></i>
-                                        Modo Atleta
-                                    </span>
-                                <?php endif; ?>
+
+                            <!-- Montos en Bolívares -->
+                            <div class="col-md-4 mb-3">
+                                <div class="text-center p-3 rounded bg-light">
+                                    <h3 class="<?= $deudaTotal > 0 ? 'text-danger' : 'text-success' ?>">
+                                        <?= Yii::$app->formatter->asCurrency($deudaTotal) ?>
+                                    </h3>
+                                    <h6 class="text-muted">Total Deuda (Bs)</h6>
+                                    <?php if ($deudaTotal > 0): ?>
+                                        <small class="text-muted">
+                                            <?= count($deudasPendientes) ?> aporte(s) pendiente(s)
+                                        </small>
+                                    <?php endif; ?>
+                                </div>
+                            </div>
+
+                            <!-- Montos en Dólares -->
+                            <div class="col-md-4 mb-3">
+                                <div class="text-center p-3 rounded bg-light">
+                                    <h3 class="<?= $deudaTotal > 0 ? 'text-danger' : 'text-success' ?>">
+                                        $<?= number_format($deudaDolares, 2) ?> USD
+                                    </h3>
+                                    <h6 class="text-muted">Total Deuda (USD)</h6>
+                                    <small class="text-muted">
+                                        Tasa: 1 USD = <?= $tasaCambio ?> Bs
+                                    </small>
+                                </div>
+                            </div>
+
+                            <!-- Detalle de deudas pendientes -->
+                            <?php if (!empty($deudasPendientes)): ?>
+                                <div class="col-md-12 mt-3">
+                                    <div class="alert alert-warning">
+                                        <h6><i class="fas fa-list mr-2"></i>Detalle de Aportes Pendientes:</h6>
+                                        <div class="table-responsive">
+                                            <table class="table table-sm table-bordered mb-0">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Fecha</th>
+                                                        <th>Concepto</th>
+                                                        <th>Monto (Bs)</th>
+                                                        <th>Monto (USD)</th>
+                                                        <th>Vencimiento</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <?php foreach ($deudasPendientes as $deuda): ?>
+                                                        <tr>
+                                                            <td><?= Yii::$app->formatter->asDate($deuda->fecha, 'php:d/m/Y') ?></td>
+                                                            <td><?= Html::encode($deuda->concepto ?: 'Aporte Semanal') ?></td>
+                                                            <td class="text-danger"><?= Yii::$app->formatter->asCurrency($deuda->monto) ?></td>
+                                                            <td>$<?= number_format($deuda->monto / $tasaCambio, 2) ?></td>
+                                                            <td><?= Yii::$app->formatter->asDate($deuda->fecha_vencimiento, 'php:d/m/Y') ?></td>
+                                                        </tr>
+                                                    <?php endforeach; ?>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            <?php else: ?>
+                                <div class="col-md-12 mt-3">
+                                    <div class="alert alert-success">
+                                        <i class="fas fa-check-circle mr-2"></i>
+                                        ¡Felicidades! No tienes aportes pendientes.
+                                    </div>
+                                </div>
+                            <?php endif; ?>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sección 4: Asistencias -->
+        <div class="row mb-4">
+            <div class="col-md-12">
+                <div class="card border-info">
+                    <div class="card-header bg-info text-white">
+                        <h5 class="card-title mb-0">
+                            <i class="fas fa-calendar-check mr-2"></i> 
+                            Control de Asistencias
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="alert alert-warning">
+                            <div class="d-flex align-items-center">
+                                <div class="mr-3">
+                                    <i class="fas fa-tools fa-2x"></i>
+                                </div>
+                                <div>
+                                    <h5 class="mb-1">Módulo en Desarrollo</h5>
+                                    <p class="mb-0">El sistema de control de asistencias se encuentra en desarrollo y será implementado próximamente.</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Información preliminar de asistencias -->
+                        <div class="row">
+                            <div class="col-md-4 mb-3">
+                                <div class="text-center p-3 rounded bg-light">
+                                    <h3><?= $porcentajeAsistencia ?>%</h3>
+                                    <h6 class="text-muted">Asistencia Este Mes</h6>
+                                    <small class="text-muted">
+                                        <?= $asistenciasCount ?> de <?= $totalAsistenciasMes ?> días
+                                    </small>
+                                </div>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <div class="text-center p-3 rounded bg-light">
+                                    <h3><?= count($asistenciasRecientes) ?></h3>
+                                    <h6 class="text-muted">Registros Recientes</h6>
+                                    <small class="text-muted">Últimos 10 registros</small>
+                                </div>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <div class="text-center p-3 rounded bg-light">
+                                    <h3><?= date('F Y') ?></h3>
+                                    <h6 class="text-muted">Mes Actual</h6>
+                                    <small class="text-muted">Período de evaluación</small>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Mensaje de funcionalidades futuras -->
+                        <div class="alert alert-secondary">
+                            <h6><i class="fas fa-lightbulb mr-2"></i>Próximas Funcionalidades:</h6>
+                            <ul class="mb-0">
+                                <li>Gráficos de asistencia mensual y anual</li>
+                                <li>Reporte detallado de inasistencias</li>
+                                <li>Justificación de faltas en línea</li>
+                                <li>Notificaciones de asistencia para representantes</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sección 5: Estadísticas -->
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card border-success">
+                    <div class="card-header bg-success text-white">
+                        <h5 class="card-title mb-0">
+                            <i class="fas fa-chart-line mr-2"></i> 
+                            Estadísticas y Rendimiento
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="alert alert-info">
+                            <div class="d-flex align-items-center">
+                                <div class="mr-3">
+                                    <i class="fas fa-rocket fa-2x"></i>
+                                </div>
+                                <div>
+                                    <h5 class="mb-1">Módulo en Construcción</h5>
+                                    <p class="mb-0">El sistema de estadísticas y rendimiento está siendo desarrollado y estará disponible próximamente.</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Información preliminar de estadísticas -->
+                        <div class="row">
+                            <div class="col-md-3 mb-3">
+                                <div class="text-center p-3 rounded bg-light">
+                                    <h3><?= $atleta->edad ?> años</h3>
+                                    <h6 class="text-muted">Edad Actual</h6>
+                                </div>
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                <div class="text-center p-3 rounded bg-light">
+                                    <h3><?= $atleta->peso ?: 'N/A' ?> kg</h3>
+                                    <h6 class="text-muted">Peso Actual</h6>
+                                </div>
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                <div class="text-center p-3 rounded bg-light">
+                                    <h3><?= $atleta->altura ?: 'N/A' ?> cm</h3>
+                                    <h6 class="text-muted">Altura</h6>
+                                </div>
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                <div class="text-center p-3 rounded bg-light">
+                                    <h3><?= $atleta->sexo == 'M' ? 'Masculino' : ($atleta->sexo == 'F' ? 'Femenino' : 'No especificado') ?></h3>
+                                    <h6 class="text-muted">Género</h6>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Mensaje de funcionalidades futuras -->
+                        <div class="alert alert-light">
+                            <h6><i class="fas fa-cogs mr-2"></i>Estadísticas que Pronto Dispondrás:</h6>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <ul>
+                                        <li>Progreso de rendimiento físico</li>
+                                        <li>Comparativas por categoría</li>
+                                        <li>Histórico de competencias</li>
+                                    </ul>
+                                </div>
+                                <div class="col-md-6">
+                                    <ul>
+                                        <li>Gráficos de evolución</li>
+                                        <li>Metas y objetivos</li>
+                                        <li>Recomendaciones personalizadas</li>
+                                    </ul>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -361,37 +429,42 @@ $this->params['breadcrumbs'][] = $this->title;
             </div>
         </div>
 
-        <!-- Resumen de Totales -->
-        <?php if (!empty($datosAtletas) && $esRepresentante): ?>
+        <!-- Pie de página con información adicional -->
         <div class="row mt-3">
             <div class="col-md-12">
-                <div class="card border-info">
-                    <div class="card-header bg-info text-white py-2">
-                        <h6 class="mb-0"><i class="fas fa-chart-pie mr-2"></i>Resumen General</h6>
-                    </div>
-                    <div class="card-body py-2">
-                        <div class="row text-center">
-                            <div class="col-md-3">
-                                <small class="text-muted">Deuda Total</small><br>
-                                <strong class="text-danger"><?= Yii::$app->formatter->asCurrency(array_sum(array_column($datosAtletas, 'deudaPendiente'))) ?></strong>
-                            </div>
-                            <div class="col-md-3">
-                                <small class="text-muted">Promedio Asistencia</small><br>
-                                <strong class="text-primary"><?= round(array_sum(array_column($datosAtletas, 'porcentajeAsistencia')) / count($datosAtletas), 1) ?>%</strong>
-                            </div>
-                            <div class="col-md-3">
-                                <small class="text-muted">Total Asistencias Mes</small><br>
-                                <strong class="text-success"><?= array_sum(array_column($datosAtletas, 'asistenciasCount')) ?></strong>
-                            </div>
-                            <div class="col-md-3">
-                                <small class="text-muted">Total Inasistencias</small><br>
-                                <strong class="text-warning"><?= array_sum(array_column($datosAtletas, 'inasistenciasCount')) ?></strong>
-                            </div>
-                        </div>
+                <div class="card border-secondary">
+                    <div class="card-body text-center">
+                        <small class="text-muted">
+                            <i class="fas fa-info-circle mr-1"></i>
+                            Información actualizada al: <?= date('d/m/Y H:i:s') ?> | 
+                            Usuario: <?= Html::encode(Yii::$app->user->identity->username ?? 'Atleta') ?> |
+                            Sesión iniciada desde: <?= Yii::$app->request->userIP ?>
+                        </small>
                     </div>
                 </div>
             </div>
         </div>
-        <?php endif; ?>
     </div>
 </div>
+
+<!-- Estilos adicionales -->
+<style>
+.bg-danger-light {
+    background-color: #f8d7da !important;
+    border: 1px solid #f5c6cb;
+}
+.bg-success-light {
+    background-color: #d4edda !important;
+    border: 1px solid #c3e6cb;
+}
+.alert h5 {
+    margin-bottom: 0.5rem;
+}
+.card {
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    transition: box-shadow 0.3s ease;
+}
+.card:hover {
+    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+}
+</style>

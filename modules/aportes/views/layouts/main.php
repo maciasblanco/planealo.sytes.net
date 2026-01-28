@@ -41,6 +41,10 @@ function getModuleTitle($moduleName)
     
     return $titles[$moduleName] ?? 'Módulo';
 }
+
+// Detectar si es desktop para scripts específicos
+$isDesktop = (!Yii::$app->request->isMobile || Yii::$app->request->isDesktop);
+$this->params['isDesktop'] = $isDesktop;
 ?>
 <?php $this->beginPage() ?>
 <!DOCTYPE html>
@@ -115,7 +119,7 @@ function getModuleTitle($moduleName)
      <!-- El contenido se cargará dinámicamente via JS -->
 </div>
 <?php endif; ?>
-    <!-- ✅ SCRIPT DE INICIALIZACIÓN Y VERIFICACIÓN -->
+    <!-- ✅ SCRIPT DE INICIALIZACIÓN Y VERIFICACIÓN (CÓDIGO CONFLICTIVO ELIMINADO) -->
     <script>
     document.addEventListener('DOMContentLoaded', function() {
     console.log('🚀 GED System iniciado - Modo: ' + (window.innerWidth < 992 ? 'Móvil' : 'Escritorio'));
@@ -244,161 +248,238 @@ function getModuleTitle($moduleName)
     window.checkNavbarHeight = verifyNavbarHeight;
     window.checkNavbarStructure = verifyNavbarStructure;
     
-    // ==================================================
-    // ✅ CORRECCIÓN DE Z-INDEX PARA SUBMENÚS
-    // ==================================================
-    
-    function fixDropdownZIndex() {
-        // Solo aplica en desktop
-        if (window.innerWidth >= 992) {
-            console.log('🔧 Aplicando correcciones de z-index a submenús...');
-            
-            // 1. Asegurar que el navbar y contenedores sean visibles
-            const elementsToMakeVisible = [
-                '.navbar-contextual',
-                '.navbar-container',
-                '.navbar-sections-container',
-                '.navbar-collapse',
-                '.navbar-menu-section',
-                '.main-navigation'
-            ];
-            
-            elementsToMakeVisible.forEach(selector => {
-                const elements = document.querySelectorAll(selector);
-                elements.forEach(el => {
-                    el.style.overflow = 'visible';
-                    el.style.position = 'relative';
-                });
-            });
-            
-            // 2. Aplicar z-index correcto a dropdowns
-            const dropdownMenus = document.querySelectorAll('.dropdown-menu');
-            dropdownMenus.forEach((menu, index) => {
-                // Calcular nivel del dropdown
-                let level = 0;
-                let parent = menu.parentElement;
-                
-                while (parent) {
-                    if (parent.classList.contains('dropdown-menu')) {
-                        level++;
-                    }
-                    if (parent.classList.contains('navbar-nav')) {
-                        break;
-                    }
-                    parent = parent.parentElement;
-                }
-                
-                // Asignar z-index según nivel
-                const baseZIndex = 1110;
-                const zIndex = baseZIndex + (level * 10);
-                
-                menu.style.zIndex = zIndex;
-                menu.style.position = 'absolute';
-                menu.style.overflow = 'visible';
-                menu.style.transform = 'none';
-                
-                // Debug info
-                if (window.location.href.includes('debug=zindex')) {
-                    menu.setAttribute('data-dropdown-level', level);
-                    menu.setAttribute('data-z-index', zIndex);
-                    menu.style.border = '1px solid #ff0';
-                }
-            });
-            
-            // 3. Asegurar que los dropdown-toggles tengan buen z-index
-            const dropdownToggles = document.querySelectorAll('.dropdown-toggle');
-            dropdownToggles.forEach(toggle => {
-                toggle.style.position = 'relative';
-                toggle.style.zIndex = '1100';
-            });
-            
-            console.log(`✅ Corrección aplicada a ${dropdownMenus.length} dropdowns`);
-        }
-    }
-    
-    // Ejecutar inmediatamente
-    setTimeout(fixDropdownZIndex, 300);
-    
-    // Re-ejecutar en eventos importantes
-    window.addEventListener('resize', fixDropdownZIndex);
-    
-    // Corregir cuando Bootstrap muestre un dropdown
-    document.addEventListener('show.bs.dropdown', function() {
-        setTimeout(fixDropdownZIndex, 100);
-    });
-    
-    // También corregir al pasar el mouse sobre dropdowns
-    const dropdownHoverElements = document.querySelectorAll('.dropdown');
-    dropdownHoverElements.forEach(element => {
-        element.addEventListener('mouseenter', function() {
-            setTimeout(fixDropdownZIndex, 50);
-        });
-    });
-    
-    // Función global para debug
-    window.debugDropdowns = function() {
-        console.group('🐛 DEBUG DROPDOWNS');
-        const dropdowns = document.querySelectorAll('.dropdown-menu');
-        dropdowns.forEach((menu, i) => {
+    // Función para verificar el estado del menú (nueva - solo para debug)
+    window.checkMenuState = function() {
+        console.group('🔍 ESTADO DEL MENÚ DESKTOP');
+        const dropdowns = document.querySelectorAll('.dropdown');
+        console.log(`Dropdowns totales: ${dropdowns.length}`);
+        
+        dropdowns.forEach((dropdown, i) => {
+            const menu = dropdown.querySelector('.dropdown-menu');
             console.log(`Dropdown ${i}:`, {
-                zIndex: menu.style.zIndex || getComputedStyle(menu).zIndex,
-                position: menu.style.position || getComputedStyle(menu).position,
-                visible: menu.offsetParent !== null,
-                level: menu.getAttribute('data-dropdown-level') || '0'
+                abierto: menu?.classList.contains('show'),
+                nivel: menu?.closest('.dropdown-menu') ? 'submenu' : 'principal',
+                zIndex: menu?.style.zIndex || 'no definido'
             });
         });
         console.groupEnd();
     };
+});
+</script>
+
+<?php if (Yii::$app->view->params['isDesktop'] ?? true): ?>
+<script>
+// ==================================================
+// ✅ SCRIPT EXCLUSIVO PARA DESKTOP - MENÚ MULTINIVEL
+// ==================================================
+
+document.addEventListener('DOMContentLoaded', function() {
+    // Solo ejecutar en desktop
+    if (window.innerWidth < 992) {
+        console.log('📱 Modo móvil - Script desktop desactivado');
+        return;
+    }
     
-    // ==================================================
-    // ✅ VERIFICACIÓN DE SUBMENÚS VISIBLES
-    // ==================================================
+    console.log('🖥️ Iniciando solución para menú desktop multinivel');
     
-    function verifyDropdownVisibility() {
-        if (window.innerWidth >= 992) {
-            const dropdowns = document.querySelectorAll('.dropdown-menu');
-            let hiddenDropdowns = 0;
+    // Variables de control
+    const hoverTimeouts = new WeakMap();
+    const HOVER_DELAY = 200; // ms de tolerancia para mover entre niveles
+    let activeDropdown = null;
+    
+    // 1. CONFIGURAR TODOS LOS DROPDOWNS
+    const setupDropdowns = () => {
+        const dropdowns = document.querySelectorAll('.dropdown');
+        
+        dropdowns.forEach(dropdown => {
+            const toggle = dropdown.querySelector('.dropdown-toggle');
+            const menu = dropdown.querySelector('.dropdown-menu');
             
-            dropdowns.forEach(menu => {
-                const computedStyle = window.getComputedStyle(menu);
-                if (computedStyle.visibility === 'hidden' || 
-                    computedStyle.opacity === '0' || 
-                    menu.offsetParent === null) {
-                    hiddenDropdowns++;
+            if (!toggle || !menu) return;
+            
+            // Evento mouseenter (entrar al dropdown)
+            dropdown.addEventListener('mouseenter', function(e) {
+                // Cancelar timeout de cierre si existe
+                const timeout = hoverTimeouts.get(this);
+                if (timeout) {
+                    clearTimeout(timeout);
+                    hoverTimeouts.delete(this);
+                }
+                
+                // Si hay un dropdown activo diferente, cerrarlo
+                if (activeDropdown && activeDropdown !== this && 
+                    !activeDropdown.contains(this)) {
+                    closeDropdown(activeDropdown);
+                }
+                
+                // Abrir este dropdown
+                openDropdown(this);
+                activeDropdown = this;
+            });
+            
+            // Evento mouseleave (salir del dropdown)
+            dropdown.addEventListener('mouseleave', function(e) {
+                // Verificar si el mouse va hacia un submenu
+                const relatedTarget = e.relatedTarget;
+                const isGoingToSubmenu = relatedTarget && 
+                    (relatedTarget.closest('.dropdown-menu') === menu || 
+                     menu.contains(relatedTarget));
+                
+                if (!isGoingToSubmenu) {
+                    // Programar cierre con delay
+                    const timeout = setTimeout(() => {
+                        if (activeDropdown === this) {
+                            closeDropdown(this);
+                            activeDropdown = null;
+                        }
+                    }, HOVER_DELAY);
+                    
+                    hoverTimeouts.set(this, timeout);
                 }
             });
             
-            if (hiddenDropdowns > 0 && window.location.href.includes('debug=dropdowns')) {
-                console.warn(`⚠️ ${hiddenDropdowns} dropdowns podrían estar ocultos`);
+            // Para el menú dropdown también
+            menu.addEventListener('mouseenter', function() {
+                // Cancelar timeout de cierre del padre
+                const parent = this.closest('.dropdown');
+                if (parent) {
+                    const timeout = hoverTimeouts.get(parent);
+                    if (timeout) {
+                        clearTimeout(timeout);
+                        hoverTimeouts.delete(parent);
+                    }
+                }
+            });
+            
+            menu.addEventListener('mouseleave', function(e) {
+                const relatedTarget = e.relatedTarget;
+                const parent = this.closest('.dropdown');
+                
+                if (!relatedTarget || !parent || !parent.contains(relatedTarget)) {
+                    const timeout = setTimeout(() => {
+                        if (parent && activeDropdown === parent) {
+                            closeDropdown(parent);
+                            activeDropdown = null;
+                        }
+                    }, HOVER_DELAY);
+                    
+                    if (parent) {
+                        hoverTimeouts.set(parent, timeout);
+                    }
+                }
+            });
+        });
+        
+        console.log(`✅ Configurados ${dropdowns.length} dropdowns para desktop`);
+    };
+    
+    // 2. FUNCIONES AUXILIARES
+    const openDropdown = (dropdown) => {
+        const menu = dropdown.querySelector('.dropdown-menu');
+        if (!menu) return;
+        
+        // Usar Bootstrap para abrir (mantiene consistencia)
+        const bsInstance = bootstrap.Dropdown.getInstance(dropdown);
+        if (bsInstance) {
+            bsInstance.show();
+        } else {
+            // Fallback manual
+            menu.classList.add('show');
+            dropdown.classList.add('show');
+            menu.style.display = 'block';
+            menu.style.opacity = '1';
+            menu.style.visibility = 'visible';
+            
+            // Ajustar z-index según nivel
+            let level = 0;
+            let parent = dropdown.parentElement;
+            while (parent) {
+                if (parent.classList.contains('dropdown-menu')) level++;
+                parent = parent.parentElement;
             }
+            menu.style.zIndex = 1110 + (level * 10);
         }
-    }
+    };
     
-    // Verificar periódicamente
-    setInterval(verifyDropdownVisibility, 2000);
+    const closeDropdown = (dropdown) => {
+        const menu = dropdown.querySelector('.dropdown-menu');
+        if (!menu) return;
+        
+        // Usar Bootstrap para cerrar
+        const bsInstance = bootstrap.Dropdown.getInstance(dropdown);
+        if (bsInstance) {
+            bsInstance.hide();
+        } else {
+            // Fallback manual
+            menu.classList.remove('show');
+            dropdown.classList.remove('show');
+            menu.style.display = 'none';
+            
+            // Cerrar también todos los submenús
+            const submenus = menu.querySelectorAll('.dropdown-menu.show');
+            submenus.forEach(submenu => {
+                submenu.classList.remove('show');
+                submenu.style.display = 'none';
+            });
+        }
+    };
     
-    // ==================================================
-    // ✅ SCRIPT TEMPORAL PARA VERIFICAR Z-INDEX (eliminar después)
-    // ==================================================
+    // 3. INICIALIZACIÓN
+    const initDesktopMenu = () => {
+        // Esperar a que Bootstrap esté listo
+        if (typeof bootstrap === 'undefined' || !bootstrap.Dropdown) {
+            setTimeout(initDesktopMenu, 100);
+            return;
+        }
+        
+        // Inicializar dropdowns de Bootstrap
+        const dropdownElements = document.querySelectorAll('.dropdown');
+        dropdownElements.forEach(dropdown => {
+            // Evitar inicializar dropdowns dentro de offcanvas móvil
+            if (!dropdown.closest('.offcanvas')) {
+                new bootstrap.Dropdown(dropdown, {
+                    autoClose: true,
+                    reference: 'toggle'
+                });
+            }
+        });
+        
+        // Configurar nuestros eventos personalizados
+        setupDropdowns();
+        
+        // Prevenir cierre al hacer clic en items
+        document.addEventListener('click', function(e) {
+            if (e.target.closest('.dropdown-item')) {
+                // Permitir que el clic se procese, luego cerrar menús
+                setTimeout(() => {
+                    document.querySelectorAll('.dropdown-menu.show').forEach(menu => {
+                        menu.classList.remove('show');
+                        menu.style.display = 'none';
+                    });
+                }, 300);
+            }
+        });
+        
+        console.log('✅ Sistema de menú desktop inicializado');
+    };
     
-    if (window.location.href.includes('debug=navbar')) {
-        const style = document.createElement('style');
-        style.textContent = `
-            .dropdown-menu {
-                box-shadow: 0 0 0 2px rgba(255,0,0,0.5) !important;
+    // Iniciar después de un breve delay
+    setTimeout(initDesktopMenu, 500);
+    
+    // 4. REINICIALIZAR AL REDIMENSIONAR
+    let resizeTimer;
+    window.addEventListener('resize', function() {
+        clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(function() {
+            if (window.innerWidth >= 992) {
+                console.log('🔄 Reconfigurando menú desktop por resize');
+                initDesktopMenu();
             }
-            .dropdown-menu .dropdown-menu {
-                box-shadow: 0 0 0 2px rgba(0,255,0,0.5) !important;
-            }
-            .dropdown-menu .dropdown-menu .dropdown-menu {
-                box-shadow: 0 0 0 2px rgba(0,0,255,0.5) !important;
-            }
-        `;
-        document.head.appendChild(style);
-        console.log('🔍 Modo debug de dropdowns activado');
-    }
+        }, 250);
+    });
 });
 </script>
+<?php endif; ?>
 
 <?php $this->endBody() ?>
 </body>

@@ -169,28 +169,36 @@ $config = [
         //modulo de acceso al sistema
         'acces' => [
             'class' => 'app\modules\acces\acces',
+            'controllerNamespace' => 'app\modules\acces\controllers',
         ],
         //modulo de acceso al sistema
         'tienda' => [
             'class' => 'app\modules\tienda\tienda',
+            'controllerNamespace' => 'app\modules\tienda\controllers',
         ],
         'atletas' => [
             'class' => 'app\modules\atletas\atletas',
+            'controllerNamespace' => 'app\modules\atletas\controllers',
         ],
-        'epcSanAgustin' => [
-            'class' => 'app\modules\escuela_club\epcSanAgustin\epcSanAgustin',
-        ],
+        //'epcSanAgustin' => [
+        //    'class' => 'app\modules\escuela_club\epcSanAgustin\epcSanAgustin',
+        //    'controllerNamespace' => 'app\modules\acces\controllers',
+        //],
         'escuela_club' => [
             'class' => 'app\modules\escuela_club\escuela_club',
+            'controllerNamespace' => 'app\modules\escuela_club\controllers',
         ],
         'ged' => [
             'class' => 'app\modules\ged\ged',
+            'controllerNamespace' => 'app\modules\ged\controllers',
         ],
         'aportes' => [
             'class' => 'app\modules\aportes\aportes',
+            'controllerNamespace' => 'app\modules\aportes\controllers',
         ],
         'reportes' => [
             'class' => 'app\modules\reportes\reportes',
+            'controllerNamespace' => 'app\modules\reportes\controllers',
         ],
         
     ],
@@ -212,7 +220,7 @@ $config = [
     'as access' => [
         'class' => 'mdm\admin\components\AccessControl',
         'allowActions' => [
-            'site/logout',
+            /*'site/logout',
             'ged/*',
             'site/*',
             'tienda/*',
@@ -221,7 +229,8 @@ $config = [
             'parroquia/get-by-muni',
             'admin/user/signup',
             'admin/user/request-password-reset',
-            'admin/user/reset-password',
+            'admin/user/reset-password',*/
+            'admin/*'
         ]
     ],
 

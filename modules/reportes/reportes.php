@@ -5,7 +5,7 @@ namespace app\modules\reportes;
 /**
  * reportes module definition class
  */
-class reportes extends \yii\base\Module
+class Reportes extends \yii\base\Module
 {
     /**
      * {@inheritdoc}
@@ -19,6 +19,7 @@ class reportes extends \yii\base\Module
     {
         parent::init();
 
-        // custom initialization code goes here
+        // SOLUCIÓN: Elimina completamente esta configuración
+        // O corrígela si realmente necesitas formatters PDF
     }
 }
