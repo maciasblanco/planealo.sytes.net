@@ -9,10 +9,14 @@ use yii\db\ActiveRecord;
  * Class AuditLog
  * @property int $id
  * @property int $user_id
- * @property string $action_type  // ✅ CAMBIADO: action -> action_type
+ * @property string $action_type
+ * @property string|null $action_subtype
+ * @property string $status
  * @property string|null $details
  * @property string|null $ip_address
  * @property string|null $user_agent
+ * @property int|null $risk_score
+ * @property bool|null $flagged
  * @property string $created_at
  */
 class AuditLog extends ActiveRecord
@@ -26,6 +30,11 @@ class AuditLog extends ActiveRecord
     const ACTION_PASSWORD_CHANGED = 'password_changed';
     const ACTION_ACCOUNT_LOCKED = 'account_locked';
     const ACTION_SESSION_EXPIRED = 'session_expired';
+    
+    const STATUS_SUCCESS = 'success';
+    const STATUS_FAILED = 'failed';
+    const STATUS_PENDING = 'pending';
+    const STATUS_COMPLETED = 'completed';
 
     /**
      * {@inheritdoc}
@@ -41,11 +50,13 @@ class AuditLog extends ActiveRecord
     public function rules()
     {
         return [
-            [['user_id', 'action_type'], 'required'],  // ✅ CAMBIADO: action -> action_type
-            [['user_id'], 'integer'],
-            [['details'], 'string'],
+            [['user_id', 'action_type', 'status', 'ip_address'], 'required'],
+            [['user_id', 'risk_score'], 'integer'],
+            [['details', 'user_agent'], 'string'],
+            [['flagged'], 'boolean'],
             [['created_at'], 'safe'],
-            [['action_type', 'ip_address', 'user_agent'], 'string', 'max' => 255],  // ✅ CAMBIADO
+            [['action_type', 'action_subtype', 'status'], 'string', 'max' => 50],
+            [['ip_address'], 'string', 'max' => 45],
         ];
     }
 
@@ -57,10 +68,14 @@ class AuditLog extends ActiveRecord
         return [
             'id' => 'ID',
             'user_id' => 'Usuario',
-            'action_type' => 'Tipo de Acción',  // ✅ CAMBIADO
+            'action_type' => 'Tipo de Acción',
+            'action_subtype' => 'Subtipo',
+            'status' => 'Estado',
             'details' => 'Detalles',
             'ip_address' => 'Dirección IP',
             'user_agent' => 'Agente de Usuario',
+            'risk_score' => 'Puntaje de Riesgo',
+            'flagged' => 'Marcado',
             'created_at' => 'Fecha de Creación',
         ];
     }
@@ -69,20 +84,28 @@ class AuditLog extends ActiveRecord
      * Crea un registro en el log de auditoría.
      *
      * @param int $userId ID del usuario
-     * @param string $actionType Tipo de acción  // ✅ CAMBIADO: $action -> $actionType
+     * @param string $actionType Tipo de acción
      * @param string|null $details Detalles adicionales
      * @param string|null $ipAddress Dirección IP (opcional)
      * @param string|null $userAgent Agente de usuario (opcional)
+     * @param string $status Estado de la acción (por defecto: 'success')
+     * @param string|null $actionSubtype Subtipo de acción (opcional)
+     * @param int|null $riskScore Puntaje de riesgo (opcional)
+     * @param bool|null $flagged Marcado (opcional)
      * @return bool
      */
-    public static function log($userId, $actionType, $details = null, $ipAddress = null, $userAgent = null)  // ✅ CAMBIADO
+    public static function log($userId, $actionType, $details = null, $ipAddress = null, $userAgent = null, $status = self::STATUS_SUCCESS, $actionSubtype = null, $riskScore = 0, $flagged = false)
     {
         $log = new self();
         $log->user_id = $userId;
-        $log->action_type = $actionType;  // ✅ CAMBIADO: action -> action_type
+        $log->action_type = $actionType;
+        $log->action_subtype = $actionSubtype;
+        $log->status = $status;
         $log->details = $details;
         $log->ip_address = $ipAddress ?: Yii::$app->request->getUserIP();
         $log->user_agent = $userAgent ?: Yii::$app->request->getUserAgent();
+        $log->risk_score = $riskScore;
+        $log->flagged = $flagged;
         $log->created_at = date('Y-m-d H:i:s');
 
         return $log->save();
