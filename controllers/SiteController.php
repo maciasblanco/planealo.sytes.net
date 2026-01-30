@@ -9,6 +9,11 @@ use yii\web\Response;
 use yii\filters\VerbFilter;
 use app\models\LoginForm;
 use app\models\ContactForm;
+use app\models\User;
+use app\models\VerificationSession;
+use app\models\AuditLog;
+use yii\web\NotFoundHttpException;
+use yii\web\BadRequestHttpException;
 
 class SiteController extends Controller
 {
@@ -20,7 +25,10 @@ class SiteController extends Controller
         return [
             'access' => [
                 'class' => AccessControl::class,
-                'only' => ['logout', 'acceder-sistema', 'mi-cuenta'],
+                'only' => [
+                    'logout', 'acceder-sistema', 'mi-cuenta', 'testcss',
+                    'verify-email-first', 'validate-code', 'change-password-first', 'resend-code'
+                ],
                 'rules' => [
                     [
                         'actions' => ['logout', 'mi-cuenta', 'testcss'],
@@ -28,11 +36,17 @@ class SiteController extends Controller
                         'roles' => ['@'],
                     ],
                     [
-                        'actions' => ['acceder-sistema'],
+                        'actions' => [
+                            'verify-email-first', 
+                            'validate-code', 
+                            'change-password-first', 
+                            'resend-code',
+                            'acceder-sistema'
+                        ],
                         'allow' => true,
                         'roles' => ['@'],
                         'denyCallback' => function ($rule, $action) {
-                            Yii::$app->session->setFlash('error', 'Debe iniciar sesión para acceder al sistema.');
+                            Yii::$app->session->setFlash('error', 'Debe iniciar sesión para acceder a esta función.');
                             return $this->redirect(['/site/login']);
                         }
                     ],
@@ -94,6 +108,26 @@ class SiteController extends Controller
             return $this->redirect(['/site/login']);
         }
         
+        $user = Yii::$app->user->identity;
+        
+        // Verificar si es primer acceso
+        if ($user->isFirstAccess()) {
+            return $this->redirect(['verify-email-first']);
+        }
+        
+        // Verificar si necesita cambio de contraseña
+        if ($user->needsPasswordChange()) {
+            return $this->redirect(['change-password-first']);
+        }
+        
+        // Verificar si está bloqueado
+        if ($user->isBlocked()) {
+            Yii::$app->session->setFlash('error', 
+                "Su cuenta está bloqueada hasta {$user->blocked_until}. Tiempo restante: {$user->getBlockTimeRemaining()}");
+            Yii::$app->user->logout();
+            return $this->redirect(['login']);
+        }
+        
         // ✅ VERIFICACIÓN EXTRA: Si ya estamos en una página del sistema GED, no redirigir
         $currentRoute = Yii::$app->controller->route;
         if (strpos($currentRoute, 'ged/') === 0) {
@@ -105,15 +139,14 @@ class SiteController extends Controller
         // Esto no revela la estructura interna al usuario
         
         // Registrar el acceso en logs para auditoría
-        Yii::info("Usuario " . Yii::$app->user->identity->username . 
-                  " accede al sistema desde IP: " . Yii::$app->request->userIP, 'security');
+        AuditLog::log($user->id, 'system_access', 'Acceso al sistema principal');
         
         // Redirigir al punto de entrada del módulo GED
         return $this->redirect(['/ged/default/index']);
     }
 
     /**
-     * ✅ Login action - CON PREVENCIÓN DE BUCLE MEJORADA
+     * ✅ Login action - CON FLUJO DE VERIFICACIÓN SEGURA
      *
      * @return Response|string
      */
@@ -129,12 +162,31 @@ class SiteController extends Controller
 
         $model = new LoginForm();
         if ($model->load(Yii::$app->request->post()) && $model->login()) {
-            // Verificar si debe cambiar contraseña temporal
             $user = Yii::$app->user->identity;
-            if ($user && method_exists($user, 'debeCambiarPassword') && $user->debeCambiarPassword()) {
+            
+            // Verificar si está bloqueado
+            if ($user->isBlocked()) {
+                Yii::$app->session->setFlash('error', 
+                    "Su cuenta está bloqueada hasta {$user->blocked_until}. Tiempo restante: {$user->getBlockTimeRemaining()}");
+                Yii::$app->user->logout();
+                return $this->redirect(['login']);
+            }
+            
+            // Registrar login exitoso
+            $user->recordSuccessfulLogin();
+            
+            // Verificar si es primer acceso
+            if ($user->isFirstAccess()) {
                 Yii::$app->session->setFlash('warning', 
-                    'Debe cambiar su contraseña temporal antes de continuar.');
-                return $this->redirect(['/site/cambiar-password']);
+                    'Es su primer acceso. Debe verificar su email y cambiar su contraseña.');
+                return $this->redirect(['verify-email-first']);
+            }
+            
+            // Verificar si necesita cambio de contraseña
+            if ($user->needsPasswordChange()) {
+                Yii::$app->session->setFlash('warning', 
+                    'Debe cambiar su contraseña antes de continuar.');
+                return $this->redirect(['change-password-first']);
             }
             
             Yii::$app->session->setFlash('success', 'Sesión iniciada correctamente.');
@@ -147,6 +199,20 @@ class SiteController extends Controller
             }
             
             return $this->goBack();
+        } else {
+            // Registrar intento fallido si el usuario existe
+            if ($model->username) {
+                $user = User::findByUsername($model->username);
+                if ($user) {
+                    $user->recordFailedLogin();
+                    
+                    // Verificar si fue bloqueado
+                    if ($user->isBlocked()) {
+                        Yii::$app->session->setFlash('error', 
+                            "Demasiados intentos fallidos. Su cuenta está bloqueada hasta {$user->blocked_until}");
+                    }
+                }
+            }
         }
 
         $model->password = '';
@@ -156,22 +222,14 @@ class SiteController extends Controller
     }
 
     /**
-     * ✅ Cierra sesión y también limpia la escuela - SIN BUCLE
+     * ✅ Logout action
      */
     public function actionLogout()
     {
         // Registrar logout en logs
         if (!Yii::$app->user->isGuest) {
-            Yii::info("Usuario " . Yii::$app->user->identity->username . 
-                      " cierra sesión desde IP: " . Yii::$app->request->userIP, 'security');
+            AuditLog::log(Yii::$app->user->id, 'logout', 'Usuario cerró sesión');
         }
-        
-        // Limpiar escuela antes de hacer logout
-        $session = Yii::$app->session;
-        $session->remove('id_escuela');
-        $session->remove('nombre_escuela');
-        $session->remove('idEscuela');
-        $session->remove('nombreEscuela');
         
         // Logout normal
         Yii::$app->user->logout();
@@ -180,6 +238,299 @@ class SiteController extends Controller
         
         // ✅ SIEMPRE REDIRIGIR AL INDEX, NUNCA AL LOGIN
         return $this->redirect(['site/index']);
+    }
+
+    /**
+     * ✅ VERIFICACIÓN DE EMAIL REAL (PRIMER ACCESO)
+     * 
+     * @return string|Response
+     */
+    public function actionVerifyEmailFirst()
+    {
+        if (Yii::$app->user->isGuest) {
+            return $this->redirect(['login']);
+        }
+        
+        $user = Yii::$app->user->identity;
+        
+        // Verificar que sea primer acceso
+        if (!$user->isFirstAccess()) {
+            Yii::$app->session->setFlash('info', 'Su email ya fue verificado anteriormente.');
+            return $this->redirect(['acceder-sistema']);
+        }
+        
+        // Verificar si está bloqueado
+        if ($user->isBlocked()) {
+            Yii::$app->session->setFlash('error', 
+                "Su cuenta está bloqueada hasta {$user->blocked_until}. Tiempo restante: {$user->getBlockTimeRemaining()}");
+            Yii::$app->user->logout();
+            return $this->redirect(['login']);
+        }
+        
+        // Crear formulario dinámico
+        $model = new \yii\base\DynamicModel(['email', 'emailConfirm', 'captcha']);
+        $model->addRule(['email', 'emailConfirm', 'captcha'], 'required')
+              ->addRule(['email'], 'email')
+              ->addRule(['emailConfirm'], 'compare', ['compareAttribute' => 'email'])
+              ->addRule(['captcha'], 'captcha', ['captchaAction' => 'site/captcha']);
+        
+        if ($model->load(Yii::$app->request->post()) && $model->validate()) {
+            // Verificar que el email no esté en uso por otro usuario
+            $existingUser = User::findByEmail($model->email);
+            if ($existingUser && $existingUser->id != $user->id) {
+                $model->addError('email', 'Este email ya está registrado por otro usuario.');
+            } else {
+                // Guardar email real temporalmente
+                $user->real_email = $model->email;
+                $user->save(false, ['real_email', 'updated_at']);
+                
+                // Crear sesión de verificación
+                $session = $user->createVerificationSession();
+                
+                if ($session) {
+                    // Enviar email con código
+                    if ($this->sendVerificationCode($user, $session->code)) {
+                        Yii::$app->session->setFlash('success', 
+                            'Se ha enviado un código de verificación a su email. Tiene 15 minutos para ingresarlo.');
+                        
+                        return $this->redirect(['validate-code', 'token' => $session->token]);
+                    } else {
+                        Yii::$app->session->setFlash('error', 
+                            'Error al enviar el código de verificación. Por favor, intente nuevamente.');
+                    }
+                } else {
+                    Yii::$app->session->setFlash('error', 
+                        'Error al crear la sesión de verificación. Por favor, intente nuevamente.');
+                }
+            }
+        }
+        
+        return $this->render('verify-email-first', [
+            'model' => $model,
+            'user' => $user,
+        ]);
+    }
+
+    /**
+     * ✅ VALIDAR CÓDIGO DE VERIFICACIÓN
+     * 
+     * @param string $token Token de la sesión
+     * @return string|Response
+     * @throws NotFoundHttpException
+     */
+    public function actionValidateCode($token)
+    {
+        // Buscar sesión activa
+        $session = VerificationSession::find()
+            ->where(['token' => $token, 'status' => VerificationSession::STATUS_PENDING])
+            ->andWhere(['>', 'expires_at', time()])
+            ->one();
+            
+        if (!$session) {
+            throw new NotFoundHttpException('La sesión de verificación no es válida o ha expirado.');
+        }
+        
+        $user = $session->user;
+        
+        // Verificar que el usuario esté logueado
+        if (Yii::$app->user->isGuest || Yii::$app->user->id != $user->id) {
+            return $this->redirect(['login']);
+        }
+        
+        // Crear formulario dinámico para código
+        $model = new \yii\base\DynamicModel(['code']);
+        $model->addRule(['code'], 'required')
+              ->addRule(['code'], 'string', ['length' => 6])
+              ->addRule(['code'], 'match', ['pattern' => '/^\d{6}$/']);
+        
+        if ($model->load(Yii::$app->request->post()) && $model->validate()) {
+            // Validar intentos (máximo 3)
+            if ($session->attempts >= 3) {
+                $user->incrementBlockCount();
+                Yii::$app->session->setFlash('error', 
+                    'Ha excedido el número máximo de intentos. Su cuenta ha sido bloqueada por 24 horas.');
+                Yii::$app->user->logout();
+                return $this->redirect(['login']);
+            }
+            
+            // Validar código
+            if ($session->code === $model->code) {
+                // Código correcto
+                $session->status = VerificationSession::STATUS_VERIFIED;
+                $session->verified_at = date('Y-m-d H:i:s');
+                $session->save();
+                
+                // Actualizar email del usuario
+                $user->email = $user->real_email;
+                $user->markEmailAsVerified();
+                
+                Yii::$app->session->setFlash('success', 'Email verificado exitosamente.');
+                return $this->redirect(['change-password-first']);
+            } else {
+                // Código incorrecto
+                $session->attempts++;
+                $session->save();
+                
+                $attemptsLeft = 3 - $session->attempts;
+                Yii::$app->session->setFlash('error', 
+                    "Código incorrecto. Le quedan {$attemptsLeft} intento(s).");
+            }
+        }
+        
+        return $this->render('verify-code', [
+            'model' => $model,
+            'token' => $token,
+            'session' => $session,
+            'user' => $user,
+        ]);
+    }
+
+    /**
+     * ✅ CAMBIO DE CONTRASEÑA OBLIGATORIO (PRIMER ACCESO)
+     * 
+     * @return string|Response
+     */
+    public function actionChangePasswordFirst()
+    {
+        if (Yii::$app->user->isGuest) {
+            return $this->redirect(['login']);
+        }
+        
+        $user = Yii::$app->user->identity;
+        
+        // Verificar que necesite cambio de contraseña
+        if (!$user->needsPasswordChange()) {
+            Yii::$app->session->setFlash('info', 'Su contraseña ya fue cambiada anteriormente.');
+            return $this->redirect(['acceder-sistema']);
+        }
+        
+        // Crear formulario dinámico
+        $model = new \yii\base\DynamicModel(['newPassword', 'newPasswordConfirm']);
+        $model->addRule(['newPassword', 'newPasswordConfirm'], 'required')
+              ->addRule(['newPassword'], 'string', ['min' => 8])
+              ->addRule(['newPasswordConfirm'], 'compare', ['compareAttribute' => 'newPassword']);
+        
+        if ($model->load(Yii::$app->request->post()) && $model->validate()) {
+            // Cambiar contraseña con validaciones
+            $result = $user->changePasswordWithValidation($model->newPassword);
+            
+            if ($result['success']) {
+                Yii::$app->session->setFlash('success', $result['message']);
+                
+                // Si es primer acceso, redirigir al sistema
+                if ($user->isFirstAccess()) {
+                    return $this->redirect(['acceder-sistema']);
+                }
+                
+                return $this->redirect(['site/index']);
+            } else {
+                Yii::$app->session->setFlash('error', $result['message']);
+            }
+        }
+        
+        return $this->render('change-password-first', [
+            'model' => $model,
+            'user' => $user,
+        ]);
+    }
+
+    /**
+     * ✅ REENVIAR CÓDIGO DE VERIFICACIÓN
+     * 
+     * @param string $token Token de la sesión
+     * @return Response
+     * @throws NotFoundHttpException
+     */
+    public function actionResendCode($token)
+    {
+        $session = VerificationSession::find()
+            ->where(['token' => $token, 'status' => VerificationSession::STATUS_PENDING])
+            ->one();
+            
+        if (!$session) {
+            throw new NotFoundHttpException('La sesión de verificación no es válida.');
+        }
+        
+        $user = $session->user;
+        
+        // Verificar límite de reenvíos (máximo 5 en 24 horas)
+        $last24Hours = date('Y-m-d H:i:s', strtotime('-24 hours'));
+        $totalSessions = VerificationSession::find()
+            ->where(['user_id' => $user->id, 'type' => 'email'])
+            ->andWhere(['>=', 'created_at', $last24Hours])
+            ->count();
+            
+        if ($totalSessions >= 5) {
+            $user->incrementBlockCount();
+            Yii::$app->session->setFlash('error', 
+                'Ha excedido el límite de códigos solicitados. Su cuenta ha sido bloqueada por 24 horas.');
+            Yii::$app->user->logout();
+            return $this->redirect(['login']);
+        }
+        
+        // Crear nueva sesión
+        $newSession = $user->createVerificationSession();
+        
+        if ($newSession) {
+            // Marcar sesión anterior como expirada
+            $session->status = VerificationSession::STATUS_EXPIRED;
+            $session->save();
+            
+            // Enviar nuevo código
+            if ($this->sendVerificationCode($user, $newSession->code)) {
+                Yii::$app->session->setFlash('success', 
+                    'Se ha enviado un nuevo código de verificación a su email.');
+            } else {
+                Yii::$app->session->setFlash('error', 
+                    'Error al enviar el código de verificación. Por favor, intente nuevamente.');
+            }
+            
+            return $this->redirect(['validate-code', 'token' => $newSession->token]);
+        }
+        
+        Yii::$app->session->setFlash('error', 
+            'Error al generar nuevo código. Por favor, intente nuevamente.');
+        return $this->redirect(['validate-code', 'token' => $token]);
+    }
+
+    /**
+     * ✅ ENVIAR CÓDIGO DE VERIFICACIÓN POR EMAIL
+     * 
+     * @param User $user
+     * @param string $code
+     * @return bool
+     */
+    private function sendVerificationCode($user, $code)
+    {
+        try {
+            $email = $user->real_email ?: $user->email;
+            
+            if (empty($email)) {
+                Yii::error('No hay email para enviar código de verificación', 'app');
+                return false;
+            }
+            
+            // Configurar mailer si no está configurado
+            if (!isset(Yii::$app->params['adminEmail'])) {
+                Yii::$app->params['adminEmail'] = 'noreply@sistema-ged.com';
+            }
+            
+            $message = Yii::$app->mailer->compose()
+                ->setTo($email)
+                ->setFrom([Yii::$app->params['adminEmail'] => Yii::$app->name])
+                ->setSubject('Código de Verificación - ' . Yii::$app->name)
+                ->setTextBody("Su código de verificación es: {$code}\n\nVálido por 15 minutos.")
+                ->setHtmlBody($this->renderPartial('@app/views/mail/verification-code', [
+                    'user' => $user,
+                    'code' => $code,
+                ]));
+                
+            return $message->send();
+                
+        } catch (\Exception $e) {
+            Yii::error('Error al enviar email de verificación: ' . $e->getMessage(), 'app');
+            return false;
+        }
     }
 
     /**
@@ -243,7 +594,7 @@ class SiteController extends Controller
                 Yii::$app->session->setFlash('success', 'Contraseña cambiada exitosamente. Ahora puede usar el sistema.');
                 
                 // Registrar el cambio en logs de seguridad
-                Yii::info("Usuario {$user->username} cambió su contraseña temporal", 'security');
+                AuditLog::log($user->id, 'password_changed_legacy', 'Contraseña cambiada desde acción cambiar-password');
                 
                 // ✅ REDIRIGIR AL INDEX, NO A LOGIN
                 return $this->redirect(['/site/index']);
@@ -284,7 +635,7 @@ class SiteController extends Controller
                 Yii::$app->session->setFlash('success', 'Contraseña cambiada exitosamente.');
                 
                 // Registrar cambio en logs
-                Yii::info("Usuario {$user->username} actualizó su contraseña desde Mi Cuenta", 'security');
+                AuditLog::log($user->id, 'password_changed_profile', 'Contraseña cambiada desde Mi Cuenta');
                 
                 return $this->refresh();
             } else {

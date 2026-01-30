@@ -32,7 +32,8 @@ $config = [
         ],
         'user' => [
             'identityClass' => 'app\models\User',
-            'enableAutoLogin' => true,
+            'enableAutoLogin' => false, // ✅ IMPORTANTE: Deshabilitado para seguridad
+            'loginUrl' => ['site/login'],
         ],
         'errorHandler' => [
             'errorAction' => 'site/error',
@@ -40,7 +41,20 @@ $config = [
         'mailer' => [
             'class' => \yii\symfonymailer\Mailer::class,
             'viewPath' => '@app/mail',
-            'useFileTransport' => true,
+            'useFileTransport' => true, // ✅ PARA DESARROLLO: true (guarda emails en archivos)
+            // 'useFileTransport' => false, // ✅ PARA PRODUCCIÓN: false (habilitar SMTP)
+            
+            // ✅ CONFIGURACIÓN SMTP PARA PRODUCCIÓN (DESCOMENTAR Y CONFIGURAR)
+            /*
+            'transport' => [
+                'scheme' => 'smtps',
+                'host' => 'smtp.gmail.com',
+                'username' => 'tu-email@gmail.com',
+                'password' => 'tu-password-app',
+                'port' => 465,
+                'dsn' => 'smtps://tu-email@gmail.com:tu-password-app@smtp.gmail.com:465',
+            ],
+            */
         ],
         'authManager' => [
             'class' => 'yii\rbac\DbManager',
@@ -60,7 +74,23 @@ $config = [
         ],
         'db' => $db,
         
-        // ✅ IMPORTANTE: Configuración de AssetManager para Bootstrap 5
+        // ✅ CONFIGURACIÓN DE I18N PARA TRADUCCIONES
+        'i18n' => [
+            'translations' => [
+                'app*' => [
+                    'class' => 'yii\i18n\PhpMessageSource',
+                    'basePath' => '@app/messages',
+                    'sourceLanguage' => 'es',
+                    'fileMap' => [
+                        'app' => 'app.php',
+                        'app/auth' => 'auth.php',
+                        'app/error' => 'error.php',
+                    ],
+                ],
+            ],
+        ],
+        
+        // ✅ CONFIGURACIÓN DE AssetManager PARA Bootstrap 5
         'assetManager' => [
             'bundles' => [
                 'yii\bootstrap5\BootstrapAsset' => [
@@ -85,6 +115,13 @@ $config = [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
             'rules' => [
+                // ✅ NUEVAS RUTAS DEL FLUJO DE AUTENTICACIÓN SEGURO
+                'verify-email-first' => 'site/verify-email-first',
+                'validate-code/<token:[\w\-]+>' => 'site/validate-code',
+                'change-password-first' => 'site/change-password-first',
+                'resend-code/<token:[\w\-]+>' => 'site/resend-code',
+                
+                // Rutas existentes
                 'site/debug-menu' => 'site/debug-menu',
                 'site/test-menu-widget' => 'site/test-menu-widget',
                 'site/clear-cache' => 'site/clear-cache',
@@ -103,6 +140,7 @@ $config = [
                 
                 // Login correcto
                 'login' => 'site/login',
+                'logout' => 'site/logout',
                 
                 // Rutas para atletas
                 'atleta/dashboard' => 'reportes-atletas/dashboard',
@@ -214,19 +252,37 @@ $config = [
             'maxProductosPorTienda' => 100,
             'comisionVenta' => 3, // 3% de comisión
             'monedaPredeterminada' => 'USD',
-        ]
+        ],
+        // ✅ PARÁMETROS PARA AUTENTICACIÓN SEGURA
+        'auth' => [
+            'verificationCodeExpiry' => 900, // 15 minutos en segundos
+            'maxVerificationAttempts' => 3,
+            'passwordHistoryLimit' => 5, // Número de contraseñas anteriores a verificar
+            'sessionTimeout' => 1800, // 30 minutos de inactividad
+        ],
     ]),
     
     'as access' => [
         'class' => 'mdm\admin\components\AccessControl',
         'allowActions' => [
-            /*'site/logout',
-            'ged/*',
-            'site/*',
-            'tienda/*',
+            // ✅ PERMITIR ACCESO A LAS RUTAS DE AUTENTICACIÓN SIN LOGIN
+            'site/login',
+            'site/logout',
+            'site/verify-email-first',
+            'site/validate-code',
+            'site/change-password-first',
+            'site/resend-code',
+            'site/error',
+            
+            // Otras rutas públicas
             'tienda/marketplace/*',
             'municipio/get-by-edo',
             'parroquia/get-by-muni',
+            'parroquia/get-by-muni-cod',
+            
+            /*'ged/*',
+            'site/*',
+            'tienda/*',
             'admin/user/signup',
             'admin/user/request-password-reset',
             'admin/user/reset-password',*/

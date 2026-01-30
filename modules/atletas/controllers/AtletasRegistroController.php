@@ -6,6 +6,7 @@ use app\models\AtletasRegistro;
 use app\models\RegistroRepresentantes;
 use app\models\CategoriaAtletas;
 use app\modules\atletas\models\AtletasRegistroSearch;
+use app\models\User;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -134,8 +135,17 @@ class AtletasRegistroController extends Controller
                         
                         $idRepresentanteAtleta = $representantesRegistrosModel->id;
                         $model->id_representante = $idRepresentanteAtleta;
+                        
+                        // ✅ CREAR USUARIO AUTOMÁTICO PARA REPRESENTANTE
+                        $this->crearUsuarioParaPersona($representantesRegistrosModel, 'representante');
+                        
                     } else {
                         $model->id_representante = $encontraCIRepresentante->id;
+                        
+                        // ✅ VERIFICAR SI EL REPRESENTANTE EXISTENTE TIENE USUARIO
+                        if (!$encontraCIRepresentante->user_id) {
+                            $this->crearUsuarioParaPersona($encontraCIRepresentante, 'representante');
+                        }
                     }
                     
                     // 🆕 ASIGNAR VALORES POR DEFECTO PARA CAMPOS OPCIONALES
@@ -155,9 +165,12 @@ class AtletasRegistroController extends Controller
                     $model->eliminado = false;
                     
                     if ($model->save()) { 
+                        // ✅ CREAR USUARIO AUTOMÁTICO PARA ATLETA
+                        $this->crearUsuarioParaPersona($model, 'atleta');
+                        
                         $transaction->commit();
                         
-                        Yii::$app->session->setFlash('success', 'Atleta registrado exitosamente.');
+                        Yii::$app->session->setFlash('success', '✅ Atleta registrado exitosamente. Usuario creado automáticamente con cédula como username y clave: 12345-aves');
                         return $this->redirect(['index', 
                             'id' => $id, 
                             'nombre' => $nombre,
@@ -166,15 +179,15 @@ class AtletasRegistroController extends Controller
                         // Error al guardar atleta
                         $transaction->rollBack();
                         Yii::error('Error al guardar atleta: ' . json_encode($model->getErrors()), 'atletas');
-                        Yii::$app->session->setFlash('error', 'Error al guardar el atleta: ' . json_encode($model->getErrors()));
+                        Yii::$app->session->setFlash('error', '❌ Error al guardar el atleta: ' . json_encode($model->getErrors()));
                     }
                 } catch (\Exception $e) {
                     $transaction->rollBack();
-                    Yii::$app->session->setFlash('error', 'Error en el proceso de registro: ' . $e->getMessage());
+                    Yii::$app->session->setFlash('error', '❌ Error en el proceso de registro: ' . $e->getMessage());
                     Yii::error('Error en actionCreate: ' . $e->getMessage(), 'atletas');
                 }
             } else {
-                Yii::$app->session->setFlash('error', 'Error al cargar los datos del formulario.');
+                Yii::$app->session->setFlash('error', '❌ Error al cargar los datos del formulario.');
             }
         } else {
             $model->loadDefaultValues();
@@ -207,7 +220,7 @@ class AtletasRegistroController extends Controller
             if ($model->save()) {
                 return $this->redirect(['view', 'id' => $model->id]);
             } else {
-                Yii::$app->session->setFlash('error', 'Error al actualizar el atleta: ' . json_encode($model->getErrors()));
+                Yii::$app->session->setFlash('error', '❌ Error al actualizar el atleta: ' . json_encode($model->getErrors()));
             }
         }
 
@@ -290,5 +303,268 @@ class AtletasRegistroController extends Controller
         }
         
         return ['success' => false, 'categoria' => 'SIN CATEGORÍA'];
+    }
+
+    /**
+     * =========================================================================
+     * MÉTODOS PARA CREACIÓN AUTOMÁTICA DE USUARIOS
+     * =========================================================================
+     */
+
+    /**
+     * Crear usuario para persona (atleta o representante)
+     * Basado en el mismo método de MigrarUsuariosController.php
+     */
+    private function crearUsuarioParaPersona($persona, $tipo)
+    {
+        try {
+            $cedula = (string)$persona->identificacion;
+            
+            if (empty($cedula)) {
+                Yii::error("Cédula vacía para {$tipo}", 'atletas');
+                return null;
+            }
+            
+            // 1. Verificar si ya existe usuario con esta cédula COMO USERNAME
+            $username = $cedula;
+            $usuarioExistente = User::findByUsername($username);
+            
+            if ($usuarioExistente) {
+                Yii::info("Usuario ya existe para {$tipo}: {$usuarioExistente->username}", 'atletas');
+                
+                // Actualizar user_id en la persona si no lo tiene
+                if (!$persona->user_id) {
+                    $persona->user_id = $usuarioExistente->id;
+                    $persona->save(false);
+                }
+                
+                // Asignar rol si no lo tiene
+                $this->asignarRolSeguro($usuarioExistente->id, $tipo);
+                
+                return $usuarioExistente;
+            }
+            
+            // 2. Crear usuario con CAMPOS MÍNIMOS
+            $user = new User();
+            $user->username = $username;
+            $user->cedula = $cedula;
+            $user->email = $cedula . '@temporal.com';
+            $user->status = User::STATUS_ACTIVE;
+            
+            // SOLO campos que sabemos que existen:
+            $user->setPassword('12345-aves');
+            $user->generateAuthKey();
+            $user->created_at = time();
+            $user->updated_at = time();
+            
+            // Agregar nombre completo si el modelo lo soporta
+            if ($user->hasAttribute('nombre')) {
+                $nombreCompleto = $this->obtenerNombreCompleto($persona);
+                $user->nombre = $nombreCompleto;
+            }
+            
+            if ($user->save()) {
+                Yii::info("✅ Usuario creado para {$tipo}: {$user->username}", 'atletas');
+                
+                // Asignar rol
+                $this->asignarRolSeguro($user->id, $tipo);
+                
+                // Actualizar user_id en la persona usando SQL directo para evitar behaviors
+                $this->actualizarUserIdPersona($persona, $user->id, $tipo);
+                
+                return $user;
+            } else {
+                Yii::error("❌ ERRORES al crear usuario para {$tipo}: " . json_encode($user->getErrors()), 'atletas');
+                return null;
+            }
+            
+        } catch (\Exception $e) {
+            Yii::error("❌ EXCEPCIÓN en crearUsuarioParaPersona: " . $e->getMessage(), 'atletas');
+            return null;
+        }
+    }
+    
+    /**
+     * Obtener nombre completo de la persona
+     */
+    private function obtenerNombreCompleto($persona)
+    {
+        if ($persona instanceof AtletasRegistro || $persona instanceof RegistroRepresentantes) {
+            $nombre = trim($persona->p_nombre . ' ' . 
+                         ($persona->s_nombre ? $persona->s_nombre . ' ' : '') .
+                         $persona->p_apellido . ' ' .
+                         ($persona->s_apellido ? $persona->s_apellido : ''));
+            return $nombre;
+        }
+        return '';
+    }
+    
+    /**
+     * Actualizar user_id en la persona usando SQL directo
+     */
+    private function actualizarUserIdPersona($persona, $userId, $tipo)
+    {
+        try {
+            $db = Yii::$app->db;
+            
+            if ($tipo === 'atleta') {
+                $command = $db->createCommand('
+                    UPDATE atletas.registro 
+                    SET user_id = :user_id 
+                    WHERE id = :id
+                ', [
+                    ':user_id' => $userId,
+                    ':id' => $persona->id
+                ]);
+            } else { // representante
+                $command = $db->createCommand('
+                    UPDATE atletas.registro_representantes 
+                    SET user_id = :user_id 
+                    WHERE id = :id
+                ', [
+                    ':user_id' => $userId,
+                    ':id' => $persona->id
+                ]);
+            }
+            
+            $command->execute();
+            Yii::info("✅ user_id actualizado para {$tipo} ID {$persona->id}: {$userId}", 'atletas');
+            return true;
+            
+        } catch (\Exception $e) {
+            Yii::error("❌ Error al actualizar user_id para {$tipo}: " . $e->getMessage(), 'atletas');
+            return false;
+        }
+    }
+    
+    /**
+     * Asignar rol de manera segura
+     */
+    private function asignarRolSeguro($userId, $rol)
+    {
+        try {
+            $auth = Yii::$app->authManager;
+            if ($auth === null) {
+                Yii::warning("⚠️ authManager no está configurado", 'atletas');
+                return false;
+            }
+            
+            // Verificar si el rol existe
+            $role = $auth->getRole($rol);
+            if (!$role) {
+                Yii::warning("⚠️ El rol '{$rol}' no existe", 'atletas');
+                return false;
+            }
+            
+            // Verificar si ya tiene asignado el rol
+            $existingAssignment = $auth->getAssignment($role->name, $userId);
+            if ($existingAssignment) {
+                Yii::info("✅ Usuario {$userId} ya tiene rol '{$rol}'", 'atletas');
+                return true;
+            }
+            
+            // Asignar rol
+            $auth->assign($role, $userId);
+            Yii::info("✅ Rol '{$rol}' asignado al usuario {$userId}", 'atletas');
+            return true;
+            
+        } catch (\Exception $e) {
+            Yii::error("❌ Error asignando rol '{$rol}': " . $e->getMessage(), 'atletas');
+            return false;
+        }
+    }
+
+    /**
+     * Acción para forzar creación de usuario para un atleta específico
+     * (Útil para testing o corrección de datos)
+     */
+    public function actionCrearUsuario($id)
+    {
+        $atleta = $this->findModel($id);
+        
+        if ($this->crearUsuarioParaPersona($atleta, 'atleta')) {
+            Yii::$app->session->setFlash('success', '✅ Usuario creado para atleta ID: ' . $id);
+        } else {
+            Yii::$app->session->setFlash('error', '❌ Error creando usuario para atleta');
+        }
+        
+        return $this->redirect(['view', 'id' => $id]);
+    }
+
+    /**
+     * Acción para verificar estado de usuario de un atleta
+     */
+    public function actionVerificarUsuario($id)
+    {
+        $atleta = $this->findModel($id);
+        
+        $usuario = null;
+        if ($atleta->user_id) {
+            $usuario = User::findOne($atleta->user_id);
+        } else {
+            // Buscar por cédula
+            $usuario = User::findByUsername($atleta->identificacion);
+        }
+        
+        $resultado = [
+            'atleta' => [
+                'id' => $atleta->id,
+                'cedula' => $atleta->identificacion,
+                'nombre' => $atleta->p_nombre . ' ' . $atleta->p_apellido,
+                'user_id' => $atleta->user_id,
+            ],
+            'usuario' => $usuario ? [
+                'id' => $usuario->id,
+                'username' => $usuario->username,
+                'email' => $usuario->email,
+                'status' => $usuario->status,
+                'creado' => date('Y-m-d H:i:s', $usuario->created_at),
+            ] : null,
+        ];
+        
+        return $this->asJson($resultado);
+    }
+
+    /**
+     * Acción para asignar roles a todos los atletas y representantes existentes
+     * (Similar al comando migrar-usuarios, pero desde la web)
+     */
+    public function actionMigrarTodos()
+    {
+        set_time_limit(300); // 5 minutos
+        
+        $contadorAtletas = 0;
+        $contadorRepresentantes = 0;
+        $erroresAtletas = 0;
+        $erroresRepresentantes = 0;
+        
+        // Migrar representantes
+        $representantes = RegistroRepresentantes::find()->all();
+        foreach ($representantes as $representante) {
+            if ($this->crearUsuarioParaPersona($representante, 'representante')) {
+                $contadorRepresentantes++;
+            } else {
+                $erroresRepresentantes++;
+            }
+        }
+        
+        // Migrar atletas
+        $atletas = AtletasRegistro::find()->all();
+        foreach ($atletas as $atleta) {
+            if ($this->crearUsuarioParaPersona($atleta, 'atleta')) {
+                $contadorAtletas++;
+            } else {
+                $erroresAtletas++;
+            }
+        }
+        
+        Yii::$app->session->setFlash('success', 
+            "✅ Migración completada:<br>" .
+            "Atletas: {$contadorAtletas} migrados, {$erroresAtletas} errores<br>" .
+            "Representantes: {$contadorRepresentantes} migrados, {$erroresRepresentantes} errores<br>" .
+            "Total: " . ($contadorAtletas + $contadorRepresentantes) . " usuarios creados"
+        );
+        
+        return $this->redirect(['index']);
     }
 }

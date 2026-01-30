@@ -6,7 +6,6 @@ use Yii;
 use yii\db\ActiveRecord;
 use yii\web\IdentityInterface;
 use yii\behaviors\TimestampBehavior;
-use yii\db\Exception as DbException;
 
 /**
  * User model
@@ -21,11 +20,26 @@ use yii\db\Exception as DbException;
  * @property integer $status
  * @property integer $created_at
  * @property integer $updated_at
+ * @property boolean $email_verified
+ * @property integer $block_count
+ * @property string $last_password_change
+ * @property boolean $requires_password_change
+ * @property string $temporal_email
+ * @property string $real_email
+ * @property string $blocked_until
+ * @property string $last_login_at
+ * @property string $last_failed_login
+ * @property integer $failed_login_attempts
  */
 class User extends ActiveRecord implements IdentityInterface
 {
     const STATUS_DELETED = 0;
     const STATUS_ACTIVE = 10;
+    const STATUS_BLOCKED = 20;
+
+    const MAX_VERIFICATION_SESSIONS = 5; // Máximo 5 códigos en 24 horas
+    const MAX_CODE_ATTEMPTS = 3; // Máximo 3 intentos por código
+    const CODE_VALIDITY_MINUTES = 15; // 15 minutos de validez
 
     /**
      * {@inheritdoc}
@@ -52,18 +66,24 @@ class User extends ActiveRecord implements IdentityInterface
     {
         return [
             [['username', 'auth_key', 'password_hash', 'email'], 'required'],
-            [['status', 'created_at', 'updated_at'], 'default', 'value' => null],
-            [['status', 'created_at', 'updated_at'], 'integer'],
+            [['status', 'created_at', 'updated_at', 'block_count', 'failed_login_attempts'], 'default', 'value' => null],
+            [['status', 'created_at', 'updated_at', 'block_count', 'failed_login_attempts'], 'integer'],
+            [['email_verified', 'requires_password_change'], 'boolean'],
+            [['last_password_change', 'blocked_until', 'last_login_at', 'last_failed_login'], 'safe'],
             [['username'], 'string', 'max' => 32],
             [['auth_key'], 'string', 'max' => 32],
-            [['password_hash', 'password_reset_token', 'email'], 'string', 'max' => 255],
+            [['password_hash', 'password_reset_token', 'email', 'temporal_email', 'real_email'], 'string', 'max' => 255],
             [['cedula'], 'string', 'max' => 20],
             [['username'], 'unique'],
             [['email'], 'unique'],
             [['cedula'], 'unique'],
             [['password_reset_token'], 'unique'],
             ['status', 'default', 'value' => self::STATUS_ACTIVE],
-            ['status', 'in', 'range' => [self::STATUS_ACTIVE, self::STATUS_DELETED]],
+            ['status', 'in', 'range' => [self::STATUS_ACTIVE, self::STATUS_DELETED, self::STATUS_BLOCKED]],
+            ['email_verified', 'default', 'value' => false],
+            ['block_count', 'default', 'value' => 0],
+            ['requires_password_change', 'default', 'value' => true],
+            ['failed_login_attempts', 'default', 'value' => 0],
         ];
     }
 
@@ -80,7 +100,393 @@ class User extends ActiveRecord implements IdentityInterface
             'status' => 'Estado',
             'created_at' => 'Creado En',
             'updated_at' => 'Actualizado En',
+            'email_verified' => 'Correo Verificado',
+            'block_count' => 'Contador de Bloqueos',
+            'last_password_change' => 'Último Cambio de Contraseña',
+            'requires_password_change' => 'Requiere Cambio de Contraseña',
+            'temporal_email' => 'Correo Temporal',
+            'real_email' => 'Correo Real',
+            'blocked_until' => 'Bloqueado Hasta',
+            'last_login_at' => 'Último Inicio de Sesión',
+            'last_failed_login' => 'Último Intento Fallido',
+            'failed_login_attempts' => 'Intentos Fallidos de Inicio de Sesión',
         ];
+    }
+
+    // ==================== RELACIONES CON NUEVAS TABLAS ====================
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getVerificationSessions()
+    {
+        return $this->hasMany(VerificationSession::class, ['user_id' => 'id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getAuditLogs()
+    {
+        return $this->hasMany(AuditLog::class, ['user_id' => 'id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getPasswordHistories()
+    {
+        return $this->hasMany(PasswordHistory::class, ['user_id' => 'id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getUserBlockHistories()
+    {
+        return $this->hasMany(UserBlockHistory::class, ['user_id' => 'id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getLoginAttempts()
+    {
+        return $this->hasMany(LoginAttempt::class, ['user_id' => 'id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getActiveVerificationSession()
+    {
+        return $this->hasOne(VerificationSession::class, ['user_id' => 'id'])
+            ->andWhere(['>', 'expires_at', time()])
+            ->andWhere(['status' => VerificationSession::STATUS_PENDING]);
+    }
+
+    // ==================== MÉTODOS DE NEGOCIO ====================
+
+    /**
+     * Determina si es el primer acceso del usuario
+     * 
+     * @return bool
+     */
+    public function isFirstAccess()
+    {
+        return $this->isEmailTemporal() && !$this->email_verified;
+    }
+
+    /**
+     * Verifica si el email del usuario es temporal (@temporal.com)
+     * 
+     * @return bool
+     */
+    public function isEmailTemporal()
+    {
+        return strpos($this->email, '@temporal.com') !== false;
+    }
+
+    /**
+     * Verifica si el usuario necesita cambiar su contraseña
+     * 
+     * @return bool
+     */
+    public function needsPasswordChange()
+    {
+        return $this->requires_password_change || $this->isPasswordGeneric();
+    }
+
+    /**
+     * Verifica si la contraseña es la genérica "12345-aves"
+     * 
+     * @return bool
+     */
+    public function isPasswordGeneric()
+    {
+        $genericPassword = '12345-aves';
+        return Yii::$app->security->validatePassword($genericPassword, $this->password_hash);
+    }
+
+    /**
+     * Verifica si el usuario está actualmente bloqueado
+     * 
+     * @return bool
+     */
+    public function isBlocked()
+    {
+        if ($this->status == self::STATUS_BLOCKED) {
+            return true;
+        }
+        
+        if ($this->blocked_until && strtotime($this->blocked_until) > time()) {
+            return true;
+        }
+        
+        return false;
+    }
+
+    /**
+     * Obtiene el bloqueo activo del usuario
+     * 
+     * @return UserBlockHistory|null
+     */
+    public function getActiveBlock()
+    {
+        return UserBlockHistory::find()
+            ->where(['user_id' => $this->id])
+            ->andWhere(['>', 'blocked_until', date('Y-m-d H:i:s')])
+            ->orderBy(['id' => SORT_DESC])
+            ->one();
+    }
+
+    /**
+     * Incrementa el contador de bloqueos del usuario
+     * 
+     * @return bool
+     */
+    public function incrementBlockCount()
+    {
+        $this->block_count = ($this->block_count ?: 0) + 1;
+        
+        // Bloqueo escalonado
+        if ($this->block_count == 1) {
+            $blockDuration = 24 * 60 * 60; // 24 horas
+        } elseif ($this->block_count == 2) {
+            $blockDuration = 48 * 60 * 60; // 48 horas
+        } else {
+            $blockDuration = 7 * 24 * 60 * 60; // 1 semana (3er bloqueo)
+        }
+        
+        $this->blocked_until = date('Y-m-d H:i:s', time() + $blockDuration);
+        
+        // Registrar en historial
+        $blockHistory = new UserBlockHistory();
+        $blockHistory->user_id = $this->id;
+        $blockHistory->blocked_until = $this->blocked_until;
+        $blockHistory->reason = 'Excedió intentos de verificación';
+        $blockHistory->created_at = time();
+        
+        if ($blockHistory->save()) {
+            AuditLog::log($this->id, 'user_blocked', 'Usuario bloqueado por exceder intentos de verificación');
+        }
+        
+        return $this->save(false, ['block_count', 'blocked_until', 'updated_at']);
+    }
+
+    /**
+     * Marca el email del usuario como verificado
+     * 
+     * @return bool
+     */
+    public function markEmailAsVerified()
+    {
+        $this->email_verified = true;
+        $this->real_email = $this->email; // Guardar el email real
+        return $this->save(false, ['email_verified', 'real_email', 'updated_at']);
+    }
+
+    /**
+     * Cambia la contraseña del usuario con validaciones de seguridad
+     * 
+     * @param string $newPassword Nueva contraseña
+     * @return array ['success' => bool, 'message' => string]
+     */
+    public function changePasswordWithValidation($newPassword)
+    {
+        // Validar que no sea la contraseña genérica
+        if ($newPassword === '12345-aves') {
+            return ['success' => false, 'message' => 'No puede usar la contraseña genérica'];
+        }
+        
+        // Validar longitud mínima
+        if (strlen($newPassword) < 8) {
+            return ['success' => false, 'message' => 'La contraseña debe tener al menos 8 caracteres'];
+        }
+        
+        // Validar complejidad
+        if (!preg_match('/[A-Z]/', $newPassword)) {
+            return ['success' => false, 'message' => 'Debe contener al menos una mayúscula'];
+        }
+        
+        if (!preg_match('/[a-z]/', $newPassword)) {
+            return ['success' => false, 'message' => 'Debe contener al menos una minúscula'];
+        }
+        
+        if (!preg_match('/[0-9]/', $newPassword)) {
+            return ['success' => false, 'message' => 'Debe contener al menos un número'];
+        }
+        
+        if (!preg_match('/[^A-Za-z0-9]/', $newPassword)) {
+            return ['success' => false, 'message' => 'Debe contener al menos un carácter especial'];
+        }
+        
+        // Verificar si ya fue usada (últimas 5)
+        $lastPasswords = PasswordHistory::find()
+            ->where(['user_id' => $this->id])
+            ->orderBy(['created_at' => SORT_DESC])
+            ->limit(5)
+            ->all();
+            
+        foreach ($lastPasswords as $oldPassword) {
+            if (Yii::$app->security->validatePassword($newPassword, $oldPassword->password_hash)) {
+                return ['success' => false, 'message' => 'Esta contraseña ya fue utilizada anteriormente'];
+            }
+        }
+        
+        // Cambiar contraseña
+        $oldPasswordHash = $this->password_hash;
+        $this->setPassword($newPassword);
+        $this->last_password_change = date('Y-m-d H:i:s');
+        $this->requires_password_change = false;
+        
+        if ($this->save()) {
+            // Registrar en historial
+            PasswordHistory::addToHistory($this->id, $oldPasswordHash);
+            
+            // Registrar en log de auditoría
+            AuditLog::log($this->id, 'password_changed', 'Contraseña cambiada exitosamente');
+            
+            return ['success' => true, 'message' => 'Contraseña cambiada exitosamente'];
+        }
+        
+        return ['success' => false, 'message' => 'Error al cambiar la contraseña'];
+    }
+
+    /**
+     * Crea una nueva sesión de verificación para el usuario
+     * 
+     * @param string $type Tipo de verificación (email, phone, etc.)
+     * @return VerificationSession|false
+     */
+    public function createVerificationSession($type = 'email')
+    {
+        // Verificar límite de sesiones (máximo 5 en 24 horas)
+        $last24Hours = date('Y-m-d H:i:s', strtotime('-24 hours'));
+        $sessionCount = VerificationSession::find()
+            ->where(['user_id' => $this->id])
+            ->andWhere(['>=', 'created_at', $last24Hours])
+            ->count();
+            
+        if ($sessionCount >= self::MAX_VERIFICATION_SESSIONS) {
+            $this->incrementBlockCount();
+            return false;
+        }
+        
+        // Crear sesión
+        $session = new VerificationSession();
+        $session->user_id = $this->id;
+        $session->token = Yii::$app->security->generateRandomString(32);
+        $session->code = sprintf("%06d", mt_rand(0, 999999));
+        $session->type = $type;
+        $session->status = VerificationSession::STATUS_PENDING;
+        $session->attempts = 0;
+        $session->created_at = time();
+        $session->expires_at = time() + (self::CODE_VALIDITY_MINUTES * 60);
+        
+        if ($session->save()) {
+            AuditLog::log($this->id, 'verification_sent', 'Código de verificación enviado');
+            return $session;
+        }
+        
+        return false;
+    }
+
+    /**
+     * Obtiene el tiempo restante hasta que expire el bloqueo
+     * 
+     * @return string
+     */
+    public function getBlockTimeRemaining()
+    {
+        if ($this->blocked_until) {
+            $remaining = strtotime($this->blocked_until) - time();
+            if ($remaining > 0) {
+                $hours = floor($remaining / 3600);
+                $minutes = floor(($remaining % 3600) / 60);
+                $seconds = $remaining % 60;
+                return sprintf("%02d:%02d:%02d", $hours, $minutes, $seconds);
+            }
+        }
+        return '00:00:00';
+    }
+
+    /**
+     * Obtiene estadísticas de seguridad del usuario
+     * 
+     * @return array
+     */
+    public function getSecurityStats()
+    {
+        $lastWeek = date('Y-m-d H:i:s', strtotime('-1 week'));
+        
+        return [
+            'block_count' => $this->block_count ?: 0,
+            'last_password_change' => $this->last_password_change,
+            'email_verified' => $this->email_verified,
+            'login_attempts_last_week' => LoginAttempt::find()
+                ->where(['user_id' => $this->id])
+                ->andWhere(['>=', 'attempted_at', $lastWeek])
+                ->count(),
+            'failed_logins_last_week' => LoginAttempt::find()
+                ->where(['user_id' => $this->id, 'success' => false])
+                ->andWhere(['>=', 'attempted_at', $lastWeek])
+                ->count(),
+            'active_block' => $this->getActiveBlock() ? $this->getActiveBlock()->blocked_until : null,
+            'block_time_remaining' => $this->getBlockTimeRemaining(),
+        ];
+    }
+
+    /**
+     * Registra un intento de login fallido
+     */
+    public function recordFailedLogin()
+    {
+        $this->failed_login_attempts = ($this->failed_login_attempts ?: 0) + 1;
+        $this->last_failed_login = date('Y-m-d H:i:s');
+        $this->save(false, ['failed_login_attempts', 'last_failed_login', 'updated_at']);
+        
+        $loginAttempt = new LoginAttempt();
+        $loginAttempt->user_id = $this->id;
+        $loginAttempt->username = $this->username;
+        $loginAttempt->ip_address = Yii::$app->request->getUserIP();
+        $loginAttempt->user_agent = Yii::$app->request->getUserAgent();
+        $loginAttempt->successful = false;
+        $loginAttempt->attempted_at = date('Y-m-d H:i:s');
+        $loginAttempt->save();
+        
+        // Bloquear después de 5 intentos fallidos
+        if ($this->failed_login_attempts >= 5) {
+            $this->incrementBlockCount();
+        }
+    }
+
+    /**
+     * Resetea los intentos fallidos
+     */
+    public function resetFailedAttempts()
+    {
+        $this->failed_login_attempts = 0;
+        $this->save(false, ['failed_login_attempts', 'updated_at']);
+    }
+
+    /**
+     * Registra login exitoso
+     */
+    public function recordSuccessfulLogin()
+    {
+        $this->last_login_at = date('Y-m-d H:i:s');
+        $this->resetFailedAttempts();
+        $this->save(false, ['last_login_at', 'updated_at']);
+        
+        $loginAttempt = new LoginAttempt();
+        $loginAttempt->user_id = $this->id;
+        $loginAttempt->username = $this->username;
+        $loginAttempt->ip_address = Yii::$app->request->getUserIP();
+        $loginAttempt->user_agent = Yii::$app->request->getUserAgent();
+        $loginAttempt->successful = true;
+        $loginAttempt->attempted_at = date('Y-m-d H:i:s');
+        $loginAttempt->save();
     }
 
     /**
@@ -311,10 +717,12 @@ class User extends ActiveRecord implements IdentityInterface
             $user->cedula = $cedula;
             $user->email = $email ?? $cedula . '@sistema-ged.com';
             $user->status = self::STATUS_ACTIVE;
+            $user->email_verified = false;
+            $user->requires_password_change = true;
 
             // Generar auth_key y password
             $user->generateAuthKey();
-            $password = Yii::$app->security->generateRandomString(8);
+            $password = '12345-aves'; // Contraseña genérica
             $user->setPassword($password);
 
             if ($user->save()) {
@@ -355,6 +763,8 @@ class User extends ActiveRecord implements IdentityInterface
             $user->username = $username;
             $user->email = $email;
             $user->status = self::STATUS_ACTIVE;
+            $user->email_verified = false;
+            $user->requires_password_change = true;
 
             // Generar auth_key y password
             $user->generateAuthKey();
