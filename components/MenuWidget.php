@@ -10,6 +10,8 @@ use app\models\Menu;
 /**
  * Widget de menú dinámico basado en la tabla seguridad.menu
  * Compatible con RBAC y estructura jerárquica completa
+ * ✅ CORREGIDO: Ahora muestra menús públicos para usuarios no autenticados
+ * ✅ ACTUALIZADO: Soporte para contenedores públicos (show_as_public_container)
  */
 class MenuWidget extends Widget
 {
@@ -31,7 +33,12 @@ class MenuWidget extends Widget
     {
         $filteredItems = $this->filterItemsByPermission($this->menuItems);
         
+        // Log para debugging
+        Yii::info("📊 MENÚ FINAL - Items totales después de filtro: " . count($filteredItems) . 
+                  " | Usuario: " . (Yii::$app->user->isGuest ? 'Invitado' : Yii::$app->user->identity->username), 'menu');
+        
         if (empty($filteredItems)) {
+            Yii::warning("⚠️ No se encontraron items de menú para mostrar", 'menu');
             return '';
         }
         
@@ -44,7 +51,9 @@ class MenuWidget extends Widget
     private function loadUserPermissions()
     {
         if (Yii::$app->user->isGuest) {
-            $this->userPermissions = [];
+            // ✅ USUARIOS INVITADOS: Permisos básicos para menús públicos
+            $this->userPermissions = ['site_index', 'site_login', 'site_contact', 'site_about'];
+            Yii::info("👤 Usuario INVITADO - Permisos públicos asignados: " . implode(', ', $this->userPermissions), 'menu');
             return;
         }
         
@@ -93,6 +102,11 @@ class MenuWidget extends Widget
         // Combinar todos los permisos
         $allPermissions = array_merge($directPermissions, $rolePermissions);
         $this->userPermissions = array_keys($allPermissions);
+        
+        // ✅ AGREGAR PERMISOS PÚBLICOS PARA TODOS LOS USUARIOS AUTENTICADOS
+        $this->userPermissions = array_merge($this->userPermissions, [
+            'site_index', 'site_logout', 'perfil_mi_informacion'
+        ]);
         
         Yii::info("Permisos totales del usuario: " . implode(', ', $this->userPermissions), 'menu');
     }
@@ -143,6 +157,7 @@ class MenuWidget extends Widget
                 'permission' => $item->permission,
                 'parent' => $item->parent,
                 'nivel' => $item->nivel,
+                'show_as_public_container' => (bool)$item->show_as_public_container, // ← NUEVO CAMPO
                 'items' => [] // Inicializar array vacío para hijos
             ];
         }
@@ -167,8 +182,8 @@ class MenuWidget extends Widget
         $this->menuItems = $tree;
         
         // Log para depuración
-        Yii::info("Total items cargados: " . count($items), 'menu');
-        Yii::info("Items raíz: " . count($tree), 'menu');
+        Yii::info("Total items cargados desde BD: " . count($items), 'menu');
+        Yii::info("Items raíz en árbol: " . count($tree), 'menu');
         $this->logTreeStructure($tree);
     }
     
@@ -179,7 +194,10 @@ class MenuWidget extends Widget
     {
         foreach ($items as $item) {
             $indent = str_repeat('  ', $level);
-            Yii::info($indent . "├─ " . strip_tags($item['label']) . " (ID: {$item['id']}, Nivel: {$item['nivel']}, Padre: " . ($item['parent'] ?? 'NULL') . ")", 'menu');
+            Yii::info($indent . "├─ " . strip_tags($item['label']) . 
+                     " (ID: {$item['id']}, Nivel: {$item['nivel']}, " .
+                     "Permiso: " . ($item['permission'] ?? 'NINGUNO') . 
+                     ", Contenedor público: " . ($item['show_as_public_container'] ? 'SÍ' : 'NO') . ")", 'menu');
             
             if (!empty($item['items'])) {
                 $this->logTreeStructure($item['items'], $level + 1);
@@ -230,20 +248,24 @@ class MenuWidget extends Widget
     }
     
     /**
-     * Filtra items por permiso (RECURSIVO PARA TODOS LOS NIVELES)
+     * Filtra items por permiso con soporte para contenedores públicos
+     * ✅ SOLO MarketPlace (177) será contenedor público
+     * ✅ Herramientas (162) y Gestión Deportiva (163) mantienen RBAC estricto
      */
     private function filterItemsByPermission($items)
     {
         $filtered = [];
         
         foreach ($items as $item) {
-            // DEBUG: Mostrar información del item
-            Yii::info("Procesando menú: " . strip_tags($item['label']) . " | Permiso requerido: " . ($item['permission'] ?? 'Ninguno'), 'menu');
+            // DEBUG: Información completa
+            Yii::info("🔍 Procesando: " . strip_tags($item['label']) . 
+                     " | ID: " . ($item['id'] ?? 'N/A') . 
+                     " | Permiso: " . ($item['permission'] ?? 'PÚBLICO') . 
+                     " | Contenedor público: " . (($item['show_as_public_container'] ?? false) ? 'SÍ' : 'NO'), 'menu');
             
-            // Si es superusuario (permiso '*'), mostrar todo
+            // 1. SUPERUSUARIO: Mostrar todo (comportamiento existente)
             if (in_array('*', $this->userPermissions)) {
-                Yii::info("Usuario tiene acceso total (*). Mostrando: " . strip_tags($item['label']), 'menu');
-                // Filtrar recursivamente los hijos
+                Yii::info("✅ Superusuario - Mostrando: " . strip_tags($item['label']), 'menu');
                 if (!empty($item['items'])) {
                     $item['items'] = $this->filterItemsByPermission($item['items']);
                 }
@@ -251,37 +273,52 @@ class MenuWidget extends Widget
                 continue;
             }
             
-            // Verificar permiso específico
-            $hasPermission = true;
-            if (!empty($item['permission'])) {
-                $hasPermission = in_array($item['permission'], $this->userPermissions);
-                
-                if ($hasPermission) {
-                    Yii::info("Usuario SÍ tiene permiso: {$item['permission']} para: " . strip_tags($item['label']), 'menu');
-                } else {
-                    Yii::info("Usuario NO tiene permiso: {$item['permission']} para: " . strip_tags($item['label']), 'menu');
-                }
+            // 2. VERIFICAR SI ITEM ESTÁ AUTORIZADO
+            $isItemAuthorized = empty($item['permission']) || 
+                               in_array($item['permission'], $this->userPermissions);
+            
+            // 3. FILTRAR HIJOS RECURSIVAMENTE (siempre procesar hijos)
+            $authorizedChildren = [];
+            if (!empty($item['items'])) {
+                $authorizedChildren = $this->filterItemsByPermission($item['items']);
             }
             
-            if (!$hasPermission) {
+            // 4. DECIDIR SI MOSTRAR ITEM - LÓGICA MEJORADA
+            if ($isItemAuthorized) {
+                // ✅ CASO NORMAL: Item autorizado por RBAC
+                Yii::info("✅ Autorizado RBAC - Mostrando: " . strip_tags($item['label']), 'menu');
+                $item['items'] = $authorizedChildren;
+                $filtered[] = $item;
+                
+            } elseif (!empty($authorizedChildren) && ($item['id'] == 177)) {
+                // ✅ CASO ESPECIAL: SOLO MarketPlace (ID 177) como contenedor público
+                // Requisitos: NO tiene permiso + TIENE hijos autorizados + ES MarketPlace
+                Yii::info("🎯 Contenedor Público ESPECIAL (MarketPlace) - Mostrando: " . 
+                         strip_tags($item['label']) . " con " . count($authorizedChildren) . " hijos autorizados", 'menu');
+                
+                // Crear versión "pública" de MarketPlace
+                $publicContainer = $item;
+                $publicContainer['items'] = $authorizedChildren;
+                $publicContainer['url'] = '#'; // Sin URL funcional (solo contenedor)
+                $publicContainer['is_public_container'] = true; // Bandera para CSS
+                $filtered[] = $publicContainer;
+                
+            } elseif (!empty($authorizedChildren) && ($item['id'] == 162 || $item['id'] == 163)) {
+                // ⚠️ Herramientas o Gestión Deportiva SIN permiso pero CON hijos autorizados
+                // POR SEGURIDAD: NO MOSTRAR (cumplir tu requerimiento)
+                Yii::info("🚫 OMITIENDO (seguridad): " . strip_tags($item['label']) . 
+                         " - Contenedor restringido aunque tenga " . count($authorizedChildren) . " hijos autorizados", 'menu');
+                continue;
+                
+            } else {
+                // ❌ NO MOSTRAR: Sin permiso y sin hijos autorizados
+                Yii::info("❌ Omitiendo: " . strip_tags($item['label']) . 
+                         " | Sin permiso y sin hijos autorizados", 'menu');
                 continue;
             }
-            
-            // Filtrar subitems recursivamente
-            if (!empty($item['items'])) {
-                $item['items'] = $this->filterItemsByPermission($item['items']);
-                
-                // Si después de filtrar no hay subitems y es un item padre sin URL propia, omitir
-                if (empty($item['items']) && (!isset($item['url']) || $item['url'] == '#')) {
-                    Yii::info("Omitiendo menú sin subitems y sin URL: " . strip_tags($item['label']), 'menu');
-                    continue;
-                }
-            }
-            
-            $filtered[] = $item;
-            Yii::info("Menú agregado: " . strip_tags($item['label']), 'menu');
         }
         
+        Yii::info("📊 Filtro completado: " . count($filtered) . " items mostrados", 'menu');
         return $filtered;
     }
     
@@ -341,6 +378,12 @@ class MenuWidget extends Widget
             $liClass .= ' menu-herramientas menu-herramientas-id-162';
         }
         
+        // ✅ CONTENEDOR PÚBLICO (SOLO MARKETPLACE)
+        if (($item['id'] ?? 0) == 177 && ($item['is_public_container'] ?? false)) {
+            $liClass .= ' menu-public-container';
+            $linkClass .= ' public-container';
+        }
+        
         // ✅ AGREGAR ATRIBUTO data-menu-id PARA JAVASCRIPT
         $liAttributes = ['class' => trim($liClass), 'data-menu-id' => $item['id'] ?? '0'];
         
@@ -348,6 +391,11 @@ class MenuWidget extends Widget
         if (($item['id'] ?? 0) == 162) {
             $liAttributes['data-menu-name'] = 'herramientas';
             $liAttributes['data-menu-tools'] = 'true';
+        }
+        
+        // Si es contenedor público (MarketPlace)
+        if (($item['id'] ?? 0) == 177 && ($item['is_public_container'] ?? false)) {
+            $liAttributes['data-public-container'] = 'true';
         }
         
         $html = Html::beginTag('li', $liAttributes);
@@ -376,6 +424,15 @@ class MenuWidget extends Widget
             $linkOptions['data-menu-herramientas'] = 'true';
         }
         
+        // Si es contenedor público (sin URL funcional)
+        if (($item['is_public_container'] ?? false) && ($item['url'] ?? '#') == '#') {
+            $linkOptions['href'] = '#';
+            $linkOptions['onclick'] = 'return false;';
+            $linkOptions['style'] = 'cursor: default;';
+        } else {
+            $linkOptions['href'] = $item['url'];
+        }
+        
         $html .= Html::a($item['label'], $item['url'], $linkOptions);
         
         // Renderizar hijos si existen (RECURSIVO)
@@ -388,6 +445,10 @@ class MenuWidget extends Widget
             
             if (($item['id'] ?? 0) == 162) {
                 $dropdownAttributes['data-parent-menu-tools'] = 'true';
+            }
+            
+            if (($item['id'] ?? 0) == 177 && ($item['is_public_container'] ?? false)) {
+                $dropdownAttributes['data-parent-public-container'] = 'true';
             }
             
             $html .= Html::beginTag('ul', $dropdownAttributes);
@@ -446,6 +507,12 @@ class MenuWidget extends Widget
             $itemClass .= ' menu-herramientas menu-herramientas-id-162';
         }
         
+        // ✅ CONTENEDOR PÚBLICO (SOLO MARKETPLACE)
+        if (($item['id'] ?? 0) == 177 && ($item['is_public_container'] ?? false)) {
+            $itemClass .= ' menu-public-container';
+            $linkClass .= ' public-container';
+        }
+        
         $divAttributes = [
             'class' => $itemClass,
             'data-menu-id' => $item['id'] ?? '0'
@@ -454,6 +521,10 @@ class MenuWidget extends Widget
         if (($item['id'] ?? 0) == 162) {
             $divAttributes['data-menu-name'] = 'herramientas';
             $divAttributes['data-menu-tools'] = 'true';
+        }
+        
+        if (($item['id'] ?? 0) == 177 && ($item['is_public_container'] ?? false)) {
+            $divAttributes['data-public-container'] = 'true';
         }
         
         $html = Html::beginTag('div', $divAttributes);
@@ -468,6 +539,15 @@ class MenuWidget extends Widget
         if (($item['id'] ?? 0) == 162) {
             $linkOptions['data-menu-tools'] = 'true';
             $linkOptions['data-menu-herramientas'] = 'true';
+        }
+        
+        // Si es contenedor público (sin URL funcional)
+        if (($item['is_public_container'] ?? false) && ($item['url'] ?? '#') == '#') {
+            $linkOptions['href'] = '#';
+            $linkOptions['onclick'] = 'return false;';
+            $linkOptions['style'] = 'cursor: default;';
+        } else {
+            $linkOptions['href'] = $item['url'];
         }
         
         if ($hasChildren) {
@@ -493,6 +573,10 @@ class MenuWidget extends Widget
             $submenuAttributes['data-parent-menu-id'] = $item['id'] ?? '0';
             if (($item['id'] ?? 0) == 162) {
                 $submenuAttributes['data-parent-menu-tools'] = 'true';
+            }
+            
+            if (($item['id'] ?? 0) == 177 && ($item['is_public_container'] ?? false)) {
+                $submenuAttributes['data-parent-public-container'] = 'true';
             }
             
             $html .= Html::beginTag('div', $submenuAttributes);

@@ -20,11 +20,10 @@ use Yii;
  * @property bool|null $mega_menu
  * @property int|null $mega_menu_columns
  * @property string|null $description
+ * @property bool|null $show_as_public_container  // ← NUEVO CAMPO AÑADIDO
  */
 class Menu extends \yii\db\ActiveRecord
 {
-
-
     /**
      * {@inheritdoc}
      */
@@ -41,11 +40,11 @@ class Menu extends \yii\db\ActiveRecord
         return [
             [['parent', 'route', 'order', 'data', 'permission', 'icon', 'description'], 'default', 'value' => null],
             [['mega_menu_columns'], 'default', 'value' => 1],
-            [['mega_menu'], 'default', 'value' => 0],
+            [['mega_menu', 'show_as_public_container'], 'default', 'value' => 0], // ← MODIFICADO
             [['name'], 'required'],
             [['parent', 'order', 'nivel', 'mega_menu_columns'], 'default', 'value' => null],
             [['parent', 'order', 'nivel', 'mega_menu_columns'], 'integer'],
-            [['active', 'mega_menu'], 'boolean'],
+            [['active', 'mega_menu', 'show_as_public_container'], 'boolean'], // ← MODIFICADO
             [['name'], 'string', 'max' => 128],
             [['route', 'data', 'description'], 'string', 'max' => 255],
             [['permission'], 'string', 'max' => 100],
@@ -73,7 +72,7 @@ class Menu extends \yii\db\ActiveRecord
             'mega_menu' => 'Mega Menu',
             'mega_menu_columns' => 'Mega Menu Columns',
             'description' => 'Description',
+            'show_as_public_container' => 'Show As Public Container', // ← NUEVO LABEL
         ];
     }
-
 }

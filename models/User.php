@@ -20,16 +20,25 @@ use yii\behaviors\TimestampBehavior;
  * @property integer $status
  * @property integer $created_at
  * @property integer $updated_at
+ * @property string $verification_code
  * @property boolean $email_verified
+ * @property string $email_verified_at
+ * @property integer $verification_attempts
  * @property integer $block_count
- * @property string $last_password_change
- * @property boolean $requires_password_change
- * @property string $temporal_email
- * @property string $real_email
+ * @property string $last_blocked_at
  * @property string $blocked_until
+ * @property boolean $permanently_blocked
+ * @property string $password_changed_at
+ * @property boolean $password_expiry_notified
+ * @property boolean $first_access_completed
+ * @property boolean $force_password_change
  * @property string $last_login_at
- * @property string $last_failed_login
- * @property integer $failed_login_attempts
+ * @property string $last_login_ip
+ * @property integer $login_count
+ * @property integer $id_estado
+ * @property integer $id_empresa
+ * @property integer $id_nacionalidad
+ * @property string $cod_estado
  */
 class User extends ActiveRecord implements IdentityInterface
 {
@@ -66,14 +75,16 @@ class User extends ActiveRecord implements IdentityInterface
     {
         return [
             [['username', 'auth_key', 'password_hash', 'email'], 'required'],
-            [['status', 'created_at', 'updated_at', 'block_count', 'failed_login_attempts'], 'default', 'value' => null],
-            [['status', 'created_at', 'updated_at', 'block_count', 'failed_login_attempts'], 'integer'],
-            [['email_verified', 'requires_password_change'], 'boolean'],
-            [['last_password_change', 'blocked_until', 'last_login_at', 'last_failed_login'], 'safe'],
+            [['status', 'created_at', 'updated_at', 'block_count', 'verification_attempts', 'login_count', 'id_estado', 'id_empresa', 'id_nacionalidad'], 'default', 'value' => null],
+            [['status', 'created_at', 'updated_at', 'block_count', 'verification_attempts', 'login_count', 'id_estado', 'id_empresa', 'id_nacionalidad'], 'integer'],
+            [['email_verified', 'permanently_blocked', 'password_expiry_notified', 'first_access_completed', 'force_password_change'], 'boolean'],
+            [['email_verified_at', 'last_blocked_at', 'blocked_until', 'password_changed_at', 'last_login_at', 'verification_sent_at'], 'safe'],
             [['username'], 'string', 'max' => 32],
             [['auth_key'], 'string', 'max' => 32],
-            [['password_hash', 'password_reset_token', 'email', 'temporal_email', 'real_email'], 'string', 'max' => 255],
+            [['password_hash', 'password_reset_token', 'email'], 'string', 'max' => 255],
             [['cedula'], 'string', 'max' => 20],
+            [['verification_code'], 'string', 'max' => 6],
+            [['last_login_ip', 'cod_estado'], 'string', 'max' => 45],
             [['username'], 'unique'],
             [['email'], 'unique'],
             [['cedula'], 'unique'],
@@ -82,8 +93,12 @@ class User extends ActiveRecord implements IdentityInterface
             ['status', 'in', 'range' => [self::STATUS_ACTIVE, self::STATUS_DELETED, self::STATUS_BLOCKED]],
             ['email_verified', 'default', 'value' => false],
             ['block_count', 'default', 'value' => 0],
-            ['requires_password_change', 'default', 'value' => true],
-            ['failed_login_attempts', 'default', 'value' => 0],
+            ['verification_attempts', 'default', 'value' => 0],
+            ['login_count', 'default', 'value' => 0],
+            ['force_password_change', 'default', 'value' => true],
+            ['permanently_blocked', 'default', 'value' => false],
+            ['password_expiry_notified', 'default', 'value' => false],
+            ['first_access_completed', 'default', 'value' => false],
         ];
     }
 
@@ -100,16 +115,26 @@ class User extends ActiveRecord implements IdentityInterface
             'status' => 'Estado',
             'created_at' => 'Creado En',
             'updated_at' => 'Actualizado En',
+            'verification_code' => 'Código de Verificación',
             'email_verified' => 'Correo Verificado',
+            'email_verified_at' => 'Correo Verificado En',
+            'verification_sent_at' => 'Código Enviado En',
+            'verification_attempts' => 'Intentos de Verificación',
             'block_count' => 'Contador de Bloqueos',
-            'last_password_change' => 'Último Cambio de Contraseña',
-            'requires_password_change' => 'Requiere Cambio de Contraseña',
-            'temporal_email' => 'Correo Temporal',
-            'real_email' => 'Correo Real',
+            'last_blocked_at' => 'Último Bloqueo En',
             'blocked_until' => 'Bloqueado Hasta',
+            'permanently_blocked' => 'Bloqueado Permanentemente',
+            'password_changed_at' => 'Último Cambio de Contraseña',
+            'password_expiry_notified' => 'Notificado de Expiración',
+            'first_access_completed' => 'Primer Acceso Completado',
+            'force_password_change' => 'Forzar Cambio de Contraseña',
             'last_login_at' => 'Último Inicio de Sesión',
-            'last_failed_login' => 'Último Intento Fallido',
-            'failed_login_attempts' => 'Intentos Fallidos de Inicio de Sesión',
+            'last_login_ip' => 'Última IP de Inicio',
+            'login_count' => 'Contador de Inicios',
+            'id_estado' => 'ID Estado',
+            'id_empresa' => 'ID Empresa',
+            'id_nacionalidad' => 'ID Nacionalidad',
+            'cod_estado' => 'Código Estado',
         ];
     }
 
@@ -161,11 +186,11 @@ class User extends ActiveRecord implements IdentityInterface
     public function getActiveVerificationSession()
     {
         return $this->hasOne(VerificationSession::class, ['user_id' => 'id'])
-            ->andWhere(['>', 'expires_at', time()])
+            ->andWhere(['>', 'code_expires_at', date('Y-m-d H:i:s')])
             ->andWhere(['status' => VerificationSession::STATUS_PENDING]);
     }
 
-    // ==================== MÉTODOS DE NEGOCIO ====================
+    // ==================== MÉTODOS DE NEGOCIO (Actualizados) ====================
 
     /**
      * Determina si es el primer acceso del usuario
@@ -194,7 +219,7 @@ class User extends ActiveRecord implements IdentityInterface
      */
     public function needsPasswordChange()
     {
-        return $this->requires_password_change || $this->isPasswordGeneric();
+        return $this->force_password_change || $this->isPasswordGeneric();
     }
 
     /**
@@ -216,6 +241,10 @@ class User extends ActiveRecord implements IdentityInterface
     public function isBlocked()
     {
         if ($this->status == self::STATUS_BLOCKED) {
+            return true;
+        }
+        
+        if ($this->permanently_blocked) {
             return true;
         }
         
@@ -248,6 +277,7 @@ class User extends ActiveRecord implements IdentityInterface
     public function incrementBlockCount()
     {
         $this->block_count = ($this->block_count ?: 0) + 1;
+        $this->last_blocked_at = date('Y-m-d H:i:s');
         
         // Bloqueo escalonado
         if ($this->block_count == 1) {
@@ -265,13 +295,12 @@ class User extends ActiveRecord implements IdentityInterface
         $blockHistory->user_id = $this->id;
         $blockHistory->blocked_until = $this->blocked_until;
         $blockHistory->reason = 'Excedió intentos de verificación';
-        $blockHistory->created_at = time();
         
         if ($blockHistory->save()) {
             AuditLog::log($this->id, 'user_blocked', 'Usuario bloqueado por exceder intentos de verificación');
         }
         
-        return $this->save(false, ['block_count', 'blocked_until', 'updated_at']);
+        return $this->save(false, ['block_count', 'last_blocked_at', 'blocked_until', 'updated_at']);
     }
 
     /**
@@ -282,8 +311,8 @@ class User extends ActiveRecord implements IdentityInterface
     public function markEmailAsVerified()
     {
         $this->email_verified = true;
-        $this->real_email = $this->email; // Guardar el email real
-        return $this->save(false, ['email_verified', 'real_email', 'updated_at']);
+        $this->email_verified_at = date('Y-m-d H:i:s');
+        return $this->save(false, ['email_verified', 'email_verified_at', 'updated_at']);
     }
 
     /**
@@ -337,8 +366,8 @@ class User extends ActiveRecord implements IdentityInterface
         // Cambiar contraseña
         $oldPasswordHash = $this->password_hash;
         $this->setPassword($newPassword);
-        $this->last_password_change = date('Y-m-d H:i:s');
-        $this->requires_password_change = false;
+        $this->password_changed_at = date('Y-m-d H:i:s');
+        $this->force_password_change = false;
         
         if ($this->save()) {
             // Registrar en historial
@@ -376,13 +405,10 @@ class User extends ActiveRecord implements IdentityInterface
         // Crear sesión
         $session = new VerificationSession();
         $session->user_id = $this->id;
-        $session->token = Yii::$app->security->generateRandomString(32);
-        $session->code = sprintf("%06d", mt_rand(0, 999999));
-        $session->type = $type;
+        $session->session_token = Yii::$app->security->generateRandomString(64);
+        $session->verification_code = sprintf("%06d", mt_rand(0, 999999));
         $session->status = VerificationSession::STATUS_PENDING;
-        $session->attempts = 0;
-        $session->created_at = time();
-        $session->expires_at = time() + (self::CODE_VALIDITY_MINUTES * 60);
+        $session->attempts_remaining = self::MAX_CODE_ATTEMPTS;
         
         if ($session->save()) {
             AuditLog::log($this->id, 'verification_sent', 'Código de verificación enviado');
@@ -422,15 +448,15 @@ class User extends ActiveRecord implements IdentityInterface
         
         return [
             'block_count' => $this->block_count ?: 0,
-            'last_password_change' => $this->last_password_change,
+            'password_changed_at' => $this->password_changed_at,
             'email_verified' => $this->email_verified,
             'login_attempts_last_week' => LoginAttempt::find()
                 ->where(['user_id' => $this->id])
-                ->andWhere(['>=', 'attempted_at', $lastWeek])
+                ->andWhere(['>=', 'created_at', $lastWeek])
                 ->count(),
             'failed_logins_last_week' => LoginAttempt::find()
-                ->where(['user_id' => $this->id, 'success' => false])
-                ->andWhere(['>=', 'attempted_at', $lastWeek])
+                ->where(['user_id' => $this->id, 'status' => \app\models\LoginAttempt::STATUS_FAILED])
+                ->andWhere(['>=', 'created_at', $lastWeek])
                 ->count(),
             'active_block' => $this->getActiveBlock() ? $this->getActiveBlock()->blocked_until : null,
             'block_time_remaining' => $this->getBlockTimeRemaining(),
@@ -442,32 +468,34 @@ class User extends ActiveRecord implements IdentityInterface
      */
     public function recordFailedLogin()
     {
-        $this->failed_login_attempts = ($this->failed_login_attempts ?: 0) + 1;
-        $this->last_failed_login = date('Y-m-d H:i:s');
-        $this->save(false, ['failed_login_attempts', 'last_failed_login', 'updated_at']);
+        $this->last_login_at = date('Y-m-d H:i:s');
+        $this->save(false, ['last_login_at', 'updated_at']);
         
         $loginAttempt = new LoginAttempt();
-        $loginAttempt->user_id = $this->id;
         $loginAttempt->username = $this->username;
+        $loginAttempt->user_id = $this->id;
         $loginAttempt->ip_address = Yii::$app->request->getUserIP();
         $loginAttempt->user_agent = Yii::$app->request->getUserAgent();
-        $loginAttempt->successful = false;
-        $loginAttempt->attempted_at = date('Y-m-d H:i:s');
-        $loginAttempt->save();
+        $loginAttempt->status = \app\models\LoginAttempt::STATUS_FAILED;
         
-        // Bloquear después de 5 intentos fallidos
-        if ($this->failed_login_attempts >= 5) {
-            $this->incrementBlockCount();
+        if ($loginAttempt->save()) {
+            // Contar intentos fallidos recientes
+            $failedAttempts = \app\models\LoginAttempt::getRecentFailuresByUser($this->username, 30);
+            
+            // Bloquear después de 5 intentos fallidos en 30 minutos
+            if ($failedAttempts >= 5) {
+                $this->incrementBlockCount();
+            }
         }
     }
 
     /**
-     * Resetea los intentos fallidos
+     * Resetea los intentos fallidos (ya no se usa - se maneja por tabla login_attempt)
      */
     public function resetFailedAttempts()
     {
-        $this->failed_login_attempts = 0;
-        $this->save(false, ['failed_login_attempts', 'updated_at']);
+        // Este método ya no es necesario ya que se maneja por la tabla login_attempt
+        return true;
     }
 
     /**
@@ -476,17 +504,11 @@ class User extends ActiveRecord implements IdentityInterface
     public function recordSuccessfulLogin()
     {
         $this->last_login_at = date('Y-m-d H:i:s');
-        $this->resetFailedAttempts();
-        $this->save(false, ['last_login_at', 'updated_at']);
+        $this->last_login_ip = Yii::$app->request->getUserIP();
+        $this->login_count = ($this->login_count ?: 0) + 1;
+        $this->save(false, ['last_login_at', 'last_login_ip', 'login_count', 'updated_at']);
         
-        $loginAttempt = new LoginAttempt();
-        $loginAttempt->user_id = $this->id;
-        $loginAttempt->username = $this->username;
-        $loginAttempt->ip_address = Yii::$app->request->getUserIP();
-        $loginAttempt->user_agent = Yii::$app->request->getUserAgent();
-        $loginAttempt->successful = true;
-        $loginAttempt->attempted_at = date('Y-m-d H:i:s');
-        $loginAttempt->save();
+        \app\models\LoginAttempt::recordSuccess($this->username, $this->id);
     }
 
     /**
@@ -718,7 +740,7 @@ class User extends ActiveRecord implements IdentityInterface
             $user->email = $email ?? $cedula . '@sistema-ged.com';
             $user->status = self::STATUS_ACTIVE;
             $user->email_verified = false;
-            $user->requires_password_change = true;
+            $user->force_password_change = true;
 
             // Generar auth_key y password
             $user->generateAuthKey();
@@ -764,7 +786,7 @@ class User extends ActiveRecord implements IdentityInterface
             $user->email = $email;
             $user->status = self::STATUS_ACTIVE;
             $user->email_verified = false;
-            $user->requires_password_change = true;
+            $user->force_password_change = true;
 
             // Generar auth_key y password
             $user->generateAuthKey();
@@ -808,13 +830,21 @@ class User extends ActiveRecord implements IdentityInterface
     }
 
     /**
-     * Obtener el nombre completo del usuario (si está disponible)
+     * Obtener el nombre para mostrar del usuario
      * 
      * @return string
      */
-    public function getNombreCompleto()
+    public function getDisplayName()
     {
         return $this->username;
+    }
+
+    /**
+     * @deprecated Usar getDisplayName() en su lugar
+     */
+    public function getNombreCompleto()
+    {
+        return $this->getDisplayName();
     }
 
     /**
@@ -843,5 +873,34 @@ class User extends ActiveRecord implements IdentityInterface
     public function estaActivo()
     {
         return $this->status === self::STATUS_ACTIVE;
+    }
+
+    /**
+     * Verificar sincronización entre modelo y BD
+     * 
+     * @return array
+     */
+    public static function verificarSincronizacionBD()
+    {
+        $schema = Yii::$app->db->schema->getTableSchema(self::tableName());
+        $model = new self();
+        $reflection = new \ReflectionClass($model);
+        
+        $problemas = [];
+        
+        // Verificar campos de BD no presentes en modelo
+        foreach ($schema->columns as $columnName => $column) {
+            if (!in_array($columnName, ['id', 'created_at', 'updated_at'])) {
+                if (!$reflection->hasProperty($columnName)) {
+                    $problemas[] = [
+                        'tipo' => 'campo_faltante',
+                        'campo' => $columnName,
+                        'descripcion' => "Campo en BD no existe en modelo"
+                    ];
+                }
+            }
+        }
+        
+        return $problemas;
     }
 }

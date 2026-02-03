@@ -1,49 +1,1044 @@
 /* =================================================================
- * ged.css - ARCHIVO MAESTRO DE IMPORTACIONES GED PARA YII2
- * Este archivo NO contiene estilos, solo importa los módulos CSS
- * Configuración para AppAsset de Yii2 Framework
- * Fecha: 2024-01-16
+ * ged.css - ARCHIVO CSS CONSOLIDADO GED (VERSIÓN CORREGIDA 4.7)
+ * Consolida: _variables.css, _base.css, _components.css, _modules.css,
+ *            _navigation.css, _submenus.css, _responsive.css, bootstrap-custom.css
+ * Fecha: 2024-01-22 - VERSIÓN CONSOLIDADA 4.7
+ * Correcciones: Navbar pegado al top, conflicto Bootstrap resuelto
  * ================================================================= */
 
-/* 
- * IMPORTANTE: Este archivo debe ser el ÚNICO archivo CSS registrado en AppAsset
- * No contiene estilos propios, solo organiza las importaciones
- */
+/* ===== VARIABLES CSS UNIFICADAS ===== */
+:root {
+  /* Offcanvas */
+  --sidebar-width-desktop: 240px;
+  --sidebar-width-desktop-compact: 60px;
+  --sidebar-width-mobile: 280px;
+  --transition-speed: 0.3s;
 
-/* ===== DECLARACIÓN DE VARIABLES CSS ===== */
-@import url('_variables.css');
+  /* Navbar - DISTRIBUCIÓN OPTIMIZADA */
+  --navbar-gradient: linear-gradient(135deg, #8e44ad 0%, #6c3483 100%);
+  --navbar-shadow-light: 0 2px 10px rgba(0,0,0,0.1);
+  --navbar-shadow-medium: 0 4px 20px rgba(0,0,0,0.15);
+  --navbar-transition-speed: 0.3s;
+  
+  /* ✅ DISTRIBUCIÓN EXACTA DEL VIEWPORT */
+  --viewport-margin-right: 5%;
+  --viewport-navbar-width: 95%;
+  --viewport-padding-left: 2.85%;
+  --viewport-padding-right: 2.85%;
+  --viewport-brand: 12%;
+  --viewport-menu: 45.5%;
+  --viewport-social: 4.5%;
+  --viewport-control: 18%;
+  --viewport-gap: 1.425%;
+  --navbar-section-gap: 1.425%;
+  
+  /* ✅ ALTURAS UNIFICADAS */
+  --navbar-container-height: 45vh;
+  --navbar-mobile-height: 60px;
+  --navbar-tablet-height: 50px;
+  --navbar-small-mobile-height: 45px;
+  --navbar-section-height: 100%;
+  
+  /* ✅ COLORES */
+  --primary-purple: #8e44ad;
+  --dark-purple: #6c3483;
+  --light-purple: #9b59b6;
+  --accent-blue: #3498db;
+  --text-white: #ffffff;
+  --text-light: rgba(255,255,255,0.9);
+  --bg-light: #f5f5f5;
+}
 
-/* ===== ESTILOS BASE Y UTILITARIOS ===== */
-@import url('_base.css');
+/* ===== RESET Y ESTILOS BASE ===== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
 
-/* ===== COMPONENTES REUTILIZABLES ===== */
-@import url('_components.css');
+html {
+    scroll-behavior: smooth;
+    font-size: 16px;
+    height: 100%;
+    width: 100vw;
+    max-width: 100vw;
+    overflow-x: hidden;
+}
 
-/* ===== ESTILOS ESPECÍFICOS DE MÓDULOS ===== */
-@import url('_modules.css');
+/* ✅ CORREGIDO: Body SIN padding-top, padding-top en main */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    line-height: 1.6;
+    color: #333;
+    background-color: var(--bg-light);
+    min-height: 100vh;
+    position: relative;
+    overflow-y: auto;
+    width: 100vw;
+    max-width: 100vw;
+    padding-top: 0; /* ✅ CORRECCIÓN: NO padding-top aquí */
+}
 
-/* ===== NAVEGACIÓN Y MENÚS ===== */
-@import url('_navigation.css');
-@import url('_submenus.css');
+/* ===== ESTRUCTURA PRINCIPAL ===== */
+.ged-main-content-wrapper {
+    width: 100vw;
+    max-width: 100vw;
+    margin: 0;
+    padding: 0;
+}
 
-/* ===== MEDIA QUERIES RESPONSIVE ===== */
-@import url('_responsive.css');
+.ged-breadcrumbs-container {
+    padding: 20px 30px 10px 30px;
+    margin: 0;
+    background: #f8f9fa;
+    border-bottom: 1px solid #dee2e6;
+    width: 100%;
+    box-sizing: border-box;
+}
 
-/* ===== NOTA PARA DESARROLLADORES ===== */
+.ged-main-content-wrapper > .container,
+.ged-main-content-wrapper > div:not(.ged-breadcrumbs-container):not(.alert) {
+    padding: 20px 30px;
+    margin: 0 auto;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+/* ✅ CORREGIDO: Main content con padding-top para navbar */
+main#main {
+    padding-top: var(--navbar-container-height); /* ✅ Aquí va el padding-top */
+    min-height: calc(100vh - var(--navbar-container-height));
+    position: relative;
+    z-index: 1;
+}
+
+/* ===== CONTENEDORES Y UTILIDADES ===== */
+.container-ged {
+    max-width: 1600px;
+    margin: 0 auto;
+    padding: 0 15px;
+    width: 100%;
+}
+
+.w-100-vw {
+    width: 100vw;
+}
+
+.max-width-100-vw {
+    max-width: 100vw;
+}
+
+.min-width-100-vw {
+    min-width: 100vw;
+}
+
+/* ===== NAVBAR PRINCIPAL ===== */
+/* ✅ CORREGIDO: Ancho completo, sin márgenes automáticos, pegado al top */
+.navbar-contextual {
+  /* ✅ ANCHO Y POSICIÓN EXACTOS - CORRECCIÓN APLICADA */
+  width: 100vw !important; /* ✅ Fuerza ancho completo */
+  max-width: 100vw !important; /* ✅ Fuerza ancho completo */
+  margin: 0 !important; /* ✅ Elimina margin auto que desplaza */
+  position: fixed;
+  top: 0 !important; /* ✅ Pegado al top */
+  left: 0 !important; /* ✅ Alineado a la izquierda */
+  right: 0;
+  z-index: 1030;
+  
+  /* ✅ ALTURA MÍNIMA DE 45vh */
+  min-height: var(--navbar-container-height);
+  height: var(--navbar-container-height);
+  
+  /* ✅ APARIENCIA */
+  background: var(--navbar-gradient);
+  box-shadow: var(--navbar-shadow-light);
+  border: none;
+  border-radius: 0;
+  
+  /* ✅ LAYOUT FLEX OPTIMIZADO */
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: center;
+  justify-content: center; /* ✅ Centrado en lugar de flex-start */
+  
+  /* ✅ PADDING INTERNO EXACTO */
+  padding: 0 !important; /* ✅ Elimina padding de Bootstrap */
+  box-sizing: border-box;
+  
+  /* ✅ TRANSICIONES */
+  transition: all var(--navbar-transition-speed) ease;
+  animation: fadeInDown 0.5s ease-out;
+  
+  /* ✅ OVERFLOW */
+  overflow: hidden;
+}
+
+/* ✅ CORRECCIÓN ESPECÍFICA PARA CONFLICTO CON BOOTSTRAP */
+.navbar.navbar-contextual {
+  padding: 0 !important; /* ✅ Anula padding de .navbar de Bootstrap */
+  margin: 0 !important; /* ✅ Anula margin de .navbar de Bootstrap */
+}
+
+/* ✅ CONTENEDOR INTERNO al 95% */
+.navbar-contextual > .navbar-container {
+  width: var(--viewport-navbar-width) !important;
+  max-width: var(--viewport-navbar-width) !important;
+  margin: 0 auto !important;
+  padding: 0 !important;
+}
+
+.navbar-contextual.scrolled {
+  background: linear-gradient(135deg, #6c3483 0%, #5B2C6F 100%);
+  box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+}
+
+/* ✅ CONTENEDOR PRINCIPAL CON FLEX EN LÍNEA */
+.navbar-container {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-items: stretch;
+    justify-content: flex-start;
+    width: 100%;
+    height: var(--navbar-container-height);
+    min-height: var(--navbar-container-height);
+    margin: 0;
+    padding: 0;
+    gap: 0;
+    box-sizing: border-box;
+}
+
+/* ✅ CONTENEDOR DE SECCIONES DENTRO DEL COLLAPSE */
+.navbar-sections-container {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-items: stretch;
+    justify-content: flex-start;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    gap: 0;
+    box-sizing: border-box;
+}
+
+/* ✅ EL COLLAPSE DEBE SER FLEX Y OCUPAR ESPACIO */
+.navbar-collapse {
+    display: flex;
+    flex-grow: 1;
+    flex-basis: auto;
+    width: auto;
+    min-width: 0;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* ===== SECCIONES DEL NAVBAR ===== */
+.navbar-brand-section {
+  flex: 0 0 var(--viewport-brand);
+  max-width: var(--viewport-brand);
+  min-width: 100px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 0;
+  height: var(--navbar-section-height);
+  box-sizing: border-box;
+  overflow: hidden;
+  margin: 0;
+}
+
+.navbar-menu-section {
+  flex: 0 0 var(--viewport-menu);
+  max-width: var(--viewport-menu);
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  height: var(--navbar-section-height);
+  padding: 0;
+  box-sizing: border-box;
+  overflow: visible;
+  margin: 0;
+}
+
+.navbar-social-section {
+  flex: 0 0 var(--viewport-social);
+  max-width: var(--viewport-social);
+  min-width: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  height: var(--navbar-section-height);
+  padding: 0;
+  box-sizing: border-box;
+  overflow: visible;
+  margin: 0;
+}
+
+.navbar-control-section {
+  flex: 0 0 var(--viewport-control);
+  max-width: var(--viewport-control);
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  height: var(--navbar-section-height);
+  padding: 0;
+  box-sizing: border-box;
+  overflow: visible;
+  opacity: 1;
+  visibility: visible;
+  margin: 0;
+}
+
+/* ✅ LOGO */
+.navbar-logo {
+  height: auto;
+  max-height: 80%;
+  max-width: 100%;
+  width: auto;
+  transition: all 0.3s ease;
+  object-fit: contain;
+  display: block;
+}
+
+.navbar-logo:hover {
+  transform: scale(1.05);
+  filter: brightness(1.1) drop-shadow(0 2px 4px rgba(0,0,0,0.2));
+}
+
+/* ✅ TOGGLER PARA MÓVIL */
+.navbar-toggler {
+  display: none;
+  border: 1px solid rgba(255,255,255,0.3);
+  background: rgba(255,255,255,0.1);
+  padding: 0.4rem 0.6rem;
+  border-radius: 4px;
+  transition: all 0.3s ease;
+}
+
+.navbar-toggler:hover {
+  background: rgba(255,255,255,0.2);
+  transform: scale(1.05);
+}
+
+.navbar-toggler-icon {
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%28255, 255, 255, 0.8%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+  width: 1.25em;
+  height: 1.25em;
+}
+
+/* ===== MENÚ PRINCIPAL ===== */
+.main-navigation {
+  width: 100%;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  flex-wrap: nowrap;
+  gap: 8px;
+  height: 100%;
+}
+
+.main-navigation .nav-link {
+  color: var(--text-white);
+  font-weight: bolder;
+  padding: 12px 16px;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+  font-size: 1rem;
+  text-decoration: none;
+  border-radius: 4px;
+  position: relative;
+  height: 100%;
+  display: flex;
+  align-items: center;
+}
+
+.main-navigation .nav-link:hover,
+.main-navigation .nav-link:focus,
+.main-navigation .nav-link.active {
+  background: rgba(255, 255, 255, 0.15);
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  color: var(--text-white);
+}
+
+.main-navigation .nav-link.active::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 15px;
+  right: 15px;
+  height: 2px;
+  background: white;
+  border-radius: 1px;
+}
+
+/* ===== DROPDOWN MENUS ===== */
+.dropdown-menu {
+  background: linear-gradient(135deg, #7d3c98, #6c3483);
+  border: none;
+  border-radius: 5px;
+  z-index: 1050;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+  padding: 0;
+  position: absolute;
+  border: 1px solid rgba(255,255,255,0.3);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+  overflow: visible;
+  min-width: 200px;
+  transition: opacity 0.2s ease, visibility 0.2s ease;
+}
+
+.dropdown-menu.show {
+  display: block;
+  z-index: 1050;
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.dropdown-item {
+  color: var(--text-white);
+  padding: 12px 15px;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+  position: relative;
+  z-index: 1051;
+  background: transparent;
+}
+
+.dropdown-item:last-child {
+  border-bottom: none;
+}
+
+.dropdown-item:hover,
+.dropdown-item:focus {
+  background: rgba(255,255,255,0.1);
+  z-index: 1051;
+}
+
+/* ✅ SUBMENÚS ANIDADOS */
+.navbar-nav .dropdown-menu {
+  z-index: 1050;
+}
+
+.navbar-nav .dropdown-menu .dropdown-menu {
+  z-index: 1051;
+  margin-left: 0;
+  margin-top: 0;
+}
+
+.navbar-nav .dropdown-menu .dropdown-menu .dropdown-menu {
+  z-index: 1052;
+}
+
+/* ===== ICONOS SOCIALES ===== */
+.social-icons-vertical {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  align-items: flex-start;
+  width: 100%;
+  height: 100%;
+  justify-content: center;
+}
+
+.social-icon-circle {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.12);
+  color: var(--text-white);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  text-decoration: none;
+  font-size: 0.9rem;
+  border: 1px solid rgba(255,255,255,0.2);
+}
+
+.social-icon-circle:hover {
+  background: rgba(255, 255, 255, 0.25);
+  transform: translateY(-2px) scale(1.15);
+  box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+}
+
+/* ===== CONTROL DE SESIÓN ===== */
+.session-controls {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  width: 100%;
+  align-items: stretch;
+  text-align: left;
+  height: 100%;
+  justify-content: center;
+}
+
+/* ===== INFORMACIÓN DE ESCUELA ===== */
+.school-info {
+  background: rgba(0, 0, 0, 0.18);
+  padding: 10px 12px;
+  border-radius: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  font-size: 0.9rem;
+  width: 100%;
+  box-sizing: border-box;
+  text-align: left;
+  margin-bottom: 6px;
+}
+
+.escuela-activa-indicator {
+  background: rgba(52, 152, 219, 0.2);
+  padding: 10px 12px;
+  border-radius: 4px;
+  border-left: 3px solid #3498db;
+  text-align: left;
+  width: 100%;
+  box-sizing: border-box;
+  margin-bottom: 6px;
+}
+
+/* ===== BUSCADOR DE ESCUELAS ===== */
+.school-search-container {
+  position: relative;
+  width: 100%;
+  text-align: left;
+  margin-bottom: 6px;
+}
+
+.school-search-container .form-control {
+  background: rgba(255,255,255,0.1);
+  border: 1px solid rgba(255,255,255,0.2);
+  color: var(--text-white);
+  font-size: 0.9rem;
+  height: 38px;
+  width: 100%;
+  margin-bottom: 5px;
+  box-sizing: border-box;
+}
+
+/* ===== INFORMACIÓN DE USUARIO ===== */
+.user-info {
+  width: 100%;
+  text-align: left;
+  background: rgba(0, 0, 0, 0.18);
+  padding: 10px 12px;
+  border-radius: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  box-sizing: border-box;
+  margin-bottom: 6px;
+}
+
+/* ===== BOTONES DE SESIÓN ===== */
+.session-controls .btn {
+  width: 100%;
+  transition: all 0.3s ease;
+  padding: 8px 12px;
+  font-size: 0.9rem;
+  border-radius: 6px;
+  white-space: nowrap;
+  margin-bottom: 6px;
+  text-align: center;
+  box-sizing: border-box;
+  display: block;
+}
+
+.session-controls .btn:last-child {
+  margin-bottom: 0;
+}
+
+.session-controls .btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}
+
+/* ===== SIDEBAR MÓVIL (OFFCANVAS) ===== */
+.ged-mobile-sidebar {
+    width: 280px;
+    background: linear-gradient(135deg, #6c3483 0%, #8e44ad 100%);
+    color: var(--text-white);
+}
+
+.ged-mobile-sidebar .offcanvas-header {
+    padding: 1.25rem;
+    border-bottom: 1px solid rgba(255,255,255,0.15);
+    background: rgba(0,0,0,0.3);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 70px;
+}
+
+/* Menú móvil */
+.mobile-nav-menu {
+  padding: 0;
+  margin: 0;
+  list-style: none;
+  flex-grow: 1;
+  overflow-y: auto;
+}
+
+.mobile-nav-menu .nav-link {
+  color: var(--text-white);
+  font-weight: bolder;
+  padding: 12px 20px;
+  border-radius: 0;
+  border-left: 3px solid transparent;
+  transition: all 0.3s ease;
+  font-size: 0.95rem;
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  width: 100%;
+}
+
+.mobile-nav-menu .nav-link:hover,
+.mobile-nav-menu .nav-link.active {
+  background: rgba(255,255,255,0.12);
+  color: var(--text-white);
+  padding-left: 25px;
+  border-left-color: var(--accent-blue);
+}
+
+/* ===== COMPONENTES DE MÓDULOS ===== */
+.ged-map-container {
+    position: relative;
+    width: 100%;
+    height: 500px;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.reportes-container {
+    background: white;
+    border-radius: 10px;
+    padding: 25px;
+    margin-bottom: 30px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+.tienda-item {
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    padding: 15px;
+    margin-bottom: 15px;
+    background: #fff;
+    transition: transform 0.2s;
+}
+
+/* ===== BOOTSTRAP PERSONALIZADO ===== */
+.navbar {
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+}
+
+.offcanvas {
+    box-shadow: -5px 0 25px rgba(0, 0, 0, 0.15);
+    border-left: 1px solid #dee2e6;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border: none;
+    border-radius: 8px;
+}
+
+/* ===== ANIMACIONES ===== */
+@keyframes slideIn {
+  from {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ===== MEDIA QUERIES CONSOLIDADAS ===== */
+
+/* Desktop (≥992px) */
+@media (min-width: 992px) {
+  /* ❌ EN PC NO HAY SIDEBAR VISIBLE */
+  #gedMobileMenuContainer {
+    display: none;
+  }
+  
+  /* ✅ TOGGLER OCULTO EN PC */
+  .navbar-toggler {
+    display: none;
+  }
+  
+  /* ✅ CONTENEDOR CON DISTRIBUCIÓN EXACTA */
+  .navbar-contextual {
+    width: 100vw !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    justify-content: center;
+  }
+  
+  /* ✅ GARANTIZAR QUE TODO QUEPA EN UNA LÍNEA */
+  .navbar-contextual > .container-fluid {
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: stretch;
+    justify-content: space-between;
+    width: var(--viewport-navbar-width) !important;
+    margin: 0 auto !important;
+    padding: 0 !important;
+  }
+  
+  /* ✅ FIX DE ULTIMO MOMENTO PARA GARANTIZAR UNA SOLA LÍNEA */
+  .navbar-contextual,
+  .navbar-contextual > .container-fluid {
+    flex-wrap: nowrap;
+    white-space: nowrap;
+    overflow: hidden;
+  }
+  
+  .navbar-brand-section,
+  .navbar-menu-section,
+  .navbar-social-section,
+  .navbar-control-section,
+  .main-navigation,
+  .navbar-nav,
+  .nav-item,
+  .nav-link {
+    white-space: nowrap;
+    display: inline-flex;
+  }
+  
+  /* ✅ DROPDOWN HOVER EN DESKTOP */
+  .navbar-nav .dropdown:hover > .dropdown-menu {
+    display: block;
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+  }
+  
+  .dropdown-menu .dropdown:hover > .dropdown-menu {
+    display: block;
+    position: absolute;
+    left: 100%;
+    top: 0;
+    margin-top: 0;
+  }
+  
+  /* ✅ CORRECCIÓN: Ajustar altura del main para desktop */
+  main#main {
+    padding-top: var(--navbar-container-height) !important;
+    min-height: calc(100vh - var(--navbar-container-height)) !important;
+  }
+}
+
+/* Tablets y pantallas medianas (1199px a 992px) */
+@media (max-width: 1199.98px) and (min-width: 992px) {
+  :root {
+    --navbar-container-height: 40vh;
+  }
+  
+  .navbar-contextual {
+    height: var(--navbar-container-height);
+    min-height: var(--navbar-container-height);
+  }
+  
+  main#main {
+    padding-top: var(--navbar-container-height) !important;
+  }
+  
+  .navbar-logo {
+    max-height: 70%;
+  }
+  
+  .main-navigation .nav-link {
+    padding: 10px 14px;
+    font-size: 0.95rem;
+  }
+}
+
+/* Tablets pequeñas y móviles grandes (991px a 768px) */
+@media (max-width: 991.98px) {
+  /* ✅ EN MÓVIL: RESET DE VARIABLES */
+  :root {
+    --viewport-navbar-width: 100%;
+    --navbar-container-height: 60px;
+  }
+  
+  .navbar-contextual {
+    height: var(--navbar-container-height);
+    min-height: var(--navbar-container-height);
+    position: fixed;
+    top: 0;
+    width: 100vw;
+    margin: 0;
+    padding: 0 15px;
+  }
+  
+  body {
+    padding-top: 0;
+    overflow-x: hidden;
+  }
+  
+  main#main {
+    margin-top: 0;
+    padding-top: var(--navbar-container-height) !important;
+    min-height: calc(100vh - var(--navbar-container-height)) !important;
+  }
+  
+  /* ✅ EN MÓVIL: SOLO BRAND Y TOGGLER */
+  .navbar-menu-section,
+  .navbar-social-section,
+  .navbar-control-section {
+    display: none;
+  }
+  
+  .navbar-brand-section {
+    flex: 1;
+    max-width: none;
+    justify-content: flex-start;
+    min-width: auto;
+    margin-right: 0;
+  }
+  
+  .navbar-toggler {
+    display: flex;
+    align-items: center;
+    margin-left: auto;
+  }
+  
+  /* ✅ ESTILOS PARA SIDEBAR MÓVIL */
+  .ged-mobile-sidebar {
+    width: 85%;
+    max-width: 300px;
+  }
+}
+
+/* Móviles (767px a 576px) */
+@media (max-width: 767.98px) {
+  :root {
+    --navbar-container-height: 50px;
+  }
+  
+  .navbar-contextual {
+    min-height: var(--navbar-container-height);
+    height: var(--navbar-container-height);
+    padding: 0 8px;
+  }
+  
+  main#main {
+    padding-top: var(--navbar-container-height) !important;
+  }
+  
+  .navbar-logo {
+    height: 32px;
+  }
+  
+  .ged-mobile-sidebar {
+    width: 85%;
+    max-width: 280px;
+  }
+  
+  .ged-mobile-sidebar .mobile-nav-menu .nav-link {
+    padding: 12px 16px;
+    font-size: 0.95rem;
+  }
+}
+
+/* Móviles pequeños (575px y menos) */
+@media (max-width: 575.98px) {
+  :root {
+    --navbar-container-height: 45px;
+  }
+  
+  .navbar-contextual {
+    min-height: var(--navbar-container-height);
+    height: var(--navbar-container-height);
+    padding: 0 5px;
+  }
+  
+  main#main {
+    padding-top: var(--navbar-container-height) !important;
+  }
+  
+  .navbar-logo {
+    height: 28px;
+  }
+  
+  .navbar-toggler {
+    padding: 0.3rem 0.5rem;
+    margin-left: 5px;
+  }
+  
+  .ged-mobile-sidebar {
+    width: 90%;
+    max-width: 280px;
+  }
+  
+  .ged-mobile-sidebar .mobile-nav-menu .nav-link {
+    padding: 10px 14px;
+    font-size: 0.9rem;
+  }
+}
+
+/* ===== SUBMENÚS ANIDADOS ===== */
+.dropdown-submenu {
+    position: relative;
+}
+
+.dropdown-submenu > .dropdown-menu {
+    top: 0;
+    left: 100%;
+    margin-top: -6px;
+    margin-left: -1px;
+    border-radius: 0 6px 6px 6px;
+    display: none;
+}
+
+.dropdown-submenu:hover > .dropdown-menu {
+    display: block;
+}
+
+/* Para menús móviles */
+.mobile-submenu {
+    padding-left: 20px;
+    background-color: rgba(0,0,0,0.02);
+}
+
+/* ===== HERRAMIENTAS (ID:162) SOLO DESKTOP ===== */
+@media (max-width: 991.98px) {
+    .menu-id-162,
+    .menu-herramientas-id-162,
+    [data-menu-id="162"],
+    [data-menu-name="herramientas"],
+    .menu-herramientas {
+        display: none !important;
+        visibility: hidden !important;
+        opacity: 0 !important;
+        height: 0 !important;
+        overflow: hidden !important;
+        pointer-events: none !important;
+    }
+}
+
+/* ===== CORRECCIÓN DE Z-INDEX PARA SUBMENÚS ===== */
+.navbar-nav .dropdown-menu {
+    z-index: 1050;
+    overflow: visible;
+}
+
+.navbar-nav .dropdown-menu .dropdown-menu {
+    z-index: 1051;
+}
+
+.navbar-nav .dropdown-menu .dropdown-menu .dropdown-menu {
+    z-index: 1052;
+}
+
+/* ===== PRINT STYLES ===== */
+@media print {
+  .navbar-contextual {
+    position: static;
+    background: white;
+    color: black;
+    box-shadow: none;
+    border-bottom: 1px solid #ddd;
+  }
+  
+  .navbar-logo {
+    filter: grayscale(100%) brightness(0%);
+  }
+  
+  .navbar-social-section,
+  .session-controls,
+  .navbar-toggler {
+    display: none;
+  }
+  
+  main#main {
+    padding-top: 0 !important;
+  }
+}
+
+/* ===== SCROLLBAR PERSONALIZADO ===== */
+.ged-mobile-sidebar .offcanvas-body::-webkit-scrollbar {
+    width: 4px;
+}
+
+.ged-mobile-sidebar .offcanvas-body::-webkit-scrollbar-track {
+    background: rgba(255,255,255,0.05);
+}
+
+.ged-mobile-sidebar .offcanvas-body::-webkit-scrollbar-thumb {
+    background: rgba(255,255,255,0.2);
+    border-radius: 2px;
+}
+
+.ged-mobile-sidebar .offcanvas-body::-webkit-scrollbar-thumb:hover {
+    background: rgba(255,255,255,0.3);
+}
+
+/* ===== DEBUG STYLES (OPCIONAL) ===== */
+.debug-navbar .navbar-contextual { outline: 2px solid red; }
+.debug-navbar .navbar-menu-section { outline: 2px solid green; }
+.debug-navbar .main-navigation { outline: 2px solid orange; }
+.debug-navbar .dropdown-menu { outline: 2px solid yellow; }
+.debug-navbar .navbar-control-section { outline: 2px solid cyan; background: rgba(0,255,255,0.1); }
+.debug-navbar .navbar-social-section { outline: 2px solid magenta; background: rgba(255,0,255,0.1); }
+
+.debug-viewport-95 .navbar-contextual {
+    outline: 2px dashed rgba(0, 255, 0, 0.5);
+    position: relative;
+}
+
+/* ✅ CORRECCIÓN EXTRA PARA GARANTIZAR NAVBAR PEGADO AL TOP */
+.fixed-top.navbar-contextual {
+  top: 0 !important;
+  left: 0 !important;
+  margin-top: 0 !important;
+}
+
+/* ===== FONT AWESOME (si se necesita) ===== */
+/* @import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css'); */
+
+/* ===== NOTA FINAL ===== */
 /*
- * Para usar este sistema en Yii2, configurar AppAsset.php así:
- * 
- * class AppAsset extends AssetBundle {
- *     public $basePath = '@webroot';
- *     public $baseUrl = '@web';
- *     public $css = [
- *         'css/ged.css',  // SOLO ESTE ARCHIVO
- *     ];
- *     public $js = [
- *         // tus scripts aquí
- *     ];
- * }
- * 
- * Asegúrate de que todos los archivos importados estén en el mismo directorio
- * que ged.css (normalmente /web/css/)
+ * ARCHIVO CSS CONSOLIDADO GED v4.7
+ * CORRECCIONES APLICADAS:
+ * 1. Navbar pegado al top (sin espacio superior)
+ * 2. Conflicto con clases Bootstrap resuelto
+ * 3. Padding-top movido de body a main#main
+ * 4. Ancho del navbar corregido (100vw externo, 95% interno)
+ * 5. Eliminado margin auto que desplazaba navbar
+ * 6. !important estratégicos para ganar sobre Bootstrap
  */

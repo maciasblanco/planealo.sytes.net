@@ -84,6 +84,21 @@ class SiteController extends Controller
      */
     public function actionIndex()
     {
+            // DEBUG: Forzar escritura de log
+    Yii::info('=== ACCESO A PÁGINA PRINCIPAL ===', 'app');
+    Yii::info('Usuario: ' . (Yii::$app->user->isGuest ? 'Invitado' : 'Logueado'), 'app');
+    
+    // Verificar si MenuWidget está cargado
+    Yii::info('Cargando MenuWidget...', 'app');
+    
+    // DEBUG: Forzar escritura de log
+    Yii::info('=== ACCESO A PÁGINA PRINCIPAL ===', 'app');
+    Yii::info('Usuario: ' . (Yii::$app->user->isGuest ? 'Invitado' : 'Logueado'), 'app');
+    
+    // Verificar si MenuWidget está cargado
+    Yii::info('Cargando MenuWidget...', 'app');
+    
+    
         // ✅ PREVENCIÓN DE BUCLE: Verificar si ya estamos autenticados en página de login
         // ✅ SI YA ESTÁ AUTENTICADO Y ACCEDE AL INDEX, NO HACER NADA ESPECIAL
         // ✅ PERMITIR QUE USUARIOS AUTENTICADOS VEAN EL LANDING

@@ -17,6 +17,18 @@ $config = [
     ],
 
    'components' => [
+        'log' => [
+            'traceLevel' => YII_DEBUG ? 3 : 0,
+            'targets' => [
+                [
+                    'class' => 'yii\log\FileTarget',
+                    'levels' => ['error', 'warning', 'info'],
+                    'logFile' => '@runtime/logs/app.log',
+                    'maxFileSize' => 1024 * 2, // 2MB
+                    'maxLogFiles' => 20,
+                ],
+            ],
+        ],
 
         'request' => [
             'cookieValidationKey' => 'mjbvsistemas-ged-voleibol-06012025',
@@ -265,28 +277,41 @@ $config = [
     'as access' => [
         'class' => 'mdm\admin\components\AccessControl',
         'allowActions' => [
-            // ✅ PERMITIR ACCESO A LAS RUTAS DE AUTENTICACIÓN SIN LOGIN
-            'site/login',
-            'site/logout',
-            'site/verify-email-first',
-            'site/validate-code',
-            'site/change-password-first',
-            'site/resend-code',
-            'site/error',
+            // ✅ RUTAS PÚBLICAS DEL SITE (ACCESO SIN LOGIN)
+            'site/index',           // Landing page pública
+            'site/login',           // Formulario de login
+            'site/logout',          // Cerrar sesión
+            'site/error',           // Página de errores
+            'site/about',           // Página "Acerca de"
+            'site/contact',         // Página de contacto
             
-            // Otras rutas públicas
-            'tienda/marketplace/*',
+            // ✅ RUTAS PÚBLICAS DEL MARKETPLACE
+            'tienda/marketplace/index',
+            'tienda/marketplace/buscar',
+            'tienda/marketplace/categoria',
+            'tienda/marketplace/producto',
+            
+            // ✅ RUTAS DE SERVICIOS PÚBLICOS (dropdowns, AJAX)
             'municipio/get-by-edo',
-            'parroquia/get-by-muni',
+            'parroquia/get-by-muni', 
             'parroquia/get-by-muni-cod',
+            'tasa-dolar/index',
             
-            /*'ged/*',
-            'site/*',
-            'tienda/*',
-            'admin/user/signup',
-            'admin/user/request-password-reset',
-            'admin/user/reset-password',*/
-            'admin/*'
+            // ✅ RUTAS DE REGISTRO Y RECUPERACIÓN
+            'admin/user/signup',                 // Registro de usuarios
+            'admin/user/request-password-reset', // Solicitar reset de contraseña
+            'admin/user/reset-password',         // Resetear contraseña
+            
+            // ✅ RUTAS DE DEBUG (solo desarrollo)
+            'site/debug-menu',
+            'site/test-menu-widget',
+            'site/clear-cache',
+            'site/get-mobile-menu',
+            'debug/menu',
+            
+            // ✅ RUTAS DE ADMINISTRACIÓN PÚBLICAS (solo las necesarias)
+            'admin/default/login',               // Login del admin
+            'admin/default/error',               // Error del admin
         ]
     ],
 

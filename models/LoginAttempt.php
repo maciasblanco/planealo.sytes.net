@@ -1,20 +1,28 @@
 <?php
+
 namespace app\models;
 
 use Yii;
+use yii\db\ActiveRecord;
+use yii\behaviors\TimestampBehavior;
 
 /**
- * This is the model class for table "seguridad.login_attempt".
- *
+ * LoginAttempt model
+ * 
  * @property int $id
  * @property string $username
- * @property bool $success
+ * @property int|null $user_id
+ * @property string $status
  * @property string $ip_address
  * @property string|null $user_agent
  * @property string|null $created_at
  */
-class LoginAttempt extends \yii\db\ActiveRecord
+class LoginAttempt extends ActiveRecord
 {
+    const STATUS_SUCCESS = 'success';
+    const STATUS_FAILED = 'failed';
+    const STATUS_BLOCKED = 'blocked';
+    
     /**
      * {@inheritdoc}
      */
@@ -22,22 +30,41 @@ class LoginAttempt extends \yii\db\ActiveRecord
     {
         return 'seguridad.login_attempt';
     }
-
+    
+    /**
+     * {@inheritdoc}
+     */
+    public function behaviors()
+    {
+        return [
+            [
+                'class' => TimestampBehavior::class,
+                'createdAtAttribute' => 'created_at',
+                'updatedAtAttribute' => null,
+                'value' => date('Y-m-d H:i:s'),
+            ],
+        ];
+    }
+    
     /**
      * {@inheritdoc}
      */
     public function rules()
     {
         return [
-            [['username', 'ip_address'], 'required'],
-            [['success'], 'boolean'],
+            [['username', 'status', 'ip_address'], 'required'],
+            [['user_id'], 'integer'],
+            [['user_agent'], 'string'],
             [['created_at'], 'safe'],
-            [['username', 'ip_address'], 'string', 'max' => 255],
-            [['user_agent'], 'string', 'max' => 512],
-            [['success'], 'default', 'value' => false],
+            [['username'], 'string', 'max' => 100],
+            [['status'], 'string', 'max' => 20],
+            [['ip_address'], 'string', 'max' => 45],
+            ['status', 'in', 'range' => [self::STATUS_SUCCESS, self::STATUS_FAILED, self::STATUS_BLOCKED]],
+            [['user_id'], 'exist', 'skipOnError' => true, 
+                'targetClass' => User::class, 'targetAttribute' => ['user_id' => 'id']],
         ];
     }
-
+    
     /**
      * {@inheritdoc}
      */
@@ -45,164 +72,141 @@ class LoginAttempt extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'username' => 'Nombre de Usuario',
-            'success' => 'Éxito',
+            'username' => 'Usuario',
+            'user_id' => 'ID Usuario',
+            'status' => 'Estado',
             'ip_address' => 'Dirección IP',
             'user_agent' => 'Agente de Usuario',
             'created_at' => 'Fecha de Creación',
         ];
     }
-
+    
     /**
-     * Registra un intento de login
+     * @return \yii\db\ActiveQuery
+     */
+    public function getUser()
+    {
+        return $this->hasOne(User::class, ['id' => 'user_id']);
+    }
+    
+    /**
+     * Registra un intento de login exitoso
      * 
-     * @param string $username Nombre de usuario
-     * @param bool $success Éxito del intento
-     * @param string|null $ipAddress Dirección IP (si null, se usa la actual)
-     * @param string|null $userAgent User Agent (si null, se usa el actual)
+     * @param string $username
+     * @param int|null $userId
      * @return bool
      */
-    public static function logAttempt($username, $success, $ipAddress = null, $userAgent = null)
+    public static function recordSuccess($username, $userId = null)
     {
-        $attempt = new self();
-        $attempt->username = $username;
-        $attempt->success = $success;
-        $attempt->ip_address = $ipAddress ?: Yii::$app->request->userIP;
-        $attempt->user_agent = $userAgent ?: Yii::$app->request->userAgent;
+        $model = new self();
+        $model->username = $username;
+        $model->user_id = $userId;
+        $model->status = self::STATUS_SUCCESS;
+        $model->ip_address = Yii::$app->request->getUserIP();
+        $model->user_agent = Yii::$app->request->getUserAgent();
         
-        return $attempt->save();
+        return $model->save();
     }
-
+    
     /**
-     * Cuenta los intentos fallidos recientes desde una IP específica
+     * Registra un intento de login fallido
      * 
-     * @param string $ipAddress Dirección IP
-     * @param int $minutes Período en minutos (por defecto 30)
+     * @param string $username
+     * @param int|null $userId
+     * @return bool
+     */
+    public static function recordFailure($username, $userId = null)
+    {
+        $model = new self();
+        $model->username = $username;
+        $model->user_id = $userId;
+        $model->status = self::STATUS_FAILED;
+        $model->ip_address = Yii::$app->request->getUserIP();
+        $model->user_agent = Yii::$app->request->getUserAgent();
+        
+        return $model->save();
+    }
+    
+    /**
+     * Registra un bloqueo de login
+     * 
+     * @param string $username
+     * @param int|null $userId
+     * @return bool
+     */
+    public static function recordBlock($username, $userId = null)
+    {
+        $model = new self();
+        $model->username = $username;
+        $model->user_id = $userId;
+        $model->status = self::STATUS_BLOCKED;
+        $model->ip_address = Yii::$app->request->getUserIP();
+        $model->user_agent = Yii::$app->request->getUserAgent();
+        
+        return $model->save();
+    }
+    
+    /**
+     * Obtiene intentos fallidos recientes por IP
+     * 
+     * @param string $ip
+     * @param int $minutes
      * @return int
      */
-    public static function getFailedAttemptsCountByIp($ipAddress, $minutes = 30)
+    public static function getRecentFailuresByIp($ip, $minutes = 15)
     {
+        $since = date('Y-m-d H:i:s', strtotime("-$minutes minutes"));
+        
         return self::find()
-            ->where(['ip_address' => $ipAddress, 'success' => false])
-            ->andWhere(['>=', 'created_at', date('Y-m-d H:i:s', strtotime("-{$minutes} minutes"))])
+            ->where(['ip_address' => $ip])
+            ->andWhere(['status' => self::STATUS_FAILED])
+            ->andWhere(['>=', 'created_at', $since])
             ->count();
     }
-
+    
     /**
-     * Cuenta los intentos fallidos recientes para un usuario específico
+     * Obtiene intentos fallidos recientes por usuario
      * 
-     * @param string $username Nombre de usuario
-     * @param int $minutes Período en minutos (por defecto 30)
+     * @param string $username
+     * @param int $minutes
      * @return int
      */
-    public static function getFailedAttemptsCountByUsername($username, $minutes = 30)
+    public static function getRecentFailuresByUser($username, $minutes = 15)
     {
-        return self::find()
-            ->where(['username' => $username, 'success' => false])
-            ->andWhere(['>=', 'created_at', date('Y-m-d H:i:s', strtotime("-{$minutes} minutes"))])
-            ->count();
-    }
-
-    /**
-     * Verifica si una IP está bloqueada por demasiados intentos fallidos
-     * 
-     * @param string $ipAddress Dirección IP
-     * @param int $maxAttempts Máximo de intentos permitidos (por defecto 5)
-     * @param int $minutes Período en minutos (por defecto 30)
-     * @return bool
-     */
-    public static function isIpBlocked($ipAddress, $maxAttempts = 5, $minutes = 30)
-    {
-        return self::getFailedAttemptsCountByIp($ipAddress, $minutes) >= $maxAttempts;
-    }
-
-    /**
-     * Verifica si un usuario está bloqueado por demasiados intentos fallidos
-     * 
-     * @param string $username Nombre de usuario
-     * @param int $maxAttempts Máximo de intentos permitidos (por defecto 3)
-     * @param int $minutes Período en minutos (por defecto 30)
-     * @return bool
-     */
-    public static function isUsernameBlocked($username, $maxAttempts = 3, $minutes = 30)
-    {
-        return self::getFailedAttemptsCountByUsername($username, $minutes) >= $maxAttempts;
-    }
-
-    /**
-     * Limpia los intentos de login antiguos
-     * 
-     * @param int $days Días a mantener (por defecto 7)
-     * @return int Número de registros eliminados
-     */
-    public static function cleanupOldAttempts($days = 7)
-    {
-        return self::deleteAll([
-            '<', 'created_at', date('Y-m-d H:i:s', strtotime("-{$days} days"))
-        ]);
-    }
-
-    /**
-     * Obtiene estadísticas de intentos de login
-     * 
-     * @param int $days Días a considerar
-     * @return array
-     */
-    public static function getStatistics($days = 7)
-    {
-        $dateFrom = date('Y-m-d H:i:s', strtotime("-{$days} days"));
+        $since = date('Y-m-d H:i:s', strtotime("-$minutes minutes"));
         
-        $total = self::find()
-            ->where(['>=', 'created_at', $dateFrom])
+        return self::find()
+            ->where(['username' => $username])
+            ->andWhere(['status' => self::STATUS_FAILED])
+            ->andWhere(['>=', 'created_at', $since])
             ->count();
-            
-        $successful = self::find()
-            ->where(['success' => true])
-            ->andWhere(['>=', 'created_at', $dateFrom])
-            ->count();
-            
-        $failed = self::find()
-            ->where(['success' => false])
-            ->andWhere(['>=', 'created_at', $dateFrom])
-            ->count();
-            
-        $uniqueIps = self::find()
-            ->select(['DISTINCT ip_address'])
-            ->where(['>=', 'created_at', $dateFrom])
-            ->count();
-            
-        $topFailedIps = self::find()
-            ->select(['ip_address', 'COUNT(*) as attempts'])
-            ->where(['success' => false])
-            ->andWhere(['>=', 'created_at', $dateFrom])
-            ->groupBy(['ip_address'])
-            ->orderBy(['attempts' => SORT_DESC])
-            ->limit(10)
-            ->asArray()
-            ->all();
-            
-        return [
-            'total' => $total,
-            'successful' => $successful,
-            'failed' => $failed,
-            'success_rate' => $total > 0 ? round(($successful / $total) * 100, 2) : 0,
-            'unique_ips' => $uniqueIps,
-            'top_failed_ips' => $topFailedIps,
-        ];
     }
-
+    
     /**
-     * {@inheritdoc}
+     * Verifica si una IP está bloqueada (demasiados intentos)
+     * 
+     * @param string $ip
+     * @param int $maxAttempts
+     * @param int $minutes
+     * @return bool
      */
-    public function beforeSave($insert)
+    public static function isIpBlocked($ip, $maxAttempts = 5, $minutes = 15)
     {
-        if (parent::beforeSave($insert)) {
-            if ($insert && empty($this->created_at)) {
-                $this->created_at = date('Y-m-d H:i:s');
-            }
-            return true;
-        }
-        return false;
+        $failures = self::getRecentFailuresByIp($ip, $minutes);
+        return $failures >= $maxAttempts;
+    }
+    
+    /**
+     * Verifica si un usuario tiene demasiados intentos fallidos
+     * 
+     * @param string $username
+     * @param int $maxAttempts
+     * @param int $minutes
+     * @return bool
+     */
+    public static function isUserBlocked($username, $maxAttempts = 3, $minutes = 15)
+    {
+        $failures = self::getRecentFailuresByUser($username, $minutes);
+        return $failures >= $maxAttempts;
     }
 }
-?>
