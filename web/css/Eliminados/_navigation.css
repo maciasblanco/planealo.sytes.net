@@ -1,0 +1,3290 @@
+/* =================================================================
+ * _navigation.css - NAVEGACIÓN Y MENÚS GED
+ * Versión: 3.6.0 - VIEWPORT 95% + MENÚ 45.5% + HERRAMIENTAS SOLO DESKTOP
+ * Fecha: 2026-01-22
+ * Última modificación: 2026-01-22 (Herramientas solo en desktop, ID:162)
+ * 
+ * DISTRIBUCIÓN EXACTA DEL VIEWPORT (100%):
+ *  1. Navbar: 95% del viewport (con 5% de margen derecho visual)
+ *  2. Secciones dentro del navbar:
+ *     - Logo: 12% del viewport (12.63% del navbar)
+ *     - Menú: 45.5% del viewport (47.89% del navbar)
+ *     - Social: 4.5% del viewport (4.74% del navbar)
+ *     - Control: 18% del viewport (18.95% del navbar)
+ *  TOTAL: 80% del viewport (84.21% del navbar) + 15% para gaps
+ * ================================================================= */
+
+/* Variables específicas de navegación */
+:root {
+  /* Offcanvas */
+  --sidebar-width-desktop: 240px;
+  --sidebar-width-desktop-compact: 60px;
+  --sidebar-width-mobile: 280px;
+  --transition-speed: 0.3s;
+
+  /* Navbar */
+  --navbar-gradient: linear-gradient(135deg, #8e44ad 0%, #6c3483 100%);
+  --navbar-shadow-light: 0 2px 10px rgba(0,0,0,0.1);
+  --navbar-shadow-medium: 0 4px 20px rgba(0,0,0,0.15);
+  --navbar-transition-speed: 0.3s;
+  
+  /* ✅ VARIABLES ACTUALIZADAS - VIEWPORT 95%, MENÚ 45.5% */
+  --viewport-margin-right: 5%;            /* 5% del viewport (margen visual) */
+  --viewport-navbar-width: 95%;           /* 95% del viewport */
+  --viewport-padding-left: 2.85%;         /* 3% de 95% = 2.85% del viewport */
+  --viewport-padding-right: 2.85%;        /* 3% de 95% = 2.85% del viewport */
+  --viewport-brand: 12%;                  /* 12% del viewport */
+  --viewport-menu: 45.5%;                 /* ✅ AUMENTADO: 45.5% del viewport */
+  --viewport-social: 4.5%;                /* 4.5% del viewport */
+  --viewport-control: 18%;                /* 18% del viewport */
+  --viewport-gap: 1.425%;                 /* 1.5% de 95% = 1.425% del viewport */
+  --navbar-section-gap: 1.425%;           /* 1.425% del viewport */
+  
+  /* ✅ NUEVAS VARIABLES PARA SOLUCIÓN UNA LÍNEA */
+  --navbar-container-height: 45vh;        /* Altura fija del navbar */
+  --navbar-section-height: 100%;          /* Todas las secciones ocupan 100% de altura */
+}
+
+/* ===== RESET DE ANCHO COMPLETO ===== */
+html, body {
+    width: 100vw !important;
+    max-width: 100vw !important;
+    min-width: 100vw !important;
+    overflow-x: hidden !important;
+    position: relative;
+    margin: 0 !important;
+    padding: 0 !important;
+    scroll-behavior: smooth;
+    scroll-padding-top: 80px;
+    box-sizing: border-box !important;
+}
+
+/* ✅ BODY PRINCIPAL - ANCHO COMPLETO */
+body {
+    width: 100vw !important;
+    max-width: 100vw !important;
+    min-width: 100vw !important;
+    overflow-x: hidden !important;
+    position: relative;
+    padding-top: var(--navbar-container-height) !important; /* ✅ 45vh */
+    margin: 0 !important;
+    box-sizing: border-box !important;
+    background-color: #ffffff;
+}
+
+@media (max-width: 991.98px) {
+    body {
+        padding-top: 60px !important; /* Móvil: 60px */
+    }
+}
+
+/* ===== ESTRUCTURA DE CONTENIDO GED ===== */
+.ged-main-content-wrapper {
+    width: 100vw !important;
+    max-width: 100vw !important;
+    min-width: 100vw !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    box-sizing: border-box !important;
+}
+
+.ged-breadcrumbs-container {
+    padding: 20px 30px 10px 30px !important;
+    margin: 0 !important;
+    background: #f8f9fa;
+    border-bottom: 1px solid #dee2e6;
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+}
+
+.ged-main-content-wrapper > .container,
+.ged-main-content-wrapper > div:not(.ged-breadcrumbs-container):not(.alert) {
+    padding: 20px 30px !important;
+    margin: 0 auto !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+}
+
+@media (max-width: 991.98px) {
+    .ged-breadcrumbs-container {
+        padding: 15px 15px 8px 15px !important;
+    }
+    
+    .ged-main-content-wrapper > .container,
+    .ged-main-content-wrapper > div:not(.ged-breadcrumbs-container):not(.alert) {
+        padding: 15px !important;
+    }
+}
+
+/* ================================================== */
+/* ✅ NAVBAR PRINCIPAL - DISTRIBUCIÓN OPTIMIZADA ===== */
+/* ================================================== */
+
+.navbar-contextual {
+  /* ✅ ANCHO Y POSICIÓN EXACTOS */
+  width: var(--viewport-navbar-width) !important;      /* 95% del viewport */
+  max-width: var(--viewport-navbar-width) !important;
+  margin: 0 0 0 auto !important;                     /* Alineado a la izquierda con 5% de margen derecho */
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  z-index: 1030 !important;
+  
+  /* ✅ ALTURA MÍNIMA DE 45vh */
+  min-height: var(--navbar-container-height) !important;
+  height: var(--navbar-container-height) !important;
+  
+  /* ✅ APARIENCIA */
+  background: var(--navbar-gradient) !important;
+  box-shadow: var(--navbar-shadow-light) !important;
+  border: none !important;
+  border-radius: 0 !important;
+  
+  /* ✅ LAYOUT FLEX OPTIMIZADO */
+  display: flex !important;
+  flex-wrap: nowrap !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+  
+  /* ✅ PADDING INTERNO EXACTO: 3% de 95% = 2.85% del viewport a cada lado */
+  padding: 0 3% !important;                          /* 3% del navbar (2.85% del viewport) */
+  box-sizing: border-box !important;
+  
+  /* ✅ TRANSICIONES */
+  transition: all var(--navbar-transition-speed) ease !important;
+  animation: fadeInDown 0.5s ease-out;
+  
+  /* ✅ OVERFLOW */
+  overflow: hidden !important;
+}
+
+.navbar-contextual.scrolled {
+  background: linear-gradient(135deg, #6c3483 0%, #5B2C6F 100%) !important;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.2) !important;
+  min-height: var(--navbar-container-height) !important;
+  height: var(--navbar-container-height) !important;
+}
+
+/* ✅ FORZAR ANCHO COMPLETO EN ELEMENTOS HIJO PARA COMPATIBILIDAD */
+.navbar-contextual > .container-fluid,
+.navbar-contextual .navbar-collapse {
+    width: 100vw !important;
+    max-width: 100vw !important;
+    min-width: 100vw !important;
+    left: 0 !important;
+    right: 0 !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+    overflow: visible !important;
+}
+
+.container-fluid.p-0.m-0 {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+}
+
+/* ================================================== */
+/* ✅ SECCIONES DEL NAVBAR - DISTRIBUCIÓN OPTIMIZADA = */
+/* ================================================== */
+
+/* ✅ LOGO: 12% del viewport (12.63% del navbar) */
+.navbar-brand-section {
+  flex: 0 0 var(--viewport-brand) !important;        /* 12% del viewport */
+  max-width: var(--viewport-brand) !important;       /* 12% del viewport */
+  min-width: 100px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+  padding: 0 !important;
+  height: var(--navbar-section-height) !important;
+  box-sizing: border-box !important;
+  overflow: hidden !important;
+  margin: 0 !important;
+}
+
+/* ✅ MENÚ PRINCIPAL: 45.5% del viewport (47.89% del navbar) */
+.navbar-menu-section {
+  flex: 0 0 var(--viewport-menu) !important;         /* 45.5% del viewport */
+  max-width: var(--viewport-menu) !important;        /* 45.5% del viewport */
+  display: flex !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+  height: var(--navbar-section-height) !important;
+  padding: 0 !important;
+  box-sizing: border-box !important;
+  overflow: visible !important;
+  margin: 0 !important;
+}
+
+/* ✅ REDES SOCIALES: 4.5% del viewport (4.74% del navbar) */
+.navbar-social-section {
+  flex: 0 0 var(--viewport-social) !important;       /* 4.5% del viewport */
+  max-width: var(--viewport-social) !important;      /* 4.5% del viewport */
+  min-width: 60px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+  height: var(--navbar-section-height) !important;
+  padding: 0 !important;
+  box-sizing: border-box !important;
+  overflow: visible !important;
+  margin: 0 !important;
+}
+
+/* ✅ CONTROL DE USUARIO: 18% del viewport (18.95% del navbar) */
+.navbar-control-section {
+  flex: 0 0 var(--viewport-control) !important;      /* 18% del viewport */
+  max-width: var(--viewport-control) !important;     /* 18% del viewport */
+  display: flex !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+  height: var(--navbar-section-height) !important;
+  padding: 0 !important;
+  box-sizing: border-box !important;
+  overflow: visible !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  margin: 0 !important;
+}
+
+/* ✅ LOGO RESPONSIVE */
+.navbar-logo {
+  height: auto !important;
+  max-height: 80% !important; /* ✅ AJUSTE: 80% de la altura del navbar */
+  max-width: 100% !important;
+  width: auto !important;
+  transition: all 0.3s ease !important;
+  object-fit: contain !important;
+  display: block !important;
+}
+
+.navbar-logo:hover {
+  transform: scale(1.05) !important;
+  filter: brightness(1.1) drop-shadow(0 2px 4px rgba(0,0,0,0.2)) !important;
+}
+
+.logo-fallback {
+  display: none;
+  background: #6c3483;
+  color: white;
+  padding: 10px;
+  border-radius: 5px;
+  text-align: center;
+}
+
+/* ✅ TOGGLER PARA MÓVIL */
+.navbar-toggler {
+  display: none !important;
+  border: 1px solid rgba(255,255,255,0.3) !important;
+  background: rgba(255,255,255,0.1) !important;
+  padding: 0.4rem 0.6rem !important;
+  border-radius: 4px !important;
+  transition: all 0.3s ease !important;
+}
+
+.navbar-toggler:hover {
+  background: rgba(255,255,255,0.2) !important;
+  transform: scale(1.05) !important;
+}
+
+.navbar-toggler-icon {
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%28255, 255, 255, 0.8%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e") !important;
+  width: 1.25em !important;
+  height: 1.25em !important;
+}
+
+/* ✅ MENÚ PRINCIPAL OPTIMIZADO */
+.main-navigation {
+  width: 100% !important;
+  display: flex !important;
+  justify-content: flex-start !important;
+  align-items: center !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  list-style: none !important;
+  flex-wrap: nowrap !important;
+  gap: 8px !important;
+  height: 100% !important;
+}
+
+.main-navigation .nav-link {
+  /* ✅ ACTUALIZADO: TEXTO BLANCO Y NEGRITA */
+  color: white !important;
+  font-weight: bolder !important;
+  padding: 12px 16px !important;
+  transition: all 0.3s ease !important;
+  white-space: nowrap !important;
+  font-size: 1rem !important;
+  text-decoration: none !important;
+  border-radius: 4px !important;
+  position: relative !important;
+  height: 100% !important;
+  display: flex !important;
+  align-items: center !important;
+}
+
+.main-navigation .nav-link:hover,
+.main-navigation .nav-link:focus,
+.main-navigation .nav-link.active {
+  background: rgba(255, 255, 255, 0.15) !important;
+  transform: translateY(-1px) !important;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1) !important;
+  /* ✅ MANTENER TEXTO BLANCO EN HOVER */
+  color: white !important;
+}
+
+.main-navigation .nav-link.active::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 15px;
+  right: 15px;
+  height: 2px;
+  background: white;
+  border-radius: 1px;
+}
+
+/* ===== DROPDOWN MENUS ===== */
+.dropdown-menu {
+  background: linear-gradient(135deg, #7d3c98, #6c3483);
+  border: none;
+  border-radius: 5px;
+  z-index: 1050 !important;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+  padding: 0;
+  position: absolute !important;
+  border: 1px solid rgba(255,255,255,0.3) !important;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.3) !important;
+  overflow: visible !important;
+  min-width: 200px !important;
+  /* ✅ AGREGAR: transición solo para opacity/visibility */
+  transition: opacity 0.2s ease, visibility 0.2s ease !important;
+}
+
+.dropdown-menu.show {
+  display: block !important;
+  z-index: 1050 !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  transform: translateY(0) !important;
+}
+
+.dropdown-item {
+  color: white !important;
+  padding: 12px 15px;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+  position: relative;
+  z-index: 1051;
+  background: transparent !important;
+}
+
+.dropdown-item:last-child {
+  border-bottom: none;
+}
+
+.dropdown-item:hover,
+.dropdown-item:focus {
+  background: rgba(255,255,255,0.1) !important;
+  z-index: 1051;
+}
+
+/* ✅ SUBMENÚS ANIDADOS */
+.navbar-nav .dropdown-menu {
+  z-index: 1050 !important;
+}
+
+.navbar-nav .dropdown-menu .dropdown-menu {
+  z-index: 1051 !important;
+  margin-left: 0 !important;
+  margin-top: 0 !important;
+}
+
+.navbar-nav .dropdown-menu .dropdown-menu .dropdown-menu {
+  z-index: 1052 !important;
+}
+
+.navbar-nav .dropdown {
+  position: relative !important;
+}
+
+.navbar-nav .dropdown-menu {
+  position: absolute !important;
+  left: 0 !important;
+  top: 100% !important;
+  margin-top: 0 !important;
+}
+
+@media (min-width: 992px) {
+  .navbar-nav .dropdown:hover > .dropdown-menu {
+    display: block !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    transform: translateY(0) !important;
+  }
+  
+  .dropdown-menu .dropdown:hover > .dropdown-menu {
+    display: block !important;
+    position: absolute !important;
+    left: 100% !important;
+    top: 0 !important;
+    margin-top: 0 !important;
+  }
+}
+
+/* ✅ AGREGAR ESTILO ESPECÍFICO PARA SUBMENÚS */
+.dropdown-menu .dropdown-menu {
+  margin-top: -6px !important;
+  margin-left: 0 !important;
+}
+
+@media (min-width: 992px) {
+  .dropdown-menu .dropdown-menu {
+    left: 100% !important;
+    top: 0 !important;
+  }
+}
+
+/* ✅ ICONOS SOCIALES OPTIMIZADOS */
+.social-icons-vertical {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 6px !important;
+  align-items: flex-start !important;
+  width: 100% !important;
+  height: 100% !important;
+  justify-content: center !important;
+}
+
+.social-icon-circle {
+  width: 32px !important;
+  height: 32px !important;
+  border-radius: 50% !important;
+  background: rgba(255, 255, 255, 0.12) !important;
+  color: white !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  transition: all 0.3s ease !important;
+  text-decoration: none !important;
+  font-size: 0.9rem !important;
+  border: 1px solid rgba(255,255,255,0.2) !important;
+}
+
+.social-icon-circle:hover {
+  background: rgba(255, 255, 255, 0.25) !important;
+  transform: translateY(-2px) scale(1.15) !important;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.2) !important;
+}
+
+/* ✅ CONTROL DE SESIÓN OPTIMIZADO */
+.session-controls {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 6px !important;
+  width: 100% !important;
+  align-items: stretch !important;
+  text-align: left !important;
+  height: 100% !important;
+  justify-content: center !important;
+}
+
+/* ✅ INFORMACIÓN DE ESCUELA OPTIMIZADA */
+.school-info {
+  background: rgba(0, 0, 0, 0.18) !important;
+  padding: 10px 12px !important;
+  border-radius: 6px !important;
+  border: 1px solid rgba(255, 255, 255, 0.15) !important;
+  font-size: 0.9rem !important;
+  width: 100% !important;
+  box-sizing: border-box !important;
+  text-align: left !important;
+  margin-bottom: 6px !important;
+}
+
+.escuela-activa-indicator {
+  background: rgba(52, 152, 219, 0.2) !important;
+  padding: 10px 12px !important;
+  border-radius: 4px !important;
+  border-left: 3px solid #3498db !important;
+  text-align: left !important;
+  width: 100% !important;
+  box-sizing: border-box !important;
+  margin-bottom: 6px !important;
+}
+
+.escuela-activa-indicator small {
+  display: block !important;
+  line-height: 1.4 !important;
+  font-size: 0.9rem !important;
+  text-align: left !important;
+}
+
+/* ✅ BUSCADOR DE ESCUELAS OPTIMIZADO */
+.school-search-container {
+  position: relative !important;
+  width: 100% !important;
+  text-align: left !important;
+  margin-bottom: 6px !important;
+}
+
+.school-search-container .input-group {
+  width: 100% !important;
+  flex-direction: column !important;
+  align-items: stretch !important;
+}
+
+.school-search-container .form-control {
+  background: rgba(255,255,255,0.1) !important;
+  border: 1px solid rgba(255,255,255,0.2) !important;
+  color: white !important;
+  font-size: 0.9rem !important;
+  height: 38px !important;
+  width: 100% !important;
+  margin-bottom: 5px !important;
+  box-sizing: border-box !important;
+}
+
+.school-search-container .form-control::placeholder {
+  color: rgba(255,255,255,0.6) !important;
+}
+
+.school-search-container .btn-outline-light {
+  border-color: rgba(255,255,255,0.3) !important;
+  color: white !important;
+  height: 38px !important;
+  padding: 0 10px !important;
+  font-size: 0.9rem !important;
+  width: 100% !important;
+  box-sizing: border-box !important;
+}
+
+.school-search-container .btn-outline-light:hover {
+  background: rgba(255,255,255,0.15) !important;
+}
+
+/* ✅ INFORMACIÓN DE USUARIO OPTIMIZADA */
+.user-info {
+  width: 100% !important;
+  text-align: left !important;
+  background: rgba(0, 0, 0, 0.18) !important;
+  padding: 10px 12px !important;
+  border-radius: 6px !important;
+  border: 1px solid rgba(255, 255, 255, 0.15) !important;
+  box-sizing: border-box !important;
+  margin-bottom: 6px !important;
+}
+
+.user-info small {
+  display: block !important;
+  line-height: 1.5 !important;
+  font-size: 0.9rem !important;
+  margin-bottom: 5px !important;
+  text-align: left !important;
+}
+
+.user-info strong {
+  color: white !important;
+  font-weight: 600 !important;
+}
+
+/* ✅ BOTONES DE SESIÓN OPTIMIZADOS */
+.session-controls .btn {
+  width: 100% !important;
+  transition: all 0.3s ease !important;
+  padding: 8px 12px !important;
+  font-size: 0.9rem !important;
+  border-radius: 6px !important;
+  white-space: nowrap !important;
+  margin-bottom: 6px !important;
+  text-align: center !important;
+  box-sizing: border-box !important;
+  display: block !important;
+}
+
+.session-controls .btn:last-child {
+  margin-bottom: 0 !important;
+}
+
+.session-controls .btn:hover {
+  transform: translateY(-2px) !important;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2) !important;
+}
+
+.session-controls .btn-outline-light {
+  border-color: rgba(255,255,255,0.4) !important;
+}
+
+.session-controls .btn-outline-light:hover {
+  background: rgba(255,255,255,0.1) !important;
+}
+
+/* DROPDOWN DE RESULTADOS */
+.search-results-dropdown {
+  position: absolute !important;
+  top: 100% !important;
+  left: 0 !important;
+  right: 0 !important;
+  background: white !important;
+  border: 1px solid #dee2e6 !important;
+  border-radius: 8px !important;
+  max-height: 200px !important;
+  overflow-y: auto !important;
+  z-index: 1050 !important;
+  box-shadow: var(--navbar-shadow-medium) !important;
+  margin-top: 2px !important;
+}
+
+.search-result-item {
+  padding: 8px 12px !important;
+  cursor: pointer !important;
+  border-bottom: 1px solid #f8f9fa !important;
+  transition: background 0.2s ease !important;
+  font-size: 0.85rem !important;
+  color: #333 !important;
+}
+
+.search-result-item:hover {
+  background: #f8f9fa !important;
+}
+
+.search-result-item:last-child {
+  border-bottom: none !important;
+}
+
+.school-name {
+  font-weight: 600 !important;
+  color: #2c3e50 !important;
+}
+
+.school-id {
+  font-size: 0.8rem !important;
+  color: #7f8c8d !important;
+}
+
+.school-address {
+  font-size: 0.8rem !important;
+  color: #95a5a6 !important;
+  margin-top: 2px !important;
+}
+
+/* ✅ DROPDOWN DE SELECCIÓN DE ESCUELA */
+.escuela-selector-dropdown {
+  min-width: 250px !important;
+  max-height: 300px !important;
+  overflow-y: auto !important;
+  background: white !important;
+  border-radius: 12px !important;
+  box-shadow: var(--navbar-shadow-medium) !important;
+  border: 1px solid #dee2e6 !important;
+  padding: 0 !important;
+}
+
+.escuela-selector-dropdown .dropdown-header {
+  font-weight: 600 !important;
+  color: #2c3e50 !important;
+  font-size: 0.9rem !important;
+  border-bottom: 1px solid #eee !important;
+  padding-bottom: 8px !important;
+}
+
+.escuela-selector-dropdown .form-select {
+  border: 1px solid #ddd !important;
+  font-size: 0.85rem !important;
+  width: 100% !important;
+  margin-bottom: 8px !important;
+}
+
+.escuela-selector-dropdown .form-select:focus {
+  border-color: #6c3483 !important;
+  box-shadow: 0 0 0 0.2rem rgba(108, 52, 131, 0.25) !important;
+}
+
+/* ✅ AJUSTES PARA ESCRITORIO */
+@media (min-width: 992px) {
+  .navbar-control-section {
+    display: flex !important;
+    align-items: stretch !important;
+    justify-content: flex-start !important;
+    height: var(--navbar-section-height) !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+  }
+  
+  .session-controls {
+    align-items: stretch !important;
+    display: flex !important;
+    flex-direction: column !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+  }
+  
+  .school-info, 
+  .school-search-container,
+  .user-info,
+  .session-controls .btn {
+    display: block !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    text-align: left !important;
+    width: 100% !important;
+  }
+}
+
+/* ===== MÓVIL Y TABLET: OFF-CANVAS ===== */
+@media (max-width: 991.98px) {
+  .ged-sidebar-backdrop {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100% !important;
+    height: 100vh !important;
+    background: rgba(0,0,0,0.5) !important;
+    z-index: 1040 !important;
+    opacity: 0 !important;
+    visibility: hidden !important;
+    transition: all 0.3s ease !important;
+    backdrop-filter: blur(3px) !important;
+  }
+  
+  .ged-sidebar-backdrop.show {
+    opacity: 1 !important;
+    visibility: visible !important;
+  }
+  
+  /* ✅ EN MÓVIL: SOLO BRAND Y TOGGLER */
+  .navbar-menu-section,
+  .navbar-social-section,
+  .navbar-control-section {
+    display: none !important;
+  }
+  
+  .navbar-brand-section {
+    flex: 1 !important;
+    max-width: none !important;
+    justify-content: flex-start !important;
+    min-width: auto !important;
+    margin-right: 0 !important;
+  }
+  
+  .navbar-toggler {
+    display: flex !important;
+    align-items: center !important;
+    margin-left: auto !important;
+  }
+}
+
+/* ================================================== */
+/* ✅ ESCRITORIO (PC) - SOLUCIÓN DEFINITIVA UNA LÍNEA == */
+/* ================================================== */
+
+@media (min-width: 992px) {
+  /* ❌ EN PC NO HAY SIDEBAR VISIBLE */
+  #gedMobileMenuContainer {
+    display: none !important;
+  }
+  
+  /* ✅ TOGGLER OCULTO EN PC */
+  .navbar-toggler {
+    display: none !important;
+  }
+  
+  /* ✅ CONTENEDOR CON DISTRIBUCIÓN EXACTA */
+  .navbar-contextual {
+    width: var(--viewport-navbar-width) !important;  /* 95% del viewport */
+    margin: 0 0 0 auto !important;                   /* Alineado a la izquierda con 5% de margen derecho */
+    padding: 0 3% !important;                        /* 3% del navbar (2.85% del viewport) */
+    min-height: var(--navbar-container-height) !important;
+    height: var(--navbar-container-height) !important;
+  }
+  
+  /* ✅ AJUSTAR CONTENIDO PRINCIPAL */
+  .ged-main-content,
+  .main-content-wrapper,
+  main#main {
+    margin-left: 0 !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+    transition: none !important;
+    width: 100vw !important;
+    max-width: 100vw !important;
+  }
+  
+  .ged-sidebar-backdrop {
+    display: none !important;
+  }
+  
+  /* ✅ SOLUCIÓN DEFINITIVA: TODO EN UNA LÍNEA */
+  /* 1. CONTENEDOR PRINCIPAL: FLEX EN LÍNEA */
+  .navbar-container {
+    display: flex !important;
+    flex-direction: row !important;
+    flex-wrap: nowrap !important;
+    align-items: stretch !important;
+    justify-content: flex-start !important;
+    width: 100% !important;
+    height: var(--navbar-container-height) !important;
+    min-height: var(--navbar-container-height) !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    gap: 0 !important;
+    box-sizing: border-box !important;
+  }
+  
+  /* 2. COLLAPSE DEBE OCUPAR EL ESPACIO RESTANTE */
+  .navbar-collapse {
+    display: flex !important;
+    flex-grow: 1 !important;
+    flex-basis: auto !important;
+    width: auto !important;
+    min-width: 0 !important;
+    height: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    box-sizing: border-box !important;
+  }
+  
+  .navbar-collapse.collapse:not(.show) {
+    display: flex !important;
+    height: 100% !important;
+    width: auto !important;
+  }
+  
+  /* 3. CONTENEDOR INTERNO DE SECCIONES */
+  .navbar-sections-container {
+    display: flex !important;
+    flex-direction: row !important;
+    flex-wrap: nowrap !important;
+    align-items: stretch !important;
+    justify-content: flex-start !important;
+    width: 100% !important;
+    height: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    gap: 0 !important;
+    box-sizing: border-box !important;
+  }
+  
+  /* 4. GARANTIZAR VISIBILIDAD DEL CONTENIDO */
+  .navbar-contextual {
+    display: flex !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    width: var(--viewport-navbar-width) !important;
+    overflow: hidden !important;
+  }
+  
+  /* 5. FORZAR DISPLAY FLEX EN LAS SECCIONES */
+  .navbar-brand-section,
+  .navbar-menu-section,
+  .navbar-social-section,
+  .navbar-control-section {
+    display: flex !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    position: relative !important;
+    z-index: 1030 !important;
+    height: 100% !important;
+    align-items: center !important;
+  }
+  
+  /* 6. ESPECÍFICO PARA EL MENÚ PRINCIPAL */
+  .main-navigation {
+    display: flex !important;
+    flex-wrap: nowrap !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    width: 100% !important;
+    justify-content: flex-start !important;
+    overflow: visible !important;
+    height: 100% !important;
+    align-items: center !important;
+  }
+  
+  .navbar-contextual > .container-fluid {
+    overflow: visible !important;
+  }
+  
+  /* 7. DISTRIBUCIÓN EXACTA DEL VIEWPORT - SIN MÁRGENES */
+  .navbar-brand-section {
+    flex: 0 0 var(--viewport-brand) !important;    /* 12% del viewport */
+    max-width: var(--viewport-brand) !important;
+    min-width: var(--viewport-brand) !important;
+    justify-content: flex-start !important;
+  }
+  
+  .navbar-menu-section {
+    flex: 0 0 var(--viewport-menu) !important;     /* 45.5% del viewport */
+    max-width: var(--viewport-menu) !important;
+    min-width: var(--viewport-menu) !important;
+    justify-content: flex-start !important;
+  }
+  
+  .navbar-social-section {
+    flex: 0 0 var(--viewport-social) !important;   /* 4.5% del viewport */
+    max-width: var(--viewport-social) !important;
+    min-width: var(--viewport-social) !important;
+    justify-content: flex-start !important;
+  }
+  
+  /* ✅ SECCIÓN DE CONTROL - DISTRIBUCIÓN EXACTA OPTIMIZADA */
+  .navbar-control-section {
+    flex: 0 0 var(--viewport-control) !important;  /* 18% del viewport (18.95% del navbar) */
+    max-width: var(--viewport-control) !important;
+    min-width: var(--viewport-control) !important;
+    display: flex !important;
+    align-items: stretch !important;
+    justify-content: flex-start !important;
+    gap: 0 !important;
+    padding: 0 !important;
+  }
+  
+  .container-fluid {
+    width: 100% !important;
+    max-width: 100% !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    box-sizing: border-box !important;
+  }
+  
+  /* ✅ CONTENIDO DENTRO DE LAS SECCIONES - OCUPA TODO EL ESPACIO */
+  .control-content {
+    width: 100% !important;
+    height: 100% !important;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: space-between !important;
+    padding: 5px 0 !important;
+    box-sizing: border-box !important;
+  }
+  
+  /* ✅ ELIMINAR CUALQUIER MARGEN O PADDING INTERNO */
+  .navbar-container > *,
+  .navbar-sections-container > *,
+  .navbar-control-section > * {
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
+  
+  /* ✅ FIX DE EMERGENCIA: FORZAR UNA LÍNEA */
+  .navbar-contextual,
+  .navbar-container,
+  .navbar-sections-container,
+  .navbar-brand-section,
+  .navbar-menu-section,
+  .navbar-social-section,
+  .navbar-control-section,
+  .main-navigation,
+  .navbar-nav,
+  .nav-item,
+  .nav-link {
+    white-space: nowrap !important;
+  }
+}
+
+/* Estilos para el menú dentro del offcanvas */
+.offcanvas-menu {
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+.menu-item {
+  position: relative;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+
+.menu-item:last-child {
+  border-bottom: none;
+}
+
+.menu-link {
+  display: flex !important;
+  align-items: center !important;
+  padding: 12px 20px !important;
+  color: rgba(255,255,255,0.9) !important;
+  text-decoration: none !important;
+  transition: all var(--transition-speed) ease !important;
+  position: relative !important;
+  font-size: 0.95rem !important;
+  border-radius: 0 !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  background: transparent !important;
+  width: 100% !important;
+}
+
+.menu-link:hover,
+.menu-link:focus,
+.menu-link.active {
+  background: rgba(255,255,255,0.12) !important;
+  color: white !important;
+  padding-left: 25px !important;
+}
+
+/* Iconos */
+.menu-icon {
+  width: 20px !important;
+  margin-right: 12px !important;
+  text-align: center !important;
+  font-size: 1rem !important;
+  flex-shrink: 0 !important;
+}
+
+.menu-text {
+  flex-grow: 1 !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  font-size: 0.95rem !important;
+}
+
+/* ✅ INDICADOR DE SUBMENÚ */
+.submenu-indicator {
+  margin-left: auto !important;
+  transition: transform 0.3s ease !important;
+  font-size: 0.8rem !important;
+  opacity: 0.8 !important;
+}
+
+.menu-link[aria-expanded="true"] .submenu-indicator {
+  transform: rotate(90deg) !important;
+}
+
+/* ✅ SUBMENÚS ANIDADOS */
+.offcanvas-menu .offcanvas-menu {
+  background: rgba(0,0,0,0.25) !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  border-left: 3px solid #3498db !important;
+}
+
+.offcanvas-menu .offcanvas-menu .menu-link {
+  padding-left: 40px !important;
+  font-size: 0.9rem !important;
+}
+
+.offcanvas-menu .offcanvas-menu .menu-link:hover {
+  padding-left: 45px !important;
+}
+
+.offcanvas-menu .offcanvas-menu .offcanvas-menu .menu-link {
+  padding-left: 60px !important;
+  font-size: 0.85rem !important;
+}
+
+.offcanvas-menu .offcanvas-menu .offcanvas-menu .menu-link:hover {
+  padding-left: 65px !important;
+}
+
+/* ✅ HEADER DEL OFFCANVAS */
+.offcanvas-header {
+  padding: 1.25rem !important;
+  border-bottom: 1px solid rgba(255,255,255,0.15) !important;
+  background: rgba(0,0,0,0.3) !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  height: 70px !important;
+}
+
+.offcanvas-title {
+  color: white !important;
+  font-weight: 600 !important;
+  margin: 0 !important;
+  font-size: 1.1rem !important;
+  display: flex !important;
+  align-items: center !important;
+}
+
+.close-offcanvas {
+  background: rgba(255,255,255,0.1) !important;
+  border: none !important;
+  color: white !important;
+  font-size: 1.1rem !important;
+  cursor: pointer !important;
+  padding: 0.5rem !important;
+  border-radius: 6px !important;
+  transition: background 0.2s ease !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 36px !important;
+  height: 36px !important;
+}
+
+.close-offcanvas:hover {
+  background: rgba(255,255,255,0.2) !important;
+}
+
+/* Estado activo para menú */
+.menu-link.active {
+  background: linear-gradient(90deg, rgba(52, 152, 219, 0.35), transparent) !important;
+  border-left: 3px solid #3498db !important;
+}
+
+/* ✅ ANIMACIONES */
+@keyframes slideIn {
+  from {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.ged-offcanvas-sidebar.open {
+  animation: slideIn 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94) !important;
+}
+
+.ged-sidebar-backdrop.show {
+  animation: fadeIn 0.3s ease !important;
+}
+
+/* ✅ ESTILOS PARA SCROLLBAR EN EL MENÚ */
+.ged-offcanvas-sidebar::-webkit-scrollbar {
+  width: 6px !important;
+}
+
+.ged-offcanvas-sidebar::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.05) !important;
+}
+
+.ged-offcanvas-sidebar::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.2) !important;
+  border-radius: 3px !important;
+}
+
+.ged-offcanvas-sidebar::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.3) !important;
+}
+
+/* ✅ RESPONSIVE ADICIONAL */
+@media (max-width: 375px) {
+  .ged-offcanvas-sidebar {
+    width: 90% !important;
+    max-width: 280px !important;
+  }
+  
+  .menu-link {
+    padding: 10px 15px !important;
+    font-size: 0.9rem !important;
+  }
+  
+  .offcanvas-header {
+    padding: 1rem !important;
+    height: 60px !important;
+  }
+}
+
+/* ================================================== */
+/* RESPONSIVE DESIGN - CONSOLIDADO Y OPTIMIZADO ====== */
+/* ================================================== */
+
+/* Tablets y pantallas medianas (1199px a 992px) */
+@media (max-width: 1199.98px) and (min-width: 992px) {
+  /* ✅ VARIABLES AJUSTADAS PARA TABLETS - PROPORCIONALES A 95% */
+  :root {
+    --viewport-navbar-width: 95% !important;      /* Mantener 95% en tablets */
+    --viewport-padding-left: 2.85% !important;    /* 3% de 95% = 2.85% del viewport */
+    --viewport-padding-right: 2.85% !important;   /* 3% de 95% = 2.85% del viewport */
+    --viewport-brand: 12% !important;             /* 12% del viewport */
+    --viewport-menu: 45.5% !important;            /* ✅ 45.5% del viewport */
+    --viewport-social: 4.5% !important;           /* 4.5% del viewport */
+    --viewport-control: 18% !important;           /* 18% del viewport */
+    --viewport-gap: 1.425% !important;            /* 1.5% de 95% = 1.425% del viewport */
+    --navbar-section-gap: 1.5% !important;
+    --navbar-container-height: 45vh !important;
+  }
+  
+  .navbar-contextual {
+    height: var(--navbar-container-height) !important;
+    min-height: var(--navbar-container-height) !important;
+  }
+  
+  body {
+    padding-top: var(--navbar-container-height) !important;
+  }
+  
+  main#main {
+    min-height: calc(100vh - var(--navbar-container-height)) !important;
+  }
+  
+  /* ✅ TABLETS: DISTRIBUCIÓN AJUSTADA */
+  .navbar-contextual {
+    width: var(--viewport-navbar-width) !important; /* 95% del viewport */
+    padding: 0 3% !important; /* 3% del navbar */
+  }
+  
+  .navbar-brand-section {
+    min-width: var(--viewport-brand) !important;
+    flex: 0 0 var(--viewport-brand) !important;
+    max-width: var(--viewport-brand) !important;
+    margin: 0 !important;
+    justify-content: flex-start !important;
+  }
+  
+  .navbar-menu-section {
+    flex: 0 0 var(--viewport-menu) !important;
+    max-width: var(--viewport-menu) !important;
+    margin: 0 !important;
+    justify-content: flex-start !important;
+  }
+  
+  .navbar-social-section {
+    flex: 0 0 var(--viewport-social) !important;
+    max-width: var(--viewport-social) !important;
+    min-width: var(--viewport-social) !important;
+    margin: 0 !important;
+    justify-content: flex-start !important;
+  }
+  
+  /* ✅ SECCIÓN DE CONTROL - CORREGIDA PARA TABLETS */
+  .navbar-control-section {
+    flex: 0 0 var(--viewport-control) !important;
+    max-width: var(--viewport-control) !important;
+    min-width: var(--viewport-control) !important;
+    margin: 0 !important;
+    align-items: stretch !important;
+    gap: 0 !important;
+    padding: 0 !important;
+  }
+  
+  .navbar-logo {
+    max-height: 70% !important;
+    height: auto !important;
+  }
+  
+  .main-navigation .nav-link {
+    /* ✅ TEXTO BLANCO Y NEGRITA EN TABLETS TAMBIÉN */
+    color: white !important;
+    font-weight: bolder !important;
+    padding: 10px 14px !important;
+    font-size: 0.95rem !important;
+  }
+  
+  .social-icons-vertical {
+    gap: 4px !important;
+    align-items: flex-start !important;
+  }
+  
+  .social-icon-circle {
+    width: 30px !important;
+    height: 30px !important;
+    font-size: 0.85rem !important;
+  }
+  
+  .session-controls {
+    gap: 4px !important;
+    align-items: stretch !important;
+  }
+  
+  .session-controls .btn {
+    padding: 7px 10px !important;
+    font-size: 0.85rem !important;
+  }
+  
+  .school-info,
+  .user-info {
+    padding: 8px 10px !important;
+    font-size: 0.85rem !important;
+    text-align: left !important;
+  }
+  
+  /* ✅ EN TABLETS TAMBIÉN DEBE ESTAR EN UNA LÍNEA */
+  .navbar-container {
+    display: flex !important;
+    flex-direction: row !important;
+    flex-wrap: nowrap !important;
+    align-items: stretch !important;
+    justify-content: flex-start !important;
+    width: 100% !important;
+    height: var(--navbar-container-height) !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    gap: 0 !important;
+  }
+  
+  .navbar-sections-container {
+    display: flex !important;
+    flex-direction: row !important;
+    flex-wrap: nowrap !important;
+    align-items: stretch !important;
+    justify-content: flex-start !important;
+    width: 100% !important;
+    height: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    gap: 0 !important;
+  }
+}
+
+/* Tablets pequeñas y móviles grandes (991px a 768px) */
+@media (max-width: 991.98px) {
+  /* ✅ EN MÓVIL: RESET DE VARIABLES */
+  :root {
+    --viewport-navbar-width: 100% !important;     /* 100% del viewport */
+    --viewport-padding-left: 15px !important;
+    --viewport-padding-right: 15px !important;
+    --navbar-container-height: 60px !important;
+  }
+  
+  .navbar-contextual {
+    height: var(--navbar-container-height) !important;
+    min-height: var(--navbar-container-height) !important;
+    position: fixed !important;
+    top: 0 !important;
+    width: var(--viewport-navbar-width) !important; /* 100% del viewport */
+    margin: 0 !important;   /* ✅ Sin margen especial */
+    padding: 0 var(--viewport-padding-left) !important;
+  }
+  
+  body {
+    padding-top: var(--navbar-container-height) !important;
+  }
+  
+  main#main {
+    margin-top: 0 !important;
+    min-height: calc(100vh - var(--navbar-container-height)) !important;
+  }
+  
+  .navbar > .container-fluid {
+    flex-wrap: wrap;
+    padding: 0 10px;
+  }
+  
+  .navbar-brand, .navbar-brand-section {
+    width: auto !important;
+    height: var(--navbar-container-height) !important;
+    order: 1;
+    flex: 1 !important;
+    max-width: none !important;
+    min-width: auto !important;
+    justify-content: flex-start !important;
+    padding-left: 10px !important;
+  }
+  
+  .navbar-toggler {
+    position: relative !important;
+    top: auto !important;
+    right: auto !important;
+    order: 2;
+    margin-left: auto;
+    display: block !important;
+    padding: 6px 8px !important;
+  }
+  
+  .navbar-collapse {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    background: linear-gradient(135deg, #8e44ad 0%, #6c3483 100%);
+    z-index: 1030;
+    margin: 0;
+    padding: 20px 15px;
+    border-top: 2px solid #7d3c98;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+    display: none !important;
+    height: auto !important;
+    overflow: visible !important;
+  }
+  
+  .navbar-collapse.show {
+    display: block !important;
+  }
+  
+  .navbar-menu-section,
+  .navbar-social-section,
+  .navbar-control-section {
+    width: 100% !important;
+    height: auto;
+    padding: 10px 0;
+    display: block !important;
+    flex: none !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+  }
+  
+  .navbar-menu-section { order: 3; }
+  .navbar-social-section { order: 4; }
+  .navbar-control-section { order: 2; }
+  
+  .navbar-nav {
+    flex-direction: column;
+    gap: 5px;
+    width: 100%;
+  }
+  
+  .nav-item {
+    width: 100%;
+    text-align: center;
+  }
+  
+  .nav-link {
+    /* ✅ TEXTO BLANCO Y NEGRITA EN MÓVIL */
+    color: white !important;
+    font-weight: bolder !important;
+    padding: 15px 20px !important;
+    background: rgba(255,255,255,0.1);
+    display: block;
+    margin-bottom: 5px;
+    border-radius: 5px;
+  }
+  
+  .dropdown-menu {
+    position: static !important;
+    width: 100% !important;
+    margin: 10px 0 !important;
+    background: rgba(0,0,0,0.3) !important;
+    border: 1px solid rgba(255,255,255,0.2);
+    float: none !important;
+  }
+  
+  .dropdown-item {
+    padding: 12px 25px !important;
+    text-align: center;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+  }
+  
+  .dropdown-item:last-child {
+    border-bottom: none;
+  }
+  
+  .social-icons-vertical {
+    flex-direction: row !important;
+    justify-content: center !important;
+    gap: 15px !important;
+  }
+  
+  .social-icon-circle {
+    width: 50px !important;
+    height: 50px !important;
+    font-size: 1.4rem !important;
+  }
+  
+  /* ✅ RESPONSIVE PARA MÓVIL - CONTROLES DE SESIÓN */
+  .session-controls {
+    flex-direction: row !important;
+    gap: 8px !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
+  
+  .session-controls .btn {
+    min-width: auto !important;
+    padding: 8px 12px !important;
+    font-size: 0.85rem !important;
+    margin-bottom: 0 !important;
+    width: auto !important;
+  }
+  
+  .session-controls .btn span:not(.bi) {
+    display: none !important;
+  }
+  
+  .user-info,
+  .school-info,
+  .school-search-container {
+    display: none !important;
+  }
+  
+  .navbar-logo {
+    max-height: 45px !important;
+    height: auto !important;
+  }
+  
+  /* ✅ EN MÓVIL: OCULTAR CONTENEDOR DE SECCIONES FLEX */
+  .navbar-sections-container {
+    flex-direction: column !important;
+    gap: 15px !important;
+  }
+}
+
+/* Móviles (767px a 576px) */
+@media (max-width: 767.98px) {
+  :root {
+    --viewport-padding-left: 8px !important;
+    --viewport-padding-right: 8px !important;
+    --navbar-container-height: 50px !important;
+  }
+  
+  .navbar-contextual {
+    min-height: var(--navbar-container-height) !important;
+    height: var(--navbar-container-height) !important;
+    padding: 0 var(--viewport-padding-left) !important;
+  }
+  
+  body {
+    padding-top: var(--navbar-container-height) !important;
+  }
+  
+  main#main {
+    min-height: calc(100vh - var(--navbar-container-height)) !important;
+  }
+  
+  .navbar-brand, .navbar-brand-section {
+    height: var(--navbar-container-height) !important;
+    padding-left: 8px !important;
+  }
+  
+  .navbar-control-section {
+    padding-right: 8px !important;
+  }
+  
+  .navbar-logo {
+    height: 32px !important;
+  }
+  
+  .session-controls {
+    gap: 6px !important;
+  }
+  
+  .session-controls .btn {
+    padding: 4px 8px !important;
+    font-size: 0.8rem !important;
+  }
+  
+  .social-icons-vertical {
+    gap: 12px !important;
+  }
+  
+  .social-icon-circle {
+    width: 40px !important;
+    height: 40px !important;
+    font-size: 1.2rem !important;
+  }
+}
+
+/* Móviles pequeños (575px y menos) */
+@media (max-width: 575.98px) {
+  :root {
+    --viewport-padding-left: 5px !important;
+    --viewport-padding-right: 5px !important;
+    --navbar-container-height: 45px !important;
+  }
+  
+  .navbar-contextual {
+    min-height: var(--navbar-container-height) !important;
+    height: var(--navbar-container-height) !important;
+    padding: 0 var(--viewport-padding-left) !important;
+  }
+  
+  body {
+    padding-top: var(--navbar-container-height) !important;
+  }
+  
+  main#main {
+    min-height: calc(100vh - var(--navbar-container-height)) !important;
+  }
+  
+  .navbar-brand, .navbar-brand-section {
+    min-width: 100px !important;
+    padding-left: 5px !important;
+    height: var(--navbar-container-height) !important;
+  }
+  
+  .navbar-control-section {
+    padding-right: 5px !important;
+  }
+  
+  .navbar-logo {
+    height: 28px !important;
+  }
+  
+  .session-controls .btn {
+    padding: 3px 6px !important;
+    font-size: 0.75rem !important;
+  }
+  
+  .navbar-toggler {
+    padding: 0.3rem 0.5rem !important;
+    margin-left: 5px !important;
+  }
+  
+  .social-icons-vertical {
+    gap: 10px !important;
+  }
+  
+  .social-icon-circle {
+    width: 35px !important;
+    height: 35px !important;
+    font-size: 1rem !important;
+  }
+}
+
+/* ===== CORRECCIONES PARA EL MENÚ MÓVIL ===== */
+.sidebar-nav .dropdown-menu {
+    position: static !important;
+    float: none !important;
+    width: 100% !important;
+    border: none !important;
+    box-shadow: none !important;
+    background: #f8f9fa !important;
+}
+
+.sidebar-nav .dropdown-item {
+    color: #333 !important;
+    padding: 10px 20px !important;
+    border-bottom: 1px solid #e9ecef;
+}
+
+.sidebar-nav .dropdown-item:hover {
+    background: #e9ecef !important;
+}
+
+/* Submenús en off-canvas */
+.sidebar-nav .dropdown-submenu {
+    position: relative;
+}
+
+.sidebar-nav .dropdown-submenu .dropdown-menu {
+    margin-left: 15px;
+    background: #f0f0f0 !important;
+}
+
+.submenu-arrow {
+    font-size: 0.8rem;
+    transition: transform 0.3s ease;
+}
+
+.dropdown-submenu.open .submenu-arrow {
+    transform: rotate(90deg);
+}
+
+/* ================================================== */
+/* ✅ SOLUCIONES CRÍTICAS - DISTRIBUCIÓN OPTIMIZADA == */
+/* ================================================== */
+
+/* ✅ SOLUCIÓN 1: 100vw sin padding lateral */
+.navbar-contextual, 
+.navbar-contextual > .container-fluid {
+    width: 100vw !important;
+    max-width: 100vw !important;
+    padding-left: 0 !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+}
+
+/* ✅ SOLUCIÓN 2: DISTRIBUCIÓN EXACTA OPTIMIZADA */
+@media (min-width: 992px) {
+    .navbar-contextual {
+        display: flex !important;
+        width: var(--viewport-navbar-width) !important; /* 95% del viewport */
+        margin: 0 0 0 auto !important; /* Alineado a la izquierda con 5% de margen derecho */
+    }
+    
+    .navbar-brand-section { 
+        flex: 0 0 var(--viewport-brand) !important;     /* 12% del viewport */
+        max-width: var(--viewport-brand) !important; 
+        margin: 0 !important;
+        justify-content: flex-start !important;
+    }
+    
+    .navbar-menu-section { 
+        flex: 0 0 var(--viewport-menu) !important;      /* 45.5% del viewport */
+        max-width: var(--viewport-menu) !important; 
+        margin: 0 !important;
+        justify-content: flex-start !important;
+    }
+    
+    .navbar-social-section { 
+        flex: 0 0 var(--viewport-social) !important;    /* 4.5% del viewport */
+        max-width: var(--viewport-social) !important; 
+        min-width: var(--viewport-social) !important;
+        margin: 0 !important;
+        justify-content: flex-start !important;
+    }
+    
+    /* ✅ SECCIÓN DE CONTROL - DISTRIBUCIÓN EXACTA OPTIMIZADA */
+    .navbar-control-section { 
+        flex: 0 0 var(--viewport-control) !important;   /* 18% del viewport (18.95% del navbar) */
+        max-width: var(--viewport-control) !important; 
+        display: flex !important;
+        align-items: stretch !important;
+        justify-content: flex-start !important;
+        margin: 0 !important;
+        gap: 0 !important;
+        padding: 0 !important;
+    }
+}
+
+/* ✅ SOLUCIÓN 3: Corrección de z-index */
+.navbar-nav .dropdown-menu {
+    z-index: 1050 !important;
+    overflow: visible !important;
+}
+
+.navbar-nav .dropdown-menu .dropdown-menu {
+    z-index: 1051 !important;
+}
+
+.navbar-nav .dropdown-menu .dropdown-menu .dropdown-menu {
+    z-index: 1052 !important;
+}
+
+.dropdown-menu {
+    display: none;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-10px);
+    transition: opacity 0.3s, transform 0.3s, visibility 0.3s;
+}
+
+.dropdown-menu.show {
+    display: block !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    transform: translateY(0) !important;
+}
+
+@media (min-width: 992px) {
+    .navbar-nav .dropdown:hover > .dropdown-menu {
+        display: block !important;
+        opacity: 1 !important;
+        visibility: visible !important;
+        transform: translateY(0) !important;
+    }
+}
+
+@keyframes fadeInScale {
+    from {
+        opacity: 0;
+        transform: translateX(-10px) scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0) scale(1);
+    }
+}
+
+.dropdown-menu .dropdown-menu.show {
+    animation: fadeInScale 0.2s ease-out !important;
+}
+
+/* ✅ PRINT STYLES */
+@media print {
+  .navbar-contextual {
+    position: static !important;
+    background: white !important;
+    color: black !important;
+    box-shadow: none !important;
+    border-bottom: 1px solid #ddd !important;
+  }
+  
+  .navbar-logo {
+    filter: grayscale(100%) brightness(0%) !important;
+  }
+  
+  .navbar-social-section,
+  .session-controls,
+  .navbar-toggler {
+    display: none !important;
+  }
+}
+
+/* ================================================== */
+/* ✅ FIXES FINALES PARA GARANTIZAR FUNCIONAMIENTO === */
+/* ================================================== */
+
+@media (min-width: 992px) {
+    .navbar-expand-lg .navbar-collapse {
+        display: flex !important;
+        flex-basis: auto !important;
+        width: 100% !important;
+    }
+    
+    .navbar-menu-section,
+    .main-navigation,
+    .navbar-nav {
+        display: flex !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+    }
+    
+    .main-navigation .nav-link {
+        pointer-events: auto !important;
+        cursor: pointer !important;
+    }
+    
+    .navbar-control-section {
+        display: flex !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+        align-items: stretch !important;
+    }
+    
+    .navbar-social-section {
+        display: flex !important;
+        justify-content: flex-start !important;
+    }
+}
+
+/* Garantizar que Font Awesome esté disponible */
+@import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css');
+
+/* ✅ CORRECCIÓN PARA BOOTSTRAP 5 */
+.navbar-collapse {
+    flex-grow: 1 !important;
+}
+
+.navbar-nav {
+    flex-direction: row !important;
+}
+
+@media (max-width: 991.98px) {
+    .navbar-nav {
+        flex-direction: column !important;
+    }
+}
+
+/* ✅ ESTILOS DE DEBUG (OPCIONAL) */
+.debug-navbar .navbar-contextual { outline: 2px solid red !important; }
+.debug-navbar .navbar-menu-section { outline: 2px solid green !important; }
+.debug-navbar .main-navigation { outline: 2px solid orange !important; }
+.debug-navbar .dropdown-menu { outline: 2px solid yellow !important; }
+.debug-navbar .navbar-control-section { outline: 2px solid cyan !important; background: rgba(0,255,255,0.1) !important; }
+.debug-navbar .navbar-social-section { outline: 2px solid magenta !important; background: rgba(255,0,255,0.1) !important; }
+
+/* ✅ FIX DE EMERGENCIA */
+.navbar-contextual .navbar-collapse,
+.navbar-contextual .navbar-menu-section,
+.navbar-contextual .main-navigation,
+.navbar-contextual .navbar-control-section,
+.navbar-contextual .navbar-social-section {
+    display: flex !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    width: 100% !important;
+}
+
+/* ✅ GARANTIZAR QUE EL NAVBAR NO INTERFIERA CON EL CONTENIDO */
+main#main {
+    position: relative;
+    z-index: 1;
+}
+
+/* ✅ SIDEBAR DE MÓDULOS (para compatibilidad) */
+.sidebar-module-wrapper {
+  position: fixed;
+  top: var(--navbar-container-height) !important;
+  left: 0;
+  width: 250px;
+  height: calc(100vh - var(--navbar-container-height)) !important;
+  background: #f8f9fa;
+  border-right: 1px solid #dee2e6;
+  z-index: 100;
+  overflow-y: auto;
+  padding: 20px 0;
+}
+
+.main-content-with-sidebar {
+  margin-left: 250px;
+  padding: 20px 30px;
+  min-height: calc(100vh - var(--navbar-container-height)) !important;
+  transition: margin-left 0.3s;
+}
+
+@media (max-width: 991.98px) {
+    .sidebar-module-wrapper {
+        display: none !important;
+    }
+    
+    .main-content-with-sidebar {
+        margin-left: 0 !important;
+        width: 100% !important;
+        padding: 15px !important;
+    }
+}
+
+/* ✅ AJUSTES PARA PANTALLAS MUY ANCHAS */
+@media (min-width: 1400px) {
+  /* ✅ RE-CALCULAR VARIABLES PARA PANTALLAS GRANDES */
+  :root {
+    --viewport-brand: 12% !important;        /* 12% del viewport */
+    --viewport-menu: 45.5% !important;       /* ✅ 45.5% del viewport */
+    --viewport-social: 4.5% !important;      /* 4.5% del viewport */
+    --viewport-control: 18% !important;      /* 18% del viewport */
+    --navbar-section-gap: 1.5% !important;
+  }
+  
+  .session-controls {
+    gap: 8px !important;
+  }
+  
+  .session-controls .btn {
+    padding: 10px 14px !important;
+    font-size: 1rem !important;
+  }
+  
+  .school-info,
+  .user-info {
+    padding: 12px 14px !important;
+    font-size: 1rem !important;
+    text-align: left !important;
+  }
+  
+  .social-icon-circle {
+    width: 36px !important;
+    height: 36px !important;
+    font-size: 1.1rem !important;
+  }
+}
+
+/* ✅ AJUSTES PARA PANTALLAS PEQUEÑAS DE ESCRITORIO */
+@media (min-width: 992px) and (max-width: 1200px) {
+  :root {
+    --navbar-section-gap: 1.5% !important;
+  }
+  
+  .social-icon-circle {
+    width: 32px !important;
+    height: 32px !important;
+    font-size: 0.9rem !important;
+  }
+  
+  .social-icons-vertical {
+    gap: 6px !important;
+    align-items: flex-start !important;
+  }
+}
+
+/* ===== DEBUG DE ANCHO ===== */
+.debug-width-check body::after {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 2px;
+    background: rgba(255,0,0,0.5);
+    z-index: 9999;
+    pointer-events: none;
+}
+
+.debug-width-check body::before {
+    content: 'Body width: ' attr(data-width);
+    position: fixed;
+    top: 5px;
+    left: 5px;
+    background: rgba(0,0,0,0.8);
+    color: white;
+    padding: 5px 10px;
+    border-radius: 3px;
+    font-size: 12px;
+    z-index: 9999;
+    pointer-events: none;
+}
+
+/* ================================================== */
+/* ✅ VERIFICADOR VISUAL DE LA ESTRUCTURA ============ */
+/* ================================================== */
+
+.debug-structure .navbar-contextual {
+    background: linear-gradient(90deg, 
+        rgba(255,0,0,0.1) 12%,                           /* Logo: 12% */
+        rgba(0,255,0,0.1) calc(12% + 45.5%),             /* Menú: 45.5% */
+        rgba(0,0,255,0.1) calc(12% + 45.5% + 4.5%),     /* Social: 4.5% */
+        rgba(255,255,0,0.1) calc(12% + 45.5% + 4.5% + 18%)  /* Control: 18% */
+    ) !important;
+    width: 95% !important;  /* ✅ 95% del viewport */
+    margin-left: auto !important; /* ✅ 5% de margen derecho visual */
+}
+
+.debug-structure .navbar-menu-section { 
+  background: rgba(0,255,0,0.3) !important; 
+}
+
+/* ================================================== */
+/* ✅ PADDING INTERNO PARA SECCIÓN CONTROL OPTIMIZADO == */
+/* ================================================== */
+
+@media (min-width: 992px) {
+    .navbar-control-section {
+        padding: 0 !important;
+        box-sizing: border-box !important;
+    }
+}
+
+@media (max-width: 1199.98px) and (min-width: 992px) {
+    .navbar-control-section {
+        padding: 0 !important;
+    }
+}
+
+/* ===== ✅ CORRECCIÓN FINAL DE SECCIÓN CONTROL ===== */
+@media (min-width: 992px) {
+    .navbar-control-section {
+        display: flex !important;
+        align-items: stretch !important;
+        justify-content: flex-start !important;
+        gap: 0 !important;
+        width: 100% !important;
+        min-height: var(--navbar-container-height) !important;
+        padding: 0 !important;
+    }
+    
+    /* Asegurar que todos los elementos dentro de control-section ocupen todo el ancho */
+    .navbar-control-section > * {
+        width: 100% !important;
+        max-width: 100% !important;
+        box-sizing: border-box !important;
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+        flex-shrink: 0 !important;
+    }
+    
+    /* Orden específico de los elementos */
+    .school-info {
+        order: 1 !important;
+    }
+    
+    .escuela-activa-indicator {
+        order: 2 !important;
+    }
+    
+    .school-search-container {
+        order: 3 !important;
+    }
+    
+    .user-info {
+        order: 4 !important;
+    }
+    
+    .session-controls {
+        order: 5 !important;
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 6px !important;
+        width: 100% !important;
+    }
+    
+    /* Botones de sesión en columna */
+    .session-controls .btn {
+        width: 100% !important;
+        margin-bottom: 4px !important;
+        text-align: center !important;
+    }
+    
+    .session-controls .btn:last-child {
+        margin-bottom: 0 !important;
+    }
+  
+    /* Corrección específica para tablets (1199px a 992px) */
+    @media (max-width: 1199.98px) and (min-width: 992px) {
+        .navbar-control-section {
+            gap: 0 !important;
+            padding: 0 !important;
+        }
+        
+        .school-info,
+        .escuela-activa-indicator,
+        .school-search-container,
+        .user-info {
+            padding: 8px 10px !important;
+            font-size: 0.85rem !important;
+        }
+        
+        .session-controls .btn {
+            padding: 7px 10px !important;
+            font-size: 0.85rem !important;
+        }
+        
+        .social-icon-circle {
+            width: 30px !important;
+            height: 30px !important;
+            font-size: 0.85rem !important;
+        }
+    }
+}
+
+/* ===== ✅ CORRECCIÓN PARA EVITAR SUPERPOSICIÓN ===== */
+@media (min-width: 992px) {
+    .navbar-control-section {
+        position: relative !important;
+        z-index: 1030 !important;
+        overflow-y: auto !important;
+        overflow-x: hidden !important;
+        max-height: var(--navbar-container-height) !important;
+    }
+    
+    /* Estilos para la barra de scroll */
+    .navbar-control-section::-webkit-scrollbar {
+        width: 4px !important;
+    }
+    
+    .navbar-control-section::-webkit-scrollbar-track {
+        background: rgba(255, 255, 255, 0.05) !important;
+        border-radius: 2px !important;
+    }
+    
+    .navbar-control-section::-webkit-scrollbar-thumb {
+        background: rgba(255, 255, 255, 0.2) !important;
+        border-radius: 2px !important;
+    }
+    
+    .navbar-control-section::-webkit-scrollbar-thumb:hover {
+        background: rgba(255, 255, 255, 0.3) !important;
+    }
+}
+
+/* ===== ✅ FIX ESPECÍFICO PARA EL BUSCADOR DE ESCUELAS ===== */
+.school-search-container {
+    position: relative !important;
+    width: 100% !important;
+    display: block !important;
+}
+
+.school-search-container .input-group {
+    display: flex !important;
+    flex-direction: column !important;
+    width: 100% !important;
+    gap: 5px !important;
+}
+
+.school-search-container .form-control {
+    width: 100% !important;
+    margin-bottom: 0 !important;
+}
+
+.school-search-container .btn {
+    width: 100% !important;
+    margin-top: 0 !important;
+}
+
+/* ===== ✅ AJUSTE DE ALTURA MÍNIMA PARA CONTENIDO ===== */
+@media (min-width: 992px) {
+    .navbar-control-section .control-content-wrapper {
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 6px !important;
+        width: 100% !important;
+        min-height: 40vh !important;
+    }
+}
+
+/* ===== ✅ DEBUG VISUAL (OPCIONAL) ===== */
+.debug-control-section .navbar-control-section > * {
+    border: 1px solid rgba(255, 255, 255, 0.3) !important;
+    background: rgba(255, 255, 255, 0.05) !important;
+    margin-bottom: 5px !important;
+    border-radius: 4px !important;
+}
+
+.debug-control-section .navbar-control-section::before {
+    content: 'Elementos: ' attr(data-count);
+    position: absolute;
+    top: -20px;
+    right: 0;
+    background: rgba(0, 0, 0, 0.7);
+    color: white;
+    padding: 2px 8px;
+    font-size: 10px;
+    border-radius: 3px;
+    z-index: 9999;
+}
+
+/* ===== ✅ RESET DE VARIABLES EN MÓVIL ===== */
+@media (max-width: 991.98px) {
+    :root {
+        --viewport-brand: auto !important;
+        --viewport-menu: 100% !important;
+        --viewport-social: 100% !important;
+        --viewport-control: 100% !important;
+        --viewport-gap: 0 !important;
+    }
+}
+
+/* ================================================== */
+/* ✅ AJUSTES FINALES PARA DISTRIBUCIÓN PERFECTA ===== */
+/* ================================================== */
+
+@media (min-width: 992px) {
+    /* ✅ GARANTIZAR QUE TODO QUEPA EN UNA LÍNEA */
+    .navbar-contextual > .container-fluid {
+        display: flex !important;
+        flex-wrap: nowrap !important;
+        align-items: stretch !important;
+        justify-content: space-between !important;
+        width: 100% !important;
+        padding: 0 !important;
+        margin: 0 !important;
+    }
+    
+    /* ✅ VERIFICACIÓN DE ANCHOS TOTALES */
+    .navbar-brand-section,
+    .navbar-menu-section,
+    .navbar-social-section,
+    .navbar-control-section {
+        flex-shrink: 0 !important;
+        flex-grow: 0 !important;
+        white-space: nowrap !important;
+    }
+    
+    /* ✅ ESPACIO ENTRE ELEMENTOS DEL MENÚ */
+    .main-navigation {
+        display: flex !important;
+        flex-wrap: nowrap !important;
+        overflow-x: auto !important;
+        overflow-y: hidden !important;
+        -webkit-overflow-scrolling: touch !important;
+        scrollbar-width: none !important; /* Firefox */
+        -ms-overflow-style: none !important; /* IE 10+ */
+    }
+    
+    .main-navigation::-webkit-scrollbar {
+        display: none !important; /* Chrome, Safari, Opera */
+    }
+}
+
+/* ✅ FIX DE ULTIMO MOMENTO PARA GARANTIZAR UNA SOLA LÍNEA */
+@media (min-width: 992px) {
+    .navbar-contextual {
+        display: flex !important;
+        flex-wrap: nowrap !important;
+        white-space: nowrap !important;
+        overflow: hidden !important;
+    }
+    
+    .navbar-contextual > .container-fluid {
+        flex-wrap: nowrap !important;
+        white-space: nowrap !important;
+    }
+    
+    /* ✅ FORZAR QUE TODOS LOS ELEMENTOS ESTÉN EN LÍNEA */
+    .navbar-brand-section,
+    .navbar-menu-section,
+    .navbar-social-section,
+    .navbar-control-section,
+    .main-navigation,
+    .navbar-nav,
+    .nav-item,
+    .nav-link {
+        white-space: nowrap !important;
+        display: inline-flex !important;
+    }
+}
+
+/* ✅ MEDIA QUERY PARA PANTALLAS EXTRA GRANDES */
+@media (min-width: 1600px) {
+  .main-navigation .nav-link {
+    /* ✅ TEXTO BLANCO Y NEGRITA EN PANTALLAS GRANDES */
+    color: white !important;
+    font-weight: bolder !important;
+    padding: 12px 18px !important;
+    font-size: 1.1rem !important;
+  }
+  
+  .social-icon-circle {
+    width: 38px !important;
+    height: 38px !important;
+    font-size: 1.1rem !important;
+  }
+  
+  .session-controls .btn {
+    padding: 12px 16px !important;
+    font-size: 1rem !important;
+  }
+}
+
+/* ✅ VERSIÓN DEL ARCHIVO EN COMENTARIO FINAL */
+/* 
+ * DISTRIBUCIÓN VERIFICADA:
+ * - Viewport total: 100%
+ * - Navbar: 95% del viewport (con 5% margen derecho visual)
+ * - Menú Principal: 45.5% del viewport
+ * - Altura mínima del navbar: 45vh
+ * - Texto del menú: blanco y bolder
+ * - Todas las secciones en una sola línea en desktop
+ * - Optimización para todos los dispositivos
+ */
+
+/* ================================================== */
+/* ✅ SOLUCIÓN DEFINITIVA - NAVBAR EN UNA LÍNEA (AGREGADO) */
+/* ================================================== */
+
+/* ✅ CONTENEDOR PRINCIPAL CON FLEX EN LÍNEA */
+.navbar-container {
+    display: flex !important;
+    flex-direction: row !important;
+    flex-wrap: nowrap !important;
+    align-items: stretch !important;
+    justify-content: flex-start !important;
+    width: 100% !important;
+    height: var(--navbar-container-height) !important;
+    min-height: var(--navbar-container-height) !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    gap: 0 !important;
+    box-sizing: border-box !important;
+}
+
+/* ✅ CONTENEDOR DE SECCIONES DENTRO DEL COLLAPSE */
+.navbar-sections-container {
+    display: flex !important;
+    flex-direction: row !important;
+    flex-wrap: nowrap !important;
+    align-items: stretch !important;
+    justify-content: flex-start !important;
+    width: 100% !important;
+    height: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    gap: 0 !important;
+    box-sizing: border-box !important;
+}
+
+/* ✅ EL COLLAPSE DEBE SER FLEX Y OCUPAR ESPACIO */
+.navbar-collapse {
+    display: flex !important;
+    flex-grow: 1 !important;
+    flex-basis: auto !important;
+    width: auto !important;
+    min-width: 0 !important;
+    height: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    box-sizing: border-box !important;
+}
+
+/* ✅ TODAS LAS SECCIONES OCUPAN 100% DE ALTURA */
+.navbar-brand-section,
+.navbar-menu-section,
+.navbar-social-section,
+.navbar-control-section {
+    height: 100% !important;
+    min-height: 100% !important;
+    display: flex !important;
+    align-items: center !important;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+/* ✅ ELIMINAR TODOS LOS MÁRGENES Y PADDINGS INTERNOS */
+.navbar-contextual,
+.navbar-container,
+.navbar-sections-container,
+.navbar-collapse,
+.navbar-brand-section,
+.navbar-menu-section,
+.navbar-social-section,
+.navbar-control-section {
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+}
+
+/* ✅ FORZAR ANCHOS EXACTOS EN DESKTOP */
+@media (min-width: 992px) {
+    .navbar-brand-section {
+        flex: 0 0 var(--viewport-brand) !important;
+        min-width: var(--viewport-brand) !important;
+        max-width: var(--viewport-brand) !important;
+    }
+    
+    .navbar-menu-section {
+        flex: 0 0 var(--viewport-menu) !important;
+        min-width: var(--viewport-menu) !important;
+        max-width: var(--viewport-menu) !important;
+    }
+    
+    .navbar-social-section {
+        flex: 0 0 var(--viewport-social) !important;
+        min-width: var(--viewport-social) !important;
+        max-width: var(--viewport-social) !important;
+    }
+    
+    .navbar-control-section {
+        flex: 0 0 var(--viewport-control) !important;
+        min-width: var(--viewport-control) !important;
+        max-width: var(--viewport-control) !important;
+    }
+}
+
+/* ✅ CORRECCIÓN ESPECÍFICA PARA EL MENÚ */
+.main-navigation {
+    height: 100% !important;
+    align-items: center !important;
+}
+
+.main-navigation .nav-link {
+    height: auto !important;
+    display: flex !important;
+    align-items: center !important;
+}
+
+/* ✅ CORRECCIÓN PARA CONTENIDO INTERNO */
+.control-content {
+    width: 100% !important;
+    height: 100% !important;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: center !important;
+    padding: 5px 0 !important;
+    box-sizing: border-box !important;
+}
+
+/* ✅ FIX PARA MÓVIL */
+@media (max-width: 991.98px) {
+    .navbar-container {
+        flex-wrap: wrap !important;
+        height: auto !important;
+    }
+    
+    .navbar-sections-container {
+        flex-direction: column !important;
+        height: auto !important;
+    }
+    
+    .navbar-brand-section,
+    .navbar-menu-section,
+    .navbar-social-section,
+    .navbar-control-section {
+        height: auto !important;
+        width: 100% !important;
+        min-width: 100% !important;
+        max-width: 100% !important;
+    }
+}
+
+/* ================================================== */
+/* ✅ SOLUCIÓN DEFINITIVA Z-INDEX PARA SUBMENÚS ====== */
+/* ================================================== */
+
+/* ✅ FORZAR CONTEXTO DE APILAMIENTO CORRECTO */
+.navbar-contextual {
+    position: fixed !important;
+    z-index: 1030 !important;
+    overflow: visible !important;
+    isolation: auto !important;
+}
+
+/* ✅ NAVBAR CONTENEDORES - VISIBLES */
+.navbar-container,
+.navbar-sections-container,
+.navbar-collapse,
+.navbar-menu-section {
+    overflow: visible !important;
+}
+
+/* ✅ CONTENEDORES DE DROPDOWN - CONTEXTO SUPERIOR */
+.nav-item.dropdown {
+    position: relative !important;
+    z-index: 1100 !important;
+}
+
+/* ✅ DROPDOWN MENU PRINCIPAL */
+.navbar-nav .dropdown-menu {
+    z-index: 1110 !important;
+    position: absolute !important;
+    top: 100% !important;
+    left: 0 !important;
+    margin-top: 0 !important;
+    opacity: 0 !important;
+    visibility: hidden !important;
+    transform: translateY(10px) !important;
+    transition: all 0.3s ease !important;
+    pointer-events: none !important;
+    will-change: transform, opacity;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+}
+
+/* ✅ DROPDOWN VISIBLE */
+.navbar-nav .dropdown-menu.show {
+    opacity: 1 !important;
+    visibility: visible !important;
+    transform: translateY(0) !important;
+    pointer-events: auto !important;
+    display: block !important;
+}
+
+/* ✅ HOVER EN DESKTOP */
+@media (min-width: 992px) {
+  .navbar-nav .dropdown:hover > .dropdown-menu {
+      opacity: 1 !important;
+      visibility: visible !important;
+      transform: translateY(0) !important;
+      pointer-events: auto !important;
+      display: block !important;
+  }
+  
+  /* ✅ SUBMENÚS ANIDADOS (SEGUNDO NIVEL) */
+  .dropdown-menu .dropdown-menu {
+      z-index: 1120 !important;
+      position: absolute !important;
+      left: 100% !important;
+      top: 0 !important;
+      margin-left: 0 !important;
+      margin-top: 0 !important;
+  }
+  
+  /* ✅ TERCER NIVEL */
+  .dropdown-menu .dropdown-menu .dropdown-menu {
+      z-index: 1130 !important;
+  }
+  
+  /* ✅ ANIMACIÓN SUAVE */
+  .navbar-nav .dropdown-menu {
+      animation: dropdownFadeIn 0.3s ease-out !important;
+  }
+  
+  .dropdown-menu .dropdown-menu {
+      animation: dropdownFadeIn 0.2s ease-out !important;
+  }
+}
+
+/* ✅ ANIMACIÓN PERSONALIZADA */
+@keyframes dropdownFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ✅ CORRECCIÓN ESPECÍFICA PARA BOOTSTRAP 5 */
+[data-bs-toggle="dropdown"] {
+    position: relative !important;
+    z-index: 1100 !important;
+}
+
+/* ✅ GARANTIZAR QUE LOS SUBMENÚS NO SEAN CORTADOS */
+.dropdown-menu {
+    transform: none !important;
+    overflow: visible !important;
+}
+
+/* ✅ FIX DE EMERGENCIA - Z-INDEX MÁXIMO PARA DROPDOWNS ACTIVOS */
+.dropdown-menu.show {
+    z-index: 9999 !important;
+}
+
+/* ✅ PREVENIR HERENCIA DE PROPIEDADES */
+.navbar-menu-section,
+.navbar-menu-section > *,
+.main-navigation,
+.main-navigation > * {
+    overflow: visible !important;
+}
+
+/* ================================================== */
+/* ✅ DEBUG VISUAL (OPCIONAL) - SOLO ACTIVAR SI NECESITAS DEBUG */
+/* ================================================== */
+
+/* 
+.debug-dropdown .dropdown-menu {
+    border: 3px solid #ff0000 !important;
+    background: rgba(255, 0, 0, 0.05) !important;
+}
+
+.debug-dropdown .dropdown-menu .dropdown-menu {
+    border: 3px solid #00ff00 !important;
+    background: rgba(0, 255, 0, 0.05) !important;
+}
+
+.debug-dropdown .dropdown-menu .dropdown-menu .dropdown-menu {
+    border: 3px solid #0000ff !important;
+    background: rgba(0, 0, 255, 0.05) !important;
+}
+*/
+
+/* ================================================== */
+/* ✅ SIDEBAR MÓVIL (OFFCANVAS)                       */
+/* ================================================== */
+
+.ged-mobile-sidebar {
+    width: 280px !important;
+    background: linear-gradient(135deg, #6c3483 0%, #8e44ad 100%) !important;
+    color: white !important;
+}
+
+.ged-mobile-sidebar .offcanvas-header {
+    border-bottom: 1px solid rgba(255,255,255,0.2) !important;
+    padding: 1.25rem !important;
+}
+
+.ged-mobile-sidebar .offcanvas-title {
+    font-weight: 600 !important;
+    font-size: 1.2rem !important;
+    display: flex !important;
+    align-items: center !important;
+}
+
+.ged-mobile-sidebar .btn-close-white {
+    filter: invert(1) grayscale(100%) brightness(200%) !important;
+    opacity: 0.8 !important;
+}
+
+.ged-mobile-sidebar .btn-close-white:hover {
+    opacity: 1 !important;
+}
+
+/* Menú móvil */
+.mobile-menu-container {
+    display: flex !important;
+    flex-direction: column !important;
+    height: 100% !important;
+}
+
+.mobile-nav-menu {
+    padding: 10px 0 !important;
+    margin: 0 !important;
+    list-style: none !important;
+    flex-grow: 1 !important;
+    overflow-y: auto !important;
+}
+
+.mobile-nav-menu .nav-item {
+    width: 100% !important;
+    margin: 0 !important;
+}
+
+.mobile-nav-menu .nav-link {
+    /* ✅ TEXTO BLANCO Y NEGRITA EN MÓVIL */
+    color: white !important;
+    font-weight: bolder !important;
+    padding: 12px 20px !important;
+    border-radius: 0 !important;
+    border-left: 3px solid transparent !important;
+    transition: all 0.3s ease !important;
+    font-size: 0.95rem !important;
+    display: flex !important;
+    align-items: center !important;
+    text-decoration: none !important;
+}
+
+.mobile-nav-menu .nav-link:hover,
+.mobile-nav-menu .nav-link.active {
+    background: rgba(255,255,255,0.1) !important;
+    color: white !important;
+    border-left-color: #3498db !important;
+    padding-left: 25px !important;
+}
+
+/* Dropdowns en móvil */
+.mobile-nav-menu .dropdown-toggle {
+    position: relative !important;
+}
+
+.mobile-nav-menu .dropdown-toggle::after {
+    display: inline-block !important;
+    margin-left: auto !important;
+    transition: transform 0.3s ease !important;
+    border-top: 0.3em solid transparent !important;
+    border-right: 0.3em solid transparent !important;
+    border-bottom: 0 !important;
+    border-left: 0.3em solid !important;
+    transform: rotate(0deg) !important;
+}
+
+.mobile-nav-menu .dropdown-toggle[aria-expanded="true"]::after {
+    transform: rotate(90deg) !important;
+}
+
+.mobile-nav-menu .dropdown-menu {
+    position: static !important;
+    float: none !important;
+    width: 100% !important;
+    background: rgba(0,0,0,0.2) !important;
+    border: none !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    display: none !important;
+}
+
+.mobile-nav-menu .dropdown-menu.show {
+    display: block !important;
+}
+
+.mobile-nav-menu .dropdown-item {
+    color: rgba(255,255,255,0.8) !important;
+    padding: 10px 20px 10px 40px !important;
+    border-bottom: 1px solid rgba(255,255,255,0.05) !important;
+    text-decoration: none !important;
+    transition: all 0.3s ease !important;
+}
+
+.mobile-nav-menu .dropdown-item:hover {
+    background: rgba(255,255,255,0.1) !important;
+    color: white !important;
+    padding-left: 45px !important;
+}
+
+/* Información de escuela en móvil */
+.mobile-school-info {
+    background: rgba(255,255,255,0.05) !important;
+    border-top: 1px solid rgba(255,255,255,0.1) !important;
+}
+
+.mobile-school-info h6 {
+    font-size: 0.9rem !important;
+    color: rgba(255,255,255,0.7) !important;
+}
+
+.mobile-school-info p {
+    font-size: 0.95rem !important;
+    margin-bottom: 0.25rem !important;
+    color: white !important;
+}
+
+.mobile-school-info small {
+    font-size: 0.8rem !important;
+    color: rgba(255,255,255,0.6) !important;
+}
+
+/* Redes sociales en móvil */
+.mobile-social-section {
+    background: rgba(255,255,255,0.03) !important;
+    border-top: 1px solid rgba(255,255,255,0.1) !important;
+}
+
+.mobile-social-section h6 {
+    font-size: 0.9rem !important;
+    color: rgba(255,255,255,0.7) !important;
+}
+
+.mobile-social-section .social-icon-circle {
+    width: 44px !important;
+    height: 44px !important;
+    font-size: 1.2rem !important;
+    background: rgba(255,255,255,0.15) !important;
+    border: 1px solid rgba(255,255,255,0.2) !important;
+}
+
+/* Control de sesión en móvil */
+.mobile-session-controls {
+    background: rgba(255,255,255,0.03) !important;
+    border-top: 1px solid rgba(255,255,255,0.1) !important;
+}
+
+.user-info-mobile {
+    background: rgba(255,255,255,0.05) !important;
+    padding: 12px !important;
+    border-radius: 8px !important;
+    border: 1px solid rgba(255,255,255,0.1) !important;
+}
+
+.user-info-mobile strong {
+    font-size: 1rem !important;
+    color: white !important;
+    display: block !important;
+}
+
+.user-info-mobile .text-muted {
+    font-size: 0.85rem !important;
+    color: rgba(255,255,255,0.7) !important;
+}
+
+.mobile-session-controls .btn {
+    padding: 10px 16px !important;
+    font-size: 0.95rem !important;
+    border-radius: 6px !important;
+}
+
+/* Responsive para móvil */
+@media (max-width: 991.98px) {
+    .navbar-collapse:not(.show) {
+        display: none !important;
+    }
+    
+    .ged-mobile-sidebar {
+        width: 85% !important;
+        max-width: 300px !important;
+    }
+}
+
+@media (max-width: 575.98px) {
+    .ged-mobile-sidebar {
+        width: 90% !important;
+    }
+    
+    .mobile-nav-menu .nav-link {
+        padding: 10px 15px !important;
+        font-size: 0.9rem !important;
+    }
+    
+    .mobile-nav-menu .dropdown-item {
+        padding: 8px 15px 8px 30px !important;
+    }
+}
+
+/* Scrollbar personalizado para sidebar */
+.ged-mobile-sidebar .offcanvas-body::-webkit-scrollbar {
+    width: 4px !important;
+}
+
+.ged-mobile-sidebar .offcanvas-body::-webkit-scrollbar-track {
+    background: rgba(255,255,255,0.05) !important;
+}
+
+.ged-mobile-sidebar .offcanvas-body::-webkit-scrollbar-thumb {
+    background: rgba(255,255,255,0.2) !important;
+    border-radius: 2px !important;
+}
+
+.ged-mobile-sidebar .offcanvas-body::-webkit-scrollbar-thumb:hover {
+    background: rgba(255,255,255,0.3) !important;
+}
+
+/* ================================================== */
+/* ✅ ACTUALIZACIÓN DE COMENTARIO FINAL              */
+/* ================================================== */
+
+/* 
+ * NUEVA DISTRIBUCIÓN (ACTUALIZADA 2026-01-22):
+ * - Viewport total: 100%
+ * - Navbar: 95% del viewport (con 5% de margen derecho visual)
+ * - Secciones dentro del navbar:
+ *   • Logo: 12% del viewport (12.63% del navbar)
+ *   • Menú: 45.5% del viewport (47.89% del navbar) 
+ *   • Social: 4.5% del viewport (4.74% del navbar)
+ *   • Control: 18% del viewport (18.95% del navbar)
+ * - Texto del menú: blanco y font-weight: bolder
+ * - Altura mínima del navbar: 45vh
+ * - Todas las secciones en una sola línea en desktop
+ * - Optimización para todos los dispositivos
+ */
+
+/* ================================================== */
+/* ESTILOS PARA SUBMENÚS ANIDADOS (MULTINIVEL)       */
+/* ================================================== */
+
+/* Estilos para submenús anidados en desktop */
+.dropdown-submenu {
+    position: relative;
+}
+
+.dropdown-submenu > .dropdown-menu {
+    top: 0;
+    left: 100%;
+    margin-top: -6px;
+    margin-left: -1px;
+    border-radius: 0 6px 6px 6px;
+    display: none;
+}
+
+/* Mostrar submenú al hover */
+.dropdown-submenu:hover > .dropdown-menu {
+    display: block;
+}
+
+/* Flecha para submenús */
+.dropdown-submenu > a::after {
+    display: block;
+    content: " ";
+    float: right;
+    width: 0;
+    height: 0;
+    border-color: transparent;
+    border-style: solid;
+    border-width: 5px 0 5px 5px;
+    border-left-color: #ccc;
+    margin-top: 5px;
+    margin-right: -10px;
+}
+
+/* Para menús móviles */
+.mobile-submenu {
+    padding-left: 20px;
+    background-color: rgba(0,0,0,0.02);
+}
+
+.mobile-submenu-item.level-1 {
+    padding-left: 20px;
+}
+
+.mobile-submenu-item.level-2 {
+    padding-left: 40px;
+}
+
+.mobile-submenu-item.level-3 {
+    padding-left: 60px;
+}
+
+/* Ajustes específicos para el menú en desktop */
+.navbar-nav .dropdown-menu {
+    background-color: #8e44ad; /* Fondo morado para dropdowns */
+}
+
+.navbar-nav .dropdown-submenu .dropdown-menu {
+    background-color: #6c3483; /* Fondo más oscuro para subdropdowns */
+}
+
+.navbar-nav .dropdown-item {
+    color: white !important;
+    font-weight: bolder !important;
+}
+
+.navbar-nav .dropdown-item:hover {
+    background-color: rgba(255,255,255,0.1);
+}
+
+/* Asegurar que los submenús no se salgan de la pantalla en desktop */
+@media (min-width: 992px) {
+    .dropdown-submenu .dropdown-menu {
+        position: absolute;
+        left: 100%;
+        top: 0;
+    }
+}
+
+/* Compatibilidad con Bootstrap 5 */
+.dropdown-submenu.dropend .dropdown-menu {
+    left: 100%;
+    top: 0;
+}
+
+/* Efecto hover para submenús */
+.dropdown-submenu:hover > .dropdown-toggle {
+    background-color: rgba(255,255,255,0.1);
+}
+
+/* Ajustar padding para subitems */
+.dropdown-menu .dropdown-item {
+    padding: 8px 20px;
+}
+
+/* Submenús dentro de submenús */
+.dropdown-submenu .dropdown-submenu .dropdown-menu {
+    top: -6px;
+    left: 100%;
+}
+
+/* Estilos para el menú de escritorio con subniveles */
+.main-navigation .dropdown-menu {
+    min-width: 220px;
+}
+
+.main-navigation .dropdown-submenu .dropdown-menu {
+    min-width: 200px;
+}
+
+/* ================================================== */
+/* ✅ SOLUCIÓN DEFINITIVA PARA MENÚ DESKTOP (≥992px) - PASO 3 */
+/* ================================================== */
+
+@media (min-width: 992px) {
+    /* ✅ ÁREA DE TRANSICIÓN ENTRE MENÚ Y SUBMENÚ */
+    .dropdown-menu {
+        margin-top: 0 !important;
+        border-top-left-radius: 0 !important;
+        border-top-right-radius: 0 !important;
+        transition: opacity 0.15s ease, visibility 0.15s ease !important;
+        pointer-events: auto !important;
+    }
+    
+    /* ✅ CONECTOR INVISIBLE PARA MANTENER HOVER */
+    .dropdown > .dropdown-menu::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -10px;
+        width: 20px;
+        height: 100%;
+        background: transparent;
+        z-index: 1109;
+    }
+    
+    /* ✅ SUBMENÚS ANIDADOS - POSICIÓN CORRECTA */
+    .dropdown-menu .dropdown-menu {
+        top: 0 !important;
+        left: 100% !important;
+        margin-top: -1px !important;
+        margin-left: 0 !important;
+        border-top-left-radius: 0 !important;
+    }
+    
+    /* ✅ PREVENIR DESAPARICIÓN BRUSCA */
+    .dropdown:hover > .dropdown-menu,
+    .dropdown.show > .dropdown-menu {
+        display: block !important;
+        opacity: 1 !important;
+        visibility: visible !important;
+    }
+    
+    /* ✅ MEJORAR VISIBILIDAD DE ITEMS */
+    .dropdown-item {
+        position: relative;
+        transition: background-color 0.1s ease !important;
+        white-space: nowrap;
+        min-width: 180px;
+    }
+    
+    .dropdown-item:hover {
+        background-color: rgba(255, 255, 255, 0.2) !important;
+        padding-left: 20px !important;
+    }
+    
+    /* ✅ INDICADOR DE SUBMENÚ */
+    .dropdown-toggle[data-bs-toggle="dropdown"]::after {
+        margin-left: 5px;
+        vertical-align: 0.15em;
+    }
+    
+    /* ✅ GARANTIZAR QUE LOS SUBMENÚS NO SE SALGAN DE LA PANTALLA */
+    .dropdown-menu .dropdown-menu {
+        transform: none !important;
+    }
+    
+    /* ✅ FIX PARA BOOTSTRAP 5 - MANTENER COMPATIBILIDAD */
+    .dropdown-menu[data-bs-popper] {
+        margin-top: 0 !important;
+        left: auto !important;
+    }
+    
+    /* ✅ EVITAR QUE EL SCROLL INTERFIERA */
+    .navbar-menu-section {
+        overflow: visible !important;
+    }
+    
+    .main-navigation {
+        overflow: visible !important;
+    }
+    
+    /* ✅ HABILITAR CLICS Y HOVER EN TODOS LOS NIVELES */
+    .navbar-nav .dropdown-menu,
+    .navbar-nav .dropdown-menu .dropdown-menu,
+    .navbar-nav .dropdown-menu .dropdown-menu .dropdown-menu {
+        pointer-events: auto !important;
+    }
+    
+    /* ✅ PREVENIR CIERRE PREMATURO DE SUBMENÚS */
+    .dropdown-submenu {
+        position: relative;
+    }
+    
+    .dropdown-submenu > .dropdown-menu {
+        top: 0;
+        left: 100%;
+        margin-top: -6px;
+        margin-left: 1px;
+        border-top-left-radius: 0;
+    }
+    
+    /* ✅ EXTENDER EL ÁREA DE HOVER ENTRE MENÚ Y SUBMENÚ */
+    .dropdown-submenu > .dropdown-toggle::after {
+        content: "▸";
+        border: none !important;
+        font-size: 0.9em;
+        vertical-align: 0;
+        margin-left: 0.5em;
+    }
+    
+    /* ✅ CONECTOR INVISIBLE ENTRE NIVELES */
+    .dropdown-submenu::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        right: -5px;
+        width: 10px;
+        height: 100%;
+        background: transparent;
+        z-index: 1120;
+    }
+    
+    /* ✅ MANTENER SUBMENÚ ABIERTO DURANTE TRANSICIÓN */
+    .dropdown-submenu:hover > .dropdown-menu,
+    .dropdown-submenu > .dropdown-menu.show {
+        display: block !important;
+        opacity: 1 !important;
+        visibility: visible !important;
+    }
+    
+    /* ✅ RETRASO PARA CIERRE (SOLO EN DESKTOP) */
+    .dropdown-menu {
+        transition: opacity 0.2s ease-out, visibility 0.2s ease-out 0.1s !important;
+    }
+    
+    /* ✅ ÁREA DE HOVER MEJORADA PARA ITEMS */
+    .dropdown-item {
+        position: relative;
+        transition: background-color 0.15s ease !important;
+    }
+    
+    .dropdown-item:hover {
+        background-color: rgba(255, 255, 255, 0.2) !important;
+    }
+    
+    /* ✅ FIX DE EMERGENCIA PARA GARANTIZAR FUNCIONAMIENTO */
+    .dropdown:hover > .dropdown-menu,
+    .dropdown.show > .dropdown-menu,
+    .dropdown-submenu:hover > .dropdown-menu {
+        display: block !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+    }
+}
+
+/* ================================================== */
+/* ✅ SOLUCIÓN DEFINITIVA - HERRAMIENTAS (ID:162) SOLO DESKTOP */
+/* ================================================== */
+
+/* 1. OCULTAR HERRAMIENTAS EN MÓVIL - MÚLTIPLES SELECTORES PARA GARANTIZAR */
+@media (max-width: 991.98px) {
+    /* Por ID específico (162) */
+    .menu-id-162,
+    .menu-herramientas-id-162,
+    
+    /* Por atributos data */
+    [data-menu-id="162"],
+    [data-menu-name="herramientas"],
+    [data-menu-tools="true"],
+    [data-menu-herramientas="true"],
+    
+    /* Por clases específicas */
+    .menu-herramientas,
+    
+    /* Para dropdowns hijos */
+    [data-parent-menu-id="162"],
+    [data-parent-menu-tools="true"],
+    
+    /* Selectores de respaldo por texto */
+    .nav-link:contains("Herramientas"),
+    .dropdown-item:contains("Herramientas") {
+        display: none !important;
+        visibility: hidden !important;
+        opacity: 0 !important;
+        height: 0 !important;
+        min-height: 0 !important;
+        max-height: 0 !important;
+        width: 0 !important;
+        overflow: hidden !important;
+        pointer-events: none !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        border: none !important;
+        transform: scale(0) !important;
+        position: absolute !important;
+        left: -9999px !important;
+    }
+    
+    /* Asegurar que el menú principal no tenga espacios vacíos */
+    .main-navigation .nav-item:empty {
+        display: none !important;
+    }
+    
+    .main-navigation {
+        gap: 0 !important;
+    }
+}
+
+/* 2. GARANTIZAR VISIBILIDAD EN DESKTOP */
+@media (min-width: 992px) {
+    .menu-id-162,
+    .menu-herramientas,
+    .menu-herramientas-id-162,
+    [data-menu-id="162"] {
+        display: flex !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+        height: auto !important;
+        width: auto !important;
+        overflow: visible !important;
+        pointer-events: auto !important;
+        transform: scale(1) !important;
+        position: relative !important;
+        left: 0 !important;
+    }
+}
+
+/* 3. CORRECCIÓN ESPECÍFICA PARA DROPDOWNS DE HERRAMIENTAS */
+.dropdown-menu[data-parent-menu-id="162"],
+.dropdown-menu[data-parent-menu-tools="true"] {
+    background: linear-gradient(135deg, #7d3c98, #6c3483) !important;
+    border: 1px solid rgba(255,255,255,0.3) !important;
+}
+
+/* 4. ANIMACIÓN SUAVE PARA TRANSICIÓN */
+.menu-id-162,
+.menu-herramientas {
+    transition: opacity 0.3s ease, transform 0.3s ease !important;
+}
+
+/* 5. ESTILOS DE DEBUG (OPCIONAL) - ELIMINAR EN PRODUCCIÓN */
+/*
+.debug-herramientas .menu-id-162 {
+    outline: 3px solid #ff0000 !important;
+    background: rgba(255, 0, 0, 0.1) !important;
+}
+
+.debug-herramientas .menu-herramientas::before {
+    content: 'ID:162 - Solo Desktop';
+    position: absolute;
+    top: -20px;
+    right: 0;
+    background: rgba(0, 0, 0, 0.8);
+    color: white;
+    padding: 2px 6px;
+    font-size: 10px;
+    border-radius: 3px;
+    z-index: 9999;
+}
+*/
+
+/* 6. CORRECCIÓN PARA MÓVIL - EVITAR FLICKERING */
+@media (max-width: 991.98px) {
+    .navbar-menu-section .nav-item.menu-id-162 {
+        animation: none !important;
+        transition: none !important;
+    }
+}
+
+/* 7. GARANTIZAR QUE NO AFECTE A OTROS ELEMENTOS */
+.menu-id-162:not(.nav-item):not(.mobile-menu-item) {
+    all: unset !important;
+}
+
+/* ================================================== */
+/* ✅ NOTA FINAL DE ACTUALIZACIÓN                     */
+/* ================================================== */
+/*
+ * ACTUALIZADO: 2026-01-22
+ * CAMBIOS PRINCIPALES:
+ * 1. Agregado soporte para ocultar "Herramientas" (ID:162) solo en móvil
+ * 2. Múltiples selectores CSS para garantizar funcionamiento
+ * 3. Compatibilidad con las clases agregadas en MenuWidget.php
+ * 4. No afecta la funcionalidad en desktop
+ * 5. Solución limpia y mantenible
+ */

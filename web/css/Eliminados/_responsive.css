@@ -1,0 +1,1074 @@
+/* =================================================================
+ * _responsive.css - MEDIA QUERIES CONSOLIDADOS GED (ACTUALIZADO)
+ * Consolidado de: ged-responsive-escuelas.css, ged-responsive-general.css, ged-responsive-tienda.css
+ * Fecha: 2024-01-22 (actualizado para compatibilidad con navbar 95% viewport)
+ * Nota: Actualizado para compatibilidad con navbar 95% viewport y menú 45.5%
+ * ================================================================= */
+
+/* ================================================== */
+/* TABLE Y PANTALLAS MEDIANAS (1199px a 992px)        */
+/* ================================================== */
+
+@media (max-width: 1199.98px) {
+    /* Responsive para escuelas */
+    .school-list-container {
+        max-height: 350px;
+    }
+    
+    .pre-registro-grid {
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 15px;
+    }
+    
+    .current-school-status {
+        padding: 12px;
+    }
+    
+    .stats-grid {
+        gap: 10px;
+    }
+    
+    .stat-item {
+        padding: 8px;
+    }
+    
+    /* ✅ AJUSTE PARA TABLETS CON NAVBAR 95% */
+    .navbar-contextual {
+        width: 95% !important;  /* ✅ Mantener 95% en tablets */
+        margin: 0 0 0 auto !important; /* ✅ 5% margen derecho */
+    }
+    
+    .navbar-menu-section {
+        flex: 0 0 45.5% !important; /* ✅ Menú 45.5% en tablets */
+        max-width: 45.5% !important;
+    }
+    
+    /* Responsive para tienda */
+    .store-promo-content {
+        padding: 0 1rem;
+    }
+    
+    .store-icon-large {
+        font-size: 2.5rem;
+    }
+    
+    .ged-btn-tienda {
+        padding: 12px 20px !important;
+        font-size: 1rem !important;
+    }
+    
+    .tienda-card {
+        margin-bottom: 1.5rem;
+    }
+    
+    .categoria-card {
+        margin-bottom: 1.5rem;
+    }
+    
+    .total-vendidos-card {
+        flex-direction: column;
+        text-align: center;
+        padding: 1.5rem;
+    }
+    
+    .total-icon {
+        margin-right: 0;
+        margin-bottom: 1rem;
+    }
+}
+
+/* ================================================== */
+/* TABLETS PEQUEÑAS Y MÓVILES GRANDES (991px a 768px) */
+/* ================================================== */
+
+@media (max-width: 991.98px) {
+    /* ✅ RESPONSIVE GENERAL ACTUALIZADO */
+    .navbar-contextual {
+        height: 60px !important;
+        min-height: 60px !important;
+        position: fixed !important;
+        top: 0 !important;
+        width: 100vw !important; /* ✅ 100% en móvil */
+        margin: 0 !important;   /* ✅ Sin margen especial en móvil */
+        padding: 0 15px !important;
+        background: linear-gradient(135deg, #8e44ad 0%, #6c3483 100%) !important;
+    }
+    
+    body {
+        padding-top: 60px !important;
+    }
+    
+    main#main {
+        margin-top: 0 !important;
+        min-height: calc(100vh - 60px) !important;
+    }
+    
+    /* ✅ SOLO LOGO Y TOGGLER VISIBLES EN MÓVIL - NO OCULTAR EL OFFCANVAS */
+    .navbar-contextual .navbar-menu-section,
+    .navbar-contextual .navbar-social-section,
+    .navbar-contextual .navbar-control-section,
+    .navbar-contextual .navbar-sections-container,
+    .navbar-contextual .navbar-collapse {
+        display: none !important;
+        visibility: hidden !important;
+        height: 0 !important;
+        width: 0 !important;
+        overflow: hidden !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        opacity: 0 !important;
+    }
+    
+    /* ✅ PERO EL OFFCANVAS Y SU CONTENIDO DEBEN SER VISIBLES */
+    #mobileMenuOffcanvas,
+    .ged-mobile-sidebar,
+    .mobile-menu-container,
+    .mobile-nav-menu {
+        display: block !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+    }
+    
+    /* ✅ MANTENER BRAND SECTION (LOGO) VISIBLE */
+    .navbar-brand-section {
+        width: auto !important;
+        height: 60px;
+        order: 1;
+        flex: 0 0 auto !important;
+        max-width: none !important;
+        min-width: auto !important;
+        justify-content: flex-start !important;
+        padding-left: 0 !important;
+        display: flex !important;
+        align-items: center !important;
+    }
+    
+    /* ✅ TOGGLER VISIBLE Y POSICIONADO CORRECTAMENTE */
+    .navbar-toggler {
+        position: relative !important;
+        top: auto !important;
+        right: auto !important;
+        order: 2;
+        margin-left: auto;
+        display: flex !important;
+        padding: 6px 8px !important;
+        align-items: center;
+        justify-content: center;
+        width: 44px;
+        height: 44px;
+        z-index: 9999;
+        background: rgba(255,255,255,0.1) !important;
+        border: 1px solid rgba(255,255,255,0.3) !important;
+        border-radius: 4px !important;
+    }
+    
+    .navbar-toggler:hover {
+        background: rgba(255,255,255,0.2) !important;
+    }
+    
+    .navbar-toggler-icon {
+        background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%28255, 255, 255, 0.8%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e") !important;
+    }
+    
+    /* ✅ Asegurar que el contenedor sea compacto */
+    .navbar-container {
+        display: flex !important;
+        flex-direction: row !important;
+        align-items: center !important;
+        justify-content: space-between !important;
+        width: 100% !important;
+        height: 60px !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        gap: 0 !important;
+    }
+    
+    /* ✅ LOGO AJUSTADO PARA MÓVIL */
+    .navbar-logo {
+        height: 40px !important;
+        max-height: 40px !important;
+        width: auto !important;
+    }
+    
+    /* ✅ ELIMINAR CUALQUIER CONTENIDO QUE SE MUESTRE EN EL NAVBAR */
+    .navbar-contextual > .container-fluid {
+        width: 100% !important;
+        padding: 0 !important;
+        margin: 0 !important;
+    }
+    
+    /* ✅ ESTILOS PARA SIDEBAR MÓVIL - ASEGURAR QUE EL MENÚ SEA VISIBLE */
+    .ged-mobile-sidebar .offcanvas-body {
+        display: flex !important;
+        flex-direction: column !important;
+        height: 100% !important;
+        padding: 0 !important;
+        overflow-y: auto !important;
+    }
+    
+    .ged-mobile-sidebar .mobile-menu-container {
+        display: flex !important;
+        flex-direction: column !important;
+        flex-grow: 1 !important;
+        min-height: 100% !important;
+    }
+    
+    .ged-mobile-sidebar .mobile-nav-menu {
+        display: flex !important;
+        flex-direction: column !important;
+        flex-grow: 1 !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        list-style: none !important;
+        opacity: 1 !important;
+        visibility: visible !important;
+    }
+    
+    .ged-mobile-sidebar .mobile-nav-menu .nav-item {
+        display: block !important;
+        width: 100% !important;
+        margin: 0 !important;
+        border-bottom: 1px solid rgba(255,255,255,0.1) !important;
+    }
+    
+    .ged-mobile-sidebar .mobile-nav-menu .nav-link {
+        /* ✅ TEXTO BLANCO Y NEGRITA EN MÓVIL */
+        color: white !important;
+        font-weight: bolder !important;
+        display: flex !important;
+        align-items: center !important;
+        padding: 14px 20px !important;
+        text-decoration: none !important;
+        font-size: 1rem !important;
+        width: 100% !important;
+        background: transparent !important;
+        border-left: 3px solid transparent !important;
+        transition: all 0.3s ease !important;
+    }
+    
+    .ged-mobile-sidebar .mobile-nav-menu .nav-link:hover,
+    .ged-mobile-sidebar .mobile-nav-menu .nav-link.active {
+        background: rgba(255,255,255,0.1) !important;
+        color: white !important; /* ✅ MANTENER BLANCO */
+        border-left-color: #3498db !important;
+        padding-left: 25px !important;
+    }
+    
+    .ged-mobile-sidebar .mobile-nav-menu .nav-link i {
+        margin-right: 12px !important;
+        font-size: 1.1rem !important;
+        width: 24px !important;
+        text-align: center !important;
+    }
+    
+    /* Dropdowns en móvil */
+    .ged-mobile-sidebar .mobile-nav-menu .dropdown-toggle::after {
+        margin-left: auto !important;
+        border-top: 0.3em solid transparent !important;
+        border-right: 0.3em solid transparent !important;
+        border-bottom: 0 !important;
+        border-left: 0.3em solid !important;
+        transform: rotate(0deg) !important;
+        transition: transform 0.3s ease !important;
+    }
+    
+    .ged-mobile-sidebar .mobile-nav-menu .dropdown-toggle[aria-expanded="true"]::after {
+        transform: rotate(90deg) !important;
+    }
+    
+    .ged-mobile-sidebar .mobile-nav-menu .dropdown-menu {
+        position: static !important;
+        float: none !important;
+        width: 100% !important;
+        background: rgba(0,0,0,0.2) !important;
+        border: none !important;
+        border-radius: 0 !important;
+        box-shadow: none !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        display: none !important;
+    }
+    
+    .ged-mobile-sidebar .mobile-nav-menu .dropdown-menu.show {
+        display: block !important;
+    }
+    
+    .ged-mobile-sidebar .mobile-nav-menu .dropdown-item {
+        color: rgba(255,255,255,0.8) !important;
+        padding: 12px 20px 12px 40px !important;
+        border-bottom: 1px solid rgba(255,255,255,0.05) !important;
+        text-decoration: none !important;
+        transition: all 0.3s ease !important;
+        display: block !important;
+        width: 100% !important;
+    }
+    
+    .ged-mobile-sidebar .mobile-nav-menu .dropdown-item:hover {
+        background: rgba(255,255,255,0.1) !important;
+        color: white !important;
+        padding-left: 45px !important;
+    }
+    
+    /* Información de escuela en móvil */
+    .ged-mobile-sidebar .mobile-school-info {
+        background: rgba(255,255,255,0.05) !important;
+        border-top: 1px solid rgba(255,255,255,0.1) !important;
+        padding: 15px !important;
+        display: block !important;
+    }
+    
+    /* Redes sociales en móvil */
+    .ged-mobile-sidebar .mobile-social-section {
+        background: rgba(255,255,255,0.03) !important;
+        border-top: 1px solid rgba(255,255,255,0.1) !important;
+        padding: 15px !important;
+        display: block !important;
+        text-align: center !important;
+    }
+    
+    /* Control de sesión en móvil */
+    .ged-mobile-sidebar .mobile-session-controls {
+        background: rgba(255,255,255,0.03) !important;
+        border-top: 1px solid rgba(255,255,255,0.1) !important;
+        padding: 15px !important;
+        display: block !important;
+    }
+    
+    /* Responsive para escuelas */
+    .encargado-search-form {
+        flex-direction: column;
+        gap: 15px;
+    }
+    
+    .encargado-search-input {
+        width: 100%;
+    }
+    
+    .encargado-search-btn {
+        width: 100%;
+    }
+    
+    .pre-registro-grid {
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+    
+    .pre-registro-header {
+        flex-direction: column;
+        gap: 10px;
+        text-align: center;
+    }
+    
+    .pre-registro-actions {
+        flex-direction: column;
+        gap: 8px;
+    }
+    
+    .school-option {
+        padding: 10px 12px;
+    }
+    
+    .school-name {
+        font-size: 1rem;
+    }
+    
+    .school-details {
+        font-size: 0.85rem;
+    }
+    
+    /* Escuela completar registro */
+    .escuela-completar-registro .current-logo {
+        margin-top: 15px;
+    }
+    
+    #map {
+        height: 300px;
+    }
+    
+    .stats-grid {
+        flex-direction: column;
+        gap: 15px;
+    }
+    
+    .stat-item {
+        padding: 5px;
+    }
+    
+    .ged-card {
+        margin-bottom: 20px;
+    }
+    
+    .current-school-status {
+        padding: 10px;
+    }
+    
+    /* Responsive para tienda */
+    .marketplace-nav {
+        flex-direction: column;
+        gap: 0.5rem;
+        align-items: center;
+    }
+    
+    .marketplace-nav .nav-item {
+        width: 100%;
+        max-width: 300px;
+        text-align: center;
+    }
+    
+    .marketplace-nav .nav-item .nav-link {
+        display: block;
+        width: 100%;
+        padding: 0.75rem 1.5rem;
+        font-size: 1rem;
+    }
+    
+    .marketplace-menu-section h3 {
+        font-size: 1.5rem;
+        margin-bottom: 0.75rem;
+    }
+    
+    .tiendas-patrocinadas-section {
+        padding: 3rem 0;
+    }
+    
+    .vh-60 {
+        min-height: 50vh;
+    }
+    
+    /* Layouts generales */
+    .escuela-layout main#main,
+    .default-layout main#main {
+        margin-top: 0 !important;
+        padding: 15px 0;
+    }
+    
+    .escuela-layout .main-container,
+    .default-layout .main-container {
+        margin-top: 0 !important;
+    }
+    
+    /* ✅ FORZAR QUE SOLO EL LOGO Y TOGGLER SEAN VISIBLES */
+    .navbar-contextual > .navbar-container > :not(.navbar-brand-section):not(.navbar-toggler) {
+        display: none !important;
+        width: 0 !important;
+        height: 0 !important;
+        overflow: hidden !important;
+        opacity: 0 !important;
+        visibility: hidden !important;
+    }
+}
+
+/* ================================================== */
+/* MÓVILES (767px a 576px)                           */
+/* ================================================== */
+
+@media (max-width: 767.98px) {
+    /* Responsive general */
+    .navbar-contextual {
+        min-height: 50px !important;
+        height: 50px !important;
+        padding: 0 8px !important;
+    }
+    
+    body {
+        padding-top: 50px !important;
+    }
+    
+    main#main {
+        min-height: calc(100vh - 50px) !important;
+    }
+    
+    .navbar-brand, .navbar-brand-section {
+        height: 50px;
+        padding-left: 8px !important;
+    }
+    
+    .navbar-logo {
+        height: 32px !important;
+    }
+    
+    .navbar-toggler {
+        padding: 4px 6px !important;
+        width: 40px;
+        height: 40px;
+    }
+    
+    /* ✅ ESTILOS PARA SIDEBAR MÓVIL EN PANTALLAS PEQUEÑAS */
+    .ged-mobile-sidebar {
+        width: 85% !important;
+        max-width: 300px !important;
+    }
+    
+    .ged-mobile-sidebar .mobile-nav-menu .nav-link {
+        /* ✅ MANTENER TEXTO BLANCO Y NEGRITA */
+        color: white !important;
+        font-weight: bolder !important;
+        padding: 12px 16px !important;
+        font-size: 0.95rem !important;
+    }
+    
+    .ged-mobile-sidebar .mobile-nav-menu .nav-link i {
+        font-size: 1rem !important;
+        width: 22px !important;
+    }
+    
+    .ged-mobile-sidebar .mobile-nav-menu .dropdown-item {
+        padding: 10px 16px 10px 35px !important;
+    }
+    
+    /* Responsive para escuelas */
+    .ged-default-select-escuela {
+        padding: 15px 0;
+    }
+    
+    .ged-default-select-escuela .card {
+        margin-bottom: 15px;
+    }
+    
+    .encargado-search-section {
+        padding: 20px;
+    }
+    
+    .pre-registro-section {
+        padding: 20px;
+    }
+    
+    .pre-registro-title {
+        font-size: 1.2rem;
+    }
+    
+    .pre-registro-card {
+        padding: 15px;
+    }
+    
+    .pre-registro-school-name {
+        font-size: 1.1rem;
+    }
+    
+    .pre-registro-detail {
+        font-size: 0.85rem;
+    }
+    
+    .pre-registro-btn {
+        padding: 6px 12px;
+        font-size: 0.8rem;
+    }
+    
+    .school-list-container {
+        max-height: 300px;
+    }
+    
+    .quick-actions-grid {
+        gap: 6px;
+    }
+    
+    .quick-action-btn {
+        padding: 8px;
+        font-size: 0.9rem;
+    }
+    
+    #map {
+        height: 250px;
+    }
+    
+    /* Horarios */
+    #horario-grid {
+        font-size: 0.75rem;
+    }
+    
+    #horario-grid th,
+    #horario-grid td {
+        padding: 2px !important;
+    }
+    
+    .horario-cell {
+        height: 30px;
+    }
+    
+    .horario-legend {
+        flex-direction: column;
+        gap: 8px;
+    }
+    
+    /* Lista de items */
+    .ged-list-item {
+        padding: 6px 0;
+        font-size: 0.85rem;
+    }
+    
+    /* Responsive para tienda */
+    .productos-mas-vendidos {
+        padding: 1.5rem 0;
+    }
+    
+    .categoria-header {
+        padding: 1rem;
+    }
+    
+    .categoria-icon {
+        font-size: 2rem;
+    }
+    
+    .producto-imagen-placeholder {
+        height: 80px;
+    }
+    
+    .producto-badge {
+        font-size: 0.7rem;
+        padding: 0.2rem 0.4rem;
+    }
+    
+    .precio-actual {
+        font-size: 1.1rem;
+    }
+    
+    .tienda-card {
+        padding: 1.5rem;
+    }
+    
+    .tienda-logo {
+        font-size: 2.5rem;
+    }
+    
+    .tienda-rating {
+        font-size: 1rem;
+    }
+    
+    .tienda-badge {
+        font-size: 0.7rem;
+    }
+    
+    /* Banner tiendas patrocinadas */
+    #banner-tiendas-patrocinadas {
+        width: 90%;
+        margin: 15px auto;
+        padding: 15px;
+    }
+    
+    #banner-tiendas-patrocinadas h2 {
+        font-size: 1.5rem;
+    }
+}
+
+/* ================================================== */
+/* MÓVILES PEQUEÑOS (575px y menos)                   */
+/* ================================================== */
+
+@media (max-width: 575.98px) {
+    /* Responsive general */
+    .navbar-contextual {
+        min-height: 45px !important;
+        height: 45px !important;
+        padding: 0 5px !important;
+    }
+    
+    body {
+        padding-top: 45px !important;
+    }
+    
+    main#main {
+        min-height: calc(100vh - 45px) !important;
+    }
+    
+    .navbar-brand, .navbar-brand-section {
+        min-width: 100px !important;
+        padding-left: 5px !important;
+        height: 45px;
+    }
+    
+    .navbar-logo {
+        height: 28px !important;
+    }
+    
+    .navbar-toggler {
+        padding: 0.3rem 0.5rem !important;
+        margin-left: 5px !important;
+        width: 36px;
+        height: 36px;
+    }
+    
+    /* ✅ ESTILOS PARA SIDEBAR MÓVIL EN PANTALLAS MUY PEQUEÑAS */
+    .ged-mobile-sidebar {
+        width: 90% !important;
+        max-width: 280px !important;
+    }
+    
+    .ged-mobile-sidebar .offcanvas-header {
+        padding: 1rem !important;
+        height: 60px !important;
+    }
+    
+    .ged-mobile-sidebar .offcanvas-title {
+        font-size: 1.1rem !important;
+    }
+    
+    .ged-mobile-sidebar .mobile-nav-menu .nav-link {
+        /* ✅ MANTENER TEXTO BLANCO Y NEGRITA */
+        color: white !important;
+        font-weight: bolder !important;
+        padding: 10px 14px !important;
+        font-size: 0.9rem !important;
+    }
+    
+    .ged-mobile-sidebar .mobile-nav-menu .nav-link i {
+        font-size: 0.9rem !important;
+        width: 20px !important;
+    }
+    
+    .ged-mobile-sidebar .mobile-nav-menu .dropdown-item {
+        padding: 8px 14px 8px 30px !important;
+    }
+    
+    .ged-mobile-sidebar .mobile-school-info,
+    .ged-mobile-sidebar .mobile-social-section,
+    .ged-mobile-sidebar .mobile-session-controls {
+        padding: 12px !important;
+    }
+    
+    .social-icon-circle {
+        width: 40px !important;
+        height: 40px !important;
+        font-size: 1rem !important;
+    }
+}
+
+/* ================================================== */
+/* RESPONSIVE ADICIONAL PARA ORIENTACIÓN              */
+/* ================================================== */
+
+@media (max-width: 768px) and (orientation: portrait) {
+    .landing-carousel {
+        height: 55vh !important;
+    }
+}
+
+@media (max-width: 768px) and (orientation: landscape) {
+    .landing-carousel {
+        height: 70vh !important;
+    }
+    
+    .landing-carousel .landing-caption {
+        bottom: 10%;
+    }
+}
+
+/* ================================================== */
+/* CORRECCIONES DE VIEWPORT                           */
+/* ================================================== */
+
+.vw-100 {
+    width: 100vw !important;
+    max-width: 100vw !important;
+}
+
+/* ================================================== */
+/* IMPORTANT OVERRIDES                                */
+/* ================================================== */
+
+.width-100-vw {
+    width: 100vw !important;
+}
+
+.max-width-100-vw {
+    max-width: 100vw !important;
+}
+
+.min-width-100-vw {
+    min-width: 100vw !important;
+}
+
+/* ================================================== */
+/* FIX PARA BOOTSTRAP COLLAPSE                        */
+/* ================================================== */
+
+.navbar-collapse {
+    transition: none !important;
+}
+
+#navbarGedCollapse {
+    position: absolute !important;
+    top: 100% !important;
+    left: 0 !important;
+    right: 0 !important;
+    background: linear-gradient(135deg, #6c3483 0%, #5B2C6F 100%) !important;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2) !important;
+    z-index: 1020 !important;
+    padding: 15px !important;
+    max-height: calc(100vh - 60px) !important;
+    overflow-y: auto !important;
+    border-top: 1px solid rgba(255,255,255,0.1) !important;
+}
+
+#navbarGedCollapse .main-navigation {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+}
+
+#navbarGedCollapse .nav-link {
+    /* ✅ MANTENER TEXTO BLANCO Y NEGRITA */
+    color: white !important;
+    font-weight: bolder !important;
+    width: 100% !important;
+    padding: 12px 15px !important;
+    border-radius: 4px !important;
+    margin-bottom: 5px !important;
+}
+
+#navbarGedCollapse .nav-link:hover {
+    background: rgba(255,255,255,0.15) !important;
+}
+
+/* ================================================== */
+/* ACCESIBILIDAD                                      */
+/* ================================================== */
+
+.navbar-contextual:focus-within {
+    outline: 2px solid rgba(255,255,255,0.5) !important;
+    outline-offset: -2px !important;
+}
+
+.navbar-toggler:focus,
+.navbar-toggler:active {
+    outline: 2px solid rgba(255,255,255,0.8) !important;
+    outline-offset: 2px !important;
+}
+
+/* ================================================== */
+/* PRINT STYLES                                       */
+/* ================================================== */
+
+@media print {
+    .navbar-contextual {
+        position: static !important;
+        background: white !important;
+        color: black !important;
+        box-shadow: none !important;
+        border-bottom: 1px solid #ddd !important;
+    }
+    
+    .navbar-logo {
+        filter: grayscale(100%) brightness(0%) !important;
+    }
+    
+    .navbar-social-section,
+    .session-controls,
+    .navbar-toggler {
+        display: none !important;
+    }
+}
+
+/* ================================================== */
+/* ESTILOS DE DEPURACIÓN PARA EL MENÚ MÓVIL           */
+/* ================================================== */
+
+@media (max-width: 991.98px) {
+    /* ✅ ESTILOS ADICIONALES PARA ASEGURAR VISIBILIDAD DEL SIDEBAR */
+    .ged-mobile-sidebar .offcanvas-body {
+        opacity: 1 !important;
+        visibility: visible !important;
+    }
+    
+    .ged-mobile-sidebar .mobile-menu-container {
+        opacity: 1 !important;
+        visibility: visible !important;
+    }
+    
+    /* ✅ FORZAR VISIBILIDAD DEL MENÚ SI ESTÁ OCULTO */
+    .mobile-nav-menu:empty {
+        min-height: 100px;
+        display: flex !important;
+        align-items: center;
+        justify-content: center;
+        color: rgba(255,255,255,0.7);
+        font-style: italic;
+    }
+    
+    .mobile-nav-menu:empty::after {
+        content: "Menú no disponible";
+    }
+    
+    /* ✅ ESTILOS PARA BOTONES EN EL SIDEBAR MÓVIL */
+    .mobile-session-controls .btn {
+        display: block !important;
+        width: 100% !important;
+        margin-bottom: 10px !important;
+        padding: 10px !important;
+        font-size: 1rem !important;
+        text-align: center !important;
+    }
+    
+    .mobile-session-controls .btn:last-child {
+        margin-bottom: 0 !important;
+    }
+    
+    /* ✅ ESTILOS PARA REDES SOCIALES EN MÓVIL */
+    .mobile-social-section .social-icon-circle {
+        display: inline-flex !important;
+        align-items: center;
+        justify-content: center;
+        margin: 0 5px !important;
+    }
+}
+
+/* ================================================== */
+/* ✅ COMPATIBILIDAD CON NAVBAR 95% VIEWPORT          */
+/* ================================================== */
+
+@media (min-width: 992px) {
+    /* ✅ GARANTIZAR QUE EN DESKTOP EL NAVBAR SEA 95% */
+    .navbar-contextual {
+        width: 95% !important;
+        margin: 0 0 0 auto !important; /* ✅ 5% margen derecho */
+    }
+    
+    .navbar-menu-section {
+        flex: 0 0 45.5% !important; /* ✅ Menú 45.5% en desktop */
+        max-width: 45.5% !important;
+    }
+}
+
+/* ================================================== */
+/* ✅ CORRECCIONES ESPECÍFICAS PARA PANTALLAS GRANDES */
+/* ================================================== */
+
+@media (min-width: 1400px) {
+    .navbar-menu-section {
+        flex: 0 0 45.5% !important; /* ✅ Mantener 45.5% en pantallas grandes */
+    }
+    
+    .main-navigation .nav-link {
+        /* ✅ MANTENER TEXTO BLANCO Y NEGRITA */
+        color: white !important;
+        font-weight: bolder !important;
+    }
+}
+
+/* ================================================== */
+/* ✅ COMPATIBILIDAD CON SISTEMA GED 95% VIEWPORT     */
+/* ================================================== */
+
+/* ✅ ESTILOS ADICIONALES PARA VERIFICACIÓN VISUAL */
+.debug-viewport-95 .navbar-contextual {
+    outline: 2px dashed rgba(0, 255, 0, 0.5) !important;
+    position: relative !important;
+}
+
+.debug-viewport-95 .navbar-contextual::before {
+    content: '95% viewport';
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    background: rgba(0, 0, 0, 0.7);
+    color: white;
+    padding: 2px 6px;
+    font-size: 10px;
+    border-radius: 3px;
+    z-index: 9999;
+}
+
+.debug-viewport-95 .navbar-menu-section {
+    outline: 2px dashed rgba(255, 255, 0, 0.5) !important;
+    position: relative !important;
+}
+
+.debug-viewport-95 .navbar-menu-section::before {
+    content: '45.5%';
+    position: absolute;
+    top: 5px;
+    left: 5px;
+    background: rgba(0, 0, 0, 0.7);
+    color: white;
+    padding: 2px 6px;
+    font-size: 10px;
+    border-radius: 3px;
+    z-index: 9999;
+}
+
+/* ================================================== */
+/* ✅ COMPATIBILIDAD CON MENÚ TEXTO BLANCO Y NEGRITA  */
+/* ================================================== */
+
+/* ✅ ASEGURAR QUE EL TEXTO DEL MENÚ SEA BLANCO Y NEGRITA EN TODOS LOS ESTADOS */
+.main-navigation .nav-link,
+.main-navigation .nav-link:hover,
+.main-navigation .nav-link:focus,
+.main-navigation .nav-link.active,
+.mobile-nav-menu .nav-link,
+.mobile-nav-menu .nav-link:hover,
+.mobile-nav-menu .nav-link.active,
+#navbarGedCollapse .nav-link,
+#navbarGedCollapse .nav-link:hover {
+    color: white !important;
+    font-weight: bolder !important;
+}
+
+/* ✅ CORRECCIÓN ESPECÍFICA PARA DROPDOWNS */
+.dropdown-item,
+.dropdown-item:hover,
+.dropdown-item:focus {
+    color: white !important;
+}
+
+/* ================================================== */
+/* ✅ MEDIA QUERIES ESPECIALES PARA AJUSTES FINALES   */
+/* ================================================== */
+
+@media (min-width: 992px) and (max-width: 1199.98px) {
+    /* ✅ AJUSTES ESPECÍFICOS PARA TABLETS EN HORIZONTAL */
+    .navbar-menu-section {
+        flex: 0 0 45.5% !important; /* ✅ Mantener 45.5% en tablets */
+    }
+    
+    .main-navigation .nav-link {
+        /* ✅ TEXTO BLANCO Y NEGRITA EN TABLETS TAMBIÉN */
+        color: white !important;
+        font-weight: bolder !important;
+        padding: 10px 14px !important;
+        font-size: 0.95rem !important;
+    }
+}
+
+@media (max-width: 991.98px) {
+    /* ✅ RESET COMPLETO PARA MÓVIL - NAVBAR A 100% */
+    .navbar-contextual {
+        width: 100vw !important;
+        margin: 0 !important;
+        padding: 0 15px !important;
+    }
+}
+
+/* ================================================== */
+/* ✅ NOTA DE ACTUALIZACIÓN                           */
+/* ================================================== */
+/*
+ * ACTUALIZADO: 2024-01-22
+ * CAMBIOS PRINCIPALES:
+ * 1. Compatibilidad con navbar 95% viewport (antes 90%)
+ * 2. Compatibilidad con menú 45.5% (antes 40.5%)
+ * 3. Texto del menú en blanco y font-weight: bolder
+ * 4. Ajustes en todos los breakpoints para mantener proporciones
+ * 5. Texto en móvil también en blanco y negrita
+ */
+ /* ================================================== */
+/* ✅ AJUSTES RESPONSIVOS PARA SUBMENÚS ANIDADOS     */
+/* ================================================== */
+
+@media (max-width: 991.98px) {
+    /* Ocultar flechas de submenús en móvil */
+    .dropdown-submenu > a::after {
+        display: none !important;
+    }
+    
+    /* Ajustar padding para submenús en móvil */
+    .mobile-submenu-item.level-1 .nav-link {
+        padding-left: 30px !important;
+    }
+    
+    .mobile-submenu-item.level-2 .nav-link {
+        padding-left: 45px !important;
+    }
+    
+    .mobile-submenu-item.level-3 .nav-link {
+        padding-left: 60px !important;
+    }
+}

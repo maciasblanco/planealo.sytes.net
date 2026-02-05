@@ -1,0 +1,125 @@
+﻿MAPEO SISTEMA PLANEALO 
+Fecha: sáb. 24/01/2026  8:48:29,71 
+Directorio: C:\xampp\htdocs\planealo_desarrollo 
+========================================== 
+ 
+1. MODELOS ENCONTRADOS 
+---------------------- 
+- Alergias 
+- AportesSemanales 
+- Asistencia 
+- AtletasRegistro 
+- CambioPasswordForm 
+- CategoriaAtletas 
+- CategoriaProducto 
+- ComprasEscuela 
+- ContactForm 
+- Discapacidad 
+- EncargadoEscuela 
+- Enfermedades 
+- Escuela 
+- Estado 
+- LoginForm 
+- Menu 
+- Municipio 
+- Nacionalidad 
+- Orden 
+- OrdenItem 
+- Parroquia 
+- Producto 
+- RegistroRepresentantes 
+- Sexo 
+- TasaDolar 
+- Tienda 
+- User 
+- Vendedor 
+Total modelos: 28 
+Modelos vac�os: 0 
+Total relaciones: 53 
+ 
+2. CONTROLADORES PRINCIPALES 
+---------------------------- 
+- CoordenadasController 
+- MunicipioController 
+- ParroquiaController 
+- PerfilController 
+- probar_fuentes 
+- SiteController 
+- TasaDolarController 
+Total controladores: 7 
+Controladores vac�os: 0 
+Total acciones: 42 
+ 
+3. COMPONENTES 
+-------------- 
+- EscuelaRequiredFilter 
+- EscuelaSession 
+- MenuWidget 
+- MenuWidgetfunciona50% 
+- MobileDetectComponent 
+- ModuleMenuWidget 
+- OwnAporteRule 
+- RepresentedAporteRule 
+Total componentes: 8 
+Componentes vac�os: 0 
+ 
+4. WIDGETS 
+---------- 
+- Alert 
+- TasaDolarWidget 
+Total widgets: 2 
+Widgets vac�os: 0 
+ 
+5. MODULOS 
+---------- 
+MODULO: acces 
+- Controladores: 2 
+- Vistas: 0 
+ 
+MODULO: aportes 
+- Controladores: 1 
+- Vistas: 0 
+ 
+MODULO: atletas 
+- Controladores: 3 
+- Vistas: 0 
+ 
+MODULO: escuela_club 
+- Controladores: 5 
+- Vistas: 0 
+ 
+MODULO: ged 
+- Controladores: 1 
+- Vistas: 0 
+ 
+MODULO: reportes 
+- Controladores: 2 
+- Vistas: 0 
+ 
+MODULO: tienda 
+- Controladores: 4 
+- Vistas: 0 
+ 
+Total m�dulos: 7 
+M�dulos vac�os: 0 
+ 
+6. VISTAS 
+--------- 
+Vistas en directorio raiz: 16 
+Vistas en widgets: 5 
+Vistas en componentes: 8 
+Total vistas: 29 
+ 
+7. RESUMEN FINAL 
+================ 
+MODELOS:            28 (0 vac�os) 
+RELACIONES:         53 
+CONTROLADORES:      25 (0 vac�os) 
+ACCIONES:           42 
+COMPONENTES:        8 (0 vac�os) 
+WIDGETS:            2 (0 vac�os) 
+MODULOS:            7 (0 vac�os) 
+VISTAS:             29 
+ 
+Relaciones por modelo: 189% 
+Acciones por controlador: 168% 

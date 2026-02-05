@@ -1,0 +1,822 @@
+/* =================================================================
+ * _modules.css - ESTILOS ESPECÍFICOS DE MÓDULOS GED
+ * Consolidado de: ged-modulo-dashboard.css, ged-modulo-escuelas.css,
+ *                 ged-modulo-landing.css (solo estilos únicos),
+ *                 ged-modulo-tienda.css (solo estilos únicos)
+ * Fecha: 2024-01-16 (actualizado para consolidación)
+ * ================================================================= */
+
+/* ===== MÓDULO DASHBOARD ===== */
+
+/* Separador de landing page */
+.landing-page hr.my-4 {
+    border-color: rgba(255,255,255,0.2);
+    width: 80%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* Acciones de landing */
+.landing-actions {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+/* Mensajes de bienvenida */
+.welcome-message {
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    border: 2px solid var(--ged-primary);
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(44, 90, 160, 0.1);
+}
+
+.welcome-message.authenticated {
+    border-color: var(--ged-secondary);
+}
+
+.welcome-message .card-title {
+    color: var(--ged-primary);
+    font-weight: 700;
+    margin-bottom: 20px;
+}
+
+.welcome-message.authenticated .card-title {
+    color: var(--ged-secondary);
+}
+
+.welcome-message .card-text {
+    color: #555;
+    font-size: 1.1rem;
+    line-height: 1.6;
+    max-width: 700px;
+    margin: 0 auto;
+}
+
+/* Footer de landing */
+.landing-footer {
+    background: linear-gradient(135deg, #343a40 0%, #212529 100%);
+    color: white;
+    margin-top: 60px;
+    position: relative;
+}
+
+.landing-footer::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--ged-primary), var(--ged-secondary));
+}
+
+.landing-footer p {
+    margin: 0;
+}
+
+.landing-footer .text-muted {
+    color: rgba(255,255,255,0.7) !important;
+}
+
+/* ===== MÓDULO ESCUELAS ===== */
+
+/* Estado de pre-registro */
+.pre-registro-status {
+    background: var(--ged-warning);
+    color: white;
+    padding: 4px 10px;
+    border-radius: 15px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.pre-registro-details {
+    margin-bottom: 15px;
+}
+
+.pre-registro-detail {
+    display: flex;
+    align-items: center;
+    margin-bottom: 8px;
+    font-size: 0.9rem;
+    color: #6c757d;
+}
+
+.pre-registro-detail i {
+    margin-right: 8px;
+    color: var(--ged-info);
+    width: 16px;
+    text-align: center;
+}
+
+.pre-registro-empty {
+    text-align: center;
+    padding: 40px 20px;
+    color: #6c757d;
+}
+
+.pre-registro-empty i {
+    font-size: 3rem;
+    color: #dee2e6;
+    margin-bottom: 15px;
+}
+
+.pre-registro-empty h4 {
+    color: #6c757d;
+    margin-bottom: 10px;
+}
+
+/* Layout de landing page index */
+.site-index .hero-section {
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 40px 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+}
+
+.site-index .schools-section {
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 40px 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+}
+
+.site-index .container {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+    padding: 0 15px !important;
+}
+
+/* Imágenes de escuelas en landing */
+.site-index .school-logo-container {
+    position: relative;
+    height: 200px;
+    overflow: hidden;
+}
+
+.site-index .school-logo {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
+    transition: transform 0.3s ease;
+}
+
+.site-index .school-card:hover .school-logo {
+    transform: scale(1.05);
+}
+
+/* Badge responsivo */
+.site-index .school-badge {
+    background: rgba(40, 167, 69, 0.9);
+    color: white;
+    padding: 4px 8px;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-weight: 500;
+}
+
+/* ===== MÓDULO LANDING ===== */
+
+/* Correcciones para body y main */
+body {
+    padding-top: var(--navbar-height-desktop) !important;
+    position: relative;
+    z-index: 1;
+    overflow-y: auto;
+    overflow-x: hidden !important;
+}
+
+/* Main content con margen superior corregido */
+main#main {
+    margin-top: 0 !important;
+    padding-top: 0 !important;
+    position: relative;
+    z-index: 1;
+    min-height: calc(100vh - var(--navbar-height-desktop)) !important;
+}
+
+/* Estilos para completar registro */
+.escuela-completar-registro .section-title {
+    border-bottom: 2px solid #007bff;
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+    margin-top: 30px;
+}
+
+.escuela-completar-registro .section-title h4 {
+    color: #007bff;
+    margin: 0;
+    font-weight: 600;
+}
+
+.escuela-completar-registro .current-logo {
+    text-align: center;
+    padding: 15px;
+    border: 1px dashed #ddd;
+    border-radius: 4px;
+    background-color: #f8f9fa;
+}
+
+.escuela-completar-registro .current-logo p {
+    margin-bottom: 10px;
+    font-weight: 500;
+}
+
+.escuela-completar-registro .form-text.text-muted {
+    font-size: 0.875rem;
+    margin-top: 0.25rem;
+}
+
+.escuela-completar-registro .alert {
+    border-left: 4px solid;
+}
+
+.escuela-completar-registro .alert-success {
+    border-left-color: #28a745;
+}
+
+.escuela-completar-registro .alert-info {
+    border-left-color: #17a2b8;
+}
+
+/* Estilos para el mapa */
+#map {
+    background-color: #f8f9fa;
+}
+
+.leaflet-container {
+    font-family: inherit;
+}
+
+.leaflet-popup-content {
+    font-size: 0.875rem;
+}
+
+/* Estilos para tarjetas de estadísticas */
+.stat-card {
+    padding: 15px 0;
+    transition: transform 0.2s ease;
+}
+
+.stat-card:hover {
+    transform: translateY(-2px);
+}
+
+.stat-card h3 {
+    margin-bottom: 5px;
+    font-weight: bold;
+    font-size: 2rem;
+}
+
+.progress {
+    background-color: #e9ecef;
+    border-radius: 4px;
+}
+
+.quick-actions-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.list-group-item {
+    border-left: 4px solid #ffc107;
+    margin-bottom: 8px;
+    border-radius: 8px !important;
+    transition: all 0.3s ease;
+}
+
+.list-group-item:hover {
+    border-left-color: #e0a800;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.stats-grid {
+    display: flex;
+    justify-content: space-between;
+    text-align: center;
+}
+
+.stat-item {
+    flex: 1;
+    padding: 10px;
+}
+
+.stat-number {
+    display: block;
+    font-size: 1.8rem;
+    font-weight: bold;
+    color: #007bff;
+}
+
+.stat-label {
+    display: block;
+    font-size: 0.8rem;
+    color: #6c757d;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.ged-list-item {
+    border: none;
+    padding: 12px 15px;
+    transition: background-color 0.3s ease;
+}
+
+.ged-list-item:hover {
+    background-color: #f8f9fa;
+}
+
+/* ===== HORARIOS ===== */
+.horario-cell {
+    cursor: pointer;
+    transition: all 0.3s ease;
+    height: 40px;
+    vertical-align: middle;
+    border: 1px solid #dee2e6;
+}
+
+.horario-cell:hover {
+    transform: scale(1.05);
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    z-index: 1;
+    position: relative;
+}
+
+/* NO SELECCIONADO - Colores por turno */
+.horario-cell.morning {
+    background-color: #fff3cd !important;
+}
+
+.horario-cell.afternoon {
+    background-color: #d1ecf1 !important;
+}
+
+.horario-cell.evening {
+    background-color: #e2e3e5 !important;
+}
+
+/* SELECCIONADO - Rojo para indicar selección */
+.horario-cell.selected {
+    background-color: #dc3545 !important;
+    color: white;
+    border-color: #c82333;
+}
+
+.horario-cell.selected .fas {
+    color: white !important;
+}
+
+/* Iconos para estados */
+.horario-cell .fa-times {
+    color: #6c757d;
+}
+
+.horario-cell.selected .fa-check {
+    color: white !important;
+}
+
+/* Estilos de la tabla */
+#horario-grid th {
+    text-align: center;
+    font-size: 0.85rem;
+    background-color: #f8f9fa;
+    position: sticky;
+    top: 0;
+}
+
+#horario-grid td {
+    text-align: center;
+    padding: 5px !important;
+}
+
+/* Leyenda de colores */
+.horario-legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    margin-bottom: 15px;
+}
+
+.legend-item {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 0.85rem;
+}
+
+.legend-color {
+    width: 20px;
+    height: 20px;
+    border: 1px solid #ddd;
+    border-radius: 3px;
+}
+
+.legend-morning { background-color: #fff3cd; }
+.legend-afternoon { background-color: #d1ecf1; }
+.legend-evening { background-color: #e2e3e5; }
+.legend-selected { background-color: #dc3545; }
+
+/* ===== PRODUCTOS MÁS VENDIDOS ===== */
+.productos-mas-vendidos {
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    position: relative;
+    overflow: hidden;
+}
+
+.productos-mas-vendidos::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, #28a745, #007bff, #fd7e14, #dc3545);
+}
+
+/* Headers de categoría */
+.categoria-header {
+    color: white;
+    padding: 1.5rem;
+    text-align: center;
+    position: relative;
+}
+
+.categoria-header.vestimenta-bg {
+    background: linear-gradient(135deg, #28a745, #20c997);
+}
+
+.categoria-header.alimentacion-bg {
+    background: linear-gradient(135deg, #fd7e14, #ffc107);
+}
+
+.categoria-header.implementos-bg {
+    background: linear-gradient(135deg, #007bff, #17a2b8);
+}
+
+.categoria-header.suplementos-bg {
+    background: linear-gradient(135deg, #dc3545, #e83e8c);
+}
+
+.categoria-icon {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+    opacity: 0.9;
+}
+
+.categoria-title {
+    font-size: 1.25rem;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+}
+
+.categoria-badge {
+    background: rgba(255,255,255,0.2);
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
+    font-size: 0.85rem;
+}
+
+.categoria-body {
+    padding: 1.5rem;
+}
+
+/* Items de producto */
+.producto-item {
+    border-bottom: 1px solid #eee;
+    padding: 1rem 0;
+    transition: all 0.3s ease;
+}
+
+.producto-item:last-child {
+    border-bottom: none;
+}
+
+.producto-item:hover {
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    padding: 1rem;
+}
+
+.producto-header {
+    position: relative;
+    margin-bottom: 1rem;
+}
+
+.producto-imagen-placeholder {
+    height: 100px;
+    background: #f8f9fa;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #6c757d;
+    font-size: 2rem;
+    overflow: hidden;
+}
+
+.producto-imagen-placeholder img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.producto-badge {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: rgba(255,193,7,0.95);
+    color: #212529;
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    z-index: 1;
+}
+
+.producto-badge.badge-top {
+    background: rgba(220,53,69,0.95);
+    color: white;
+}
+
+.producto-nombre {
+    font-size: 0.95rem;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+    color: #343a40;
+}
+
+.producto-precio {
+    margin-bottom: 0.75rem;
+}
+
+.precio-actual {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #28a745;
+}
+
+/* Contador total */
+.total-vendidos-card {
+    background: linear-gradient(135deg, #6f42c1, #6610f2);
+    color: white;
+    padding: 2rem;
+    border-radius: 15px;
+    display: inline-flex;
+    align-items: center;
+    gap: 1.5rem;
+    box-shadow: 0 10px 20px rgba(102,16,242,0.3);
+}
+
+.total-icon {
+    font-size: 3rem;
+    opacity: 0.9;
+}
+
+.total-titulo {
+    font-size: 1.1rem;
+    margin-bottom: 0.5rem;
+    opacity: 0.9;
+}
+
+.total-cantidad {
+    font-size: 2.5rem;
+    font-weight: 700;
+    line-height: 1;
+}
+
+/* ===== TIENDAS PATROCINADAS ===== */
+.tiendas-patrocinadas-section {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 60vh;
+    display: flex;
+    align-items: center;
+    position: relative;
+    overflow: hidden;
+    padding: 4rem 0;
+}
+
+.tiendas-patrocinadas-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"><path fill="rgba(255,255,255,0.1)" fill-opacity="1" d="M0,96L48,112C96,128,192,160,288,160C384,160,480,128,576,112C672,96,768,96,864,112C960,128,1056,160,1152,160C1248,160,1344,128,1392,112L1440,96L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path></svg>');
+    background-size: cover;
+    background-position: bottom;
+}
+
+.vh-60 {
+    min-height: 60vh;
+    height: auto;
+}
+
+.tienda-badge {
+    position: absolute;
+    top: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #ffc107;
+    color: #000;
+    padding: 0.25rem 1rem;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: bold;
+}
+
+.tienda-logo {
+    font-size: 3rem;
+    color: #667eea;
+    margin-bottom: 1rem;
+}
+
+.tienda-nombre {
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 0.5rem;
+}
+
+.tienda-desc {
+    color: #666;
+    font-size: 0.9rem;
+    margin-bottom: 1rem;
+}
+
+.tienda-rating {
+    color: #ffc107;
+    font-size: 1.2rem;
+    margin-bottom: 1.5rem;
+}
+
+/* ===== MÓDULO TIENDA ===== */
+
+/* Contenido promocional de tienda */
+.store-promo-content {
+    text-align: center;
+}
+
+.store-icon-large {
+    font-size: 3rem;
+    opacity: 0.8;
+}
+
+.store-title {
+    font-weight: 700;
+    color: #2c3e50;
+    margin-bottom: 0.5rem;
+}
+
+.store-description {
+    color: #6c757d;
+    font-size: 0.9rem;
+    line-height: 1.4;
+}
+
+.store-features {
+    text-align: left;
+    margin-top: 1rem;
+}
+
+.store-feature-item {
+    padding: 0.25rem 0;
+    font-size: 0.85rem;
+    color: #495057;
+}
+
+.tienda-price {
+    font-weight: 700;
+    color: #28a745;
+    font-size: 1.1rem;
+}
+
+.tienda-discount {
+    color: #dc3545;
+    text-decoration: line-through;
+    font-size: 0.9rem;
+    margin-left: 0.5rem;
+}
+
+.tienda-badge {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 0.25rem 0.5rem;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+/* ===== ESTILOS PARA LANDING PAGE ===== */
+.landing-page {
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    min-height: 100vh;
+}
+
+/* Hero Section */
+.landing-page .hero-section {
+    background: linear-gradient(135deg, #2c5aa0 0%, #1e3a8a 100%);
+    color: white;
+    padding: 60px 0;
+    margin-bottom: 40px;
+    position: relative;
+    overflow: hidden;
+}
+
+.landing-page .hero-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="none"><path d="M0,0 L100,0 L100,100 Z" fill="rgba(255,255,255,0.05)"/></svg>');
+    background-size: cover;
+    opacity: 0.1;
+}
+
+.landing-page .hero-section .container {
+    position: relative;
+    z-index: 1;
+}
+
+.landing-page .ged-logo {
+    max-height: 150px;
+    max-width: 200px;
+    width: auto;
+    height: auto;
+    filter: drop-shadow(0 4px 8px rgba(0,0,0,0.3));
+    transition: transform 0.3s ease;
+}
+
+.landing-page .ged-logo:hover {
+    transform: scale(1.05);
+}
+
+.landing-page .display-4 {
+    font-weight: 700;
+    margin-bottom: 1rem;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+.landing-page .lead {
+    font-size: 1.25rem;
+    opacity: 0.9;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+/* Banner tiendas patrocinadas */
+#banner-tiendas-patrocinadas {
+    width: 90%;
+    margin: 15px auto;
+    padding: 15px;
+}
+
+#banner-tiendas-patrocinadas h2 {
+    font-size: 1.5rem;
+}
+
+/* Marketplace nav */
+.marketplace-nav {
+    flex-direction: column;
+    gap: 0.5rem;
+    align-items: center;
+}
+
+.marketplace-nav .nav-item {
+    width: 100%;
+    max-width: 300px;
+    text-align: center;
+}
+
+.marketplace-nav .nav-item .nav-link {
+    display: block;
+    width: 100%;
+    padding: 0.75rem 1.5rem;
+    font-size: 1rem;
+}
+
+.marketplace-menu-section h3 {
+    font-size: 1.5rem;
+    margin-bottom: 0.75rem;
+}
+
+/* Animaciones específicas para landing */
+.landing-page .hero-section,
+.landing-page .features-section,
+.landing-page .landing-footer {
+    animation: fadeInUp 0.6s ease forwards;
+}
+
+.landing-page .hero-section { animation-delay: 0.1s; }
+.landing-page .features-section { animation-delay: 0.2s; }
+.landing-page .landing-footer { animation-delay: 0.3s; }
