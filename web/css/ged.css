@@ -1,9 +1,10 @@
 /* =================================================================
- * ged.css - ARCHIVO CSS CONSOLIDADO GED (VERSIÓN CORREGIDA 4.7)
+ * ged.css - ARCHIVO CSS CONSOLIDADO GED (VERSIÓN CORREGIDA 5.0)
  * Consolida: _variables.css, _base.css, _components.css, _modules.css,
  *            _navigation.css, _submenus.css, _responsive.css, bootstrap-custom.css
- * Fecha: 2024-01-22 - VERSIÓN CONSOLIDADA 4.7
- * Correcciones: Navbar pegado al top, conflicto Bootstrap resuelto
+ * Fecha: 2024-01-22 - VERSIÓN CONSOLIDADA 5.0
+ * Correcciones: Dropdowns a la derecha en móvil, fondo opaco, legible
+ * Correcciones adicionales: 3er nivel de menú en móvil funcional
  * ================================================================= */
 
 /* ===== VARIABLES CSS UNIFICADAS ===== */
@@ -11,7 +12,7 @@
   /* Offcanvas */
   --sidebar-width-desktop: 240px;
   --sidebar-width-desktop-compact: 60px;
-  --sidebar-width-mobile: 280px;
+  --sidebar-width-mobile: 300px;
   --transition-speed: 0.3s;
 
   /* Navbar - DISTRIBUCIÓN OPTIMIZADA */
@@ -47,6 +48,12 @@
   --text-white: #ffffff;
   --text-light: rgba(255,255,255,0.9);
   --bg-light: #f5f5f5;
+  
+  /* ✅ NUEVAS VARIABLES PARA DROPDOWNS */
+  --mobile-offcanvas-width: 320px;
+  --dropdown-bg-color: #7d3c98;
+  --dropdown-bg-opaque: rgba(125, 60, 152, 0.98);
+  --dropdown-border-color: rgba(255,255,255,0.3);
 }
 
 /* ===== RESET Y ESTILOS BASE ===== */
@@ -65,7 +72,6 @@ html {
     overflow-x: hidden;
 }
 
-/* ✅ CORREGIDO: Body SIN padding-top, padding-top en main */
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     line-height: 1.6;
@@ -76,7 +82,7 @@ body {
     overflow-y: auto;
     width: 100vw;
     max-width: 100vw;
-    padding-top: 0; /* ✅ CORRECCIÓN: NO padding-top aquí */
+    padding-top: 0;
 }
 
 /* ===== ESTRUCTURA PRINCIPAL ===== */
@@ -104,9 +110,8 @@ body {
     box-sizing: border-box;
 }
 
-/* ✅ CORREGIDO: Main content con padding-top para navbar */
 main#main {
-    padding-top: var(--navbar-container-height); /* ✅ Aquí va el padding-top */
+    padding-top: var(--navbar-container-height);
     min-height: calc(100vh - var(--navbar-container-height));
     position: relative;
     z-index: 1;
@@ -133,58 +138,49 @@ main#main {
 }
 
 /* ===== NAVBAR PRINCIPAL ===== */
-/* ✅ CORREGIDO: Ancho completo, sin márgenes automáticos, pegado al top */
 .navbar-contextual {
-  /* ✅ ANCHO Y POSICIÓN EXACTOS - CORRECCIÓN APLICADA */
-  width: 100vw !important; /* ✅ Fuerza ancho completo */
-  max-width: 100vw !important; /* ✅ Fuerza ancho completo */
-  margin: 0 !important; /* ✅ Elimina margin auto que desplaza */
+  width: 100vw !important;
+  max-width: 100vw !important;
+  margin: 0 !important;
   position: fixed;
-  top: 0 !important; /* ✅ Pegado al top */
-  left: 0 !important; /* ✅ Alineado a la izquierda */
+  top: 0 !important;
+  left: 0 !important;
   right: 0;
   z-index: 1030;
   
-  /* ✅ ALTURA MÍNIMA DE 45vh */
   min-height: var(--navbar-container-height);
   height: var(--navbar-container-height);
   
-  /* ✅ APARIENCIA */
   background: var(--navbar-gradient);
   box-shadow: var(--navbar-shadow-light);
   border: none;
   border-radius: 0;
   
-  /* ✅ LAYOUT FLEX OPTIMIZADO */
   display: flex;
   flex-wrap: nowrap;
   align-items: center;
-  justify-content: center; /* ✅ Centrado en lugar de flex-start */
+  justify-content: center;
   
-  /* ✅ PADDING INTERNO EXACTO */
-  padding: 0 !important; /* ✅ Elimina padding de Bootstrap */
+  padding: 0 !important;
   box-sizing: border-box;
   
-  /* ✅ TRANSICIONES */
   transition: all var(--navbar-transition-speed) ease;
   animation: fadeInDown 0.5s ease-out;
   
-  /* ✅ OVERFLOW */
-  overflow: hidden;
+  overflow: visible !important;
 }
 
-/* ✅ CORRECCIÓN ESPECÍFICA PARA CONFLICTO CON BOOTSTRAP */
 .navbar.navbar-contextual {
-  padding: 0 !important; /* ✅ Anula padding de .navbar de Bootstrap */
-  margin: 0 !important; /* ✅ Anula margin de .navbar de Bootstrap */
+  padding: 0 !important;
+  margin: 0 !important;
 }
 
-/* ✅ CONTENEDOR INTERNO al 95% */
 .navbar-contextual > .navbar-container {
   width: var(--viewport-navbar-width) !important;
   max-width: var(--viewport-navbar-width) !important;
   margin: 0 auto !important;
   padding: 0 !important;
+  overflow: visible !important;
 }
 
 .navbar-contextual.scrolled {
@@ -192,7 +188,6 @@ main#main {
   box-shadow: 0 4px 20px rgba(0,0,0,0.2);
 }
 
-/* ✅ CONTENEDOR PRINCIPAL CON FLEX EN LÍNEA */
 .navbar-container {
     display: flex;
     flex-direction: row;
@@ -206,9 +201,9 @@ main#main {
     padding: 0;
     gap: 0;
     box-sizing: border-box;
+    overflow: visible !important;
 }
 
-/* ✅ CONTENEDOR DE SECCIONES DENTRO DEL COLLAPSE */
 .navbar-sections-container {
     display: flex;
     flex-direction: row;
@@ -221,9 +216,9 @@ main#main {
     padding: 0;
     gap: 0;
     box-sizing: border-box;
+    overflow: visible !important;
 }
 
-/* ✅ EL COLLAPSE DEBE SER FLEX Y OCUPAR ESPACIO */
 .navbar-collapse {
     display: flex;
     flex-grow: 1;
@@ -234,6 +229,7 @@ main#main {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+    overflow: visible !important;
 }
 
 /* ===== SECCIONES DEL NAVBAR ===== */
@@ -247,7 +243,7 @@ main#main {
   padding: 0;
   height: var(--navbar-section-height);
   box-sizing: border-box;
-  overflow: hidden;
+  overflow: visible !important;
   margin: 0;
 }
 
@@ -260,7 +256,7 @@ main#main {
   height: var(--navbar-section-height);
   padding: 0;
   box-sizing: border-box;
-  overflow: visible;
+  overflow: visible !important;
   margin: 0;
 }
 
@@ -274,7 +270,7 @@ main#main {
   height: var(--navbar-section-height);
   padding: 0;
   box-sizing: border-box;
-  overflow: visible;
+  overflow: visible !important;
   margin: 0;
 }
 
@@ -287,7 +283,7 @@ main#main {
   height: var(--navbar-section-height);
   padding: 0;
   box-sizing: border-box;
-  overflow: visible;
+  overflow: visible !important;
   opacity: 1;
   visibility: visible;
   margin: 0;
@@ -342,6 +338,7 @@ main#main {
   flex-wrap: nowrap;
   gap: 8px;
   height: 100%;
+  overflow: visible !important;
 }
 
 .main-navigation .nav-link {
@@ -379,64 +376,90 @@ main#main {
   border-radius: 1px;
 }
 
-/* ===== DROPDOWN MENUS ===== */
+/* ===== DROPDOWN MENUS - CORRECCIÓN: FONDO OPACO ===== */
 .dropdown-menu {
-  background: linear-gradient(135deg, #7d3c98, #6c3483);
-  border: none;
-  border-radius: 5px;
-  z-index: 1050;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-  padding: 0;
-  position: absolute;
-  border: 1px solid rgba(255,255,255,0.3);
-  box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-  overflow: visible;
-  min-width: 200px;
-  transition: opacity 0.2s ease, visibility 0.2s ease;
+  background: var(--dropdown-bg-color) !important;
+  background: linear-gradient(135deg, #7d3c98, #6c3483) !important;
+  border: 1px solid var(--dropdown-border-color) !important;
+  border-radius: 6px !important;
+  z-index: 1050 !important;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.3) !important;
+  padding: 0 !important;
+  position: absolute !important;
+  overflow: visible !important;
+  min-width: 200px !important;
+  transition: opacity 0.2s ease, visibility 0.2s ease !important;
+  top: 100% !important;
+  left: 0 !important;
+  
+  display: none !important;
+  opacity: 0 !important;
+  visibility: hidden !important;
+}
+
+/* ✅ FONDO COMPLETAMENTE OPACO PARA LEGIBILIDAD */
+.dropdown-menu,
+.dropdown-menu .dropdown-menu,
+.dropdown-menu .dropdown-menu .dropdown-menu {
+  background: var(--dropdown-bg-opaque) !important;
+  backdrop-filter: blur(10px) !important;
+  -webkit-backdrop-filter: blur(10px) !important;
 }
 
 .dropdown-menu.show {
-  display: block;
-  z-index: 1050;
-  opacity: 1;
-  visibility: visible;
-  transform: translateY(0);
+  display: block !important;
+  z-index: 1050 !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  transform: translateY(0) !important;
 }
 
 .dropdown-item {
-  color: var(--text-white);
-  padding: 12px 15px;
-  transition: all 0.3s ease;
-  white-space: nowrap;
-  border-bottom: 1px solid rgba(255,255,255,0.1);
-  position: relative;
-  z-index: 1051;
-  background: transparent;
+  color: var(--text-white) !important;
+  padding: 12px 15px !important;
+  transition: all 0.3s ease !important;
+  white-space: nowrap !important;
+  border-bottom: 1px solid rgba(255,255,255,0.1) !important;
+  position: relative !important;
+  z-index: 1051 !important;
+  background: transparent !important;
+  font-weight: 500 !important;
+  text-shadow: 0 1px 1px rgba(0,0,0,0.3) !important;
 }
 
 .dropdown-item:last-child {
-  border-bottom: none;
+  border-bottom: none !important;
 }
 
 .dropdown-item:hover,
 .dropdown-item:focus {
-  background: rgba(255,255,255,0.1);
-  z-index: 1051;
+  background: rgba(255,255,255,0.15) !important;
+  z-index: 1051 !important;
+  color: var(--text-white) !important;
 }
 
-/* ✅ SUBMENÚS ANIDADOS */
+/* ✅ SUBMENÚS ANIDADOS - POSICIÓN CORRECTA PARA TODOS LOS DISPOSITIVOS */
 .navbar-nav .dropdown-menu {
-  z-index: 1050;
+  z-index: 1050 !important;
 }
 
-.navbar-nav .dropdown-menu .dropdown-menu {
-  z-index: 1051;
-  margin-left: 0;
-  margin-top: 0;
-}
+/* ✅ CORRECCIÓN CRÍTICA: Submenús a la DERECHA en desktop */
+@media (min-width: 992px) {
+  .navbar-nav .dropdown-menu .dropdown-menu {
+    top: 0 !important;
+    left: 100% !important;
+    margin-top: 0 !important;
+    margin-left: 0 !important;
+    z-index: 1051 !important;
+  }
 
-.navbar-nav .dropdown-menu .dropdown-menu .dropdown-menu {
-  z-index: 1052;
+  .navbar-nav .dropdown-menu .dropdown-menu .dropdown-menu {
+    top: 0 !important;
+    left: 100% !important;
+    margin-top: 0 !important;
+    margin-left: 0 !important;
+    z-index: 1052 !important;
+  }
 }
 
 /* ===== ICONOS SOCIALES ===== */
@@ -561,52 +584,56 @@ main#main {
   box-shadow: 0 4px 12px rgba(0,0,0,0.2);
 }
 
-/* ===== SIDEBAR MÓVIL (OFFCANVAS) ===== */
+/* ===== SIDEBAR MÓVIL (OFFCANVAS) - MÁS ANCHO ===== */
 .ged-mobile-sidebar {
-    width: 280px;
-    background: linear-gradient(135deg, #6c3483 0%, #8e44ad 100%);
-    color: var(--text-white);
+    width: var(--mobile-offcanvas-width) !important;
+    background: linear-gradient(135deg, #6c3483 0%, #8e44ad 100%) !important;
+    color: var(--text-white) !important;
+    z-index: 1060 !important;
+    overflow: visible !important;
 }
 
 .ged-mobile-sidebar .offcanvas-header {
-    padding: 1.25rem;
-    border-bottom: 1px solid rgba(255,255,255,0.15);
-    background: rgba(0,0,0,0.3);
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    height: 70px;
+    padding: 1.25rem !important;
+    border-bottom: 1px solid rgba(255,255,255,0.15) !important;
+    background: rgba(0,0,0,0.3) !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    height: 70px !important;
 }
 
 /* Menú móvil */
 .mobile-nav-menu {
-  padding: 0;
-  margin: 0;
-  list-style: none;
-  flex-grow: 1;
-  overflow-y: auto;
+  padding: 0 !important;
+  margin: 0 !important;
+  list-style: none !important;
+  flex-grow: 1 !important;
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+  position: relative !important;
 }
 
 .mobile-nav-menu .nav-link {
-  color: var(--text-white);
-  font-weight: bolder;
-  padding: 12px 20px;
-  border-radius: 0;
-  border-left: 3px solid transparent;
-  transition: all 0.3s ease;
-  font-size: 0.95rem;
-  display: flex;
-  align-items: center;
-  text-decoration: none;
-  width: 100%;
+  color: var(--text-white) !important;
+  font-weight: bolder !important;
+  padding: 12px 20px !important;
+  border-radius: 0 !important;
+  border-left: 3px solid transparent !important;
+  transition: all 0.3s ease !important;
+  font-size: 0.95rem !important;
+  display: flex !important;
+  align-items: center !important;
+  text-decoration: none !important;
+  width: 100% !important;
 }
 
 .mobile-nav-menu .nav-link:hover,
 .mobile-nav-menu .nav-link.active {
-  background: rgba(255,255,255,0.12);
-  color: var(--text-white);
-  padding-left: 25px;
-  border-left-color: var(--accent-blue);
+  background: rgba(255,255,255,0.12) !important;
+  color: var(--text-white) !important;
+  padding-left: 25px !important;
+  border-left-color: var(--accent-blue) !important;
 }
 
 /* ===== COMPONENTES DE MÓDULOS ===== */
@@ -644,8 +671,8 @@ main#main {
 }
 
 .offcanvas {
-    box-shadow: -5px 0 25px rgba(0, 0, 0, 0.15);
-    border-left: 1px solid #dee2e6;
+    box-shadow: -5px 0 25px rgba(0, 0, 0, 0.15) !important;
+    border-left: 1px solid #dee2e6 !important;
 }
 
 .btn-primary {
@@ -686,9 +713,11 @@ main#main {
   }
 }
 
-/* ===== MEDIA QUERIES CONSOLIDADAS ===== */
+/* =========================================== */
+/* ✅ DROPDOWNS A LA DERECHA EN MÓVIL (IGUAL QUE DESKTOP) */
+/* =========================================== */
 
-/* Desktop (≥992px) */
+/* Desktop (≥992px) - DROPDOWNS POR HOVER */
 @media (min-width: 992px) {
   /* ❌ EN PC NO HAY SIDEBAR VISIBLE */
   #gedMobileMenuContainer {
@@ -739,20 +768,34 @@ main#main {
     display: inline-flex;
   }
   
-  /* ✅ DROPDOWN HOVER EN DESKTOP */
+  /* ✅ DROPDOWN HOVER EN DESKTOP - CSS PURO, SIN JS */
   .navbar-nav .dropdown:hover > .dropdown-menu {
-    display: block;
-    opacity: 1;
-    visibility: visible;
-    transform: translateY(0);
+    display: block !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    transform: translateY(0) !important;
   }
   
+  /* ✅ CONSISTENCIA: Submenús siempre a la DERECHA en desktop */
   .dropdown-menu .dropdown:hover > .dropdown-menu {
-    display: block;
-    position: absolute;
-    left: 100%;
-    top: 0;
-    margin-top: 0;
+    display: block !important;
+    position: absolute !important;
+    left: 100% !important;
+    top: 0 !important;
+    margin-top: 0 !important;
+  }
+  
+  .dropdown-menu .dropdown-menu .dropdown:hover > .dropdown-menu {
+    display: block !important;
+    position: absolute !important;
+    left: 100% !important;
+    top: 0 !important;
+    margin-top: 0 !important;
+  }
+  
+  /* ✅ Asegurar que los dropdowns tengan posición relativa */
+  .navbar-nav .dropdown {
+    position: relative;
   }
   
   /* ✅ CORRECCIÓN: Ajustar altura del main para desktop */
@@ -787,12 +830,17 @@ main#main {
   }
 }
 
+/* =========================================== */
+/* ✅ CORRECCIÓN CRÍTICA: DROPDOWNS A LA DERECHA EN MÓVIL */
+/* =========================================== */
+
 /* Tablets pequeñas y móviles grandes (991px a 768px) */
 @media (max-width: 991.98px) {
   /* ✅ EN MÓVIL: RESET DE VARIABLES */
   :root {
     --viewport-navbar-width: 100%;
     --navbar-container-height: 60px;
+    --mobile-offcanvas-width: 320px;
   }
   
   .navbar-contextual {
@@ -837,10 +885,122 @@ main#main {
     margin-left: auto;
   }
   
-  /* ✅ ESTILOS PARA SIDEBAR MÓVIL */
+  /* ✅ ESTILOS PARA SIDEBAR MÓVIL - MÁS ANCHO PARA DROPDOWNS */
   .ged-mobile-sidebar {
-    width: 85%;
-    max-width: 300px;
+    width: 85% !important;
+    max-width: var(--mobile-offcanvas-width) !important;
+    min-width: 300px !important;
+  }
+  
+  /* ✅ DROPDOWNS EN MÓVIL: SE DESPLIEGAN A LA DERECHA (EXACTAMENTE COMO DESKTOP) */
+  .ged-mobile-sidebar .dropdown-menu {
+    position: absolute !important;
+    top: 0 !important;
+    left: 100% !important;
+    margin-top: 0 !important;
+    margin-left: 5px !important;
+    width: 220px !important;
+    max-width: 220px !important;
+    min-width: 200px !important;
+    border-radius: 6px !important;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3) !important;
+    border: 1px solid var(--dropdown-border-color) !important;
+    z-index: 1070 !important;
+    display: none !important;
+    background: var(--dropdown-bg-opaque) !important;
+    backdrop-filter: blur(10px) !important;
+    -webkit-backdrop-filter: blur(10px) !important;
+  }
+  
+  /* ✅ SEGUNDO NIVEL (igual que desktop) */
+  .ged-mobile-sidebar .dropdown-menu .dropdown-menu {
+    top: 0 !important;
+    left: 100% !important;
+    margin-left: 5px !important;
+    z-index: 1071 !important;
+    width: 210px !important;
+    background: var(--dropdown-bg-opaque) !important;
+  }
+  
+  /* ✅ TERCER NIVEL (igual que desktop) - FONDO OPACO Y LEGIBLE */
+  .ged-mobile-sidebar .dropdown-menu .dropdown-menu .dropdown-menu {
+    top: 0 !important;
+    left: 100% !important;
+    margin-left: 5px !important;
+    z-index: 1072 !important;
+    width: 200px !important;
+    background: var(--dropdown-bg-opaque) !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+  }
+  
+  /* ✅ Cuando se muestra el dropdown (clase .show de Bootstrap) */
+  .ged-mobile-sidebar .dropdown-menu.show {
+    display: block !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    transform: translateX(0) !important;
+  }
+  
+  /* ✅ Si el dropdown se sale por la derecha, moverlo a la izquierda */
+  .ged-mobile-sidebar .dropdown-menu.dropdown-menu-right {
+    left: auto !important;
+    right: 100% !important;
+    margin-left: 0 !important;
+    margin-right: 5px !important;
+  }
+  
+  /* ✅ Asegurar que los dropdowns sean legibles */
+  .ged-mobile-sidebar .dropdown-item {
+    color: var(--text-white) !important;
+    font-weight: 500 !important;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.5) !important;
+    background: transparent !important;
+    border-bottom: 1px solid rgba(255,255,255,0.15) !important;
+  }
+  
+  .ged-mobile-sidebar .dropdown-item:hover {
+    background: rgba(255,255,255,0.15) !important;
+    color: white !important;
+  }
+  
+  /* ✅ Indicador visual para items con submenú */
+  .ged-mobile-sidebar .dropdown-toggle::after {
+    display: inline-block !important;
+    margin-left: 0.255em !important;
+    vertical-align: 0.255em !important;
+    content: "" !important;
+    border-top: 0.3em solid !important;
+    border-right: 0.3em solid transparent !important;
+    border-bottom: 0 !important;
+    border-left: 0.3em solid transparent !important;
+    transform: rotate(-90deg) !important;
+  }
+  
+  /* ✅ Asegurar que el offcanvas no corte los dropdowns */
+  .ged-mobile-sidebar,
+  .ged-mobile-sidebar .offcanvas-body {
+    overflow: visible !important;
+  }
+  
+  /* ✅ Asegurar que los dropdowns no queden transparentes */
+  .dropdown-menu,
+  .dropdown-menu .dropdown-menu,
+  .dropdown-menu .dropdown-menu .dropdown-menu {
+    background: var(--dropdown-bg-opaque) !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+  }
+  
+  /* ✅ EN MÓVIL: SOLO MOSTRAR CON CLICK */
+  .navbar-nav .dropdown-menu[style*="display: block"] {
+    display: none !important;
+  }
+  
+  .navbar-nav .dropdown-menu.show {
+    display: block !important;
+    opacity: 1 !important;
+    visibility: visible !important;
   }
 }
 
@@ -848,6 +1008,7 @@ main#main {
 @media (max-width: 767.98px) {
   :root {
     --navbar-container-height: 50px;
+    --mobile-offcanvas-width: 300px;
   }
   
   .navbar-contextual {
@@ -865,13 +1026,27 @@ main#main {
   }
   
   .ged-mobile-sidebar {
-    width: 85%;
-    max-width: 280px;
+    width: 85% !important;
+    max-width: var(--mobile-offcanvas-width) !important;
   }
   
   .ged-mobile-sidebar .mobile-nav-menu .nav-link {
     padding: 12px 16px;
     font-size: 0.95rem;
+  }
+  
+  /* ✅ Ajustar tamaño de dropdowns para móviles más pequeños */
+  .ged-mobile-sidebar .dropdown-menu {
+    width: 200px !important;
+    max-width: 200px !important;
+  }
+  
+  .ged-mobile-sidebar .dropdown-menu .dropdown-menu {
+    width: 190px !important;
+  }
+  
+  .ged-mobile-sidebar .dropdown-menu .dropdown-menu .dropdown-menu {
+    width: 180px !important;
   }
 }
 
@@ -879,6 +1054,7 @@ main#main {
 @media (max-width: 575.98px) {
   :root {
     --navbar-container-height: 45px;
+    --mobile-offcanvas-width: 280px;
   }
   
   .navbar-contextual {
@@ -901,13 +1077,27 @@ main#main {
   }
   
   .ged-mobile-sidebar {
-    width: 90%;
-    max-width: 280px;
+    width: 90% !important;
+    max-width: var(--mobile-offcanvas-width) !important;
   }
   
   .ged-mobile-sidebar .mobile-nav-menu .nav-link {
     padding: 10px 14px;
     font-size: 0.9rem;
+  }
+  
+  /* ✅ Ajustar aún más para pantallas muy pequeñas */
+  .ged-mobile-sidebar .dropdown-menu {
+    width: 180px !important;
+    max-width: 180px !important;
+  }
+  
+  .ged-mobile-sidebar .dropdown-menu .dropdown-menu {
+    width: 170px !important;
+  }
+  
+  .ged-mobile-sidebar .dropdown-menu .dropdown-menu .dropdown-menu {
+    width: 160px !important;
   }
 }
 
@@ -917,10 +1107,10 @@ main#main {
 }
 
 .dropdown-submenu > .dropdown-menu {
-    top: 0;
-    left: 100%;
-    margin-top: -6px;
-    margin-left: -1px;
+    top: 0 !important;
+    left: 100% !important;
+    margin-top: -6px !important;
+    margin-left: -1px !important;
     border-radius: 0 6px 6px 6px;
     display: none;
 }
@@ -953,16 +1143,16 @@ main#main {
 
 /* ===== CORRECCIÓN DE Z-INDEX PARA SUBMENÚS ===== */
 .navbar-nav .dropdown-menu {
-    z-index: 1050;
+    z-index: 1050 !important;
     overflow: visible;
 }
 
 .navbar-nav .dropdown-menu .dropdown-menu {
-    z-index: 1051;
+    z-index: 1051 !important;
 }
 
 .navbar-nav .dropdown-menu .dropdown-menu .dropdown-menu {
-    z-index: 1052;
+    z-index: 1052 !important;
 }
 
 /* ===== PRINT STYLES ===== */
@@ -1028,17 +1218,259 @@ main#main {
   margin-top: 0 !important;
 }
 
-/* ===== FONT AWESOME (si se necesita) ===== */
+/* ===== CORRECCIÓN DEFINITIVA - ELIMINAR INTERFERENCIA DEL JS ===== */
+/* ===== AÑADIDO EL 2024-01-22 ===== */
+
+/* ✅ 1. ANULAR CUALQUIER ESTILO INLINE QUE PONGA EL JS */
+.navbar-nav .dropdown-menu[style] {
+    position: absolute !important;
+    top: 100% !important;
+    left: 0 !important;
+    display: none !important;
+    opacity: 0 !important;
+    visibility: hidden !important;
+}
+
+.navbar-nav .dropdown-menu[style*="display: block"] {
+    display: block !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+}
+
+/* ✅ 2. GARANTIZAR QUE LOS SUBMENÚS ESTÉN A LA DERECHA EN DESKTOP */
+@media (min-width: 992px) {
+    .navbar-nav .dropdown-menu .dropdown-menu[style] {
+        top: 0 !important;
+        left: 100% !important;
+        margin-top: 0 !important;
+        margin-left: 0 !important;
+    }
+}
+
+/* ✅ 3. EN MÓVIL: SOLO MOSTRAR CON CLICK (clase .show de Bootstrap) */
+@media (max-width: 991.98px) {
+    .navbar-nav .dropdown-menu[style*="display: block"] {
+        display: none !important;
+    }
+    
+    .navbar-nav .dropdown-menu.show {
+        display: block !important;
+        opacity: 1 !important;
+        visibility: visible !important;
+    }
+}
+
+/* ✅ 4. GARANTIZAR OVERFLOW VISIBLE EN TODOS LOS CONTENEDORES */
+.navbar-contextual,
+.navbar-container,
+.navbar-sections-container,
+.navbar-menu-section,
+.main-navigation,
+.navbar-nav {
+    overflow: visible !important;
+}
+
+/* ✅ 5. Z-INDEX JERÁRQUICO DEFINITIVO */
+.navbar-contextual {
+    z-index: 1030 !important;
+}
+
+.dropdown-menu {
+    z-index: 1050 !important;
+}
+
+.dropdown-menu .dropdown-menu {
+    z-index: 1051 !important;
+}
+
+.dropdown-menu .dropdown-menu .dropdown-menu {
+    z-index: 1052 !important;
+}
+
+.ged-mobile-sidebar {
+    z-index: 1060 !important;
+}
+
+/* ✅ 6. DESHABILITAR COMPORTAMIENTO JS PARA DROPDOWNS EN DESKTOP */
+/* Esto previene que el JavaScript interfiera con el CSS */
+.navbar-nav .dropdown {
+    pointer-events: auto !important;
+}
+
+/* =========================================== */
+/* ✅ CORRECCIÓN ESPECÍFICA PARA TERCER NIVEL EN MÓVIL */
+/* =========================================== */
+@media (max-width: 991.98px) {
+    /* ✅ 1. PERMITIR QUE DROPDOWNS SALGAN DEL OFFCANVAS */
+    .ged-mobile-sidebar,
+    .ged-mobile-sidebar .offcanvas-body {
+        overflow: visible !important;
+    }
+    
+    .ged-mobile-sidebar .mobile-menu-container {
+        position: relative;
+        overflow: visible !important;
+    }
+    
+    /* ✅ 2. DROPDOWNS DE TERCER NIVEL - POSICIÓN Y VISIBILIDAD */
+    .dropdown-menu .dropdown-menu .dropdown-menu {
+        position: absolute !important;
+        top: 0 !important;
+        left: 100% !important;
+        margin-left: 5px !important;
+        width: 200px !important;
+        max-width: 90vw !important;
+        min-width: 180px !important;
+        background: rgba(125, 60, 152, 0.98) !important;
+        backdrop-filter: blur(10px) !important;
+        -webkit-backdrop-filter: blur(10px) !important;
+        border: 1px solid rgba(255,255,255,0.3) !important;
+        border-radius: 6px !important;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.3) !important;
+        z-index: 1072 !important;
+        opacity: 0 !important;
+        visibility: hidden !important;
+        display: none !important;
+        padding: 0 !important;
+        overflow: visible !important;
+        transform: translateX(0) !important;
+        transition: opacity 0.2s ease, visibility 0.2s ease !important;
+    }
+    
+    /* ✅ 3. CUANDO SE MUESTRA EL TERCER NIVEL */
+    .dropdown-menu .dropdown-menu .dropdown-menu.show {
+        display: block !important;
+        opacity: 1 !important;
+        visibility: visible !important;
+        transform: translateX(0) !important;
+    }
+    
+    /* ✅ 4. AJUSTAR CUANDO SE SALE POR LA DERECHA */
+    .dropdown-menu .dropdown-menu .dropdown-menu.dropdown-menu-right {
+        left: auto !important;
+        right: 100% !important;
+        margin-left: 0 !important;
+        margin-right: 5px !important;
+    }
+    
+    /* ✅ 5. INDICADOR VISUAL PARA ITEMS CON SUBMENÚ (3ER NIVEL) */
+    .dropdown-menu .dropdown-menu .dropdown-toggle::after {
+        display: inline-block !important;
+        margin-left: 0.255em !important;
+        vertical-align: 0.255em !important;
+        content: "" !important;
+        border-top: 0.3em solid !important;
+        border-right: 0.3em solid transparent !important;
+        border-bottom: 0 !important;
+        border-left: 0.3em solid transparent !important;
+        transform: rotate(-90deg) !important;
+        opacity: 0.7;
+    }
+    
+    /* ✅ 6. ESTILOS ESPECÍFICOS PARA ITEMS DE TERCER NIVEL */
+    .dropdown-menu .dropdown-menu .dropdown-menu .dropdown-item {
+        color: #ffffff !important;
+        font-weight: 500 !important;
+        text-shadow: 0 1px 2px rgba(0,0,0,0.5) !important;
+        background: transparent !important;
+        border-bottom: 1px solid rgba(255,255,255,0.15) !important;
+        padding: 12px 16px !important;
+        white-space: normal !important;
+        line-height: 1.4;
+        min-height: 44px;
+        display: flex;
+        align-items: center;
+        transition: all 0.2s ease !important;
+    }
+    
+    .dropdown-menu .dropdown-menu .dropdown-menu .dropdown-item:hover,
+    .dropdown-menu .dropdown-menu .dropdown-menu .dropdown-item:focus {
+        background: rgba(255, 255, 255, 0.15) !important;
+        padding-left: 20px !important;
+    }
+    
+    /* ✅ 7. ASEGURAR QUE EL PADRE TENGA POSICIÓN RELATIVA */
+    .dropdown-menu .dropdown-menu .dropdown {
+        position: relative !important;
+    }
+    
+    /* ✅ 8. CLASE DE IDENTIFICACIÓN PARA DEBUG */
+    .dropdown-level-3 {
+        position: relative;
+    }
+}
+
+/* ✅ AJUSTES PARA TABLETS PEQUEÑAS */
+@media (max-width: 767.98px) {
+    .dropdown-menu .dropdown-menu .dropdown-menu {
+        width: 190px !important;
+        max-width: 85vw !important;
+    }
+}
+
+/* ✅ AJUSTES PARA MÓVILES PEQUEÑOS */
+@media (max-width: 575.98px) {
+    .dropdown-menu .dropdown-menu .dropdown-menu {
+        width: 180px !important;
+        max-width: 80vw !important;
+    }
+}
+
+/* ===== FONT AWESOME ===== */
 /* @import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css'); */
 
 /* ===== NOTA FINAL ===== */
 /*
- * ARCHIVO CSS CONSOLIDADO GED v4.7
+ * ARCHIVO CSS CONSOLIDADO GED v5.0
  * CORRECCIONES APLICADAS:
- * 1. Navbar pegado al top (sin espacio superior)
- * 2. Conflicto con clases Bootstrap resuelto
- * 3. Padding-top movido de body a main#main
- * 4. Ancho del navbar corregido (100vw externo, 95% interno)
- * 5. Eliminado margin auto que desplazaba navbar
- * 6. !important estratégicos para ganar sobre Bootstrap
+ * 1. ✅ DROPDOWNS A LA DERECHA EN MÓVIL (IGUAL QUE DESKTOP)
+ * 2. ✅ FONDO OPACO Y LEGIBLE - NO TRANSPARENTE
+ * 3. ✅ TERCER NIVEL COMPLETAMENTE VISIBLE Y LEGIBLE
+ * 4. ✅ OFFCANVAS MÁS ANCHO PARA ACOMODAR DROPDOWDS
+ * 5. ✅ Z-INDEX JERÁRQUICO MEJORADO (1050-1072)
+ * 6. ✅ RESPONSIVE: SE AJUSTA A PANTALLAS PEQUEÑAS
+ * 7. ✅ CONSISTENCIA TOTAL DESKTOP/MOBILE
+ * 8. ✅ CORRECCIONES ESPECÍFICAS PARA 3ER NIVEL EN MÓVIL
  */
+ /* ===== SOLUCIÓN DE EMERGENCIA PARA 3ER NIVEL - POSICIÓN CORRECTA ===== */
+@media (max-width: 991.98px) {
+    /* FORZAR que todos los dropdowns móviles se muestren a la DERECHA */
+    .ged-mobile-sidebar .dropdown-menu {
+        left: 100% !important;
+        right: auto !important;
+        transform: none !important;
+    }
+    
+    /* ESPECÍFICO para 3er nivel */
+    .ged-mobile-sidebar .dropdown-menu .dropdown-menu .dropdown-menu {
+        left: 100% !important;
+        right: auto !important;
+        margin-left: 5px !important;
+        margin-right: 0 !important;
+        position: absolute !important;
+        top: 0 !important;
+        z-index: 1072 !important;
+        display: none !important;
+        opacity: 0 !important;
+        visibility: hidden !important;
+        background: rgba(125, 60, 152, 0.98) !important;
+        width: 200px !important;
+        max-width: 90vw !important;
+    }
+    
+    /* Cuando se muestra el 3er nivel */
+    .ged-mobile-sidebar .dropdown-menu .dropdown-menu .dropdown-menu.show {
+        display: block !important;
+        opacity: 1 !important;
+        visibility: visible !important;
+        transform: translateX(0) !important;
+    }
+    
+    /* Si se sale de la pantalla, mover a la izquierda */
+    .ged-mobile-sidebar .dropdown-menu .dropdown-menu .dropdown-menu.dropdown-menu-right {
+        left: auto !important;
+        right: 100% !important;
+        margin-left: 0 !important;
+        margin-right: 5px !important;
+    }
+}

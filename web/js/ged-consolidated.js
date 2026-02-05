@@ -3,7 +3,8 @@
  * Reemplaza: ged.js, ged-init.js, gedOffCanvas-module.js, 
  *            navbarWidth-module.js, mapa-module.js, 
  *            horario-selector.js, reportes-module.js, tienda-module.js
- * Fecha: 2024-01-22 - VERSIÓN CONSOLIDADA 4.6
+ * Fecha: 2024-01-22 - VERSIÓN CONSOLIDADA 5.3
+ * Correcciones: Menú móvil COMPLETAMENTE funcional con 2do y 3er nivel
  * ================================================================= */
 
 'use strict';
@@ -18,11 +19,11 @@ const gedSystem = {
         mobileBreakpoint: 992,
         modules: {
             map: null,
-            offcanvas: null,
             reportes: null,
             tienda: null
         },
-        events: {}
+        events: {},
+        isMobileMenuOpen: false
     },
     
     // ===== CONSTANTES =====
@@ -30,14 +31,7 @@ const gedSystem = {
         NAVBAR_HEIGHT_DESKTOP: '45vh',
         NAVBAR_HEIGHT_MOBILE: '60px',
         NAVBAR_WIDTH_DESKTOP: '95%',
-        NAVBAR_WIDTH_MOBILE: '100%',
-        Z_INDEX: {
-            NAVBAR: 1030,
-            DROPDOWN_LEVEL_1: 1050,
-            DROPDOWN_LEVEL_2: 1060,
-            DROPDOWN_LEVEL_3: 1070,
-            OFFCANVAS: 1040
-        }
+        NAVBAR_WIDTH_MOBILE: '100%'
     },
     
     // ===== INICIALIZACIÓN PRINCIPAL =====
@@ -47,12 +41,11 @@ const gedSystem = {
             return;
         }
         
-        console.log('🚀 GED System v4.6 - Inicializando sistema consolidado');
+        console.log('🚀 GED System v5.3 - Inicializando sistema consolidado');
         
         // Inicializar componentes en orden
         this.initNavbar();
-        this.initOffCanvas();
-        this.initDropdowns();
+        this.initMobileMenuSystem(); // NUEVO: Sistema de menú móvil
         this.initEventListeners();
         this.initResponsiveChecks();
         this.initDynamicModules();
@@ -81,9 +74,9 @@ const gedSystem = {
         
         console.log('🎯 Inicializando navbar consolidado');
         
-        // ✅ FUNCIÓN ÚNICA para ajustar navbar (reemplaza navbarWidth-module.js)
+        // ✅ FUNCIÓN ÚNICA para ajustar navbar
         const adjustNavbar = () => {
-            const isDesktop = window.innerWidth >= this.CONSTANTS.mobileBreakpoint;
+            const isDesktop = window.innerWidth >= this.config.mobileBreakpoint;
             
             if (isDesktop) {
                 // Desktop: 95% width, 45vh height
@@ -124,7 +117,7 @@ const gedSystem = {
     
     // ===== DISTRIBUCIÓN EXACTA DEL NAVBAR =====
     ensureNavbarDistribution: function() {
-        if (window.innerWidth < this.CONSTANTS.mobileBreakpoint) return;
+        if (window.innerWidth < this.config.mobileBreakpoint) return;
         
         const sections = {
             brand: document.querySelector('.navbar-brand-section'),
@@ -182,183 +175,338 @@ const gedSystem = {
         });
     },
     
-    // ===== OFFCANVAS UNIFICADO =====
-    initOffCanvas: function() {
+    // ===== SISTEMA DE MENÚ MÓVIL - SOLUCIÓN COMPLETA =====
+    initMobileMenuSystem: function() {
+        console.log('📱 Inicializando sistema de menú móvil');
+        
+        // Configurar offcanvas
+        this.setupOffcanvas();
+        
+        // Preparar estructura inicial
+        this.prepareMobileMenuStructure();
+    },
+    
+    // ===== CONFIGURAR OFFCANVAS =====
+    setupOffcanvas: function() {
         const offcanvasEl = document.getElementById('mobileMenuOffcanvas');
         if (!offcanvasEl) {
-            console.log('ℹ️ Offcanvas no encontrado (puede ser normal en desktop)');
+            console.log('ℹ️ Offcanvas no encontrado');
             return;
         }
         
-        console.log('📱 Inicializando offcanvas móvil');
+        console.log('🔧 Configurando offcanvas móvil');
         
-        // Inicializar con Bootstrap si está disponible
-        if (typeof bootstrap !== 'undefined' && bootstrap.Offcanvas) {
-            const offcanvas = new bootstrap.Offcanvas(offcanvasEl);
-            this.config.modules.offcanvas = offcanvas;
-            
-            // Manejar eventos
-            offcanvasEl.addEventListener('show.bs.offcanvas', () => {
-                document.body.style.overflow = 'hidden';
-                this.config.isOffcanvasOpen = true;
-                console.log('📱 Offcanvas abierto');
-            });
-            
-            offcanvasEl.addEventListener('hidden.bs.offcanvas', () => {
-                document.body.style.overflow = 'auto';
-                this.config.isOffcanvasOpen = false;
-                console.log('📱 Offcanvas cerrado');
-            });
-        } else {
-            console.warn('⚠️ Bootstrap no cargado, offcanvas funcionamiento limitado');
-        }
+        // Escuchar cuando el offcanvas se abra
+        offcanvasEl.addEventListener('show.bs.offcanvas', () => {
+            console.log('📱 Offcanvas abriéndose');
+            this.config.isMobileMenuOpen = true;
+        });
         
-        // Manejar dropdowns dentro del offcanvas
-        this.initMobileDropdowns(offcanvasEl);
+        // Escuchar cuando el offcanvas esté COMPLETAMENTE abierto
+        offcanvasEl.addEventListener('shown.bs.offcanvas', () => {
+            console.log('✅ Offcanvas completamente abierto');
+            this.config.isMobileMenuOpen = true;
+            
+            // Inicializar sistema de menú móvil
+            setTimeout(() => {
+                this.initializeMobileMenu();
+            }, 100);
+        });
+        
+        // Escuchar cuando el offcanvas se cierre
+        offcanvasEl.addEventListener('hidden.bs.offcanvas', () => {
+            console.log('❌ Offcanvas cerrado');
+            this.config.isMobileMenuOpen = false;
+        });
     },
     
-    // ===== DROPDOWNS UNIFICADOS =====
-    initDropdowns: function() {
-        if (window.innerWidth >= this.CONSTANTS.mobileBreakpoint) {
-            this.initDesktopDropdowns();
-        }
+    // ===== PREPARAR ESTRUCTURA DE MENÚ MÓVIL =====
+    prepareMobileMenuStructure: function() {
+        const offcanvasEl = document.getElementById('mobileMenuOffcanvas');
+        if (!offcanvasEl) return;
         
-        // Manejar transición desktop/mobile
-        window.addEventListener('resize', () => {
-            if (window.innerWidth >= this.CONSTANTS.mobileBreakpoint) {
-                this.initDesktopDropdowns();
+        console.log('🏗️ Preparando estructura de menú móvil');
+        
+        // ✅ 1. PREPARAR DROPDOWNS DE 2do NIVEL
+        const secondLevelMenus = offcanvasEl.querySelectorAll('.dropdown-menu .dropdown-menu');
+        secondLevelMenus.forEach((menu, index) => {
+            console.log(`🔧 Preparando 2do nivel ${index + 1}`);
+            
+            // Asegurar clases
+            menu.classList.add('mobile-dropdown-level-2');
+            
+            // Forzar estilos básicos
+            menu.style.cssText = `
+                position: absolute !important;
+                top: 0 !important;
+                left: 100% !important;
+                margin-left: 5px !important;
+                width: 220px !important;
+                max-width: 90vw !important;
+                background: rgba(125, 60, 152, 0.98) !important;
+                border: 1px solid rgba(255,255,255,0.3) !important;
+                border-radius: 6px !important;
+                box-shadow: 0 10px 30px rgba(0,0,0,0.3) !important;
+                z-index: 1071 !important;
+                display: none !important;
+                opacity: 0 !important;
+                visibility: hidden !important;
+                padding: 0 !important;
+            `;
+        });
+        
+        // ✅ 2. PREPARAR DROPDOWNS DE 3er NIVEL
+        const thirdLevelMenus = offcanvasEl.querySelectorAll('.dropdown-menu .dropdown-menu .dropdown-menu');
+        thirdLevelMenus.forEach((menu, index) => {
+            console.log(`🔧 Preparando 3er nivel ${index + 1}`);
+            
+            // Asegurar clases
+            menu.classList.add('mobile-dropdown-level-3');
+            
+            // Forzar estilos básicos
+            menu.style.cssText = `
+                position: absolute !important;
+                top: 0 !important;
+                left: 100% !important;
+                margin-left: 5px !important;
+                width: 200px !important;
+                max-width: 90vw !important;
+                background: rgba(125, 60, 152, 0.98) !important;
+                border: 1px solid rgba(255,255,255,0.3) !important;
+                border-radius: 6px !important;
+                box-shadow: 0 10px 30px rgba(0,0,0,0.3) !important;
+                z-index: 1072 !important;
+                display: none !important;
+                opacity: 0 !important;
+                visibility: hidden !important;
+                padding: 0 !important;
+            `;
+        });
+        
+        console.log(`✅ Preparados: ${secondLevelMenus.length} 2do nivel, ${thirdLevelMenus.length} 3er nivel`);
+    },
+    
+    // ===== INICIALIZAR MENÚ MÓVIL =====
+    initializeMobileMenu: function() {
+        if (!this.config.isMobileMenuOpen) return;
+        
+        console.log('🎯 Inicializando menú móvil interactivo');
+        
+        const offcanvasEl = document.getElementById('mobileMenuOffcanvas');
+        if (!offcanvasEl) return;
+        
+        // ✅ 1. CONFIGURAR DELEGACIÓN DE EVENTOS ÚNICA
+        this.setupMobileMenuEventDelegation(offcanvasEl);
+        
+        // ✅ 2. AGREGAR INDICADORES VISUALES
+        this.addMobileMenuIndicators(offcanvasEl);
+        
+        console.log('✅ Menú móvil inicializado');
+    },
+    
+    // ===== CONFIGURAR DELEGACIÓN DE EVENTOS PARA MENÚ MÓVIL =====
+    setupMobileMenuEventDelegation: function(container) {
+        console.log('🖱️ Configurando delegación de eventos para menú móvil');
+        
+        // Remover cualquier evento anterior
+        container.removeEventListener('click', this.config.events.mobileMenuClick);
+        
+        // Crear handler de delegación
+        const clickHandler = (e) => {
+            // Solo procesar en móvil
+            if (window.innerWidth >= this.config.mobileBreakpoint) return;
+            
+            // Buscar el elemento clickeado que sea un dropdown toggle
+            let target = e.target;
+            
+            // Si se hizo clic en un ícono dentro del enlace
+            if (target.tagName === 'I' || target.tagName === 'SPAN') {
+                target = target.closest('a');
             }
+            
+            // Si se hizo clic en un enlace sin dropdown
+            if (!target || !target.classList.contains('dropdown-toggle')) {
+                // Si se hizo clic fuera de un dropdown, cerrar todos
+                if (!target || !target.closest('.dropdown')) {
+                    this.closeAllMobileDropdowns(container);
+                }
+                return;
+            }
+            
+            // Prevenir comportamiento por defecto de Bootstrap
+            e.preventDefault();
+            e.stopPropagation();
+            
+            // Obtener el menú asociado
+            const dropdownMenu = target.nextElementSibling;
+            if (!dropdownMenu || !dropdownMenu.classList.contains('dropdown-menu')) {
+                return;
+            }
+            
+            console.log('🔄 Click en dropdown móvil');
+            
+            // Manejar el clic
+            this.handleMobileMenuClick(target, dropdownMenu, container);
+        };
+        
+        // Guardar referencia y asignar evento
+        this.config.events.mobileMenuClick = clickHandler;
+        container.addEventListener('click', clickHandler);
+        
+        console.log('✅ Delegación de eventos configurada');
+    },
+    
+    // ===== MANEJAR CLIC EN MENÚ MÓVIL =====
+    handleMobileMenuClick: function(toggle, dropdownMenu, container) {
+        const isOpen = dropdownMenu.style.display === 'block';
+        
+        console.log(`🔄 Dropdown ${isOpen ? 'abierto' : 'cerrado'} → ${isOpen ? 'cerrando' : 'abriendo'}`);
+        
+        if (!isOpen) {
+            // Cerrar otros dropdowns del mismo nivel
+            this.closeOtherMobileDropdowns(container, dropdownMenu);
+        }
+        
+        // Alternar estado
+        if (isOpen) {
+            // Cerrar este dropdown
+            this.closeMobileDropdown(dropdownMenu);
+            
+            // También cerrar sus hijos
+            this.closeChildDropdowns(dropdownMenu);
+        } else {
+            // Abrir este dropdown
+            this.openMobileDropdown(toggle, dropdownMenu);
+        }
+    },
+    
+    // ===== ABRIR DROPDOWN MÓVIL =====
+    openMobileDropdown: function(toggle, dropdownMenu) {
+        // Mostrar dropdown
+        dropdownMenu.style.display = 'block';
+        dropdownMenu.style.opacity = '1';
+        dropdownMenu.style.visibility = 'visible';
+        
+        // Actualizar estado del toggle
+        toggle.setAttribute('aria-expanded', 'true');
+        
+        // Añadir clase activa
+        toggle.classList.add('active');
+        
+        // Ajustar posición si es necesario
+        this.adjustMobileDropdownPosition(dropdownMenu);
+        
+        console.log('✅ Dropdown abierto');
+    },
+    
+    // ===== CERRAR DROPDOWN MÓVIL =====
+    closeMobileDropdown: function(dropdownMenu) {
+        // Ocultar dropdown
+        dropdownMenu.style.display = 'none';
+        dropdownMenu.style.opacity = '0';
+        dropdownMenu.style.visibility = 'hidden';
+        
+        // Actualizar toggle asociado
+        const toggle = dropdownMenu.previousElementSibling;
+        if (toggle && toggle.classList.contains('dropdown-toggle')) {
+            toggle.setAttribute('aria-expanded', 'false');
+            toggle.classList.remove('active');
+        }
+        
+        console.log('✅ Dropdown cerrado');
+    },
+    
+    // ===== CERRAR OTROS DROPDOWNS MÓVILES =====
+    closeOtherMobileDropdowns: function(container, currentMenu) {
+        // Buscar todos los dropdowns abiertos
+        const openDropdowns = container.querySelectorAll('.dropdown-menu[style*="display: block"]');
+        
+        openDropdowns.forEach(menu => {
+            // No cerrar el actual
+            if (menu === currentMenu) return;
+            
+            // No cerrar padres del actual
+            if (currentMenu && menu.contains(currentMenu)) return;
+            
+            // Cerrar este dropdown
+            this.closeMobileDropdown(menu);
         });
     },
     
-    // ===== DROPDOWNS PARA DESKTOP =====
-    initDesktopDropdowns: function() {
-        const dropdowns = document.querySelectorAll('.dropdown:not(.mobile-only)');
+    // ===== CERRAR TODOS LOS DROPDOWNS MÓVILES =====
+    closeAllMobileDropdowns: function(container) {
+        const openDropdowns = container.querySelectorAll('.dropdown-menu[style*="display: block"]');
         
-        dropdowns.forEach(dropdown => {
-            // Remover listeners anteriores
-            dropdown.removeEventListener('mouseenter', this.config.events.dropdownEnter);
-            dropdown.removeEventListener('mouseleave', this.config.events.dropdownLeave);
-            
-            // Nuevos listeners
-            const enterHandler = () => {
-                const menu = dropdown.querySelector('.dropdown-menu');
-                if (menu) {
-                    menu.style.display = 'block';
-                    menu.style.opacity = '1';
-                    menu.style.visibility = 'visible';
-                    this.fixDropdownZIndex(menu);
-                }
-            };
-            
-            const leaveHandler = () => {
-                const menu = dropdown.querySelector('.dropdown-menu');
-                if (menu) {
-                    menu.style.display = 'none';
-                    menu.style.opacity = '0';
-                    menu.style.visibility = 'hidden';
-                }
-            };
-            
-            // Guardar referencia para poder remover
-            this.config.events.dropdownEnter = enterHandler;
-            this.config.events.dropdownLeave = leaveHandler;
-            
-            dropdown.addEventListener('mouseenter', enterHandler);
-            dropdown.addEventListener('mouseleave', leaveHandler);
+        openDropdowns.forEach(menu => {
+            this.closeMobileDropdown(menu);
         });
         
-        console.log(`✅ ${dropdowns.length} dropdowns de desktop inicializados`);
+        console.log(`🚫 Cerrados ${openDropdowns.length} dropdowns`);
     },
     
-    // ===== DROPDOWNS PARA MÓVIL =====
-    initMobileDropdowns: function(container) {
+    // ===== CERRAR DROPDOWNS HIJOS =====
+    closeChildDropdowns: function(parentMenu) {
+        const childDropdowns = parentMenu.querySelectorAll('.dropdown-menu[style*="display: block"]');
+        
+        childDropdowns.forEach(menu => {
+            this.closeMobileDropdown(menu);
+        });
+    },
+    
+    // ===== AJUSTAR POSICIÓN DE DROPDOWN MÓVIL =====
+    adjustMobileDropdownPosition: function(dropdownMenu) {
+        if (window.innerWidth >= this.config.mobileBreakpoint) return;
+        
+        // Solo ajustar para dropdowns anidados (2do y 3er nivel)
+        if (!dropdownMenu.classList.contains('mobile-dropdown-level-2') && 
+            !dropdownMenu.classList.contains('mobile-dropdown-level-3')) {
+            return;
+        }
+        
+        const rect = dropdownMenu.getBoundingClientRect();
+        const viewportWidth = window.innerWidth;
+        
+        // Si se sale por la derecha, mostrar a la izquierda
+        if (rect.right > viewportWidth - 20) {
+            dropdownMenu.style.left = 'auto';
+            dropdownMenu.style.right = '100%';
+            dropdownMenu.style.marginLeft = '0';
+            dropdownMenu.style.marginRight = '5px';
+        } else {
+            // Mantener a la derecha
+            dropdownMenu.style.left = '100%';
+            dropdownMenu.style.right = 'auto';
+            dropdownMenu.style.marginLeft = '5px';
+            dropdownMenu.style.marginRight = '0';
+        }
+    },
+    
+    // ===== AGREGAR INDICADORES VISUALES =====
+    addMobileMenuIndicators: function(container) {
+        console.log('🎨 Agregando indicadores visuales para menú móvil');
+        
+        // Buscar todos los items que tienen submenú
         const dropdownToggles = container.querySelectorAll('.dropdown-toggle');
         
         dropdownToggles.forEach(toggle => {
-            toggle.addEventListener('click', (e) => {
-                if (window.innerWidth < this.CONSTANTS.mobileBreakpoint) {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    
-                    const dropdownMenu = toggle.nextElementSibling;
-                    if (dropdownMenu && dropdownMenu.classList.contains('dropdown-menu')) {
-                        const isShowing = dropdownMenu.classList.contains('show');
-                        
-                        // Cerrar otros dropdowns
-                        container.querySelectorAll('.dropdown-menu.show').forEach(menu => {
-                            if (menu !== dropdownMenu) {
-                                menu.classList.remove('show');
-                                const otherToggle = menu.previousElementSibling;
-                                if (otherToggle && otherToggle.classList.contains('dropdown-toggle')) {
-                                    otherToggle.setAttribute('aria-expanded', 'false');
-                                }
-                            }
-                        });
-                        
-                        // Toggle este dropdown
-                        dropdownMenu.classList.toggle('show');
-                        toggle.setAttribute('aria-expanded', !isShowing);
-                    }
+            const dropdownMenu = toggle.nextElementSibling;
+            if (dropdownMenu && dropdownMenu.classList.contains('dropdown-menu')) {
+                // Agregar flecha indicadora si no existe
+                if (!toggle.querySelector('.mobile-menu-arrow')) {
+                    const arrow = document.createElement('span');
+                    arrow.className = 'mobile-menu-arrow ms-2';
+                    arrow.innerHTML = '›';
+                    arrow.style.cssText = `
+                        display: inline-block;
+                        transform: rotate(90deg);
+                        transition: transform 0.3s;
+                    `;
+                    toggle.appendChild(arrow);
                 }
-            });
-        });
-        
-        // Cerrar dropdowns al hacer clic fuera
-        document.addEventListener('click', (e) => {
-            if (window.innerWidth < this.CONSTANTS.mobileBreakpoint && 
-                !e.target.closest('.dropdown')) {
-                container.querySelectorAll('.dropdown-menu.show').forEach(menu => {
-                    menu.classList.remove('show');
-                    const toggle = menu.previousElementSibling;
-                    if (toggle && toggle.classList.contains('dropdown-toggle')) {
-                        toggle.setAttribute('aria-expanded', 'false');
-                    }
-                });
             }
         });
-    },
-    
-    // ===== CORRECCIÓN DE Z-INDEX PARA DROPDOWNS =====
-    fixDropdownZIndex: function(dropdownMenu) {
-        if (!dropdownMenu) return;
         
-        // Calcular nivel del dropdown
-        let level = 0;
-        let parent = dropdownMenu.parentElement;
-        
-        while (parent) {
-            if (parent.classList.contains('dropdown-menu')) {
-                level++;
-            }
-            parent = parent.parentElement;
-        }
-        
-        // Asignar z-index según nivel
-        let zIndex;
-        switch(level) {
-            case 0:
-                zIndex = this.CONSTANTS.Z_INDEX.DROPDOWN_LEVEL_1;
-                break;
-            case 1:
-                zIndex = this.CONSTANTS.Z_INDEX.DROPDOWN_LEVEL_2;
-                break;
-            case 2:
-                zIndex = this.CONSTANTS.Z_INDEX.DROPDOWN_LEVEL_3;
-                break;
-            default:
-                zIndex = this.CONSTANTS.Z_INDEX.DROPDOWN_LEVEL_1 + (level * 10);
-        }
-        
-        dropdownMenu.style.zIndex = zIndex;
-        dropdownMenu.style.position = 'absolute';
-        dropdownMenu.style.overflow = 'visible';
-        
-        // Aplicar a sub-dropdowns también
-        const subDropdowns = dropdownMenu.querySelectorAll('.dropdown-menu');
-        subDropdowns.forEach((subMenu, index) => {
-            subMenu.style.zIndex = zIndex + (index + 1) * 10;
-        });
+        console.log(`✅ ${dropdownToggles.length} indicadores agregados`);
     },
     
     // ===== MAPA UNIFICADO =====
@@ -366,44 +514,35 @@ const gedSystem = {
         const mapContainer = document.getElementById('ged-map');
         if (!mapContainer) return;
         
-        // Verificar si Leaflet está disponible
         if (typeof L === 'undefined') {
-            console.warn('⚠️ Leaflet no cargado, mapa no se inicializará');
+            console.warn('⚠️ Leaflet no cargado');
             return;
         }
         
-        // Evitar inicialización duplicada
         if (this.config.modules.map) {
             console.log('ℹ️ Mapa ya inicializado');
             return;
         }
         
-        console.log('🗺️ Inicializando mapa consolidado');
+        console.log('🗺️ Inicializando mapa');
         
         try {
-            // Crear mapa
             const map = L.map('ged-map').setView([40.4168, -3.7038], 13);
             
-            // Añadir capa de tiles
             L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                 attribution: '© OpenStreetMap contributors',
                 maxZoom: 19
             }).addTo(map);
             
-            // Ajustar tamaño al cargar y en resize
             map.whenReady(() => {
                 map.invalidateSize();
                 console.log('✅ Mapa listo');
             });
             
-            // Guardar referencia
             this.config.modules.map = map;
             
-            // Ajustar en resize
             window.addEventListener('resize', this.debounce(() => {
-                if (map) {
-                    map.invalidateSize();
-                }
+                if (map) map.invalidateSize();
             }, 250));
             
         } catch (error) {
@@ -418,14 +557,12 @@ const gedSystem = {
         
         console.log('⏰ Inicializando selector de horario');
         
-        // Lógica simplificada de selección
         horarioGrid.addEventListener('click', (e) => {
             const cell = e.target.closest('.horario-cell');
             if (!cell) return;
             
             e.preventDefault();
             
-            // Toggle selección
             const isSelected = cell.classList.contains('selected');
             
             if (isSelected) {
@@ -436,11 +573,9 @@ const gedSystem = {
                 cell.setAttribute('data-selected', 'true');
             }
             
-            // Actualizar contador
             this.updateHorarioCounter();
         });
         
-        // Inicializar contador
         this.updateHorarioCounter();
     },
     
@@ -455,20 +590,15 @@ const gedSystem = {
     
     // ===== MÓDULO DE REPORTES =====
     initReportesModule: function() {
-        // Verificar si estamos en la página de reportes
         if (!window.location.pathname.includes('/reportes')) {
             return;
         }
         
         console.log('📊 Inicializando módulo de reportes');
         
-        // Inicializar filtros
         this.initReportesFilters();
-        
-        // Inicializar gráficos si hay
         this.initReportesCharts();
         
-        // Marcar como cargado
         this.config.modules.reportes = {
             initialized: true,
             filters: {},
@@ -480,7 +610,6 @@ const gedSystem = {
         const filterForm = document.getElementById('reportes-filter-form');
         if (!filterForm) return;
         
-        // Aplicar filtros con debounce
         const inputs = filterForm.querySelectorAll('input, select, textarea');
         inputs.forEach(input => {
             input.addEventListener('input', this.debounce(() => {
@@ -488,7 +617,6 @@ const gedSystem = {
             }, 300));
         });
         
-        // Botón de reset
         const resetBtn = document.getElementById('reset-filters');
         if (resetBtn) {
             resetBtn.addEventListener('click', () => {
@@ -500,11 +628,9 @@ const gedSystem = {
     
     applyReportesFilters: function() {
         console.log('🔍 Aplicando filtros de reportes');
-        // Aquí iría la lógica de filtrado real
     },
     
     initReportesCharts: function() {
-        // Inicializar gráficos si hay librería de charting
         if (typeof Chart !== 'undefined') {
             const chartElements = document.querySelectorAll('.reporte-chart');
             chartElements.forEach((element, index) => {
@@ -534,23 +660,16 @@ const gedSystem = {
     
     // ===== MÓDULO DE TIENDA =====
     initTiendaModule: function() {
-        // Verificar si estamos en la página de tienda
         if (!window.location.pathname.includes('/tienda')) {
             return;
         }
         
         console.log('🛒 Inicializando módulo de tienda');
         
-        // Inicializar carrito
         this.initCarrito();
-        
-        // Inicializar filtros de productos
         this.initTiendaFilters();
-        
-        // Inicializar sistema de valoraciones
         this.initValoraciones();
         
-        // Marcar como cargado
         this.config.modules.tienda = {
             initialized: true,
             carrito: [],
@@ -564,7 +683,6 @@ const gedSystem = {
         
         if (!carritoBtn || !carritoModal) return;
         
-        // Abrir modal del carrito
         carritoBtn.addEventListener('click', () => {
             if (typeof bootstrap !== 'undefined' && bootstrap.Modal) {
                 const modal = new bootstrap.Modal(carritoModal);
@@ -576,7 +694,6 @@ const gedSystem = {
             this.actualizarCarrito();
         });
         
-        // Botones de añadir al carrito
         const addToCartBtns = document.querySelectorAll('.add-to-cart-btn');
         addToCartBtns.forEach(btn => {
             btn.addEventListener('click', (e) => {
@@ -591,7 +708,6 @@ const gedSystem = {
     },
     
     agregarAlCarrito: function(id, nombre, precio) {
-        // Lógica simplificada del carrito
         const item = {
             id: id,
             nombre: nombre,
@@ -600,21 +716,15 @@ const gedSystem = {
             timestamp: Date.now()
         };
         
-        // Buscar si ya existe
         const existingIndex = this.config.modules.tienda.carrito.findIndex(item => item.id === id);
         
         if (existingIndex >= 0) {
-            // Incrementar cantidad
             this.config.modules.tienda.carrito[existingIndex].cantidad++;
         } else {
-            // Añadir nuevo
             this.config.modules.tienda.carrito.push(item);
         }
         
-        // Actualizar UI
         this.actualizarCarrito();
-        
-        // Mostrar notificación
         this.showNotification(`"${nombre}" añadido al carrito`, 'success');
         
         console.log('🛍️ Carrito actualizado:', this.config.modules.tienda.carrito);
@@ -637,7 +747,6 @@ const gedSystem = {
         }
         
         if (carritoItems) {
-            // Actualizar lista de items (simplificado)
             carritoItems.innerHTML = this.config.modules.tienda.carrito.map(item => `
                 <div class="carrito-item">
                     <strong>${item.nombre}</strong> 
@@ -651,7 +760,6 @@ const gedSystem = {
         const filterForm = document.getElementById('tienda-filter-form');
         if (!filterForm) return;
         
-        // Filtro por categoría
         const categoriaSelect = document.getElementById('categoria-filter');
         if (categoriaSelect) {
             categoriaSelect.addEventListener('change', this.debounce(() => {
@@ -659,7 +767,6 @@ const gedSystem = {
             }, 300));
         }
         
-        // Filtro por precio
         const precioMin = document.getElementById('precio-min');
         const precioMax = document.getElementById('precio-max');
         
@@ -674,11 +781,9 @@ const gedSystem = {
     
     applyTiendaFilters: function() {
         console.log('🔍 Aplicando filtros de tienda');
-        // Aquí iría la lógica de filtrado real
     },
     
     initValoraciones: function() {
-        // Sistema de estrellas
         const starRatings = document.querySelectorAll('.star-rating');
         
         starRatings.forEach(rating => {
@@ -689,7 +794,6 @@ const gedSystem = {
                 star.addEventListener('click', () => {
                     const value = index + 1;
                     
-                    // Actualizar estrellas visualmente
                     stars.forEach((s, i) => {
                         if (i < value) {
                             s.classList.add('active');
@@ -698,27 +802,23 @@ const gedSystem = {
                         }
                     });
                     
-                    // Actualizar valor
                     if (ratingValue) {
                         ratingValue.textContent = value.toFixed(1);
                         ratingValue.dataset.value = value;
                     }
                     
-                    // Enviar valoración (simulado)
                     console.log(`⭐ Valoración enviada: ${value} estrellas`);
                 });
             });
         });
     },
     
-    // ===== EVENT LISTENERS CONSOLIDADOS =====
+    // ===== EVENT LISTENERS =====
     initEventListeners: function() {
-        // ✅ SINGLE SOURCE para resize
         window.addEventListener('resize', this.debounce(() => {
             this.handleResize();
         }, 300));
         
-        // ✅ Detectar cambios en la URL para módulos dinámicos
         let lastUrl = location.href;
         new MutationObserver(() => {
             const url = location.href;
@@ -728,9 +828,7 @@ const gedSystem = {
             }
         }).observe(document, {subtree: true, childList: true});
         
-        // ✅ Prevenir comportamientos no deseados
         document.addEventListener('click', (e) => {
-            // Prevenir clics en links vacíos
             if (e.target.tagName === 'A' && e.target.getAttribute('href') === '#') {
                 e.preventDefault();
             }
@@ -739,51 +837,46 @@ const gedSystem = {
     
     // ===== MANEJO DE RESIZE =====
     handleResize: function() {
-        const isDesktop = window.innerWidth >= this.CONSTANTS.mobileBreakpoint;
+        const isMobile = window.innerWidth < this.config.mobileBreakpoint;
         
-        // Re-inicializar dropdowns según el modo
-        if (isDesktop) {
-            this.initDesktopDropdowns();
+        if (isMobile && this.config.isMobileMenuOpen) {
+            // Reajustar posición de dropdowns si el offcanvas está abierto
+            setTimeout(() => {
+                this.adjustAllMobileDropdownPositions();
+            }, 300);
         }
         
-        // Reajustar mapa si existe
         if (this.config.modules.map) {
             this.config.modules.map.invalidateSize();
         }
+    },
+    
+    // ===== AJUSTAR TODAS LAS POSICIONES DE DROPDOWNS MÓVILES =====
+    adjustAllMobileDropdownPositions: function() {
+        const offcanvasEl = document.getElementById('mobileMenuOffcanvas');
+        if (!offcanvasEl) return;
         
-        // Actualizar offcanvas si está abierto
-        if (this.config.isOffcanvasOpen && isDesktop) {
-            const offcanvas = document.getElementById('mobileMenuOffcanvas');
-            if (offcanvas && typeof bootstrap !== 'undefined') {
-                const bsOffcanvas = bootstrap.Offcanvas.getInstance(offcanvas);
-                if (bsOffcanvas) {
-                    bsOffcanvas.hide();
-                }
-            }
-        }
+        const dropdowns = offcanvasEl.querySelectorAll('.dropdown-menu[style*="display: block"]');
+        dropdowns.forEach(dropdown => {
+            this.adjustMobileDropdownPosition(dropdown);
+        });
     },
     
     // ===== VERIFICACIONES RESPONSIVE =====
     initResponsiveChecks: function() {
-        // Verificar estructura navbar
         this.checkNavbarStructure();
-        
-        // Verificar overflow
         this.checkOverflow();
-        
-        // Verificar herramientas ID:162 solo en desktop
         this.checkHerramientas162();
     },
     
     checkNavbarStructure: function() {
-        if (window.innerWidth >= this.CONSTANTS.mobileBreakpoint) {
+        if (window.innerWidth >= this.config.mobileBreakpoint) {
             const container = document.querySelector('.navbar-container');
             if (container && getComputedStyle(container).flexDirection === 'column') {
                 console.warn('⚠️ Navbar en columna en desktop - corrigiendo');
                 container.style.flexDirection = 'row';
             }
             
-            // Verificar que todas las secciones estén en línea
             const sections = document.querySelectorAll('.navbar-brand-section, .navbar-menu-section, .navbar-social-section, .navbar-control-section');
             sections.forEach(section => {
                 section.style.whiteSpace = 'nowrap';
@@ -793,14 +886,10 @@ const gedSystem = {
     },
     
     checkOverflow: function() {
-        // Solo diagnóstico, no modificar CSS directamente
-        const bodyOverflow = getComputedStyle(document.body).overflowX;
-        const htmlOverflow = getComputedStyle(document.documentElement).overflowX;
-        
         if (this.config.debug) {
             console.log('📊 Overflow diagnóstico:', {
-                body: bodyOverflow,
-                html: htmlOverflow,
+                body: getComputedStyle(document.body).overflowX,
+                html: getComputedStyle(document.documentElement).overflowX,
                 windowWidth: window.innerWidth,
                 documentWidth: document.documentElement.clientWidth
             });
@@ -808,8 +897,7 @@ const gedSystem = {
     },
     
     checkHerramientas162: function() {
-        // Seguridad extra para ocultar herramientas en móvil
-        const isMobile = window.innerWidth < this.CONSTANTS.mobileBreakpoint;
+        const isMobile = window.innerWidth < this.config.mobileBreakpoint;
         const selectores = [
             '.menu-id-162',
             '[data-menu-id="162"]',
@@ -837,27 +925,22 @@ const gedSystem = {
     
     // ===== MÓDULOS DINÁMICOS =====
     initDynamicModules: function() {
-        // Detectar qué módulos necesita la página actual
         const path = window.location.pathname;
         
-        // Mapa (si existe el contenedor)
         const mapContainer = document.getElementById('ged-map');
         if (mapContainer && !this.config.modules.map) {
             this.initMap();
         }
         
-        // Horario (si existe el grid)
         const horarioGrid = document.getElementById('horario-grid');
         if (horarioGrid) {
             this.initHorarioSelector();
         }
         
-        // Reportes
         if (path.includes('/reportes') && !this.config.modules.reportes) {
             this.initReportesModule();
         }
         
-        // Tienda
         if (path.includes('/tienda') && !this.config.modules.tienda) {
             this.initTiendaModule();
         }
@@ -877,7 +960,6 @@ const gedSystem = {
     },
     
     showNotification: function(message, type = 'info') {
-        // Crear notificación
         const notification = document.createElement('div');
         notification.className = `ged-notification ${type}`;
         notification.innerHTML = `
@@ -887,7 +969,6 @@ const gedSystem = {
             </div>
         `;
         
-        // Estilos básicos
         notification.style.cssText = `
             position: fixed;
             top: 20px;
@@ -901,7 +982,6 @@ const gedSystem = {
             animation: slideInRight 0.3s ease;
         `;
         
-        // Botón de cerrar
         const closeBtn = notification.querySelector('.notification-close');
         closeBtn.addEventListener('click', () => {
             notification.style.animation = 'slideOutRight 0.3s ease';
@@ -912,7 +992,6 @@ const gedSystem = {
             }, 300);
         });
         
-        // Auto-remover después de 5 segundos
         setTimeout(() => {
             if (notification.parentNode) {
                 notification.style.animation = 'slideOutRight 0.3s ease';
@@ -924,10 +1003,8 @@ const gedSystem = {
             }
         }, 5000);
         
-        // Añadir al DOM
         document.body.appendChild(notification);
         
-        // Añadir animaciones CSS si no existen
         if (!document.getElementById('notification-animations')) {
             const style = document.createElement('style');
             style.id = 'notification-animations';
@@ -945,51 +1022,53 @@ const gedSystem = {
         }
     },
     
-    // ===== DEBUG UTILITIES =====
+    // ===== DEBUG =====
     debug: function() {
-        console.group('🐛 DEBUG GED SYSTEM');
+        console.group('🐛 DEBUG GED SYSTEM v5.3');
         console.log('Configuración:', this.config);
         console.log('Viewport:', window.innerWidth, 'x', window.innerHeight);
+        console.log('Offcanvas abierto:', this.config.isMobileMenuOpen);
         
-        const navbar = document.querySelector('.navbar-contextual');
-        if (navbar) {
-            console.log('Navbar:', {
-                width: navbar.offsetWidth,
-                height: navbar.offsetHeight,
-                computedWidth: getComputedStyle(navbar).width,
-                computedHeight: getComputedStyle(navbar).height
+        // Verificar estructura del offcanvas
+        const offcanvas = document.getElementById('mobileMenuOffcanvas');
+        if (offcanvas) {
+            console.log('Offcanvas encontrado');
+            
+            // Contar dropdowns
+            const dropdowns = offcanvas.querySelectorAll('.dropdown-menu');
+            const level2 = offcanvas.querySelectorAll('.mobile-dropdown-level-2');
+            const level3 = offcanvas.querySelectorAll('.mobile-dropdown-level-3');
+            
+            console.log(`📊 Dropdowns totales: ${dropdowns.length}`);
+            console.log(`📊 2do nivel: ${level2.length}`);
+            console.log(`📊 3er nivel: ${level3.length}`);
+            
+            // Verificar eventos
+            const toggles = offcanvas.querySelectorAll('.dropdown-toggle');
+            console.log(`🖱️ Dropdown toggles: ${toggles.length}`);
+            
+            toggles.forEach((toggle, i) => {
+                const hasMenu = toggle.nextElementSibling && 
+                              toggle.nextElementSibling.classList.contains('dropdown-menu');
+                console.log(`Toggle ${i + 1}: Tiene menú = ${hasMenu ? '✅' : '❌'}`);
             });
         }
         
-        console.log('Módulos cargados:', Object.keys(this.config.modules).filter(key => this.config.modules[key]));
         console.groupEnd();
-        
-        // Añadir estilos de debug si se solicita
-        if (window.location.href.includes('debug=css')) {
-            const debugStyle = document.createElement('style');
-            debugStyle.textContent = `
-                .navbar-contextual { outline: 2px solid red !important; }
-                .navbar-menu-section { outline: 2px solid green !important; }
-                .dropdown-menu { outline: 2px solid blue !important; }
-            `;
-            document.head.appendChild(debugStyle);
-        }
     },
     
-    // ===== DESTRUCTOR (para limpieza) =====
+    // ===== DESTRUCTOR =====
     destroy: function() {
-        // Limpiar event listeners
         window.removeEventListener('resize', this.handleResize);
         
-        // Limpiar módulos
         if (this.config.modules.map) {
             this.config.modules.map.remove();
         }
         
-        // Limpiar config
         this.config.isInitialized = false;
         this.config.modules = {};
         this.config.events = {};
+        this.config.isMobileMenuOpen = false;
         
         console.log('🧹 GED System destruido');
     }
@@ -997,14 +1076,12 @@ const gedSystem = {
 
 // ===== INICIALIZACIÓN AUTOMÁTICA =====
 document.addEventListener('DOMContentLoaded', function() {
-    // Pequeño delay para asegurar que todo está cargado
     setTimeout(() => {
         gedSystem.init();
     }, 100);
 });
 
-// ===== POLYFILLS PARA COMPATIBILIDAD =====
-// closest() polyfill
+// ===== POLYFILLS =====
 if (!Element.prototype.closest) {
     Element.prototype.closest = function(s) {
         var el = this;
@@ -1016,7 +1093,6 @@ if (!Element.prototype.closest) {
     };
 }
 
-// matches() polyfill
 if (!Element.prototype.matches) {
     Element.prototype.matches = 
         Element.prototype.matchesSelector || 
@@ -1032,15 +1108,17 @@ if (!Element.prototype.matches) {
         };
 }
 
-// ===== EXPORTACIÓN PARA MÓDULOS =====
 if (typeof module !== 'undefined' && module.exports) {
     module.exports = gedSystem;
 }
 
 /* ===== NOTA FINAL =====
- * ARCHIVO JS CONSOLIDADO GED v4.6
- * Reemplaza 8 archivos JS por 1
- * Elimina conflictos y duplicaciones
- * Optimizado para rendimiento
- * Mantiene todas las funcionalidades
+ * ARCHIVO JS CONSOLIDADO GED v5.3
+ * SOLUCIÓN COMPLETA PARA MENÚ MÓVIL:
+ * 1. ✅ SISTEMA DELEGACIÓN DE EVENTOS único
+ * 2. ✅ MANEJO COMPLETO de 2do y 3er nivel
+ * 3. ✅ PREVENCIÓN de interferencia de Bootstrap
+ * 4. ✅ INDICADORES VISUALES para items con submenú
+ * 5. ✅ AJUSTE AUTOMÁTICO de posición
+ * 6. ✅ CIERRE INTELIGENTE de otros dropdowns
  */
