@@ -1,8 +1,10 @@
 /* =================================================================
- * ged-consolidated.js - SISTEMA GED UNIFICADO - VERSIÓN 6.0
+ * ged-consolidated.js - SISTEMA GED UNIFICADO
+ * Reemplaza: ged.js, ged-init.js, gedOffCanvas-module.js, 
+ *            navbarWidth-module.js, mapa-module.js, 
+ *            horario-selector.js, reportes-module.js, tienda-module.js
+ * Fecha: 2024-01-22 - VERSIÓN CONSOLIDADA 5.3
  * Correcciones: Menú móvil COMPLETAMENTE funcional con 2do y 3er nivel
- * Mejoras: Bootstrap 5 inicializado, conteo corregido, diagnóstico mejorado
- * Fecha: 2026-02-05
  * ================================================================= */
 
 'use strict';
@@ -21,9 +23,7 @@ const gedSystem = {
             tienda: null
         },
         events: {},
-        isMobileMenuOpen: false,
-        // NUEVO: Registro de niveles del menú
-        menuLevels: { level2: 0, level3: 0 }
+        isMobileMenuOpen: false
     },
     
     // ===== CONSTANTES =====
@@ -41,17 +41,14 @@ const gedSystem = {
             return;
         }
         
-        console.log('🚀 GED System v6.0 - Inicializando sistema consolidado');
+        console.log('🚀 GED System v5.3 - Inicializando sistema consolidado');
         
         // Inicializar componentes en orden
         this.initNavbar();
-        this.initMobileMenuSystem(); // NUEVO: Sistema de menú móvil mejorado
+        this.initMobileMenuSystem(); // NUEVO: Sistema de menú móvil
         this.initEventListeners();
         this.initResponsiveChecks();
         this.initDynamicModules();
-        
-        // NUEVO: Inicializar dropdowns de Bootstrap 5 para niveles anidados
-        this.initBootstrapDropdowns();
         
         // Marcar como inicializado
         this.config.isInitialized = true;
@@ -178,134 +175,15 @@ const gedSystem = {
         });
     },
     
-    // ===== INICIALIZAR DROPDOWNS BOOTSTRAP 5 (NUEVO) =====
-    initBootstrapDropdowns: function() {
-        console.log('🔽 Inicializando dropdowns de Bootstrap 5 para niveles anidados');
-        
-        // Inicializar todos los dropdowns que no están en el offcanvas móvil
-        const dropdownToggles = document.querySelectorAll('.dropdown-toggle');
-        
-        dropdownToggles.forEach((toggle, index) => {
-            // Solo inicializar si no está dentro del offcanvas móvil
-            if (!toggle.closest('#mobileMenuOffcanvas')) {
-                // Asegurar que tenga el atributo data-bs-toggle
-                if (!toggle.hasAttribute('data-bs-toggle')) {
-                    toggle.setAttribute('data-bs-toggle', 'dropdown');
-                }
-                
-                // Inicializar dropdown de Bootstrap
-                try {
-                    const dropdown = new bootstrap.Dropdown(toggle);
-                    // NUEVO: Agregar atributo de nivel
-                    this.setDropdownLevel(toggle);
-                } catch (error) {
-                    console.warn(`⚠️ Error inicializando dropdown ${index}:`, error);
-                }
-            }
-        });
-        
-        console.log(`✅ ${dropdownToggles.length} dropdowns inicializados`);
-    },
-    
-    // ===== SISTEMA DE MENÚ MÓVIL - SOLUCIÓN COMPLETA MEJORADA =====
+    // ===== SISTEMA DE MENÚ MÓVIL - SOLUCIÓN COMPLETA =====
     initMobileMenuSystem: function() {
-        console.log('📱 Inicializando sistema de menú móvil v6.0');
-        
-        // NUEVO: Contar niveles reales del menú
-        this.countAndLogMenuLevels();
+        console.log('📱 Inicializando sistema de menú móvil');
         
         // Configurar offcanvas
         this.setupOffcanvas();
         
         // Preparar estructura inicial
         this.prepareMobileMenuStructure();
-    },
-    
-    // ===== CONTAR Y REGISTRAR NIVELES DEL MENÚ (NUEVO) =====
-    countAndLogMenuLevels: function() {
-        console.group('🔢 CONTEO DE NIVELES DEL MENÚ MÓVIL');
-        
-        const offcanvasEl = document.getElementById('mobileMenuOffcanvas');
-        if (!offcanvasEl) {
-            console.warn('❌ Offcanvas no encontrado para conteo');
-            console.groupEnd();
-            return;
-        }
-        
-        // NUEVO: Función de conteo corregida
-        const counts = this.countNestedDropdowns(offcanvasEl);
-        
-        // Guardar en configuración
-        this.config.menuLevels = counts;
-        
-        console.log(`📊 Resultado del conteo:`);
-        console.log(`   • 2do nivel (submenús): ${counts.level2}`);
-        console.log(`   • 3er nivel (sub-submenús): ${counts.level3}`);
-        console.log(`   • ¿Hay niveles 3?: ${counts.level3 > 0 ? '✅ SÍ' : '❌ NO'}`);
-        
-        console.groupEnd();
-        return counts;
-    },
-    
-    // ===== FUNCIÓN COUNTNESTEDDROPDOWNS CORREGIDA (NUEVO) =====
-    countNestedDropdowns: function(container) {
-        const dropdowns = container.querySelectorAll('.dropdown-menu');
-        let level2 = 0;
-        let level3 = 0;
-        
-        console.log(`🔍 Analizando ${dropdowns.length} elementos .dropdown-menu`);
-        
-        dropdowns.forEach((dropdown, index) => {
-            // Determinar nivel por profundidad de ancestros
-            let level = 0;
-            let parent = dropdown.parentElement;
-            
-            // Contar cuántos dropdown-menu hay en la jerarquía de padres
-            while (parent) {
-                if (parent.classList && parent.classList.contains('dropdown-menu')) {
-                    level++;
-                }
-                parent = parent.parentElement;
-            }
-            
-            // Clasificar por nivel
-            if (level === 1) {
-                level2++;
-                console.log(`   Dropdown ${index + 1}: 2do nivel (dentro de 1 dropdown padre)`);
-            } else if (level >= 2) {
-                level3++;
-                console.log(`   Dropdown ${index + 1}: 3er nivel (dentro de ${level} dropdowns padres)`);
-            } else if (level === 0) {
-                console.log(`   Dropdown ${index + 1}: 1er nivel (sin padres dropdown)`);
-            }
-        });
-        
-        return { level2, level3 };
-    },
-    
-    // ===== ASIGNAR NIVEL A DROPDOWN (NUEVO) =====
-    setDropdownLevel: function(toggleElement) {
-        const dropdownMenu = toggleElement.nextElementSibling;
-        if (!dropdownMenu || !dropdownMenu.classList.contains('dropdown-menu')) {
-            return;
-        }
-        
-        // Determinar nivel
-        let level = 0;
-        let parent = dropdownMenu.parentElement;
-        
-        while (parent) {
-            if (parent.classList && parent.classList.contains('dropdown-menu')) {
-                level++;
-            }
-            parent = parent.parentElement;
-        }
-        
-        // Asignar atributo data-dropdown-level
-        if (level > 0) {
-            toggleElement.setAttribute('data-dropdown-level', level + 1);
-            dropdownMenu.setAttribute('data-dropdown-level', level + 1);
-        }
     },
     
     // ===== CONFIGURAR OFFCANVAS =====
@@ -328,9 +206,6 @@ const gedSystem = {
         offcanvasEl.addEventListener('shown.bs.offcanvas', () => {
             console.log('✅ Offcanvas completamente abierto');
             this.config.isMobileMenuOpen = true;
-            
-            // NUEVO: Verificar estructura después de abrir
-            this.debugMobileMenuLevels();
             
             // Inicializar sistema de menú móvil
             setTimeout(() => {
@@ -355,150 +230,60 @@ const gedSystem = {
         // ✅ 1. PREPARAR DROPDOWNS DE 2do NIVEL
         const secondLevelMenus = offcanvasEl.querySelectorAll('.dropdown-menu .dropdown-menu');
         secondLevelMenus.forEach((menu, index) => {
-            // Solo agregar clase si no la tiene
-            if (!menu.classList.contains('mobile-dropdown-level-2')) {
-                menu.classList.add('mobile-dropdown-level-2');
-            }
+            console.log(`🔧 Preparando 2do nivel ${index + 1}`);
             
-            // Asignar atributo de nivel
-            menu.setAttribute('data-dropdown-level', '2');
+            // Asegurar clases
+            menu.classList.add('mobile-dropdown-level-2');
             
-            // NUEVO: Estilos mejorados sin !important excesivo
-            Object.assign(menu.style, {
-                position: 'absolute',
-                top: '0',
-                left: '100%',
-                marginLeft: '5px',
-                width: '220px',
-                maxWidth: '90vw',
-                backgroundColor: 'rgba(125, 60, 152, 0.98)',
-                border: '1px solid rgba(255,255,255,0.3)',
-                borderRadius: '6px',
-                boxShadow: '0 10px 30px rgba(0,0,0,0.3)',
-                zIndex: '1071',
-                display: 'none',
-                opacity: '0',
-                visibility: 'hidden',
-                padding: '0'
-            });
+            // Forzar estilos básicos
+            menu.style.cssText = `
+                position: absolute !important;
+                top: 0 !important;
+                left: 100% !important;
+                margin-left: 5px !important;
+                width: 220px !important;
+                max-width: 90vw !important;
+                background: rgba(125, 60, 152, 0.98) !important;
+                border: 1px solid rgba(255,255,255,0.3) !important;
+                border-radius: 6px !important;
+                box-shadow: 0 10px 30px rgba(0,0,0,0.3) !important;
+                z-index: 1071 !important;
+                display: none !important;
+                opacity: 0 !important;
+                visibility: hidden !important;
+                padding: 0 !important;
+            `;
         });
         
         // ✅ 2. PREPARAR DROPDOWNS DE 3er NIVEL
         const thirdLevelMenus = offcanvasEl.querySelectorAll('.dropdown-menu .dropdown-menu .dropdown-menu');
         thirdLevelMenus.forEach((menu, index) => {
-            // Solo agregar clase si no la tiene
-            if (!menu.classList.contains('mobile-dropdown-level-3')) {
-                menu.classList.add('mobile-dropdown-level-3');
-            }
+            console.log(`🔧 Preparando 3er nivel ${index + 1}`);
             
-            // Asignar atributo de nivel
-            menu.setAttribute('data-dropdown-level', '3');
+            // Asegurar clases
+            menu.classList.add('mobile-dropdown-level-3');
             
-            // NUEVO: Estilos diferenciados para nivel 3
-            Object.assign(menu.style, {
-                position: 'absolute',
-                top: '0',
-                left: '100%',
-                marginLeft: '5px',
-                width: '200px',
-                maxWidth: '85vw',
-                backgroundColor: 'rgba(105, 40, 132, 0.98)',
-                border: '1px solid rgba(255,255,255,0.4)',
-                borderRadius: '6px',
-                boxShadow: '0 10px 30px rgba(0,0,0,0.4)',
-                zIndex: '1072',
-                display: 'none',
-                opacity: '0',
-                visibility: 'hidden',
-                padding: '0'
-            });
+            // Forzar estilos básicos
+            menu.style.cssText = `
+                position: absolute !important;
+                top: 0 !important;
+                left: 100% !important;
+                margin-left: 5px !important;
+                width: 200px !important;
+                max-width: 90vw !important;
+                background: rgba(125, 60, 152, 0.98) !important;
+                border: 1px solid rgba(255,255,255,0.3) !important;
+                border-radius: 6px !important;
+                box-shadow: 0 10px 30px rgba(0,0,0,0.3) !important;
+                z-index: 1072 !important;
+                display: none !important;
+                opacity: 0 !important;
+                visibility: hidden !important;
+                padding: 0 !important;
+            `;
         });
-        
-        // NUEVO: Inicializar dropdowns anidados dentro del offcanvas
-        this.initNestedDropdownsInOffcanvas(offcanvasEl);
         
         console.log(`✅ Preparados: ${secondLevelMenus.length} 2do nivel, ${thirdLevelMenus.length} 3er nivel`);
-    },
-    
-    // ===== INICIALIZAR DROPDOWNS ANIDADOS EN OFFCANVAS (NUEVO) =====
-    initNestedDropdownsInOffcanvas: function(offcanvasEl) {
-        // Encontrar todos los dropdown-toggles dentro del offcanvas
-        const dropdownToggles = offcanvasEl.querySelectorAll('.dropdown-toggle');
-        
-        dropdownToggles.forEach((toggle, index) => {
-            // Marcar como dropdown de Bootstrap
-            toggle.setAttribute('data-bs-toggle', 'dropdown');
-            
-            // Asignar nivel
-            this.setDropdownLevel(toggle);
-            
-            // Inicializar dropdown de Bootstrap con configuración especial para móvil
-            try {
-                const dropdown = new bootstrap.Dropdown(toggle, {
-                    display: 'static', // Para comportamiento móvil
-                    autoClose: false   // Mantener abierto en móvil
-                });
-                
-                // NUEVO: Agregar evento personalizado para móvil
-                toggle.addEventListener('click', (e) => {
-                    if (window.innerWidth < this.config.mobileBreakpoint) {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        this.handleMobileDropdownClick(toggle, dropdown);
-                    }
-                });
-                
-            } catch (error) {
-                console.warn(`⚠️ Error inicializando dropdown móvil ${index}:`, error);
-            }
-        });
-    },
-    
-    // ===== MANEJAR CLIC EN DROPDOWN MÓVIL (NUEVO) =====
-    handleMobileDropdownClick: function(toggle, dropdownInstance) {
-        const dropdownMenu = toggle.nextElementSibling;
-        if (!dropdownMenu) return;
-        
-        const isShowing = dropdownMenu.style.display === 'block';
-        
-        if (isShowing) {
-            // Cerrar
-            dropdownInstance.hide();
-        } else {
-            // Cerrar otros dropdowns del mismo nivel primero
-            this.closeOtherMobileDropdownsAtSameLevel(toggle);
-            
-            // Abrir este
-            dropdownInstance.show();
-            
-            // Ajustar posición
-            this.adjustMobileDropdownPosition(dropdownMenu);
-        }
-    },
-    
-    // ===== CERRAR OTROS DROPDOWNS DEL MISMO NIVEL (NUEVO) =====
-    closeOtherMobileDropdownsAtSameLevel: function(currentToggle) {
-        const currentLevel = currentToggle.getAttribute('data-dropdown-level') || '1';
-        const offcanvas = document.getElementById('mobileMenuOffcanvas');
-        if (!offcanvas) return;
-        
-        // Encontrar todos los dropdowns abiertos del mismo nivel
-        const sameLevelToggles = offcanvas.querySelectorAll(
-            `.dropdown-toggle[data-dropdown-level="${currentLevel}"]`
-        );
-        
-        sameLevelToggles.forEach(toggle => {
-            if (toggle !== currentToggle) {
-                const dropdownMenu = toggle.nextElementSibling;
-                if (dropdownMenu && dropdownMenu.style.display === 'block') {
-                    // Encontrar instancia de Bootstrap y cerrar
-                    const dropdownInstance = bootstrap.Dropdown.getInstance(toggle);
-                    if (dropdownInstance) {
-                        dropdownInstance.hide();
-                    }
-                }
-            }
-        });
     },
     
     // ===== INICIALIZAR MENÚ MÓVIL =====
@@ -524,9 +309,7 @@ const gedSystem = {
         console.log('🖱️ Configurando delegación de eventos para menú móvil');
         
         // Remover cualquier evento anterior
-        if (this.config.events.mobileMenuClick) {
-            container.removeEventListener('click', this.config.events.mobileMenuClick);
-        }
+        container.removeEventListener('click', this.config.events.mobileMenuClick);
         
         // Crear handler de delegación
         const clickHandler = (e) => {
@@ -1239,119 +1022,36 @@ const gedSystem = {
         }
     },
     
-    // ===== FUNCIONES DE DIAGNÓSTICO MEJORADAS (NUEVO) =====
-    debugMobileMenuLevels: function() {
-        console.group('🔍 DIAGNÓSTICO COMPLETO MENÚ MÓVIL');
-        
-        const offcanvas = document.getElementById('mobileMenuOffcanvas');
-        if (!offcanvas) {
-            console.error('❌ Offcanvas no encontrado');
-            console.groupEnd();
-            return;
-        }
-        
-        // Contar niveles estructurales
-        const counts = this.countNestedDropdowns(offcanvas);
-        
-        // Contar por clases CSS
-        const level2ByClass = offcanvas.querySelectorAll('.mobile-dropdown-level-2').length;
-        const level3ByClass = offcanvas.querySelectorAll('.mobile-dropdown-level-3').length;
-        
-        // Contar por atributos
-        const level2ByAttr = offcanvas.querySelectorAll('[data-dropdown-level="2"]').length;
-        const level3ByAttr = offcanvas.querySelectorAll('[data-dropdown-level="3"]').length;
-        
-        // Verificar dropdowns de Bootstrap
-        const bootstrapDropdowns = [];
-        const dropdownToggles = offcanvas.querySelectorAll('.dropdown-toggle');
-        dropdownToggles.forEach(toggle => {
-            const instance = bootstrap.Dropdown.getInstance(toggle);
-            bootstrapDropdowns.push({
-                element: toggle,
-                hasInstance: !!instance,
-                level: toggle.getAttribute('data-dropdown-level') || '1'
-            });
-        });
-        
-        console.log('📊 ESTADÍSTICAS:');
-        console.log(`   • Dropdowns totales: ${offcanvas.querySelectorAll('.dropdown-menu').length}`);
-        console.log(`   • Dropdown toggles: ${dropdownToggles.length}`);
-        console.log('');
-        console.log('📈 NIVELES POR ESTRUCTURA:');
-        console.log(`   • 2do nivel: ${counts.level2}`);
-        console.log(`   • 3er nivel: ${counts.level3}`);
-        console.log('');
-        console.log('🎨 NIVELES POR CLASES CSS:');
-        console.log(`   • .mobile-dropdown-level-2: ${level2ByClass}`);
-        console.log(`   • .mobile-dropdown-level-3: ${level3ByClass}`);
-        console.log('');
-        console.log('🏷️ NIVELES POR ATRIBUTOS:');
-        console.log(`   • data-dropdown-level="2": ${level2ByAttr}`);
-        console.log(`   • data-dropdown-level="3": ${level3ByAttr}`);
-        console.log('');
-        console.log('⚡ BOOTSTRAP DROPDOWNS:');
-        console.log(`   • Inicializados: ${bootstrapDropdowns.filter(d => d.hasInstance).length}/${bootstrapDropdowns.length}`);
-        
-        // Verificar si hay discrepancias
-        if (counts.level3 === 0 && (level3ByClass > 0 || level3ByAttr > 0)) {
-            console.warn('⚠️ DISCREPANCIA: Hay niveles 3 en clases/atributos pero no detectados estructuralmente');
-        }
-        
-        if (counts.level3 > 0) {
-            console.log('✅ CORRECTO: Se detectaron niveles 3 estructuralmente');
-        }
-        
-        console.groupEnd();
-    },
-    
-    // ===== REINICIALIZAR MENÚ MÓVIL (NUEVO) =====
-    reinitializeMobileMenu: function() {
-        console.log('🔄 REINICIALIZANDO MENÚ MÓVIL');
-        
-        const offcanvas = document.getElementById('mobileMenuOffcanvas');
-        if (!offcanvas) {
-            console.error('❌ Offcanvas no encontrado');
-            return;
-        }
-        
-        // 1. Cerrar todos los dropdowns
-        this.closeAllMobileDropdowns(offcanvas);
-        
-        // 2. Destruir instancias de Bootstrap
-        const dropdownToggles = offcanvas.querySelectorAll('.dropdown-toggle');
-        dropdownToggles.forEach(toggle => {
-            const instance = bootstrap.Dropdown.getInstance(toggle);
-            if (instance) {
-                instance.dispose();
-            }
-        });
-        
-        // 3. Re-preparar estructura
-        this.prepareMobileMenuStructure();
-        
-        // 4. Re-inicializar
-        this.initializeMobileMenu();
-        
-        console.log('✅ Menú móvil reinicializado');
-    },
-    
     // ===== DEBUG =====
     debug: function() {
-        console.group('🐛 DEBUG GED SYSTEM v6.0');
+        console.group('🐛 DEBUG GED SYSTEM v5.3');
         console.log('Configuración:', this.config);
         console.log('Viewport:', window.innerWidth, 'x', window.innerHeight);
         console.log('Offcanvas abierto:', this.config.isMobileMenuOpen);
-        
-        // NUEVO: Mostrar niveles del menú
-        console.log('Niveles del menú:', this.config.menuLevels);
         
         // Verificar estructura del offcanvas
         const offcanvas = document.getElementById('mobileMenuOffcanvas');
         if (offcanvas) {
             console.log('Offcanvas encontrado');
             
-            // Usar función de diagnóstico mejorada
-            this.debugMobileMenuLevels();
+            // Contar dropdowns
+            const dropdowns = offcanvas.querySelectorAll('.dropdown-menu');
+            const level2 = offcanvas.querySelectorAll('.mobile-dropdown-level-2');
+            const level3 = offcanvas.querySelectorAll('.mobile-dropdown-level-3');
+            
+            console.log(`📊 Dropdowns totales: ${dropdowns.length}`);
+            console.log(`📊 2do nivel: ${level2.length}`);
+            console.log(`📊 3er nivel: ${level3.length}`);
+            
+            // Verificar eventos
+            const toggles = offcanvas.querySelectorAll('.dropdown-toggle');
+            console.log(`🖱️ Dropdown toggles: ${toggles.length}`);
+            
+            toggles.forEach((toggle, i) => {
+                const hasMenu = toggle.nextElementSibling && 
+                              toggle.nextElementSibling.classList.contains('dropdown-menu');
+                console.log(`Toggle ${i + 1}: Tiene menú = ${hasMenu ? '✅' : '❌'}`);
+            });
         }
         
         console.groupEnd();
@@ -1408,84 +1108,17 @@ if (!Element.prototype.matches) {
         };
 }
 
-// ===== FUNCIONES GLOBALES DE DIAGNÓSTICO (NUEVO) =====
-window.debugMobileMenuLevels = function() {
-    if (gedSystem && typeof gedSystem.debugMobileMenuLevels === 'function') {
-        gedSystem.debugMobileMenuLevels();
-    } else {
-        console.error('❌ GED System no está inicializado');
-    }
-};
-
-window.reinitializeMobileMenu = function() {
-    if (gedSystem && typeof gedSystem.reinitializeMobileMenu === 'function') {
-        gedSystem.reinitializeMobileMenu();
-    } else {
-        console.error('❌ GED System no está inicializado');
-    }
-};
-
-window.countMenuLevels = function() {
-    const offcanvas = document.getElementById('mobileMenuOffcanvas');
-    if (!offcanvas) {
-        console.error('❌ Offcanvas no encontrado');
-        return;
-    }
-    
-    const dropdowns = offcanvas.querySelectorAll('.dropdown-menu');
-    let level2 = 0, level3 = 0;
-    
-    dropdowns.forEach(dropdown => {
-        let parentCount = 0;
-        let parent = dropdown.parentElement;
-        
-        while (parent) {
-            if (parent.classList && parent.classList.contains('dropdown-menu')) {
-                parentCount++;
-            }
-            parent = parent.parentElement;
-        }
-        
-        if (parentCount === 1) level2++;
-        if (parentCount >= 2) level3++;
-    });
-    
-    console.log('🔍 VERIFICACIÓN RÁPIDA NIVELES:');
-    console.log(`   • 2do nivel: ${level2}`);
-    console.log(`   • 3er nivel: ${level3}`);
-    console.log(`   • Total dropdowns: ${dropdowns.length}`);
-};
-
 if (typeof module !== 'undefined' && module.exports) {
     module.exports = gedSystem;
 }
 
 /* ===== NOTA FINAL =====
- * ARCHIVO JS CONSOLIDADO GED v6.0
- * SOLUCIÓN COMPLETA PARA MENÚ MÓVIL CON 3 NIVELES:
- * 
- * ✅ CORREGIDA DETECCIÓN DE NIVELES 3:
- *    - Función countNestedDropdowns() corregida
- *    - Conteo estructural por ancestros dropdown-menu
- *    - Registro en config.menuLevels
- * 
- * ✅ INICIALIZACIÓN BOOTSTRAP 5 PARA DROPDOWNS ANIDADOS:
- *    - Todos los .dropdown-toggle inicializados
- *    - Atributos data-dropdown-level asignados
- *    - Configuración especial para comportamiento móvil
- * 
- * ✅ FUNCIONES DE DIAGNÓSTICO MEJORADAS:
- *    - debugMobileMenuLevels() - diagnóstico completo
- *    - reinitializeMobileMenu() - reinicialización forzada
- *    - Funciones globales accesibles desde consola
- * 
- * ✅ ESTILOS MEJORADOS:
- *    - Diferentes colores para nivel 2 y 3
- *    - Z-index progresivo (1071, 1072)
- *    - Sin !important excesivo
- * 
- * ✅ COMPATIBILIDAD TOTAL:
- *    - Bootstrap 5
- *    - Yii2 MenuWidget
- *    - Mantiene 100% funcionalidades originales
+ * ARCHIVO JS CONSOLIDADO GED v5.3
+ * SOLUCIÓN COMPLETA PARA MENÚ MÓVIL:
+ * 1. ✅ SISTEMA DELEGACIÓN DE EVENTOS único
+ * 2. ✅ MANEJO COMPLETO de 2do y 3er nivel
+ * 3. ✅ PREVENCIÓN de interferencia de Bootstrap
+ * 4. ✅ INDICADORES VISUALES para items con submenú
+ * 5. ✅ AJUSTE AUTOMÁTICO de posición
+ * 6. ✅ CIERRE INTELIGENTE de otros dropdowns
  */

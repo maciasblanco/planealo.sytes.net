@@ -1,10 +1,10 @@
 /* =================================================================
- * ged.css - ARCHIVO CSS CONSOLIDADO GED (VERSIÓN MEJORADA 6.0)
+ * ged.css - ARCHIVO CSS CONSOLIDADO GED (VERSIÓN CORREGIDA 5.0)
  * Consolida: _variables.css, _base.css, _components.css, _modules.css,
  *            _navigation.css, _submenus.css, _responsive.css, bootstrap-custom.css
- * Fecha: 2026-03-05 - VERSIÓN CONSOLIDADA 6.0
- * Correcciones: Menú móvil COMPLETAMENTE funcional con 2do y 3er nivel
- * Compatible con ged-consolidated.js v6.0 y Bootstrap 5
+ * Fecha: 2024-01-22 - VERSIÓN CONSOLIDADA 5.0
+ * Correcciones: Dropdowns a la derecha en móvil, fondo opaco, legible
+ * Correcciones adicionales: 3er nivel de menú en móvil funcional
  * ================================================================= */
 
 /* ===== VARIABLES CSS UNIFICADAS ===== */
@@ -12,7 +12,7 @@
   /* Offcanvas */
   --sidebar-width-desktop: 240px;
   --sidebar-width-desktop-compact: 60px;
-  --sidebar-width-mobile: 320px; /* ✅ Aumentado para 3 niveles */
+  --sidebar-width-mobile: 300px;
   --transition-speed: 0.3s;
 
   /* Navbar - DISTRIBUCIÓN OPTIMIZADA */
@@ -54,12 +54,6 @@
   --dropdown-bg-color: #7d3c98;
   --dropdown-bg-opaque: rgba(125, 60, 152, 0.98);
   --dropdown-border-color: rgba(255,255,255,0.3);
-  
-  /* ✅ NUEVAS VARIABLES PARA 3 NIVELES */
-  --dropdown-level2-bg: rgba(125, 60, 152, 0.98);
-  --dropdown-level3-bg: rgba(105, 40, 132, 0.98);
-  --dropdown-level2-border: rgba(255, 255, 255, 0.5);
-  --dropdown-level3-border: rgba(255, 255, 255, 0.7);
 }
 
 /* ===== RESET Y ESTILOS BASE ===== */
@@ -1425,7 +1419,20 @@ main#main {
 /* ===== FONT AWESOME ===== */
 /* @import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css'); */
 
-/* ===== SOLUCIÓN DE EMERGENCIA PARA 3ER NIVEL - POSICIÓN CORRECTA ===== */
+/* ===== NOTA FINAL ===== */
+/*
+ * ARCHIVO CSS CONSOLIDADO GED v5.0
+ * CORRECCIONES APLICADAS:
+ * 1. ✅ DROPDOWNS A LA DERECHA EN MÓVIL (IGUAL QUE DESKTOP)
+ * 2. ✅ FONDO OPACO Y LEGIBLE - NO TRANSPARENTE
+ * 3. ✅ TERCER NIVEL COMPLETAMENTE VISIBLE Y LEGIBLE
+ * 4. ✅ OFFCANVAS MÁS ANCHO PARA ACOMODAR DROPDOWDS
+ * 5. ✅ Z-INDEX JERÁRQUICO MEJORADO (1050-1072)
+ * 6. ✅ RESPONSIVE: SE AJUSTA A PANTALLAS PEQUEÑAS
+ * 7. ✅ CONSISTENCIA TOTAL DESKTOP/MOBILE
+ * 8. ✅ CORRECCIONES ESPECÍFICAS PARA 3ER NIVEL EN MÓVIL
+ */
+ /* ===== SOLUCIÓN DE EMERGENCIA PARA 3ER NIVEL - POSICIÓN CORRECTA ===== */
 @media (max-width: 991.98px) {
     /* FORZAR que todos los dropdowns móviles se muestren a la DERECHA */
     .ged-mobile-sidebar .dropdown-menu {
@@ -1467,363 +1474,3 @@ main#main {
         margin-right: 5px !important;
     }
 }
-
-/* =================================================================
- * CORRECCIONES ESPECÍFICAS PARA MENÚ MÓVIL CON 3 NIVELES v6.0
- * Compatible con ged-consolidated.js v6.0 y Bootstrap 5
- * ================================================================= */
-
-/* ✅ 1. CLASES ESPECÍFICAS PARA NIVELES 2 Y 3 (AGREGADAS POR JS) */
-.mobile-dropdown-level-2 {
-    background: var(--dropdown-level2-bg) !important;
-    border-left: 3px solid var(--dropdown-level2-border) !important;
-    z-index: 1071 !important;
-}
-
-.mobile-dropdown-level-3 {
-    background: var(--dropdown-level3-bg) !important;
-    border-left: 3px solid var(--dropdown-level3-border) !important;
-    z-index: 1072 !important;
-}
-
-/* ✅ 2. INDICADORES VISUALES PARA NIVELES */
-.dropdown-toggle[data-dropdown-level="2"]::after {
-    content: ' ›';
-    margin-left: 5px;
-    font-weight: bold;
-    opacity: 0.8;
-}
-
-.dropdown-toggle[data-dropdown-level="3"]::after {
-    content: ' »';
-    margin-left: 5px;
-    font-weight: bold;
-    opacity: 0.8;
-}
-
-/* ✅ 3. FLECHAS ANIMADAS PARA MENÚ MÓVIL */
-.mobile-menu-arrow {
-    display: inline-block;
-    transform: rotate(90deg);
-    transition: transform 0.3s ease;
-    margin-left: 5px;
-    font-weight: bold;
-    font-size: 1.2em;
-}
-
-.dropdown-toggle.active .mobile-menu-arrow {
-    transform: rotate(-90deg);
-}
-
-/* ✅ 4. MEJORAR VISIBILIDAD DE DROPDOWDS EN MÓVIL */
-@media (max-width: 991.98px) {
-    /* Asegurar que los dropdowns se vean fuera del offcanvas */
-    .ged-mobile-sidebar,
-    .ged-mobile-sidebar .offcanvas-body {
-        overflow: visible !important;
-    }
-    
-    /* Posición específica para niveles 2 y 3 */
-    .ged-mobile-sidebar .mobile-dropdown-level-2 {
-        position: absolute !important;
-        top: 0 !important;
-        left: 100% !important;
-        margin-left: 5px !important;
-        width: 220px !important;
-        max-width: 90vw !important;
-        min-width: 200px !important;
-        z-index: 1071 !important;
-    }
-    
-    .ged-mobile-sidebar .mobile-dropdown-level-3 {
-        position: absolute !important;
-        top: 0 !important;
-        left: 100% !important;
-        margin-left: 5px !important;
-        width: 200px !important;
-        max-width: 85vw !important;
-        min-width: 180px !important;
-        z-index: 1072 !important;
-    }
-    
-    /* Si se sale por la derecha, mostrar a la izquierda */
-    .ged-mobile-sidebar .dropdown-menu.dropdown-menu-right,
-    .ged-mobile-sidebar .mobile-dropdown-level-2.dropdown-menu-right,
-    .ged-mobile-sidebar .mobile-dropdown-level-3.dropdown-menu-right {
-        left: auto !important;
-        right: 100% !important;
-        margin-left: 0 !important;
-        margin-right: 5px !important;
-    }
-    
-    /* Asegurar que los dropdowns estén por encima de todo */
-    .ged-mobile-sidebar .dropdown-menu {
-        z-index: 1070 !important;
-    }
-    
-    /* Mejorar visibilidad de los textos */
-    .ged-mobile-sidebar .dropdown-item {
-        font-size: 0.95rem !important;
-        line-height: 1.4 !important;
-        min-height: 44px !important;
-        display: flex !important;
-        align-items: center !important;
-    }
-    
-    /* Diferencia visual entre niveles */
-    .mobile-dropdown-level-2 .dropdown-item {
-        padding-left: 20px !important;
-        border-left: 2px solid rgba(255, 255, 255, 0.2) !important;
-    }
-    
-    .mobile-dropdown-level-3 .dropdown-item {
-        padding-left: 30px !important;
-        border-left: 2px solid rgba(255, 255, 255, 0.4) !important;
-    }
-    
-    /* Efecto hover más visible */
-    .ged-mobile-sidebar .dropdown-item:hover {
-        background: rgba(255, 255, 255, 0.2) !important;
-        transform: translateX(3px) !important;
-        transition: all 0.2s ease !important;
-    }
-}
-
-/* ✅ 5. ANIMACIONES SUAVES PARA APERTURA/CIERRE */
-.dropdown-menu {
-    transition: opacity 0.3s ease, visibility 0.3s ease, transform 0.3s ease !important;
-    transform-origin: top left !important;
-}
-
-.dropdown-menu.show {
-    animation: dropdownSlideIn 0.3s ease forwards !important;
-}
-
-@keyframes dropdownSlideIn {
-    from {
-        opacity: 0;
-        transform: translateX(-10px) scale(0.95);
-    }
-    to {
-        opacity: 1;
-        transform: translateX(0) scale(1);
-    }
-}
-
-/* ✅ 6. ESTILOS PARA BOTONES DE DROPDOWN ACTIVOS */
-.dropdown-toggle.active {
-    background: rgba(255, 255, 255, 0.2) !important;
-    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.3) !important;
-}
-
-/* ✅ 7. MEJORAR VISIBILIDAD EN PANTALLAS PEQUEÑAS */
-@media (max-width: 767.98px) {
-    .ged-mobile-sidebar .mobile-dropdown-level-2 {
-        width: 200px !important;
-        max-width: 85vw !important;
-    }
-    
-    .ged-mobile-sidebar .mobile-dropdown-level-3 {
-        width: 180px !important;
-        max-width: 80vw !important;
-    }
-    
-    /* Reducir padding en móviles muy pequeños */
-    .ged-mobile-sidebar .dropdown-item {
-        padding: 10px 15px !important;
-        font-size: 0.9rem !important;
-    }
-}
-
-@media (max-width: 575.98px) {
-    .ged-mobile-sidebar .mobile-dropdown-level-2 {
-        width: 180px !important;
-        max-width: 80vw !important;
-    }
-    
-    .ged-mobile-sidebar .mobile-dropdown-level-3 {
-        width: 160px !important;
-        max-width: 75vw !important;
-    }
-}
-
-/* ✅ 8. DEBUG VISUAL (solo cuando hay clase debug) */
-.debug-dropdown-levels .mobile-dropdown-level-2 {
-    outline: 2px dashed #00ff00 !important;
-}
-
-.debug-dropdown-levels .mobile-dropdown-level-3 {
-    outline: 2px dashed #ff9900 !important;
-}
-
-.debug-dropdown-levels .dropdown-toggle[data-dropdown-level="2"] {
-    background: rgba(0, 255, 0, 0.1) !important;
-}
-
-.debug-dropdown-levels .dropdown-toggle[data-dropdown-level="3"] {
-    background: rgba(255, 153, 0, 0.1) !important;
-}
-
-/* ✅ 9. ASEGURAR COMPATIBILIDAD CON BOOTSTRAP 5 */
-.dropdown-menu[data-bs-popper] {
-    top: 100% !important;
-    left: 0 !important;
-    margin-top: 0.125rem !important;
-}
-
-/* ✅ 10. CORRECCIÓN PARA SUBMENÚS DENTRO DE SUBMENÚS */
-.dropdown-menu .dropdown-menu {
-    margin-top: 0 !important;
-}
-
-/* ✅ 11. ESTILOS PARA EL OFFSCANVAS MÓVIL MÁS ANCHO (si es necesario) */
-@media (max-width: 991.98px) {
-    .ged-mobile-sidebar {
-        width: 320px !important;
-        max-width: 85vw !important;
-    }
-    
-    /* Permitir que el scroll sea solo vertical */
-    .ged-mobile-sidebar .offcanvas-body {
-        overflow-y: auto !important;
-        overflow-x: hidden !important;
-    }
-}
-
-/* ✅ 12. MEJORAR LEGIBILIDAD DEL TEXTO */
-.ged-mobile-sidebar .dropdown-item {
-    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5) !important;
-    font-weight: 500 !important;
-}
-
-/* ✅ 13. TRANSICIONES PARA TOGGLES */
-.dropdown-toggle {
-    transition: all 0.2s ease !important;
-    cursor: pointer !important;
-}
-
-.dropdown-toggle:hover {
-    background: rgba(255, 255, 255, 0.1) !important;
-}
-
-/* ✅ 14. Z-INDEX JERÁRQUICO MEJORADO */
-.navbar-contextual { z-index: 1030 !important; }
-.offcanvas-backdrop { z-index: 1055 !important; }
-.ged-mobile-sidebar { z-index: 1060 !important; }
-.dropdown-menu { z-index: 1070 !important; }
-.mobile-dropdown-level-2 { z-index: 1071 !important; }
-.mobile-dropdown-level-3 { z-index: 1072 !important; }
-
-/* ✅ 15. ESTILOS ESPECIALES PARA ITEMS ANIDADOS */
-.dropdown-item.has-children {
-    position: relative;
-    display: flex !important;
-    justify-content: space-between !important;
-    align-items: center !important;
-}
-
-.dropdown-item.has-children::after {
-    content: '›';
-    margin-left: 10px;
-    font-weight: bold;
-    opacity: 0.7;
-}
-
-/* ✅ 16. CORRECCIÓN PARA CUANDO EL DROPDOWN ESTÁ ABIERTO */
-.dropdown-menu.show {
-    display: block !important;
-    opacity: 1 !important;
-    visibility: visible !important;
-    transform: translate3d(0, 0, 0) !important;
-    pointer-events: all !important;
-}
-
-/* ✅ 17. ASEGURAR QUE NO HAYA DESBORDAMIENTO HORIZONTAL */
-body.mobile-menu-open {
-    overflow-x: hidden !important;
-    position: fixed !important;
-    width: 100% !important;
-}
-
-/* ✅ 18. ESTILOS PARA EL HEADER DEL OFFCANVAS */
-.ged-mobile-sidebar .offcanvas-header {
-    background: rgba(0, 0, 0, 0.3) !important;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.15) !important;
-    padding: 1rem 1.25rem !important;
-    min-height: 70px !important;
-    flex-shrink: 0 !important;
-}
-
-/* ✅ 19. BOTÓN DE CERRAR MEJORADO */
-.ged-mobile-sidebar .btn-close {
-    filter: invert(1) !important;
-    opacity: 0.8 !important;
-    transition: opacity 0.2s ease !important;
-}
-
-.ged-mobile-sidebar .btn-close:hover {
-    opacity: 1 !important;
-}
-
-/* ✅ 20. FONDO DEL OFFCANVAS CON GRADIENTE */
-.ged-mobile-sidebar {
-    background: linear-gradient(135deg, #6c3483 0%, #8e44ad 100%) !important;
-}
-
-/* ✅ 21. SEPARACIÓN VISUAL ENTRE NIVELES */
-.dropdown-menu .dropdown-divider {
-    margin: 0.5rem 0 !important;
-    border-color: rgba(255, 255, 255, 0.2) !important;
-}
-
-/* ✅ 22. RESPONSIVE ADJUSTMENTS */
-@media (max-width: 991.98px) and (orientation: landscape) {
-    .ged-mobile-sidebar {
-        max-height: 80vh !important;
-        height: auto !important;
-    }
-    
-    .ged-mobile-sidebar .offcanvas-body {
-        max-height: calc(80vh - 70px) !important;
-    }
-}
-
-/* ✅ 23. IMPRIMIR ESTILOS */
-@media print {
-    .ged-mobile-sidebar,
-    .dropdown-menu,
-    .mobile-dropdown-level-2,
-    .mobile-dropdown-level-3 {
-        display: none !important;
-    }
-}
-
-/* ✅ 24. ESTILOS DE FOCUS PARA ACCESIBILIDAD */
-.dropdown-item:focus,
-.dropdown-toggle:focus {
-    outline: 2px solid rgba(255, 255, 255, 0.5) !important;
-    outline-offset: 2px !important;
-}
-
-/* ✅ 25. SUPRESS FLICKERING EN TRANSICIONES */
-.dropdown-menu {
-    backface-visibility: hidden !important;
-    -webkit-backface-visibility: hidden !important;
-    transform: translateZ(0) !important;
-}
-
-/* ===== NOTA FINAL ===== */
-/*
- * ARCHIVO CSS CONSOLIDADO GED v6.0
- * CORRECCIONES APLICADAS:
- * 1. ✅ MENÚ MÓVIL CON 3 NIVELES COMPLETAMENTE FUNCIONAL
- * 2. ✅ CLASES ESPECÍFICAS: .mobile-dropdown-level-2 y .mobile-dropdown-level-3
- * 3. ✅ ATRIBUTOS DATA-DROPDOWN-LEVEL PARA IDENTIFICACIÓN
- * 4. ✅ ANIMACIONES SUAVES PARA APERTURA/CIERRE
- * 5. ✅ Z-INDEX JERÁRQUICO MEJORADO (1030-1072)
- * 6. ✅ DIFERENCIA VISUAL CLARA ENTRE NIVELES
- * 7. ✅ RESPONSIVE: SE AJUSTA A TODAS LAS PANTALLAS
- * 8. ✅ COMPATIBILIDAD CON BOOTSTRAP 5 Y ged-consolidated.js v6.0
- * 9. ✅ ACCESIBILIDAD MEJORADA (focus states)
- * 10. ✅ DEBUG VISUAL PARA DESARROLLO
- */

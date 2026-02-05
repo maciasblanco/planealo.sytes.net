@@ -23,16 +23,12 @@ $nombreEscuela = Yii::$app->session->get('nombreEscuela', 'Selecciona una escuel
             </a>
         </div>
         
-        <!-- Botón toggler para móvil -->
         <button class="navbar-toggler d-lg-none ms-auto" type="button" 
                 data-bs-toggle="offcanvas"
-                data-bs-target="#mobileMenuOffcanvas"
-                aria-controls="mobileMenuOffcanvas"
-                aria-label="Abrir menú de navegación">
+                data-bs-target="#mobileMenuOffcanvas">
             <span class="navbar-toggler-icon"></span>
         </button>
 
-        <!-- Navbar principal (escritorio) -->
         <div class="collapse navbar-collapse show d-none d-lg-flex" id="navbarContent">
             <div class="navbar-sections-container d-flex align-items-stretch flex-grow-1">
                 
@@ -104,28 +100,20 @@ $nombreEscuela = Yii::$app->session->get('nombreEscuela', 'Selecciona una escuel
     </div>
 </nav>
 
-<!-- OffCanvas para menú móvil -->
 <div class="offcanvas offcanvas-start ged-mobile-sidebar" tabindex="-1" id="mobileMenuOffcanvas">
     <div class="offcanvas-header bg-primary text-white">
-        <h5 class="offcanvas-title">
-            <i class="bi bi-menu-app me-2"></i>Menú GED
-        </h5>
-        <button type="button" class="btn-close btn-close-white" 
-                data-bs-dismiss="offcanvas"
-                aria-label="Cerrar menú"></button>
+        <h5 class="offcanvas-title"><i class="bi bi-menu-app me-2"></i>Menú GED</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas"></button>
     </div>
-    
     <div class="offcanvas-body p-0">
         <div class="mobile-menu-container">
-            <!-- Menú principal -->
             <?= \app\components\MenuWidget::widget([
                 'options' => [
                     'class' => 'nav flex-column mobile-nav-menu',
-                    'id' => 'gedMobileNav'
+                    'mobileMode' => true
                 ]
             ]) ?>
             
-            <!-- Controles de sesión móvil -->
             <div class="mobile-session-controls p-3 border-top">
                 <?php if (Yii::$app->user->isGuest): ?>
                     <div class="d-grid gap-2">
