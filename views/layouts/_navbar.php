@@ -14,9 +14,10 @@ $nombreEscuela = Yii::$app->session->get('nombreEscuela', 'Selecciona una escuel
                 <?= Html::img('@web/img/logos/logoGed.png', [
                     'class' => 'navbar-logo',
                     'alt' => 'GED Logo',
-                    'loading' => 'eager'
+                    'loading' => 'eager',
+                    'onerror' => "this.style.display='none'; this.parentNode.querySelector('.logo-fallback').classList.remove('d-none');"
                 ]) ?>
-                <div class="logo-fallback">
+                <div class="logo-fallback d-none" aria-hidden="true">
                     <strong>GED</strong><br>
                     <small>Sistema Deportivo</small>
                 </div>
@@ -33,6 +34,7 @@ $nombreEscuela = Yii::$app->session->get('nombreEscuela', 'Selecciona una escuel
             <div class="navbar-sections-container d-flex align-items-stretch flex-grow-1">
                 
                 <div class="navbar-menu-section d-flex align-items-center">
+                    <!-- ✅ DESKTOP: Menú normal con dropdowns -->
                     <?= \app\components\MenuWidget::widget([
                         'options' => ['class' => 'navbar-nav main-navigation']
                     ]) ?>
@@ -100,6 +102,7 @@ $nombreEscuela = Yii::$app->session->get('nombreEscuela', 'Selecciona una escuel
     </div>
 </nav>
 
+<!-- ✅ OFFCANVAS MÓVIL CON ESTRUCTURA CORRECTA -->
 <div class="offcanvas offcanvas-start ged-mobile-sidebar" tabindex="-1" id="mobileMenuOffcanvas">
     <div class="offcanvas-header bg-primary text-white">
         <h5 class="offcanvas-title"><i class="bi bi-menu-app me-2"></i>Menú GED</h5>
@@ -107,11 +110,10 @@ $nombreEscuela = Yii::$app->session->get('nombreEscuela', 'Selecciona una escuel
     </div>
     <div class="offcanvas-body p-0">
         <div class="mobile-menu-container">
+            <!-- ✅ CORRECCIÓN CRÍTICA: mobileMode=true como parámetro separado -->
             <?= \app\components\MenuWidget::widget([
-                'options' => [
-                    'class' => 'nav flex-column mobile-nav-menu',
-                    'mobileMode' => true
-                ]
+                'options' => [],  // Sin clases específicas para mantener flexibilidad
+                'mobileMode' => true  // ← PARÁMETRO CORRECTO, FUERA DE 'options'
             ]) ?>
             
             <div class="mobile-session-controls p-3 border-top">

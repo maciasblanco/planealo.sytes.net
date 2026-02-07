@@ -3,8 +3,8 @@
  * Reemplaza: ged.js, ged-init.js, gedOffCanvas-module.js, 
  *            navbarWidth-module.js, mapa-module.js, 
  *            horario-selector.js, reportes-module.js, tienda-module.js
- * Fecha: 2026-02-07 - VERSIÓN CONSOLIDADA 5.9.1
- * CORRECCIÓN: Eliminada interferencia con CSS - Coordinación balanceada
+ * Fecha: 2024-01-22 - VERSIÓN CONSOLIDADA 5.3
+ * Correcciones: Menú móvil COMPLETAMENTE funcional con 2do y 3er nivel
  * ================================================================= */
 
 'use strict';
@@ -23,8 +23,7 @@ const gedSystem = {
             tienda: null
         },
         events: {},
-        isMobileMenuOpen: false,
-        cssLoaded: false // Nueva: para verificar carga CSS
+        isMobileMenuOpen: false
     },
     
     // ===== CONSTANTES =====
@@ -42,13 +41,11 @@ const gedSystem = {
             return;
         }
         
-        console.log('🚀 GED System v5.9.1 - Inicializando sistema consolidado');
-        
-        // Verificar si CSS cargó correctamente
-        this.config.cssLoaded = this.checkCSSLoaded();
+        console.log('🚀 GED System v5.3 - Inicializando sistema consolidado');
         
         // Inicializar componentes en orden
         this.initNavbar();
+        this.initMobileMenuSystem(); // NUEVO: Sistema de menú móvil
         this.initEventListeners();
         this.initResponsiveChecks();
         this.initDynamicModules();
@@ -60,7 +57,6 @@ const gedSystem = {
         window.gedSystem = this;
         
         console.log('✅ Sistema GED inicializado correctamente');
-        console.log(`📊 CSS cargado: ${this.config.cssLoaded ? '✅ SÍ' : '⚠️ NO'}`);
         
         // Ejecutar debug si está activado
         if (this.config.debug) {
@@ -68,19 +64,7 @@ const gedSystem = {
         }
     },
     
-    // ===== VERIFICACIÓN DE CSS =====
-    checkCSSLoaded: function() {
-        try {
-            const rootStyles = getComputedStyle(document.documentElement);
-            const navbarHeightVar = rootStyles.getPropertyValue('--navbar-container-height');
-            return navbarHeightVar !== '' && navbarHeightVar !== null;
-        } catch (error) {
-            console.warn('⚠️ No se pudo verificar carga de CSS:', error);
-            return false;
-        }
-    },
-    
-    // ===== NAVBAR UNIFICADO - VERSIÓN BALANCEADA =====
+    // ===== NAVBAR UNIFICADO =====
     initNavbar: function() {
         const navbar = document.querySelector('.navbar-contextual');
         if (!navbar) {
@@ -88,54 +72,33 @@ const gedSystem = {
             return;
         }
         
-        console.log('🎯 Inicializando navbar (modo balanceado)');
+        console.log('🎯 Inicializando navbar consolidado');
         
         // ✅ FUNCIÓN ÚNICA para ajustar navbar
         const adjustNavbar = () => {
             const isDesktop = window.innerWidth >= this.config.mobileBreakpoint;
             
-            // 🔄 LEER VALORES DEL CSS PRIMERO
-            const computedStyles = getComputedStyle(navbar);
-            const cssHeight = computedStyles.height;
-            
             if (isDesktop) {
-                // ✅ DESKTOP: CSS maneja altura y padding
-                // Solo ajustar distribución y ancho que CSS podría no cubrir bien
+                // Desktop: 95% width, 45vh height
+                const targetHeight = window.innerHeight * 0.45;
                 navbar.style.width = this.CONSTANTS.NAVBAR_WIDTH_DESKTOP;
                 navbar.style.marginLeft = 'auto';
+                navbar.style.height = targetHeight + 'px';
+                navbar.style.minHeight = targetHeight + 'px';
+                document.body.style.paddingTop = targetHeight + 'px';
                 
-                // ❌ NO duplicar altura (CSS ya tiene height: 45vh)
-                // ❌ NO duplicar padding (CSS ya tiene padding-top en main#main)
-                
-                // ✅ Solo forzar distribución si CSS no carga
-                if (!this.config.cssLoaded) {
-                    const fallbackHeight = window.innerHeight * 0.45;
-                    navbar.style.height = fallbackHeight + 'px';
-                    navbar.style.minHeight = fallbackHeight + 'px';
-                    document.body.style.paddingTop = fallbackHeight + 'px';
-                    console.warn('🔄 Aplicando fallback JS (CSS no cargó)');
-                }
-                
-                // ✅ Asegurar distribución exacta (CSS puede no cubrir edge cases)
+                // Asegurar distribución exacta
                 this.ensureNavbarDistribution();
             } else {
-                // ✅ MÓVIL: CSS maneja altura con breakpoints
+                // Mobile: 100% width, altura fija
                 navbar.style.width = this.CONSTANTS.NAVBAR_WIDTH_MOBILE;
                 navbar.style.marginLeft = '0';
-                
-                // ❌ NO forzar 60px fijo (CSS ya tiene breakpoints: 60px, 50px, 45px)
-                // ❌ NO duplicar padding
-                
-                // ✅ Solo fallback si CSS no carga
-                if (!this.config.cssLoaded) {
-                    navbar.style.height = this.CONSTANTS.NAVBAR_HEIGHT_MOBILE;
-                    navbar.style.minHeight = this.CONSTANTS.NAVBAR_HEIGHT_MOBILE;
-                    document.body.style.paddingTop = this.CONSTANTS.NAVBAR_HEIGHT_MOBILE;
-                    console.warn('🔄 Aplicando fallback JS (CSS no cargó)');
-                }
+                navbar.style.height = this.CONSTANTS.NAVBAR_HEIGHT_MOBILE;
+                navbar.style.minHeight = this.CONSTANTS.NAVBAR_HEIGHT_MOBILE;
+                document.body.style.paddingTop = this.CONSTANTS.NAVBAR_HEIGHT_MOBILE;
             }
             
-            // ✅ Scroll behavior (no depende de altura duplicada)
+            // Scroll behavior
             this.handleNavbarScroll(navbar);
         };
         
@@ -170,14 +133,14 @@ const gedSystem = {
                 return;
             }
             
-            // Asegurar display flex (edge cases que CSS podría no cubrir)
+            // Asegurar display flex
             section.style.display = 'flex';
             section.style.alignItems = 'center';
             section.style.height = '100%';
             section.style.overflow = 'hidden';
         });
         
-        // Forzar una línea (CSS ya lo tiene pero JS asegura)
+        // Forzar una línea
         const container = document.querySelector('.navbar-container');
         const sectionsContainer = document.querySelector('.navbar-sections-container');
         
@@ -210,6 +173,340 @@ const gedSystem = {
                 }
             }, 10);
         });
+    },
+    
+    // ===== SISTEMA DE MENÚ MÓVIL - SOLUCIÓN COMPLETA =====
+    initMobileMenuSystem: function() {
+        console.log('📱 Inicializando sistema de menú móvil');
+        
+        // Configurar offcanvas
+        this.setupOffcanvas();
+        
+        // Preparar estructura inicial
+        this.prepareMobileMenuStructure();
+    },
+    
+    // ===== CONFIGURAR OFFCANVAS =====
+    setupOffcanvas: function() {
+        const offcanvasEl = document.getElementById('mobileMenuOffcanvas');
+        if (!offcanvasEl) {
+            console.log('ℹ️ Offcanvas no encontrado');
+            return;
+        }
+        
+        console.log('🔧 Configurando offcanvas móvil');
+        
+        // Escuchar cuando el offcanvas se abra
+        offcanvasEl.addEventListener('show.bs.offcanvas', () => {
+            console.log('📱 Offcanvas abriéndose');
+            this.config.isMobileMenuOpen = true;
+        });
+        
+        // Escuchar cuando el offcanvas esté COMPLETAMENTE abierto
+        offcanvasEl.addEventListener('shown.bs.offcanvas', () => {
+            console.log('✅ Offcanvas completamente abierto');
+            this.config.isMobileMenuOpen = true;
+            
+            // Inicializar sistema de menú móvil
+            setTimeout(() => {
+                this.initializeMobileMenu();
+            }, 100);
+        });
+        
+        // Escuchar cuando el offcanvas se cierre
+        offcanvasEl.addEventListener('hidden.bs.offcanvas', () => {
+            console.log('❌ Offcanvas cerrado');
+            this.config.isMobileMenuOpen = false;
+        });
+    },
+    
+    // ===== PREPARAR ESTRUCTURA DE MENÚ MÓVIL =====
+    prepareMobileMenuStructure: function() {
+        const offcanvasEl = document.getElementById('mobileMenuOffcanvas');
+        if (!offcanvasEl) return;
+        
+        console.log('🏗️ Preparando estructura de menú móvil');
+        
+        // ✅ 1. PREPARAR DROPDOWNS DE 2do NIVEL
+        const secondLevelMenus = offcanvasEl.querySelectorAll('.dropdown-menu .dropdown-menu');
+        secondLevelMenus.forEach((menu, index) => {
+            console.log(`🔧 Preparando 2do nivel ${index + 1}`);
+            
+            // Asegurar clases
+            menu.classList.add('mobile-dropdown-level-2');
+            
+            // Forzar estilos básicos
+            menu.style.cssText = `
+                position: absolute !important;
+                top: 0 !important;
+                left: 100% !important;
+                margin-left: 5px !important;
+                width: 220px !important;
+                max-width: 90vw !important;
+                background: rgba(125, 60, 152, 0.98) !important;
+                border: 1px solid rgba(255,255,255,0.3) !important;
+                border-radius: 6px !important;
+                box-shadow: 0 10px 30px rgba(0,0,0,0.3) !important;
+                z-index: 1071 !important;
+                display: none !important;
+                opacity: 0 !important;
+                visibility: hidden !important;
+                padding: 0 !important;
+            `;
+        });
+        
+        // ✅ 2. PREPARAR DROPDOWNS DE 3er NIVEL
+        const thirdLevelMenus = offcanvasEl.querySelectorAll('.dropdown-menu .dropdown-menu .dropdown-menu');
+        thirdLevelMenus.forEach((menu, index) => {
+            console.log(`🔧 Preparando 3er nivel ${index + 1}`);
+            
+            // Asegurar clases
+            menu.classList.add('mobile-dropdown-level-3');
+            
+            // Forzar estilos básicos
+            menu.style.cssText = `
+                position: absolute !important;
+                top: 0 !important;
+                left: 100% !important;
+                margin-left: 5px !important;
+                width: 200px !important;
+                max-width: 90vw !important;
+                background: rgba(125, 60, 152, 0.98) !important;
+                border: 1px solid rgba(255,255,255,0.3) !important;
+                border-radius: 6px !important;
+                box-shadow: 0 10px 30px rgba(0,0,0,0.3) !important;
+                z-index: 1072 !important;
+                display: none !important;
+                opacity: 0 !important;
+                visibility: hidden !important;
+                padding: 0 !important;
+            `;
+        });
+        
+        console.log(`✅ Preparados: ${secondLevelMenus.length} 2do nivel, ${thirdLevelMenus.length} 3er nivel`);
+    },
+    
+    // ===== INICIALIZAR MENÚ MÓVIL =====
+    initializeMobileMenu: function() {
+        if (!this.config.isMobileMenuOpen) return;
+        
+        console.log('🎯 Inicializando menú móvil interactivo');
+        
+        const offcanvasEl = document.getElementById('mobileMenuOffcanvas');
+        if (!offcanvasEl) return;
+        
+        // ✅ 1. CONFIGURAR DELEGACIÓN DE EVENTOS ÚNICA
+        this.setupMobileMenuEventDelegation(offcanvasEl);
+        
+        // ✅ 2. AGREGAR INDICADORES VISUALES
+        this.addMobileMenuIndicators(offcanvasEl);
+        
+        console.log('✅ Menú móvil inicializado');
+    },
+    
+    // ===== CONFIGURAR DELEGACIÓN DE EVENTOS PARA MENÚ MÓVIL =====
+    setupMobileMenuEventDelegation: function(container) {
+        console.log('🖱️ Configurando delegación de eventos para menú móvil');
+        
+        // Remover cualquier evento anterior
+        container.removeEventListener('click', this.config.events.mobileMenuClick);
+        
+        // Crear handler de delegación
+        const clickHandler = (e) => {
+            // Solo procesar en móvil
+            if (window.innerWidth >= this.config.mobileBreakpoint) return;
+            
+            // Buscar el elemento clickeado que sea un dropdown toggle
+            let target = e.target;
+            
+            // Si se hizo clic en un ícono dentro del enlace
+            if (target.tagName === 'I' || target.tagName === 'SPAN') {
+                target = target.closest('a');
+            }
+            
+            // Si se hizo clic en un enlace sin dropdown
+            if (!target || !target.classList.contains('dropdown-toggle')) {
+                // Si se hizo clic fuera de un dropdown, cerrar todos
+                if (!target || !target.closest('.dropdown')) {
+                    this.closeAllMobileDropdowns(container);
+                }
+                return;
+            }
+            
+            // Prevenir comportamiento por defecto de Bootstrap
+            e.preventDefault();
+            e.stopPropagation();
+            
+            // Obtener el menú asociado
+            const dropdownMenu = target.nextElementSibling;
+            if (!dropdownMenu || !dropdownMenu.classList.contains('dropdown-menu')) {
+                return;
+            }
+            
+            console.log('🔄 Click en dropdown móvil');
+            
+            // Manejar el clic
+            this.handleMobileMenuClick(target, dropdownMenu, container);
+        };
+        
+        // Guardar referencia y asignar evento
+        this.config.events.mobileMenuClick = clickHandler;
+        container.addEventListener('click', clickHandler);
+        
+        console.log('✅ Delegación de eventos configurada');
+    },
+    
+    // ===== MANEJAR CLIC EN MENÚ MÓVIL =====
+    handleMobileMenuClick: function(toggle, dropdownMenu, container) {
+        const isOpen = dropdownMenu.style.display === 'block';
+        
+        console.log(`🔄 Dropdown ${isOpen ? 'abierto' : 'cerrado'} → ${isOpen ? 'cerrando' : 'abriendo'}`);
+        
+        if (!isOpen) {
+            // Cerrar otros dropdowns del mismo nivel
+            this.closeOtherMobileDropdowns(container, dropdownMenu);
+        }
+        
+        // Alternar estado
+        if (isOpen) {
+            // Cerrar este dropdown
+            this.closeMobileDropdown(dropdownMenu);
+            
+            // También cerrar sus hijos
+            this.closeChildDropdowns(dropdownMenu);
+        } else {
+            // Abrir este dropdown
+            this.openMobileDropdown(toggle, dropdownMenu);
+        }
+    },
+    
+    // ===== ABRIR DROPDOWN MÓVIL =====
+    openMobileDropdown: function(toggle, dropdownMenu) {
+        // Mostrar dropdown
+        dropdownMenu.style.display = 'block';
+        dropdownMenu.style.opacity = '1';
+        dropdownMenu.style.visibility = 'visible';
+        
+        // Actualizar estado del toggle
+        toggle.setAttribute('aria-expanded', 'true');
+        
+        // Añadir clase activa
+        toggle.classList.add('active');
+        
+        // Ajustar posición si es necesario
+        this.adjustMobileDropdownPosition(dropdownMenu);
+        
+        console.log('✅ Dropdown abierto');
+    },
+    
+    // ===== CERRAR DROPDOWN MÓVIL =====
+    closeMobileDropdown: function(dropdownMenu) {
+        // Ocultar dropdown
+        dropdownMenu.style.display = 'none';
+        dropdownMenu.style.opacity = '0';
+        dropdownMenu.style.visibility = 'hidden';
+        
+        // Actualizar toggle asociado
+        const toggle = dropdownMenu.previousElementSibling;
+        if (toggle && toggle.classList.contains('dropdown-toggle')) {
+            toggle.setAttribute('aria-expanded', 'false');
+            toggle.classList.remove('active');
+        }
+        
+        console.log('✅ Dropdown cerrado');
+    },
+    
+    // ===== CERRAR OTROS DROPDOWNS MÓVILES =====
+    closeOtherMobileDropdowns: function(container, currentMenu) {
+        // Buscar todos los dropdowns abiertos
+        const openDropdowns = container.querySelectorAll('.dropdown-menu[style*="display: block"]');
+        
+        openDropdowns.forEach(menu => {
+            // No cerrar el actual
+            if (menu === currentMenu) return;
+            
+            // No cerrar padres del actual
+            if (currentMenu && menu.contains(currentMenu)) return;
+            
+            // Cerrar este dropdown
+            this.closeMobileDropdown(menu);
+        });
+    },
+    
+    // ===== CERRAR TODOS LOS DROPDOWNS MÓVILES =====
+    closeAllMobileDropdowns: function(container) {
+        const openDropdowns = container.querySelectorAll('.dropdown-menu[style*="display: block"]');
+        
+        openDropdowns.forEach(menu => {
+            this.closeMobileDropdown(menu);
+        });
+        
+        console.log(`🚫 Cerrados ${openDropdowns.length} dropdowns`);
+    },
+    
+    // ===== CERRAR DROPDOWNS HIJOS =====
+    closeChildDropdowns: function(parentMenu) {
+        const childDropdowns = parentMenu.querySelectorAll('.dropdown-menu[style*="display: block"]');
+        
+        childDropdowns.forEach(menu => {
+            this.closeMobileDropdown(menu);
+        });
+    },
+    
+    // ===== AJUSTAR POSICIÓN DE DROPDOWN MÓVIL =====
+    adjustMobileDropdownPosition: function(dropdownMenu) {
+        if (window.innerWidth >= this.config.mobileBreakpoint) return;
+        
+        // Solo ajustar para dropdowns anidados (2do y 3er nivel)
+        if (!dropdownMenu.classList.contains('mobile-dropdown-level-2') && 
+            !dropdownMenu.classList.contains('mobile-dropdown-level-3')) {
+            return;
+        }
+        
+        const rect = dropdownMenu.getBoundingClientRect();
+        const viewportWidth = window.innerWidth;
+        
+        // Si se sale por la derecha, mostrar a la izquierda
+        if (rect.right > viewportWidth - 20) {
+            dropdownMenu.style.left = 'auto';
+            dropdownMenu.style.right = '100%';
+            dropdownMenu.style.marginLeft = '0';
+            dropdownMenu.style.marginRight = '5px';
+        } else {
+            // Mantener a la derecha
+            dropdownMenu.style.left = '100%';
+            dropdownMenu.style.right = 'auto';
+            dropdownMenu.style.marginLeft = '5px';
+            dropdownMenu.style.marginRight = '0';
+        }
+    },
+    
+    // ===== AGREGAR INDICADORES VISUALES =====
+    addMobileMenuIndicators: function(container) {
+        console.log('🎨 Agregando indicadores visuales para menú móvil');
+        
+        // Buscar todos los items que tienen submenú
+        const dropdownToggles = container.querySelectorAll('.dropdown-toggle');
+        
+        dropdownToggles.forEach(toggle => {
+            const dropdownMenu = toggle.nextElementSibling;
+            if (dropdownMenu && dropdownMenu.classList.contains('dropdown-menu')) {
+                // Agregar flecha indicadora si no existe
+                if (!toggle.querySelector('.mobile-menu-arrow')) {
+                    const arrow = document.createElement('span');
+                    arrow.className = 'mobile-menu-arrow ms-2';
+                    arrow.innerHTML = '›';
+                    arrow.style.cssText = `
+                        display: inline-block;
+                        transform: rotate(90deg);
+                        transition: transform 0.3s;
+                    `;
+                    toggle.appendChild(arrow);
+                }
+            }
+        });
+        
+        console.log(`✅ ${dropdownToggles.length} indicadores agregados`);
     },
     
     // ===== MAPA UNIFICADO =====
@@ -540,9 +837,29 @@ const gedSystem = {
     
     // ===== MANEJO DE RESIZE =====
     handleResize: function() {
+        const isMobile = window.innerWidth < this.config.mobileBreakpoint;
+        
+        if (isMobile && this.config.isMobileMenuOpen) {
+            // Reajustar posición de dropdowns si el offcanvas está abierto
+            setTimeout(() => {
+                this.adjustAllMobileDropdownPositions();
+            }, 300);
+        }
+        
         if (this.config.modules.map) {
             this.config.modules.map.invalidateSize();
         }
+    },
+    
+    // ===== AJUSTAR TODAS LAS POSICIONES DE DROPDOWNS MÓVILES =====
+    adjustAllMobileDropdownPositions: function() {
+        const offcanvasEl = document.getElementById('mobileMenuOffcanvas');
+        if (!offcanvasEl) return;
+        
+        const dropdowns = offcanvasEl.querySelectorAll('.dropdown-menu[style*="display: block"]');
+        dropdowns.forEach(dropdown => {
+            this.adjustMobileDropdownPosition(dropdown);
+        });
     },
     
     // ===== VERIFICACIONES RESPONSIVE =====
@@ -707,24 +1024,35 @@ const gedSystem = {
     
     // ===== DEBUG =====
     debug: function() {
-        console.group('🐛 DEBUG GED SYSTEM v5.9.1');
+        console.group('🐛 DEBUG GED SYSTEM v5.3');
         console.log('Configuración:', this.config);
         console.log('Viewport:', window.innerWidth, 'x', window.innerHeight);
+        console.log('Offcanvas abierto:', this.config.isMobileMenuOpen);
         
-        // Verificar valores CSS vs JS
-        const navbar = document.querySelector('.navbar-contextual');
-        if (navbar) {
-            const computed = getComputedStyle(navbar);
-            console.log('📐 Navbar CSS vs JS:', {
-                'CSS height': computed.height,
-                'CSS width': computed.width,
-                'JS height': navbar.style.height,
-                'JS width': navbar.style.width
+        // Verificar estructura del offcanvas
+        const offcanvas = document.getElementById('mobileMenuOffcanvas');
+        if (offcanvas) {
+            console.log('Offcanvas encontrado');
+            
+            // Contar dropdowns
+            const dropdowns = offcanvas.querySelectorAll('.dropdown-menu');
+            const level2 = offcanvas.querySelectorAll('.mobile-dropdown-level-2');
+            const level3 = offcanvas.querySelectorAll('.mobile-dropdown-level-3');
+            
+            console.log(`📊 Dropdowns totales: ${dropdowns.length}`);
+            console.log(`📊 2do nivel: ${level2.length}`);
+            console.log(`📊 3er nivel: ${level3.length}`);
+            
+            // Verificar eventos
+            const toggles = offcanvas.querySelectorAll('.dropdown-toggle');
+            console.log(`🖱️ Dropdown toggles: ${toggles.length}`);
+            
+            toggles.forEach((toggle, i) => {
+                const hasMenu = toggle.nextElementSibling && 
+                              toggle.nextElementSibling.classList.contains('dropdown-menu');
+                console.log(`Toggle ${i + 1}: Tiene menú = ${hasMenu ? '✅' : '❌'}`);
             });
         }
-        
-        // Verificar body padding
-        console.log('📏 Body padding-top:', getComputedStyle(document.body).paddingTop);
         
         console.groupEnd();
     },
@@ -740,6 +1068,7 @@ const gedSystem = {
         this.config.isInitialized = false;
         this.config.modules = {};
         this.config.events = {};
+        this.config.isMobileMenuOpen = false;
         
         console.log('🧹 GED System destruido');
     }
@@ -784,18 +1113,12 @@ if (typeof module !== 'undefined' && module.exports) {
 }
 
 /* ===== NOTA FINAL =====
- * ARCHIVO JS CONSOLIDADO GED v5.9.1
- * MODIFICACIONES APLICADAS:
- * 1. ✅ VERIFICACIÓN de carga CSS (checkCSSLoaded)
- * 2. ✅ MODO BALANCEADO: CSS como fuente principal de estilos
- * 3. ✅ ELIMINADO: duplicación de altura y padding (cause de doble separación)
- * 4. ✅ MANTENIDO: fallback JS solo si CSS no carga
- * 5. ✅ MANTENIDO: ajustes de distribución interna (edge cases)
- * 6. ✅ DEPURACIÓN MEJORADA: logs informativos
- * 
- * BENEFICIOS:
- * - CSS controla altura, padding, responsive breakpoints
- * - JS maneja distribución interna, cálculos dinámicos, fallback
- * - Eliminado conflicto de doble separación (90vh → 45vh correcto)
- * - Coordinación perfecta entre CSS y JS
+ * ARCHIVO JS CONSOLIDADO GED v5.3
+ * SOLUCIÓN COMPLETA PARA MENÚ MÓVIL:
+ * 1. ✅ SISTEMA DELEGACIÓN DE EVENTOS único
+ * 2. ✅ MANEJO COMPLETO de 2do y 3er nivel
+ * 3. ✅ PREVENCIÓN de interferencia de Bootstrap
+ * 4. ✅ INDICADORES VISUALES para items con submenú
+ * 5. ✅ AJUSTE AUTOMÁTICO de posición
+ * 6. ✅ CIERRE INTELIGENTE de otros dropdowns
  */
