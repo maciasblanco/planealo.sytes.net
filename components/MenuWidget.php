@@ -11,6 +11,7 @@ use app\models\Menu;
  * Widget de menú dinámico basado en la tabla seguridad.menu
  * ✅ CORREGIDO: Genera estructura correcta para móvil con collapses de Bootstrap
  * ✅ DESKTOP: Dropdowns anidados para más de 2 niveles
+ * ✅ CORRECCIÓN: Eliminados ítems redundantes (Login/Registro/Mi Cuenta) del menú principal
  */
 class MenuWidget extends Widget
 {
@@ -172,6 +173,12 @@ class MenuWidget extends Widget
         $filtered = [];
         
         foreach ($items as $item) {
+            // ⛔ EXCLUSIÓN: Ítems que deben aparecer solo en el control de usuario
+            // ID 184: Login, ID 185: Registro, ID 186: Mi Cuenta
+            if (in_array($item['id'] ?? 0, [184, 185, 186])) {
+                continue;
+            }
+            
             // SUPERUSUARIO: Mostrar todo
             if (in_array('*', $this->userPermissions)) {
                 if (!empty($item['items'])) {
