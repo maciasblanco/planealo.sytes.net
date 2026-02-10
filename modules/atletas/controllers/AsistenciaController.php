@@ -6,11 +6,11 @@ namespace app\modules\atletas\controllers;
 use Yii;
 use app\models\Asistencia;
 use app\models\AtletasRegistro;
+use app\models\Escuela;
 use app\modules\atletas\models\AsistenciaSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
-use yii\filters\AccessControl;
 
 /**
  * AsistenciaController implements the CRUD actions for Asistencia model.
@@ -97,7 +97,7 @@ class AsistenciaController extends Controller
             return $this->redirect(['registro-rapido']);
         }
 
-        // Obtener atletas activos para el select - CORREGIDO
+        // Obtener atletas activos para el select
         $atletas = AtletasRegistro::find()
             ->where(['eliminado' => false])
             ->orderBy(['p_nombre' => SORT_ASC, 'p_apellido' => SORT_ASC])
@@ -230,68 +230,6 @@ class AsistenciaController extends Controller
     }
 
     /**
-     * Obtener estadísticas rápidas para el índice
-     */
-    private function getEstadisticasRapidas()
-    {
-        $hoy = date('Y-m-d');
-        $mes = date('m');
-        $ano = date('Y');
-
-        return [
-            'asistencias_hoy' => Asistencia::find()
-                ->where(['fecha_practica' => $hoy, 'asistio' => true, 'eliminado' => false])
-                ->count(),
-            'total_atletas' => AtletasRegistro::find()
-                ->where(['eliminado' => false])
-                ->count(),
-            'porcentaje_asistencia_mes' => $this->calcularPorcentajeAsistenciaMes($mes, $ano),
-        ];
-    }
-
-    /**
-     * Calcular porcentaje de asistencia del mes
-     */
-    private function calcularPorcentajeAsistenciaMes($mes, $ano)
-    {
-        $totalDias = cal_days_in_month(CAL_GREGORIAN, $mes, $ano);
-        $totalAtletas = AtletasRegistro::find()->where(['eliminado' => false])->count();
-        $maxAsistencias = $totalDias * $totalAtletas;
-
-        if ($maxAsistencias == 0) return 0;
-
-        $totalAsistencias = Asistencia::find()
-            ->where(['asistio' => true, 'eliminado' => false])
-            ->andWhere("EXTRACT(MONTH FROM fecha_practica) = $mes")
-            ->andWhere("EXTRACT(YEAR FROM fecha_practica) = $ano")
-            ->count();
-
-        return round(($totalAsistencias / $maxAsistencias) * 100, 1);
-    }
-
-    /**
-     * Exportar reporte a Excel
-     */
-    private function exportarReporte($dataProvider)
-    {
-        // Implementar exportación a Excel aquí
-        // Puedes usar PHPExcel o PhpSpreadsheet
-        Yii::$app->session->setFlash('info', 'Función de exportación en desarrollo.');
-        return $this->redirect(['reporte']);
-    }
-
-    /**
-     * Finds the Asistencia model based on its primary key value.
-     */
-    protected function findModel($id)
-    {
-        if (($model = Asistencia::findOne($id)) !== null) {
-            return $model;
-        }
-
-        throw new NotFoundHttpException('La asistencia solicitada no existe.');
-    }
-    /**
      * Registro múltiple de asistencia por escuela
      */
     public function actionRegistroMultiple()
@@ -304,18 +242,40 @@ class AsistenciaController extends Controller
         $atletas = [];
         $idEscuelaSeleccionada = Yii::$app->request->get('id_escuela');
 
-        if (Yii::$app->request->post()) {
+        if (!empty($idEscuelaSeleccionada)) {
+            $escuela = Escuela::findOne($idEscuelaSeleccionada);
+            
+            // ✅ VERIFICACIÓN CORREGIDA: La escuela debe existir y no estar eliminada
+            if ($escuela && $escuela->eliminado == false) {
+                // ✅ CONSULTA OPTIMIZADA PARA POSTGRESQL
+                // Asumimos que el campo 'eliminado' es de tipo boolean en PostgreSQL
+                $atletas = AtletasRegistro::find()
+                    ->where(['id_escuela' => $idEscuelaSeleccionada])
+                    ->andWhere(['eliminado' => false]) // Valor booleano false
+                    ->orderBy(['p_nombre' => SORT_ASC, 'p_apellido' => SORT_ASC])
+                    ->all();
+                    
+                // ✅ LOG PARA DIAGNÓSTICO
+                Yii::debug("Atletas encontrados para escuela {$idEscuelaSeleccionada}: " . count($atletas), 'asistencia');
+                
+            } else {
+                Yii::$app->session->setFlash('error', '❌ La escuela seleccionada no existe o está inactiva.');
+                $idEscuelaSeleccionada = null;
+            }
+        }
+
+        // ✅ CORRECCIÓN: Separar la lógica de POST para el registro de asistencias
+        // Esta parte solo se ejecuta cuando se envía el formulario con los atletas seleccionados
+        if (Yii::$app->request->post() && !empty($idEscuelaSeleccionada)) {
             $post = Yii::$app->request->post();
             $idAtletas = $post['id_atletas'] ?? [];
-            $idEscuela = $post['id_escuela'] ?? null;
             $comentarios = $post['Asistencia']['comentarios'] ?? '';
             
             $registrosExitosos = 0;
             $errores = [];
 
             foreach ($idAtletas as $idAtleta) {
-                $fechaPractica = $post['Asistencia']['fecha_practica'] ?? date('Y-m-d');
-                $resultado = Asistencia::registrarAsistencia($idAtleta, $idEscuela, $fechaPractica);
+                $resultado = Asistencia::registrarAsistencia($idAtleta, $idEscuelaSeleccionada, $model->fecha_practica);
                 
                 if ($resultado['success']) {
                     $registrosExitosos++;
@@ -345,15 +305,8 @@ class AsistenciaController extends Controller
                     "❌ Errores encontrados:<br>" . implode('<br>', $errores));
             }
 
-            return $this->redirect(['registro-multiple', 'id_escuela' => $idEscuela]);
-        }
-
-        // Si hay una escuela seleccionada, obtener sus atletas
-        if ($idEscuelaSeleccionada) {
-            $atletas = AtletasRegistro::find()
-                ->where(['eliminado' => false, 'id_escuela' => $idEscuelaSeleccionada])
-                ->orderBy(['p_nombre' => SORT_ASC, 'p_apellido' => SORT_ASC])
-                ->all();
+            // Redirigir para evitar reenvío del formulario
+            return $this->redirect(['registro-multiple', 'id_escuela' => $idEscuelaSeleccionada]);
         }
 
         return $this->render('registro-multiple', [
@@ -458,5 +411,67 @@ class AsistenciaController extends Controller
             'success' => true,
             'html' => $html
         ];
+    }
+
+    /**
+     * Obtener estadísticas rápidas para el índice
+     */
+    private function getEstadisticasRapidas()
+    {
+        $hoy = date('Y-m-d');
+        $mes = date('m');
+        $ano = date('Y');
+
+        return [
+            'asistencias_hoy' => Asistencia::find()
+                ->where(['fecha_practica' => $hoy, 'asistio' => true, 'eliminado' => false])
+                ->count(),
+            'total_atletas' => AtletasRegistro::find()
+                ->where(['eliminado' => false])
+                ->count(),
+            'porcentaje_asistencia_mes' => $this->calcularPorcentajeAsistenciaMes($mes, $ano),
+        ];
+    }
+
+    /**
+     * Calcular porcentaje de asistencia del mes
+     */
+    private function calcularPorcentajeAsistenciaMes($mes, $ano)
+    {
+        $totalDias = cal_days_in_month(CAL_GREGORIAN, $mes, $ano);
+        $totalAtletas = AtletasRegistro::find()->where(['eliminado' => false])->count();
+        $maxAsistencias = $totalDias * $totalAtletas;
+
+        if ($maxAsistencias == 0) return 0;
+
+        $totalAsistencias = Asistencia::find()
+            ->where(['asistio' => true, 'eliminado' => false])
+            ->andWhere("EXTRACT(MONTH FROM fecha_practica) = $mes")
+            ->andWhere("EXTRACT(YEAR FROM fecha_practica) = $ano")
+            ->count();
+
+        return round(($totalAsistencias / $maxAsistencias) * 100, 1);
+    }
+
+    /**
+     * Exportar reporte a Excel
+     */
+    private function exportarReporte($dataProvider)
+    {
+        // Implementar exportación a Excel aquí
+        Yii::$app->session->setFlash('info', 'Función de exportación en desarrollo.');
+        return $this->redirect(['reporte']);
+    }
+
+    /**
+     * Finds the Asistencia model based on its primary key value.
+     */
+    protected function findModel($id)
+    {
+        if (($model = Asistencia::findOne($id)) !== null) {
+            return $model;
+        }
+
+        throw new NotFoundHttpException('La asistencia solicitada no existe.');
     }
 }

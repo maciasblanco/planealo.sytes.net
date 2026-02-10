@@ -38,7 +38,7 @@ class AportesSemanales extends ActiveRecord
     // =========================================================================
     // CONSTANTES DEL SISTEMA
     // =========================================================================
-    const MONTO_QUINCENAL_USD = 4.00; // $4.00 dólares por quincena
+    const MONTO_QUINCENAL_USD = 5.00; // $5.00 dólares por quincena
     const ESTADO_PENDIENTE = 'pendiente';
     const ESTADO_PAGADO = 'pagado';
     const ESTADO_CANCELADO = 'cancelado';

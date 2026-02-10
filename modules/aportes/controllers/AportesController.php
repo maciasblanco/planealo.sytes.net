@@ -18,8 +18,10 @@ use yii\filters\AccessControl;
 
 /**
  * AportesController implementa el CRUD para el modelo AportesSemanales.
- * ACTUALIZADO: Sistema quincenal ($4.00 cada 15 días) con manejo dual de moneda (Bs/USD)
+ * ACTUALIZADO: Sistema quincenal ($5.00 cada 15 días) con manejo dual de moneda (Bs/USD)
  * SOLO DESDE 15/01/2026
+ * ✅ CORREGIDO: Superusuario (ID 1) ahora tiene acceso completo
+ * ✅ ACTUALIZADO: Monto quincenal $5.00 (antes $4.00)
  */
 class AportesController extends Controller
 {
@@ -76,7 +78,27 @@ class AportesController extends Controller
         Yii::info("Atletas encontrados: " . count($atletas));
 
         if (empty($atletas)) {
-            Yii::$app->session->setFlash('warning', 'No se encontraron atletas registrados en esta escuela o no tiene permisos para verlos.');
+            // Determinar el motivo por el cual no hay atletas
+            $user = Yii::$app->user;
+            $mensaje = '';
+            
+            // ✅ CORRECCIÓN: Superusuario (ID 1) siempre tiene acceso
+            if ($user->id == 1 || $user->can('admin')) {
+                $mensaje = 'No se encontraron atletas registrados en esta escuela.';
+            } elseif ($user->can('viewOwnAportes')) {
+                $mensaje = 'No tienes un perfil de atleta asignado a tu usuario en esta escuela.';
+            } elseif ($user->can('viewRepresentedAportes')) {
+                $representante = RegistroRepresentantes::find()->where(['user_id' => $user->id])->one();
+                if ($representante) {
+                    $mensaje = 'No tienes atletas asignados como representante en esta escuela.';
+                } else {
+                    $mensaje = 'No estás registrado como representante.';
+                }
+            } else {
+                $mensaje = 'No tienes permisos para ver atletas.';
+            }
+            
+            Yii::$app->session->setFlash('warning', $mensaje);
             return $this->render('index', [
                 'atletasConEstadisticas' => [],
                 'totalRecaudado' => 0,
@@ -330,7 +352,7 @@ class AportesController extends Controller
                     
                 $montoDeuda = AportesSemanales::find()
                     ->where(['atleta_id' => $atleta_id, 'estado' => 'pendiente'])
-                    ->andWhere(['>=', 'fecha_quincena', '2026-01-15']) // FILTRO CRÍTICO
+                    ->andWhere(['>=', 'fecha_quincena', '2026-01-2026']) // FILTRO CRÍTICO
                     ->sum('monto');
                 $montoDeuda = $montoDeuda ? floatval($montoDeuda) : 0;
                     
@@ -1040,17 +1062,27 @@ class AportesController extends Controller
     }
 
     // =========================================================================
-    // MÉTODOS RBAC - CONTROL DE ACCESO
+    // MÉTODOS RBAC - CONTROL DE ACCESO (CON CORRECCIÓN PARA SUPERUSUARIO)
     // =========================================================================
 
     /**
      * Obtiene los atletas permitidos según los permisos RBAC del usuario
+     * ✅ CORREGIDO: Superusuario (ID 1) ahora tiene acceso completo
      * @param int $id_escuela
      * @return AtletasRegistro[]
      */
     protected function getAtletasPermitidos($id_escuela)
     {
         $user = Yii::$app->user;
+        
+        // ✅ CORRECCIÓN CRÍTICA: Superusuario (ID 1) siempre ve todos los atletas
+        if ($user->id == 1) {
+            return AtletasRegistro::find()
+                ->where(['id_escuela' => $id_escuela])
+                ->andWhere(['eliminado' => false])
+                ->orderBy(['p_nombre' => SORT_ASC, 'p_apellido' => SORT_ASC])
+                ->all();
+        }
         
         // Admin ve todos los atletas de la escuela
         if ($user->can('admin')) {
@@ -1093,12 +1125,18 @@ class AportesController extends Controller
 
     /**
      * Verifica si el usuario tiene permiso para ver un atleta específico
+     * ✅ CORREGIDO: Superusuario (ID 1) siempre tiene permiso
      * @param AtletasRegistro $atleta
      * @return bool
      */
     protected function tienePermisoVerAtleta($atleta)
     {
         $user = Yii::$app->user;
+        
+        // ✅ CORRECCIÓN CRÍTICA: Superusuario (ID 1) siempre tiene permiso
+        if ($user->id == 1) {
+            return true;
+        }
         
         // Admin puede ver todos los atletas
         if ($user->can('admin')) {
@@ -1124,6 +1162,7 @@ class AportesController extends Controller
 
     /**
      * Verifica si el usuario tiene permiso para ver un atleta por ID
+     * ✅ CORREGIDO: Superusuario (ID 1) siempre tiene permiso
      * @param int $atleta_id
      * @return bool
      */
@@ -1135,23 +1174,47 @@ class AportesController extends Controller
 
     /**
      * Verifica si el usuario tiene permiso para ver un aporte específico
+     * ✅ CORREGIDO: Superusuario (ID 1) siempre tiene permiso
      * @param AportesSemanales $aporte
      * @return bool
      */
     protected function tienePermisoVerAporte($aporte)
     {
+        $user = Yii::$app->user;
+        
+        // ✅ CORRECCIÓN CRÍTICA: Superusuario (ID 1) siempre tiene permiso
+        if ($user->id == 1) {
+            return true;
+        }
+        
         $atleta = AtletasRegistro::findOne($aporte->atleta_id);
         return $atleta && $this->tienePermisoVerAtleta($atleta);
     }
 
     /**
      * Obtiene top atletas permitidos según RBAC (SOLO DESDE 15/01/2026)
+     * ✅ CORREGIDO: Superusuario (ID 1) ve todos los top atletas
      * @param int $id_escuela
      * @param array $atletasPermitidos
      * @return array
      */
     protected function getTopAtletasPermitidos($id_escuela, $atletasPermitidos)
     {
+        $user = Yii::$app->user;
+        
+        // ✅ CORRECCIÓN: Superusuario (ID 1) ve todos los top atletas sin filtrar
+        if ($user->id == 1 || $user->can('admin')) {
+            return AportesSemanales::find()
+                ->select(['atleta_id', 'COUNT(*) as total_aportes', 'SUM(monto) as total_pagado'])
+                ->where(['estado' => 'pagado', 'escuela_id' => $id_escuela])
+                ->andWhere(['>=', 'fecha_quincena', '2026-01-15']) // FILTRO CRÍTICO
+                ->groupBy(['atleta_id'])
+                ->orderBy(['total_pagado' => SORT_DESC])
+                ->limit(5)
+                ->asArray()
+                ->all();
+        }
+        
         if (empty($atletasPermitidos)) {
             return [];
         }
@@ -1858,7 +1921,7 @@ class AportesController extends Controller
             $transaction->commit();
             
             Yii::$app->session->setFlash('success', 
-                "Migración completada: {$atletasProcesados} atletas procesados, {$quincenasGeneradas} quincenas generadas desde 15/01/2026. "
+                "Migración completada: {$atletasProcesados} atletas procesados, {$quincenasGeneradas} quincenas generadas desde 15/01/2026. " 
                 . "Se eliminaron {$eliminadas} quincenas antiguas."
             );
             

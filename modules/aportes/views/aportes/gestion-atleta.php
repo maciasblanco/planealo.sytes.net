@@ -37,13 +37,11 @@ $this->params['breadcrumbs'][] = $this->title;
 $tasaDolarActual = \app\models\TasaDolar::getTasaActual();
 
 // Pre-calcular valores para JavaScript
-$montoQuincenalDolares = \app\models\AportesSemanales::MONTO_QUINCENAL;
+$montoQuincenalDolares = \app\models\AportesSemanales::MONTO_QUINCENAL_USD;
 $montoQuincenalBolivares = $tasaDolarActual * $montoQuincenalDolares;
 
-// ✅ CORREGIDO - Filtrar atletas por escuela actual
-$atletasFiltrados = \app\models\AtletasRegistro::find()
-    ->where(['id_escuela' => $id_escuela])
-    ->all();
+// ✅ CORREGIDO - Usar los atletas permitidos que ya vienen del controlador
+// $atletas ya está definido por el controlador
 ?>
 
 <div class="gestion-atleta">
@@ -101,7 +99,7 @@ $atletasFiltrados = \app\models\AtletasRegistro::find()
         </div>
         <div class="card-body">
             <div class="list-group" style="max-height: 300px; overflow-y: auto;">
-                <?php foreach ($atletasFiltrados as $a): ?>
+                <?php foreach ($atletas as $a): ?>
                     <?= Html::a(
                         '<i class="fas fa-user"></i> ' . $a->p_nombre . ' ' . $a->p_apellido . ' (' . $a->identificacion . ')',
                         ['/aportes/aportes/gestion-atleta', 'atleta_id' => $a->id],
@@ -175,7 +173,7 @@ $atletasFiltrados = \app\models\AtletasRegistro::find()
                     <div class="info-box-content">
                         <span class="info-box-text">Monto Deuda</span>
                         <span class="info-box-number">$<?= number_format($montoDeuda, 2) ?></span>
-                        <span class="info-box-detail">$<?= number_format(\app\models\AportesSemanales::MONTO_QUINCENAL, 2) ?> por quincena</span>
+                        <span class="info-box-detail">$<?= number_format(\app\models\AportesSemanales::MONTO_QUINCENAL_USD, 2) ?> por quincena</span>
                     </div>
                 </div>
             </div>
@@ -193,7 +191,7 @@ $atletasFiltrados = \app\models\AtletasRegistro::find()
                         </div>
                         <div class="col-md-6">
                             <strong>Aporte Quincenal Equivalente:</strong> 
-                            Bs. <?= number_format($montoQuincenalBolivares, 2) ?>
+                            Bs. <?= number_format($tasaDolarActual * 5.00, 2) ?>  <!-- Cambiado 4.00 a 5.00 -->
                         </div>
                     </div>
                 </div>
@@ -232,7 +230,7 @@ $atletasFiltrados = \app\models\AtletasRegistro::find()
                                         'step' => '0.01',
                                         'class' => 'form-control',
                                         'id' => 'monto-dolares-individual',
-                                        'value' => \app\models\AportesSemanales::MONTO_QUINCENAL,
+                                        'value' => \app\models\AportesSemanales::MONTO_QUINCENAL_USD,
                                         'required' => true
                                     ])->label('Monto ($)') ?>
                                 </div>
@@ -314,9 +312,9 @@ $atletasFiltrados = \app\models\AtletasRegistro::find()
                                         <label>Monto Total a Aportar ($) *</label>
                                         <input type="number" step="0.01" min="4" class="form-control" 
                                                name="monto_flexible" id="monto-flexible" 
-                                               value="<?= \app\models\AportesSemanales::MONTO_QUINCENAL ?>" required>
+                                               value="<?= \app\models\AportesSemanales::MONTO_QUINCENAL_USD ?>" required>
                                         <small class="form-text text-muted">
-                                            Mínimo: $<?= number_format(\app\models\AportesSemanales::MONTO_QUINCENAL, 2) ?> (1 quincena)
+                                            Mínimo: $<?= number_format(5.00, 2) ?> (1 quincena)  <!-- Cambiado 4.00 a 5.00 -->
                                         </small>
                                     </div>
                                 </div>
@@ -696,7 +694,7 @@ $atletasFiltrados = \app\models\AtletasRegistro::find()
 $js = <<<JS
 $(document).ready(function() {
     const MONTO_QUINCENAL = parseFloat('$montoQuincenalBolivares');
-    const MONTO_QUINCENAL_DOLARES = parseFloat('$montoQuincenalDolares');
+    const MONTO_QUINCENAL_DOLARES = parseFloat('5.00');  // Cambiado 4.00 a 5.00
     const TASA_ACTUAL = parseFloat('$tasaDolarActual');
     
     // ===== FUNCIONES DE CONVERSIÓN =====
