@@ -100117,3 +100117,971 @@ $_SERVER = [
     'REQUEST_TIME_FLOAT' => 1770687833.4092
     'REQUEST_TIME' => 1770687833
 ]
+2026-02-10 09:56:38 [::1][1][qmlqqigfmgjgqg5vhaviivr3bt][error][yii\web\HttpException:404] yii\base\InvalidRouteException: Unable to resolve the request "js/jsBootstrap5/bootstrap.bundle.min.js.map". in C:\xampp\htdocs\planealo.sytes.net\vendor\yiisoft\yii2\base\Module.php:564
+Stack trace:
+#0 C:\xampp\htdocs\planealo.sytes.net\vendor\yiisoft\yii2\web\Application.php(103): yii\base\Module->runAction('js/jsBootstrap5...', Array)
+#1 C:\xampp\htdocs\planealo.sytes.net\vendor\yiisoft\yii2\base\Application.php(387): yii\web\Application->handleRequest(Object(yii\web\Request))
+#2 C:\xampp\htdocs\planealo.sytes.net\web\index.php(12): yii\base\Application->run()
+#3 {main}
+
+Next yii\web\NotFoundHttpException: Página no encontrada. in C:\xampp\htdocs\planealo.sytes.net\vendor\yiisoft\yii2\web\Application.php:115
+Stack trace:
+#0 C:\xampp\htdocs\planealo.sytes.net\vendor\yiisoft\yii2\base\Application.php(387): yii\web\Application->handleRequest(Object(yii\web\Request))
+#1 C:\xampp\htdocs\planealo.sytes.net\web\index.php(12): yii\base\Application->run()
+#2 {main}
+2026-02-10 09:56:38 [::1][1][qmlqqigfmgjgqg5vhaviivr3bt][info][application] $_GET = []
+
+$_POST = []
+
+$_FILES = []
+
+$_COOKIE = [
+    '_ga' => 'GA1.1.1679908835.1749223008'
+    '_identity' => '9dc3e882c595ff0fa4feeae21489c917fcb86f4f3aef88d6982c5f18402701dea:2:{i:0;s:9:\"_identity\";i:1;s:46:\"[1,\"FCxNRGJia25jro30ecX5r8yVk7nCuaOY\",2592000]\";}'
+    '_csrf' => '81be198d78a8bda3d78df1cbdd69b980d458fafbe3a0b168ed08dc11cfa55e2ea:2:{i:0;s:5:\"_csrf\";i:1;s:32:\"2z86aNIx54Gly3zHs6NR4uUgnRDW7DY0\";}'
+    'PHPSESSID' => 'qmlqqigfmgjgqg5vhaviivr3bt'
+]
+
+$_SESSION = [
+    '__flash' => []
+    '__returnUrl' => 'http://localhost/planealo_desarrollo/web/'
+    '__id' => 1
+    '__authKey' => 'FCxNRGJia25jro30ecX5r8yVk7nCuaOY'
+    'id_escuela' => 2
+    'nombre_escuela' => 'Club Aves Voladoras'
+    'escuela_activa' => true
+    'escuela_ultima_actualizacion' => 1770397990
+    'idEscuela' => 2
+    'nombreEscuela' => 'Club Aves Voladoras'
+]
+
+$_SERVER = [
+    'REDIRECT_MIBDIRS' => 'C:/xampp/php/extras/mibs'
+    'REDIRECT_MYSQL_HOME' => '\\xampp\\mysql\\bin'
+    'REDIRECT_OPENSSL_CONF' => 'C:/xampp/apache/bin/openssl.cnf'
+    'REDIRECT_PHP_PEAR_SYSCONF_DIR' => '\\xampp\\php'
+    'REDIRECT_PHPRC' => '\\xampp\\php'
+    'REDIRECT_TMP' => '\\xampp\\tmp'
+    'REDIRECT_STATUS' => '200'
+    'MIBDIRS' => 'C:/xampp/php/extras/mibs'
+    'MYSQL_HOME' => '\\xampp\\mysql\\bin'
+    'OPENSSL_CONF' => 'C:/xampp/apache/bin/openssl.cnf'
+    'PHP_PEAR_SYSCONF_DIR' => '\\xampp\\php'
+    'PHPRC' => '\\xampp\\php'
+    'TMP' => '\\xampp\\tmp'
+    'HTTP_HOST' => 'localhost'
+    'HTTP_CONNECTION' => 'keep-alive'
+    'HTTP_SEC_FETCH_SITE' => 'same-origin'
+    'HTTP_SEC_FETCH_MODE' => 'no-cors'
+    'HTTP_SEC_FETCH_DEST' => 'empty'
+    'HTTP_USER_AGENT' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36 OPR/126.0.0.0'
+    'HTTP_ACCEPT_ENCODING' => 'gzip, deflate, br, zstd'
+    'HTTP_ACCEPT_LANGUAGE' => 'en,id;q=0.9,tr;q=0.8,ru;q=0.7'
+    'HTTP_COOKIE' => '_ga=GA1.1.1679908835.1749223008; _identity=9dc3e882c595ff0fa4feeae21489c917fcb86f4f3aef88d6982c5f18402701dea%3A2%3A%7Bi%3A0%3Bs%3A9%3A%22_identity%22%3Bi%3A1%3Bs%3A46%3A%22%5B1%2C%22FCxNRGJia25jro30ecX5r8yVk7nCuaOY%22%2C2592000%5D%22%3B%7D; _csrf=81be198d78a8bda3d78df1cbdd69b980d458fafbe3a0b168ed08dc11cfa55e2ea%3A2%3A%7Bi%3A0%3Bs%3A5%3A%22_csrf%22%3Bi%3A1%3Bs%3A32%3A%222z86aNIx54Gly3zHs6NR4uUgnRDW7DY0%22%3B%7D; PHPSESSID=qmlqqigfmgjgqg5vhaviivr3bt'
+    'PATH' => 'C:\\WINDOWS\\system32;C:\\WINDOWS;C:\\WINDOWS\\System32\\Wbem;C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\;C:\\WINDOWS\\System32\\OpenSSH\\;C:\\xampp\\php;C:\\ProgramData\\ComposerSetup\\bin;C:\\Program Files\\PuTTY\\;C:\\Program Files\\Git\\cmd;C:\\Program Files\\nodejs\\;C:\\Program Files (x86)\\Microsoft SQL Server\\160\\Tools\\Binn\\;C:\\Program Files\\Microsoft SQL Server\\160\\Tools\\Binn\\;C:\\Program Files\\Microsoft SQL Server\\Client SDK\\ODBC\\170\\Tools\\Binn\\;C:\\Program Files\\Microsoft SQL Server\\160\\DTS\\Binn\\;C:\\Program Files (x86)\\Microsoft SQL Server\\160\\DTS\\Binn\\;C:\\Users\\Otic-Sistemas\\AppData\\Local\\Microsoft\\WindowsApps;;C:\\Users\\Otic-Sistemas\\AppData\\Local\\Programs\\Microsoft VS Code\\bin;C:\\Users\\Otic-Sistemas\\AppData\\Roaming\\Composer\\vendor\\bin;C:\\Users\\Otic-Sistemas\\AppData\\Roaming\\npm'
+    'SystemRoot' => 'C:\\WINDOWS'
+    'COMSPEC' => 'C:\\WINDOWS\\system32\\cmd.exe'
+    'PATHEXT' => '.COM;.EXE;.BAT;.CMD;.VBS;.VBE;.JS;.JSE;.WSF;.WSH;.MSC'
+    'WINDIR' => 'C:\\WINDOWS'
+    'SERVER_SIGNATURE' => '<address>Apache/2.4.54 (Win64) OpenSSL/1.1.1p PHP/8.2.0 Server at localhost Port 80</address>
+'
+    'SERVER_SOFTWARE' => 'Apache/2.4.54 (Win64) OpenSSL/1.1.1p PHP/8.2.0'
+    'SERVER_NAME' => 'localhost'
+    'SERVER_ADDR' => '::1'
+    'SERVER_PORT' => '80'
+    'REMOTE_ADDR' => '::1'
+    'DOCUMENT_ROOT' => 'C:/xampp/htdocs'
+    'REQUEST_SCHEME' => 'http'
+    'CONTEXT_PREFIX' => ''
+    'CONTEXT_DOCUMENT_ROOT' => 'C:/xampp/htdocs'
+    'SERVER_ADMIN' => 'postmaster@localhost'
+    'SCRIPT_FILENAME' => 'C:/xampp/htdocs/planealo.sytes.net/web/index.php'
+    'REMOTE_PORT' => '50001'
+    'REDIRECT_URL' => '/planealo.sytes.net/web/js/jsBootstrap5/bootstrap.bundle.min.js.map'
+    'GATEWAY_INTERFACE' => 'CGI/1.1'
+    'SERVER_PROTOCOL' => 'HTTP/1.1'
+    'REQUEST_METHOD' => 'GET'
+    'QUERY_STRING' => ''
+    'REQUEST_URI' => '/planealo.sytes.net/web/js/jsBootstrap5/bootstrap.bundle.min.js.map'
+    'SCRIPT_NAME' => '/planealo.sytes.net/web/index.php'
+    'PHP_SELF' => '/planealo.sytes.net/web/index.php'
+    'REQUEST_TIME_FLOAT' => 1770731797.9848
+    'REQUEST_TIME' => 1770731797
+]
+2026-02-10 09:57:35 [::1][1][-][error][application] Error generando quincenas para atleta 83: SQLSTATE[22P02]: Invalid text representation: 7 ERROR:  la sintaxis de entrada no es válida para tipo numeric: «oficial»
+The SQL being executed was: INSERT INTO "contabilidad"."aportes_semanales" ("atleta_id", "escuela_id", "fecha_quincena", "numero_quincena", "monto", "tasa_dolar_quincena", "monto_bs_original", "estado", "pago_parcial", "comentarios", "u_create", "u_update", "tipo_cambio", "created_at", "update_at") VALUES (83, 2, '2026-01-31', 1, '1.33', '361.49', '480.8', 'pendiente', TRUE, 'Pago proporcional por inscripción tardía (4 días)', 1, 1, 'oficial', '2026-02-10 09:57:34', '2026-02-10 09:57:34') RETURNING "id"
+    in C:\xampp\htdocs\planealo.sytes.net\modules\aportes\controllers\AportesController.php:142
+2026-02-10 09:57:35 [::1][1][-][error][application] Error generando quincenas para atleta 65: SQLSTATE[22P02]: Invalid text representation: 7 ERROR:  la sintaxis de entrada no es válida para tipo numeric: «oficial»
+The SQL being executed was: INSERT INTO "contabilidad"."aportes_semanales" ("atleta_id", "escuela_id", "fecha_quincena", "numero_quincena", "monto", "tasa_dolar_quincena", "monto_bs_original", "estado", "pago_parcial", "u_create", "u_update", "tipo_cambio", "created_at", "update_at") VALUES (65, 2, '2026-01-31', 1, '5', '361.49', '1807.5', 'pendiente', FALSE, 1, 1, 'oficial', '2026-02-10 09:57:35', '2026-02-10 09:57:35') RETURNING "id"
+    in C:\xampp\htdocs\planealo.sytes.net\modules\aportes\controllers\AportesController.php:142
+2026-02-10 09:57:35 [::1][1][-][error][application] Error generando quincenas para atleta 48: SQLSTATE[22P02]: Invalid text representation: 7 ERROR:  la sintaxis de entrada no es válida para tipo numeric: «oficial»
+The SQL being executed was: INSERT INTO "contabilidad"."aportes_semanales" ("atleta_id", "escuela_id", "fecha_quincena", "numero_quincena", "monto", "tasa_dolar_quincena", "monto_bs_original", "estado", "pago_parcial", "u_create", "u_update", "tipo_cambio", "created_at", "update_at") VALUES (48, 2, '2026-01-31', 1, '5', '361.49', '1807.5', 'pendiente', FALSE, 1, 1, 'oficial', '2026-02-10 09:57:35', '2026-02-10 09:57:35') RETURNING "id"
+    in C:\xampp\htdocs\planealo.sytes.net\modules\aportes\controllers\AportesController.php:142
+2026-02-10 09:57:35 [::1][1][-][error][application] Error generando quincenas para atleta 46: SQLSTATE[22P02]: Invalid text representation: 7 ERROR:  la sintaxis de entrada no es válida para tipo numeric: «oficial»
+The SQL being executed was: INSERT INTO "contabilidad"."aportes_semanales" ("atleta_id", "escuela_id", "fecha_quincena", "numero_quincena", "monto", "tasa_dolar_quincena", "monto_bs_original", "estado", "pago_parcial", "u_create", "u_update", "tipo_cambio", "created_at", "update_at") VALUES (46, 2, '2026-01-31', 1, '5', '361.49', '1807.5', 'pendiente', FALSE, 1, 1, 'oficial', '2026-02-10 09:57:35', '2026-02-10 09:57:35') RETURNING "id"
+    in C:\xampp\htdocs\planealo.sytes.net\modules\aportes\controllers\AportesController.php:142
+2026-02-10 09:57:35 [::1][1][-][error][application] Error generando quincenas para atleta 75: SQLSTATE[22P02]: Invalid text representation: 7 ERROR:  la sintaxis de entrada no es válida para tipo numeric: «oficial»
+The SQL being executed was: INSERT INTO "contabilidad"."aportes_semanales" ("atleta_id", "escuela_id", "fecha_quincena", "numero_quincena", "monto", "tasa_dolar_quincena", "monto_bs_original", "estado", "pago_parcial", "u_create", "u_update", "tipo_cambio", "created_at", "update_at") VALUES (75, 2, '2026-01-31', 1, '5', '361.49', '1807.5', 'pendiente', FALSE, 1, 1, 'oficial', '2026-02-10 09:57:35', '2026-02-10 09:57:35') RETURNING "id"
+    in C:\xampp\htdocs\planealo.sytes.net\modules\aportes\controllers\AportesController.php:142
+2026-02-10 09:57:35 [::1][1][-][error][application] Error generando quincenas para atleta 66: SQLSTATE[22P02]: Invalid text representation: 7 ERROR:  la sintaxis de entrada no es válida para tipo numeric: «oficial»
+The SQL being executed was: INSERT INTO "contabilidad"."aportes_semanales" ("atleta_id", "escuela_id", "fecha_quincena", "numero_quincena", "monto", "tasa_dolar_quincena", "monto_bs_original", "estado", "pago_parcial", "u_create", "u_update", "tipo_cambio", "created_at", "update_at") VALUES (66, 2, '2026-01-31', 1, '5', '361.49', '1807.5', 'pendiente', FALSE, 1, 1, 'oficial', '2026-02-10 09:57:35', '2026-02-10 09:57:35') RETURNING "id"
+    in C:\xampp\htdocs\planealo.sytes.net\modules\aportes\controllers\AportesController.php:142
+2026-02-10 09:57:35 [::1][1][-][error][application] Error generando quincenas para atleta 84: SQLSTATE[22P02]: Invalid text representation: 7 ERROR:  la sintaxis de entrada no es válida para tipo numeric: «oficial»
+The SQL being executed was: INSERT INTO "contabilidad"."aportes_semanales" ("atleta_id", "escuela_id", "fecha_quincena", "numero_quincena", "monto", "tasa_dolar_quincena", "monto_bs_original", "estado", "pago_parcial", "comentarios", "u_create", "u_update", "tipo_cambio", "created_at", "update_at") VALUES (84, 2, '2026-01-31', 1, '0.67', '361.49', '242.2', 'pendiente', TRUE, 'Pago proporcional por inscripción tardía (2 días)', 1, 1, 'oficial', '2026-02-10 09:57:35', '2026-02-10 09:57:35') RETURNING "id"
+    in C:\xampp\htdocs\planealo.sytes.net\modules\aportes\controllers\AportesController.php:142
+2026-02-10 09:57:35 [::1][1][-][error][application] Error generando quincenas para atleta 45: SQLSTATE[22P02]: Invalid text representation: 7 ERROR:  la sintaxis de entrada no es válida para tipo numeric: «oficial»
+The SQL being executed was: INSERT INTO "contabilidad"."aportes_semanales" ("atleta_id", "escuela_id", "fecha_quincena", "numero_quincena", "monto", "tasa_dolar_quincena", "monto_bs_original", "estado", "pago_parcial", "u_create", "u_update", "tipo_cambio", "created_at", "update_at") VALUES (45, 2, '2026-01-31', 1, '5', '361.49', '1807.5', 'pendiente', FALSE, 1, 1, 'oficial', '2026-02-10 09:57:35', '2026-02-10 09:57:35') RETURNING "id"
+    in C:\xampp\htdocs\planealo.sytes.net\modules\aportes\controllers\AportesController.php:142
+2026-02-10 09:57:35 [::1][1][-][error][application] Error generando quincenas para atleta 30: SQLSTATE[22P02]: Invalid text representation: 7 ERROR:  la sintaxis de entrada no es válida para tipo numeric: «oficial»
+The SQL being executed was: INSERT INTO "contabilidad"."aportes_semanales" ("atleta_id", "escuela_id", "fecha_quincena", "numero_quincena", "monto", "tasa_dolar_quincena", "monto_bs_original", "estado", "pago_parcial", "u_create", "u_update", "tipo_cambio", "created_at", "update_at") VALUES (30, 2, '2026-01-31', 1, '5', '361.49', '1807.5', 'pendiente', FALSE, 1, 1, 'oficial', '2026-02-10 09:57:35', '2026-02-10 09:57:35') RETURNING "id"
+    in C:\xampp\htdocs\planealo.sytes.net\modules\aportes\controllers\AportesController.php:142
+2026-02-10 09:57:35 [::1][1][-][error][application] Error generando quincenas para atleta 67: SQLSTATE[22P02]: Invalid text representation: 7 ERROR:  la sintaxis de entrada no es válida para tipo numeric: «oficial»
+The SQL being executed was: INSERT INTO "contabilidad"."aportes_semanales" ("atleta_id", "escuela_id", "fecha_quincena", "numero_quincena", "monto", "tasa_dolar_quincena", "monto_bs_original", "estado", "pago_parcial", "u_create", "u_update", "tipo_cambio", "created_at", "update_at") VALUES (67, 2, '2026-01-31', 1, '5', '361.49', '1807.5', 'pendiente', FALSE, 1, 1, 'oficial', '2026-02-10 09:57:35', '2026-02-10 09:57:35') RETURNING "id"
+    in C:\xampp\htdocs\planealo.sytes.net\modules\aportes\controllers\AportesController.php:142
+2026-02-10 09:57:35 [::1][1][-][error][application] Error generando quincenas para atleta 79: SQLSTATE[22P02]: Invalid text representation: 7 ERROR:  la sintaxis de entrada no es válida para tipo numeric: «oficial»
+The SQL being executed was: INSERT INTO "contabilidad"."aportes_semanales" ("atleta_id", "escuela_id", "fecha_quincena", "numero_quincena", "monto", "tasa_dolar_quincena", "monto_bs_original", "estado", "pago_parcial", "comentarios", "u_create", "u_update", "tipo_cambio", "created_at", "update_at") VALUES (79, 2, '2026-01-31', 1, '1.67', '361.49', '603.7', 'pendiente', TRUE, 'Pago proporcional por inscripción tardía (5 días)', 1, 1, 'oficial', '2026-02-10 09:57:35', '2026-02-10 09:57:35') RETURNING "id"
+    in C:\xampp\htdocs\planealo.sytes.net\modules\aportes\controllers\AportesController.php:142
+2026-02-10 09:57:35 [::1][1][-][error][application] Error generando quincenas para atleta 51: SQLSTATE[22P02]: Invalid text representation: 7 ERROR:  la sintaxis de entrada no es válida para tipo numeric: «oficial»
+The SQL being executed was: INSERT INTO "contabilidad"."aportes_semanales" ("atleta_id", "escuela_id", "fecha_quincena", "numero_quincena", "monto", "tasa_dolar_quincena", "monto_bs_original", "estado", "pago_parcial", "u_create", "u_update", "tipo_cambio", "created_at", "update_at") VALUES (51, 2, '2026-01-31', 1, '5', '361.49', '1807.5', 'pendiente', FALSE, 1, 1, 'oficial', '2026-02-10 09:57:35', '2026-02-10 09:57:35') RETURNING "id"
+    in C:\xampp\htdocs\planealo.sytes.net\modules\aportes\controllers\AportesController.php:142
+2026-02-10 09:57:35 [::1][1][-][error][application] Error generando quincenas para atleta 80: SQLSTATE[22P02]: Invalid text representation: 7 ERROR:  la sintaxis de entrada no es válida para tipo numeric: «oficial»
+The SQL being executed was: INSERT INTO "contabilidad"."aportes_semanales" ("atleta_id", "escuela_id", "fecha_quincena", "numero_quincena", "monto", "tasa_dolar_quincena", "monto_bs_original", "estado", "pago_parcial", "comentarios", "u_create", "u_update", "tipo_cambio", "created_at", "update_at") VALUES (80, 2, '2026-01-31', 1, '1.33', '361.49', '480.8', 'pendiente', TRUE, 'Pago proporcional por inscripción tardía (4 días)', 1, 1, 'oficial', '2026-02-10 09:57:35', '2026-02-10 09:57:35') RETURNING "id"
+    in C:\xampp\htdocs\planealo.sytes.net\modules\aportes\controllers\AportesController.php:142
+2026-02-10 09:57:35 [::1][1][-][error][application] Error generando quincenas para atleta 33: SQLSTATE[22P02]: Invalid text representation: 7 ERROR:  la sintaxis de entrada no es válida para tipo numeric: «oficial»
+The SQL being executed was: INSERT INTO "contabilidad"."aportes_semanales" ("atleta_id", "escuela_id", "fecha_quincena", "numero_quincena", "monto", "tasa_dolar_quincena", "monto_bs_original", "estado", "pago_parcial", "u_create", "u_update", "tipo_cambio", "created_at", "update_at") VALUES (33, 2, '2026-01-31', 1, '5', '361.49', '1807.5', 'pendiente', FALSE, 1, 1, 'oficial', '2026-02-10 09:57:35', '2026-02-10 09:57:35') RETURNING "id"
+    in C:\xampp\htdocs\planealo.sytes.net\modules\aportes\controllers\AportesController.php:142
+2026-02-10 09:57:35 [::1][1][-][error][application] Error generando quincenas para atleta 64: SQLSTATE[22P02]: Invalid text representation: 7 ERROR:  la sintaxis de entrada no es válida para tipo numeric: «oficial»
+The SQL being executed was: INSERT INTO "contabilidad"."aportes_semanales" ("atleta_id", "escuela_id", "fecha_quincena", "numero_quincena", "monto", "tasa_dolar_quincena", "monto_bs_original", "estado", "pago_parcial", "u_create", "u_update", "tipo_cambio", "created_at", "update_at") VALUES (64, 2, '2026-01-31', 1, '5', '361.49', '1807.5', 'pendiente', FALSE, 1, 1, 'oficial', '2026-02-10 09:57:35', '2026-02-10 09:57:35') RETURNING "id"
+    in C:\xampp\htdocs\planealo.sytes.net\modules\aportes\controllers\AportesController.php:142
+2026-02-10 09:57:35 [::1][1][-][error][application] Error generando quincenas para atleta 34: SQLSTATE[22P02]: Invalid text representation: 7 ERROR:  la sintaxis de entrada no es válida para tipo numeric: «oficial»
+The SQL being executed was: INSERT INTO "contabilidad"."aportes_semanales" ("atleta_id", "escuela_id", "fecha_quincena", "numero_quincena", "monto", "tasa_dolar_quincena", "monto_bs_original", "estado", "pago_parcial", "u_create", "u_update", "tipo_cambio", "created_at", "update_at") VALUES (34, 2, '2026-01-31', 1, '5', '361.49', '1807.5', 'pendiente', FALSE, 1, 1, 'oficial', '2026-02-10 09:57:35', '2026-02-10 09:57:35') RETURNING "id"
+    in C:\xampp\htdocs\planealo.sytes.net\modules\aportes\controllers\AportesController.php:142
+2026-02-10 09:57:35 [::1][1][-][error][application] Error generando quincenas para atleta 63: SQLSTATE[22P02]: Invalid text representation: 7 ERROR:  la sintaxis de entrada no es válida para tipo numeric: «oficial»
+The SQL being executed was: INSERT INTO "contabilidad"."aportes_semanales" ("atleta_id", "escuela_id", "fecha_quincena", "numero_quincena", "monto", "tasa_dolar_quincena", "monto_bs_original", "estado", "pago_parcial", "u_create", "u_update", "tipo_cambio", "created_at", "update_at") VALUES (63, 2, '2026-01-31', 1, '5', '361.49', '1807.5', 'pendiente', FALSE, 1, 1, 'oficial', '2026-02-10 09:57:35', '2026-02-10 09:57:35') RETURNING "id"
+    in C:\xampp\htdocs\planealo.sytes.net\modules\aportes\controllers\AportesController.php:142
+2026-02-10 09:57:35 [::1][1][-][error][application] Error generando quincenas para atleta 35: SQLSTATE[22P02]: Invalid text representation: 7 ERROR:  la sintaxis de entrada no es válida para tipo numeric: «oficial»
+The SQL being executed was: INSERT INTO "contabilidad"."aportes_semanales" ("atleta_id", "escuela_id", "fecha_quincena", "numero_quincena", "monto", "tasa_dolar_quincena", "monto_bs_original", "estado", "pago_parcial", "u_create", "u_update", "tipo_cambio", "created_at", "update_at") VALUES (35, 2, '2026-01-31', 1, '5', '361.49', '1807.5', 'pendiente', FALSE, 1, 1, 'oficial', '2026-02-10 09:57:35', '2026-02-10 09:57:35') RETURNING "id"
+    in C:\xampp\htdocs\planealo.sytes.net\modules\aportes\controllers\AportesController.php:142
+2026-02-10 09:57:35 [::1][1][-][error][application] Error generando quincenas para atleta 68: SQLSTATE[22P02]: Invalid text representation: 7 ERROR:  la sintaxis de entrada no es válida para tipo numeric: «oficial»
+The SQL being executed was: INSERT INTO "contabilidad"."aportes_semanales" ("atleta_id", "escuela_id", "fecha_quincena", "numero_quincena", "monto", "tasa_dolar_quincena", "monto_bs_original", "estado", "pago_parcial", "u_create", "u_update", "tipo_cambio", "created_at", "update_at") VALUES (68, 2, '2026-01-31', 1, '5', '361.49', '1807.5', 'pendiente', FALSE, 1, 1, 'oficial', '2026-02-10 09:57:35', '2026-02-10 09:57:35') RETURNING "id"
+    in C:\xampp\htdocs\planealo.sytes.net\modules\aportes\controllers\AportesController.php:142
+2026-02-10 09:57:35 [::1][1][-][error][application] Error generando quincenas para atleta 69: SQLSTATE[22P02]: Invalid text representation: 7 ERROR:  la sintaxis de entrada no es válida para tipo numeric: «oficial»
+The SQL being executed was: INSERT INTO "contabilidad"."aportes_semanales" ("atleta_id", "escuela_id", "fecha_quincena", "numero_quincena", "monto", "tasa_dolar_quincena", "monto_bs_original", "estado", "pago_parcial", "u_create", "u_update", "tipo_cambio", "created_at", "update_at") VALUES (69, 2, '2026-01-31', 1, '5', '361.49', '1807.5', 'pendiente', FALSE, 1, 1, 'oficial', '2026-02-10 09:57:35', '2026-02-10 09:57:35') RETURNING "id"
+    in C:\xampp\htdocs\planealo.sytes.net\modules\aportes\controllers\AportesController.php:142
+2026-02-10 09:57:35 [::1][1][-][error][application] Error generando quincenas para atleta 47: SQLSTATE[22P02]: Invalid text representation: 7 ERROR:  la sintaxis de entrada no es válida para tipo numeric: «oficial»
+The SQL being executed was: INSERT INTO "contabilidad"."aportes_semanales" ("atleta_id", "escuela_id", "fecha_quincena", "numero_quincena", "monto", "tasa_dolar_quincena", "monto_bs_original", "estado", "pago_parcial", "u_create", "u_update", "tipo_cambio", "created_at", "update_at") VALUES (47, 2, '2026-01-31', 1, '5', '361.49', '1807.5', 'pendiente', FALSE, 1, 1, 'oficial', '2026-02-10 09:57:35', '2026-02-10 09:57:35') RETURNING "id"
+    in C:\xampp\htdocs\planealo.sytes.net\modules\aportes\controllers\AportesController.php:142
+2026-02-10 09:57:35 [::1][1][-][error][application] Error generando quincenas para atleta 55: SQLSTATE[22P02]: Invalid text representation: 7 ERROR:  la sintaxis de entrada no es válida para tipo numeric: «oficial»
+The SQL being executed was: INSERT INTO "contabilidad"."aportes_semanales" ("atleta_id", "escuela_id", "fecha_quincena", "numero_quincena", "monto", "tasa_dolar_quincena", "monto_bs_original", "estado", "pago_parcial", "u_create", "u_update", "tipo_cambio", "created_at", "update_at") VALUES (55, 2, '2026-01-31', 1, '5', '361.49', '1807.5', 'pendiente', FALSE, 1, 1, 'oficial', '2026-02-10 09:57:35', '2026-02-10 09:57:35') RETURNING "id"
+    in C:\xampp\htdocs\planealo.sytes.net\modules\aportes\controllers\AportesController.php:142
+2026-02-10 09:57:35 [::1][1][-][error][application] Error generando quincenas para atleta 44: SQLSTATE[22P02]: Invalid text representation: 7 ERROR:  la sintaxis de entrada no es válida para tipo numeric: «oficial»
+The SQL being executed was: INSERT INTO "contabilidad"."aportes_semanales" ("atleta_id", "escuela_id", "fecha_quincena", "numero_quincena", "monto", "tasa_dolar_quincena", "monto_bs_original", "estado", "pago_parcial", "u_create", "u_update", "tipo_cambio", "created_at", "update_at") VALUES (44, 2, '2026-01-31', 1, '5', '361.49', '1807.5', 'pendiente', FALSE, 1, 1, 'oficial', '2026-02-10 09:57:35', '2026-02-10 09:57:35') RETURNING "id"
+    in C:\xampp\htdocs\planealo.sytes.net\modules\aportes\controllers\AportesController.php:142
+2026-02-10 09:57:35 [::1][1][-][error][application] Error generando quincenas para atleta 50: SQLSTATE[22P02]: Invalid text representation: 7 ERROR:  la sintaxis de entrada no es válida para tipo numeric: «oficial»
+The SQL being executed was: INSERT INTO "contabilidad"."aportes_semanales" ("atleta_id", "escuela_id", "fecha_quincena", "numero_quincena", "monto", "tasa_dolar_quincena", "monto_bs_original", "estado", "pago_parcial", "u_create", "u_update", "tipo_cambio", "created_at", "update_at") VALUES (50, 2, '2026-01-31', 1, '5', '361.49', '1807.5', 'pendiente', FALSE, 1, 1, 'oficial', '2026-02-10 09:57:35', '2026-02-10 09:57:35') RETURNING "id"
+    in C:\xampp\htdocs\planealo.sytes.net\modules\aportes\controllers\AportesController.php:142
+2026-02-10 09:57:35 [::1][1][-][error][application] Error generando quincenas para atleta 37: SQLSTATE[22P02]: Invalid text representation: 7 ERROR:  la sintaxis de entrada no es válida para tipo numeric: «oficial»
+The SQL being executed was: INSERT INTO "contabilidad"."aportes_semanales" ("atleta_id", "escuela_id", "fecha_quincena", "numero_quincena", "monto", "tasa_dolar_quincena", "monto_bs_original", "estado", "pago_parcial", "u_create", "u_update", "tipo_cambio", "created_at", "update_at") VALUES (37, 2, '2026-01-31', 1, '5', '361.49', '1807.5', 'pendiente', FALSE, 1, 1, 'oficial', '2026-02-10 09:57:35', '2026-02-10 09:57:35') RETURNING "id"
+    in C:\xampp\htdocs\planealo.sytes.net\modules\aportes\controllers\AportesController.php:142
+2026-02-10 09:57:35 [::1][1][-][error][application] Error generando quincenas para atleta 49: SQLSTATE[22P02]: Invalid text representation: 7 ERROR:  la sintaxis de entrada no es válida para tipo numeric: «oficial»
+The SQL being executed was: INSERT INTO "contabilidad"."aportes_semanales" ("atleta_id", "escuela_id", "fecha_quincena", "numero_quincena", "monto", "tasa_dolar_quincena", "monto_bs_original", "estado", "pago_parcial", "u_create", "u_update", "tipo_cambio", "created_at", "update_at") VALUES (49, 2, '2026-01-31', 1, '5', '361.49', '1807.5', 'pendiente', FALSE, 1, 1, 'oficial', '2026-02-10 09:57:35', '2026-02-10 09:57:35') RETURNING "id"
+    in C:\xampp\htdocs\planealo.sytes.net\modules\aportes\controllers\AportesController.php:142
+2026-02-10 09:57:35 [::1][1][-][error][application] Error generando quincenas para atleta 73: SQLSTATE[22P02]: Invalid text representation: 7 ERROR:  la sintaxis de entrada no es válida para tipo numeric: «oficial»
+The SQL being executed was: INSERT INTO "contabilidad"."aportes_semanales" ("atleta_id", "escuela_id", "fecha_quincena", "numero_quincena", "monto", "tasa_dolar_quincena", "monto_bs_original", "estado", "pago_parcial", "u_create", "u_update", "tipo_cambio", "created_at", "update_at") VALUES (73, 2, '2026-01-31', 1, '5', '361.49', '1807.5', 'pendiente', FALSE, 1, 1, 'oficial', '2026-02-10 09:57:35', '2026-02-10 09:57:35') RETURNING "id"
+    in C:\xampp\htdocs\planealo.sytes.net\modules\aportes\controllers\AportesController.php:142
+2026-02-10 09:57:35 [::1][1][-][error][application] Error generando quincenas para atleta 78: SQLSTATE[22P02]: Invalid text representation: 7 ERROR:  la sintaxis de entrada no es válida para tipo numeric: «oficial»
+The SQL being executed was: INSERT INTO "contabilidad"."aportes_semanales" ("atleta_id", "escuela_id", "fecha_quincena", "numero_quincena", "monto", "tasa_dolar_quincena", "monto_bs_original", "estado", "pago_parcial", "comentarios", "u_create", "u_update", "tipo_cambio", "created_at", "update_at") VALUES (78, 2, '2026-01-31', 1, '1.67', '361.49', '603.7', 'pendiente', TRUE, 'Pago proporcional por inscripción tardía (5 días)', 1, 1, 'oficial', '2026-02-10 09:57:35', '2026-02-10 09:57:35') RETURNING "id"
+    in C:\xampp\htdocs\planealo.sytes.net\modules\aportes\controllers\AportesController.php:142
+2026-02-10 09:57:35 [::1][1][-][error][application] Error generando quincenas para atleta 38: SQLSTATE[22P02]: Invalid text representation: 7 ERROR:  la sintaxis de entrada no es válida para tipo numeric: «oficial»
+The SQL being executed was: INSERT INTO "contabilidad"."aportes_semanales" ("atleta_id", "escuela_id", "fecha_quincena", "numero_quincena", "monto", "tasa_dolar_quincena", "monto_bs_original", "estado", "pago_parcial", "u_create", "u_update", "tipo_cambio", "created_at", "update_at") VALUES (38, 2, '2026-01-31', 1, '5', '361.49', '1807.5', 'pendiente', FALSE, 1, 1, 'oficial', '2026-02-10 09:57:35', '2026-02-10 09:57:35') RETURNING "id"
+    in C:\xampp\htdocs\planealo.sytes.net\modules\aportes\controllers\AportesController.php:142
+2026-02-10 09:57:35 [::1][1][-][error][application] Error generando quincenas para atleta 29: SQLSTATE[22P02]: Invalid text representation: 7 ERROR:  la sintaxis de entrada no es válida para tipo numeric: «oficial»
+The SQL being executed was: INSERT INTO "contabilidad"."aportes_semanales" ("atleta_id", "escuela_id", "fecha_quincena", "numero_quincena", "monto", "tasa_dolar_quincena", "monto_bs_original", "estado", "pago_parcial", "u_create", "u_update", "tipo_cambio", "created_at", "update_at") VALUES (29, 2, '2026-01-31', 1, '5', '361.49', '1807.5', 'pendiente', FALSE, 1, 1, 'oficial', '2026-02-10 09:57:35', '2026-02-10 09:57:35') RETURNING "id"
+    in C:\xampp\htdocs\planealo.sytes.net\modules\aportes\controllers\AportesController.php:142
+2026-02-10 09:57:35 [::1][1][-][error][application] Error generando quincenas para atleta 53: SQLSTATE[22P02]: Invalid text representation: 7 ERROR:  la sintaxis de entrada no es válida para tipo numeric: «oficial»
+The SQL being executed was: INSERT INTO "contabilidad"."aportes_semanales" ("atleta_id", "escuela_id", "fecha_quincena", "numero_quincena", "monto", "tasa_dolar_quincena", "monto_bs_original", "estado", "pago_parcial", "u_create", "u_update", "tipo_cambio", "created_at", "update_at") VALUES (53, 2, '2026-01-31', 1, '5', '361.49', '1807.5', 'pendiente', FALSE, 1, 1, 'oficial', '2026-02-10 09:57:35', '2026-02-10 09:57:35') RETURNING "id"
+    in C:\xampp\htdocs\planealo.sytes.net\modules\aportes\controllers\AportesController.php:142
+2026-02-10 09:57:35 [::1][1][-][error][application] Error generando quincenas para atleta 54: SQLSTATE[22P02]: Invalid text representation: 7 ERROR:  la sintaxis de entrada no es válida para tipo numeric: «oficial»
+The SQL being executed was: INSERT INTO "contabilidad"."aportes_semanales" ("atleta_id", "escuela_id", "fecha_quincena", "numero_quincena", "monto", "tasa_dolar_quincena", "monto_bs_original", "estado", "pago_parcial", "u_create", "u_update", "tipo_cambio", "created_at", "update_at") VALUES (54, 2, '2026-01-31', 1, '5', '361.49', '1807.5', 'pendiente', FALSE, 1, 1, 'oficial', '2026-02-10 09:57:35', '2026-02-10 09:57:35') RETURNING "id"
+    in C:\xampp\htdocs\planealo.sytes.net\modules\aportes\controllers\AportesController.php:142
+2026-02-10 09:57:35 [::1][1][-][error][application] Error generando quincenas para atleta 52: SQLSTATE[22P02]: Invalid text representation: 7 ERROR:  la sintaxis de entrada no es válida para tipo numeric: «oficial»
+The SQL being executed was: INSERT INTO "contabilidad"."aportes_semanales" ("atleta_id", "escuela_id", "fecha_quincena", "numero_quincena", "monto", "tasa_dolar_quincena", "monto_bs_original", "estado", "pago_parcial", "u_create", "u_update", "tipo_cambio", "created_at", "update_at") VALUES (52, 2, '2026-01-31', 1, '5', '361.49', '1807.5', 'pendiente', FALSE, 1, 1, 'oficial', '2026-02-10 09:57:35', '2026-02-10 09:57:35') RETURNING "id"
+    in C:\xampp\htdocs\planealo.sytes.net\modules\aportes\controllers\AportesController.php:142
+2026-02-10 09:57:57 [::1][1][-][error][tasa-dolar] Error BCV Directo: fopen(https://www.bcv.org.ve/): Failed to open stream: Se produjo un error durante el intento de conexión ya que la parte conectada no respondió adecuadamente tras un periodo de tiempo, o bien se produjo un error en la conexión establecida ya que el host conectado no ha podido responder
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:157
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:105
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:78
+2026-02-10 09:57:57 [::1][1][-][warning][tasa-dolar] ❌ Fuente BCV_Directo falló o tasa inválida: 0
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:112
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:78
+    in C:\xampp\htdocs\planealo.sytes.net\widgets\TasaDolarWidget.php:15
+2026-02-10 09:58:17 [::1][1][-][error][tasa-dolar] Error BCV Alternativo: fopen(https://www.bcv.org.ve/tasas-informativas-sistema-bancario): Failed to open stream: Se produjo un error durante el intento de conexión ya que la parte conectada no respondió adecuadamente tras un periodo de tiempo, o bien se produjo un error en la conexión establecida ya que el host conectado no ha podido responder
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:187
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:105
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:78
+2026-02-10 09:58:17 [::1][1][-][warning][tasa-dolar] ❌ Fuente BCV_Alternativo falló o tasa inválida: 0
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:112
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:78
+    in C:\xampp\htdocs\planealo.sytes.net\widgets\TasaDolarWidget.php:15
+2026-02-10 09:58:32 [::1][1][-][error][tasa-dolar] Error Yahoo Finance: fopen(https://query1.finance.yahoo.com/v8/finance/chart/USDVES=X): Failed to open stream: Se produjo un error durante el intento de conexión ya que la parte conectada no respondió adecuadamente tras un periodo de tiempo, o bien se produjo un error en la conexión establecida ya que el host conectado no ha podido responder
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:286
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:105
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:78
+2026-02-10 09:58:32 [::1][1][-][warning][tasa-dolar] ❌ Fuente EnParalelo falló o tasa inválida: 0
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:112
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:78
+    in C:\xampp\htdocs\planealo.sytes.net\widgets\TasaDolarWidget.php:15
+2026-02-10 09:58:47 [::1][1][-][error][tasa-dolar] Error ExchangeRate-API: fopen(https://api.exchangerate-api.com/v4/latest/USD): Failed to open stream: Se produjo un error durante el intento de conexión ya que la parte conectada no respondió adecuadamente tras un periodo de tiempo, o bien se produjo un error en la conexión establecida ya que el host conectado no ha podido responder
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:317
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:105
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:78
+2026-02-10 09:58:47 [::1][1][-][warning][tasa-dolar] ❌ Fuente API_Respaldo falló o tasa inválida: 0
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:112
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:78
+    in C:\xampp\htdocs\planealo.sytes.net\widgets\TasaDolarWidget.php:15
+2026-02-10 09:58:47 [::1][1][-][error][tasa-dolar] ❌ Todas las fuentes fallaron
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:116
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:78
+    in C:\xampp\htdocs\planealo.sytes.net\widgets\TasaDolarWidget.php:15
+2026-02-10 09:57:33 [::1][1][-][info][application] $_GET = []
+
+$_POST = []
+
+$_FILES = []
+
+$_COOKIE = [
+    '_ga' => 'GA1.1.1679908835.1749223008'
+    '_identity' => '9dc3e882c595ff0fa4feeae21489c917fcb86f4f3aef88d6982c5f18402701dea:2:{i:0;s:9:\"_identity\";i:1;s:46:\"[1,\"FCxNRGJia25jro30ecX5r8yVk7nCuaOY\",2592000]\";}'
+    '_csrf' => '81be198d78a8bda3d78df1cbdd69b980d458fafbe3a0b168ed08dc11cfa55e2ea:2:{i:0;s:5:\"_csrf\";i:1;s:32:\"2z86aNIx54Gly3zHs6NR4uUgnRDW7DY0\";}'
+    'PHPSESSID' => 'qmlqqigfmgjgqg5vhaviivr3bt'
+]
+
+$_SESSION = [
+    '__flash' => []
+    '__returnUrl' => 'http://localhost/planealo_desarrollo/web/'
+    '__id' => 1
+    '__authKey' => 'FCxNRGJia25jro30ecX5r8yVk7nCuaOY'
+    'id_escuela' => 2
+    'nombre_escuela' => 'Club Aves Voladoras'
+    'escuela_activa' => true
+    'escuela_ultima_actualizacion' => 1770397990
+    'idEscuela' => 2
+    'nombreEscuela' => 'Club Aves Voladoras'
+]
+
+$_SERVER = [
+    'REDIRECT_MIBDIRS' => 'C:/xampp/php/extras/mibs'
+    'REDIRECT_MYSQL_HOME' => '\\xampp\\mysql\\bin'
+    'REDIRECT_OPENSSL_CONF' => 'C:/xampp/apache/bin/openssl.cnf'
+    'REDIRECT_PHP_PEAR_SYSCONF_DIR' => '\\xampp\\php'
+    'REDIRECT_PHPRC' => '\\xampp\\php'
+    'REDIRECT_TMP' => '\\xampp\\tmp'
+    'REDIRECT_STATUS' => '200'
+    'MIBDIRS' => 'C:/xampp/php/extras/mibs'
+    'MYSQL_HOME' => '\\xampp\\mysql\\bin'
+    'OPENSSL_CONF' => 'C:/xampp/apache/bin/openssl.cnf'
+    'PHP_PEAR_SYSCONF_DIR' => '\\xampp\\php'
+    'PHPRC' => '\\xampp\\php'
+    'TMP' => '\\xampp\\tmp'
+    'HTTP_HOST' => 'localhost'
+    'HTTP_CONNECTION' => 'keep-alive'
+    'HTTP_SEC_CH_UA' => '\"Chromium\";v=\"142\", \"Opera GX\";v=\"126\", \"Not_A Brand\";v=\"99\"'
+    'HTTP_SEC_CH_UA_MOBILE' => '?0'
+    'HTTP_SEC_CH_UA_PLATFORM' => '\"Windows\"'
+    'HTTP_UPGRADE_INSECURE_REQUESTS' => '1'
+    'HTTP_USER_AGENT' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36 OPR/126.0.0.0'
+    'HTTP_ACCEPT' => 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7'
+    'HTTP_SEC_FETCH_SITE' => 'same-origin'
+    'HTTP_SEC_FETCH_MODE' => 'navigate'
+    'HTTP_SEC_FETCH_USER' => '?1'
+    'HTTP_SEC_FETCH_DEST' => 'document'
+    'HTTP_REFERER' => 'http://localhost/planealo.sytes.net/web/'
+    'HTTP_ACCEPT_ENCODING' => 'gzip, deflate, br, zstd'
+    'HTTP_ACCEPT_LANGUAGE' => 'en,id;q=0.9,tr;q=0.8,ru;q=0.7'
+    'HTTP_COOKIE' => '_ga=GA1.1.1679908835.1749223008; _identity=9dc3e882c595ff0fa4feeae21489c917fcb86f4f3aef88d6982c5f18402701dea%3A2%3A%7Bi%3A0%3Bs%3A9%3A%22_identity%22%3Bi%3A1%3Bs%3A46%3A%22%5B1%2C%22FCxNRGJia25jro30ecX5r8yVk7nCuaOY%22%2C2592000%5D%22%3B%7D; _csrf=81be198d78a8bda3d78df1cbdd69b980d458fafbe3a0b168ed08dc11cfa55e2ea%3A2%3A%7Bi%3A0%3Bs%3A5%3A%22_csrf%22%3Bi%3A1%3Bs%3A32%3A%222z86aNIx54Gly3zHs6NR4uUgnRDW7DY0%22%3B%7D; PHPSESSID=qmlqqigfmgjgqg5vhaviivr3bt'
+    'PATH' => 'C:\\WINDOWS\\system32;C:\\WINDOWS;C:\\WINDOWS\\System32\\Wbem;C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\;C:\\WINDOWS\\System32\\OpenSSH\\;C:\\xampp\\php;C:\\ProgramData\\ComposerSetup\\bin;C:\\Program Files\\PuTTY\\;C:\\Program Files\\Git\\cmd;C:\\Program Files\\nodejs\\;C:\\Program Files (x86)\\Microsoft SQL Server\\160\\Tools\\Binn\\;C:\\Program Files\\Microsoft SQL Server\\160\\Tools\\Binn\\;C:\\Program Files\\Microsoft SQL Server\\Client SDK\\ODBC\\170\\Tools\\Binn\\;C:\\Program Files\\Microsoft SQL Server\\160\\DTS\\Binn\\;C:\\Program Files (x86)\\Microsoft SQL Server\\160\\DTS\\Binn\\;C:\\Users\\Otic-Sistemas\\AppData\\Local\\Microsoft\\WindowsApps;;C:\\Users\\Otic-Sistemas\\AppData\\Local\\Programs\\Microsoft VS Code\\bin;C:\\Users\\Otic-Sistemas\\AppData\\Roaming\\Composer\\vendor\\bin;C:\\Users\\Otic-Sistemas\\AppData\\Roaming\\npm'
+    'SystemRoot' => 'C:\\WINDOWS'
+    'COMSPEC' => 'C:\\WINDOWS\\system32\\cmd.exe'
+    'PATHEXT' => '.COM;.EXE;.BAT;.CMD;.VBS;.VBE;.JS;.JSE;.WSF;.WSH;.MSC'
+    'WINDIR' => 'C:\\WINDOWS'
+    'SERVER_SIGNATURE' => '<address>Apache/2.4.54 (Win64) OpenSSL/1.1.1p PHP/8.2.0 Server at localhost Port 80</address>
+'
+    'SERVER_SOFTWARE' => 'Apache/2.4.54 (Win64) OpenSSL/1.1.1p PHP/8.2.0'
+    'SERVER_NAME' => 'localhost'
+    'SERVER_ADDR' => '::1'
+    'SERVER_PORT' => '80'
+    'REMOTE_ADDR' => '::1'
+    'DOCUMENT_ROOT' => 'C:/xampp/htdocs'
+    'REQUEST_SCHEME' => 'http'
+    'CONTEXT_PREFIX' => ''
+    'CONTEXT_DOCUMENT_ROOT' => 'C:/xampp/htdocs'
+    'SERVER_ADMIN' => 'postmaster@localhost'
+    'SCRIPT_FILENAME' => 'C:/xampp/htdocs/planealo.sytes.net/web/index.php'
+    'REMOTE_PORT' => '50045'
+    'REDIRECT_URL' => '/planealo.sytes.net/web/aportes/aportes/index'
+    'GATEWAY_INTERFACE' => 'CGI/1.1'
+    'SERVER_PROTOCOL' => 'HTTP/1.1'
+    'REQUEST_METHOD' => 'GET'
+    'QUERY_STRING' => ''
+    'REQUEST_URI' => '/planealo.sytes.net/web/aportes/aportes/index'
+    'SCRIPT_NAME' => '/planealo.sytes.net/web/index.php'
+    'PHP_SELF' => '/planealo.sytes.net/web/index.php'
+    'REQUEST_TIME_FLOAT' => 1770731853.178
+    'REQUEST_TIME' => 1770731853
+]
+2026-02-10 09:58:48 [::1][1][qmlqqigfmgjgqg5vhaviivr3bt][error][yii\web\HttpException:404] yii\base\InvalidRouteException: Unable to resolve the request "js/escuela-selector.js". in C:\xampp\htdocs\planealo.sytes.net\vendor\yiisoft\yii2\base\Module.php:564
+Stack trace:
+#0 C:\xampp\htdocs\planealo.sytes.net\vendor\yiisoft\yii2\web\Application.php(103): yii\base\Module->runAction('js/escuela-sele...', Array)
+#1 C:\xampp\htdocs\planealo.sytes.net\vendor\yiisoft\yii2\base\Application.php(387): yii\web\Application->handleRequest(Object(yii\web\Request))
+#2 C:\xampp\htdocs\planealo.sytes.net\web\index.php(12): yii\base\Application->run()
+#3 {main}
+
+Next yii\web\NotFoundHttpException: Página no encontrada. in C:\xampp\htdocs\planealo.sytes.net\vendor\yiisoft\yii2\web\Application.php:115
+Stack trace:
+#0 C:\xampp\htdocs\planealo.sytes.net\vendor\yiisoft\yii2\base\Application.php(387): yii\web\Application->handleRequest(Object(yii\web\Request))
+#1 C:\xampp\htdocs\planealo.sytes.net\web\index.php(12): yii\base\Application->run()
+#2 {main}
+2026-02-10 09:58:48 [::1][1][qmlqqigfmgjgqg5vhaviivr3bt][info][application] $_GET = []
+
+$_POST = []
+
+$_FILES = []
+
+$_COOKIE = [
+    '_ga' => 'GA1.1.1679908835.1749223008'
+    '_identity' => '9dc3e882c595ff0fa4feeae21489c917fcb86f4f3aef88d6982c5f18402701dea:2:{i:0;s:9:\"_identity\";i:1;s:46:\"[1,\"FCxNRGJia25jro30ecX5r8yVk7nCuaOY\",2592000]\";}'
+    '_csrf' => '81be198d78a8bda3d78df1cbdd69b980d458fafbe3a0b168ed08dc11cfa55e2ea:2:{i:0;s:5:\"_csrf\";i:1;s:32:\"2z86aNIx54Gly3zHs6NR4uUgnRDW7DY0\";}'
+    'PHPSESSID' => 'qmlqqigfmgjgqg5vhaviivr3bt'
+]
+
+$_SESSION = [
+    '__flash' => []
+    '__returnUrl' => 'http://localhost/planealo_desarrollo/web/'
+    '__id' => 1
+    '__authKey' => 'FCxNRGJia25jro30ecX5r8yVk7nCuaOY'
+    'id_escuela' => 2
+    'nombre_escuela' => 'Club Aves Voladoras'
+    'escuela_activa' => true
+    'escuela_ultima_actualizacion' => 1770397990
+    'idEscuela' => 2
+    'nombreEscuela' => 'Club Aves Voladoras'
+]
+
+$_SERVER = [
+    'REDIRECT_MIBDIRS' => 'C:/xampp/php/extras/mibs'
+    'REDIRECT_MYSQL_HOME' => '\\xampp\\mysql\\bin'
+    'REDIRECT_OPENSSL_CONF' => 'C:/xampp/apache/bin/openssl.cnf'
+    'REDIRECT_PHP_PEAR_SYSCONF_DIR' => '\\xampp\\php'
+    'REDIRECT_PHPRC' => '\\xampp\\php'
+    'REDIRECT_TMP' => '\\xampp\\tmp'
+    'REDIRECT_STATUS' => '200'
+    'MIBDIRS' => 'C:/xampp/php/extras/mibs'
+    'MYSQL_HOME' => '\\xampp\\mysql\\bin'
+    'OPENSSL_CONF' => 'C:/xampp/apache/bin/openssl.cnf'
+    'PHP_PEAR_SYSCONF_DIR' => '\\xampp\\php'
+    'PHPRC' => '\\xampp\\php'
+    'TMP' => '\\xampp\\tmp'
+    'HTTP_HOST' => 'localhost'
+    'HTTP_CONNECTION' => 'keep-alive'
+    'HTTP_SEC_CH_UA_PLATFORM' => '\"Windows\"'
+    'HTTP_USER_AGENT' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36 OPR/126.0.0.0'
+    'HTTP_SEC_CH_UA' => '\"Chromium\";v=\"142\", \"Opera GX\";v=\"126\", \"Not_A Brand\";v=\"99\"'
+    'HTTP_SEC_CH_UA_MOBILE' => '?0'
+    'HTTP_ACCEPT' => '*/*'
+    'HTTP_SEC_FETCH_SITE' => 'same-origin'
+    'HTTP_SEC_FETCH_MODE' => 'no-cors'
+    'HTTP_SEC_FETCH_DEST' => 'script'
+    'HTTP_REFERER' => 'http://localhost/planealo.sytes.net/web/aportes/aportes/index'
+    'HTTP_ACCEPT_ENCODING' => 'gzip, deflate, br, zstd'
+    'HTTP_ACCEPT_LANGUAGE' => 'en,id;q=0.9,tr;q=0.8,ru;q=0.7'
+    'HTTP_COOKIE' => '_ga=GA1.1.1679908835.1749223008; _identity=9dc3e882c595ff0fa4feeae21489c917fcb86f4f3aef88d6982c5f18402701dea%3A2%3A%7Bi%3A0%3Bs%3A9%3A%22_identity%22%3Bi%3A1%3Bs%3A46%3A%22%5B1%2C%22FCxNRGJia25jro30ecX5r8yVk7nCuaOY%22%2C2592000%5D%22%3B%7D; _csrf=81be198d78a8bda3d78df1cbdd69b980d458fafbe3a0b168ed08dc11cfa55e2ea%3A2%3A%7Bi%3A0%3Bs%3A5%3A%22_csrf%22%3Bi%3A1%3Bs%3A32%3A%222z86aNIx54Gly3zHs6NR4uUgnRDW7DY0%22%3B%7D; PHPSESSID=qmlqqigfmgjgqg5vhaviivr3bt'
+    'PATH' => 'C:\\WINDOWS\\system32;C:\\WINDOWS;C:\\WINDOWS\\System32\\Wbem;C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\;C:\\WINDOWS\\System32\\OpenSSH\\;C:\\xampp\\php;C:\\ProgramData\\ComposerSetup\\bin;C:\\Program Files\\PuTTY\\;C:\\Program Files\\Git\\cmd;C:\\Program Files\\nodejs\\;C:\\Program Files (x86)\\Microsoft SQL Server\\160\\Tools\\Binn\\;C:\\Program Files\\Microsoft SQL Server\\160\\Tools\\Binn\\;C:\\Program Files\\Microsoft SQL Server\\Client SDK\\ODBC\\170\\Tools\\Binn\\;C:\\Program Files\\Microsoft SQL Server\\160\\DTS\\Binn\\;C:\\Program Files (x86)\\Microsoft SQL Server\\160\\DTS\\Binn\\;C:\\Users\\Otic-Sistemas\\AppData\\Local\\Microsoft\\WindowsApps;;C:\\Users\\Otic-Sistemas\\AppData\\Local\\Programs\\Microsoft VS Code\\bin;C:\\Users\\Otic-Sistemas\\AppData\\Roaming\\Composer\\vendor\\bin;C:\\Users\\Otic-Sistemas\\AppData\\Roaming\\npm'
+    'SystemRoot' => 'C:\\WINDOWS'
+    'COMSPEC' => 'C:\\WINDOWS\\system32\\cmd.exe'
+    'PATHEXT' => '.COM;.EXE;.BAT;.CMD;.VBS;.VBE;.JS;.JSE;.WSF;.WSH;.MSC'
+    'WINDIR' => 'C:\\WINDOWS'
+    'SERVER_SIGNATURE' => '<address>Apache/2.4.54 (Win64) OpenSSL/1.1.1p PHP/8.2.0 Server at localhost Port 80</address>
+'
+    'SERVER_SOFTWARE' => 'Apache/2.4.54 (Win64) OpenSSL/1.1.1p PHP/8.2.0'
+    'SERVER_NAME' => 'localhost'
+    'SERVER_ADDR' => '::1'
+    'SERVER_PORT' => '80'
+    'REMOTE_ADDR' => '::1'
+    'DOCUMENT_ROOT' => 'C:/xampp/htdocs'
+    'REQUEST_SCHEME' => 'http'
+    'CONTEXT_PREFIX' => ''
+    'CONTEXT_DOCUMENT_ROOT' => 'C:/xampp/htdocs'
+    'SERVER_ADMIN' => 'postmaster@localhost'
+    'SCRIPT_FILENAME' => 'C:/xampp/htdocs/planealo.sytes.net/web/index.php'
+    'REMOTE_PORT' => '50079'
+    'REDIRECT_URL' => '/planealo.sytes.net/web/js/escuela-selector.js'
+    'GATEWAY_INTERFACE' => 'CGI/1.1'
+    'SERVER_PROTOCOL' => 'HTTP/1.1'
+    'REQUEST_METHOD' => 'GET'
+    'QUERY_STRING' => ''
+    'REQUEST_URI' => '/planealo.sytes.net/web/js/escuela-selector.js'
+    'SCRIPT_NAME' => '/planealo.sytes.net/web/index.php'
+    'PHP_SELF' => '/planealo.sytes.net/web/index.php'
+    'REQUEST_TIME_FLOAT' => 1770731928.354
+    'REQUEST_TIME' => 1770731928
+]
+2026-02-10 14:09:12 [::1][1][-][error][tasa-dolar] Error BCV Directo: fopen(https://www.bcv.org.ve/): Failed to open stream: Se produjo un error durante el intento de conexión ya que la parte conectada no respondió adecuadamente tras un periodo de tiempo, o bien se produjo un error en la conexión establecida ya que el host conectado no ha podido responder
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:157
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:105
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:78
+2026-02-10 14:09:12 [::1][1][-][warning][tasa-dolar] ❌ Fuente BCV_Directo falló o tasa inválida: 0
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:112
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:78
+    in C:\xampp\htdocs\planealo.sytes.net\widgets\TasaDolarWidget.php:15
+2026-02-10 14:09:32 [::1][1][-][error][tasa-dolar] Error BCV Alternativo: fopen(https://www.bcv.org.ve/tasas-informativas-sistema-bancario): Failed to open stream: Se produjo un error durante el intento de conexión ya que la parte conectada no respondió adecuadamente tras un periodo de tiempo, o bien se produjo un error en la conexión establecida ya que el host conectado no ha podido responder
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:187
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:105
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:78
+2026-02-10 14:09:32 [::1][1][-][warning][tasa-dolar] ❌ Fuente BCV_Alternativo falló o tasa inválida: 0
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:112
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:78
+    in C:\xampp\htdocs\planealo.sytes.net\widgets\TasaDolarWidget.php:15
+2026-02-10 14:09:47 [::1][1][-][error][tasa-dolar] Error Yahoo Finance: fopen(https://query1.finance.yahoo.com/v8/finance/chart/USDVES=X): Failed to open stream: Se produjo un error durante el intento de conexión ya que la parte conectada no respondió adecuadamente tras un periodo de tiempo, o bien se produjo un error en la conexión establecida ya que el host conectado no ha podido responder
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:286
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:105
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:78
+2026-02-10 14:09:47 [::1][1][-][warning][tasa-dolar] ❌ Fuente EnParalelo falló o tasa inválida: 0
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:112
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:78
+    in C:\xampp\htdocs\planealo.sytes.net\widgets\TasaDolarWidget.php:15
+2026-02-10 14:10:02 [::1][1][-][error][tasa-dolar] Error ExchangeRate-API: fopen(https://api.exchangerate-api.com/v4/latest/USD): Failed to open stream: Se produjo un error durante el intento de conexión ya que la parte conectada no respondió adecuadamente tras un periodo de tiempo, o bien se produjo un error en la conexión establecida ya que el host conectado no ha podido responder
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:317
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:105
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:78
+2026-02-10 14:10:02 [::1][1][-][warning][tasa-dolar] ❌ Fuente API_Respaldo falló o tasa inválida: 0
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:112
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:78
+    in C:\xampp\htdocs\planealo.sytes.net\widgets\TasaDolarWidget.php:15
+2026-02-10 14:10:02 [::1][1][-][error][tasa-dolar] ❌ Todas las fuentes fallaron
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:116
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:78
+    in C:\xampp\htdocs\planealo.sytes.net\widgets\TasaDolarWidget.php:15
+2026-02-10 14:08:40 [::1][1][-][info][application] $_GET = []
+
+$_POST = []
+
+$_FILES = []
+
+$_COOKIE = [
+    '_ga' => 'GA1.1.1679908835.1749223008'
+    '_identity' => '9dc3e882c595ff0fa4feeae21489c917fcb86f4f3aef88d6982c5f18402701dea:2:{i:0;s:9:\"_identity\";i:1;s:46:\"[1,\"FCxNRGJia25jro30ecX5r8yVk7nCuaOY\",2592000]\";}'
+    '_csrf' => '81be198d78a8bda3d78df1cbdd69b980d458fafbe3a0b168ed08dc11cfa55e2ea:2:{i:0;s:5:\"_csrf\";i:1;s:32:\"2z86aNIx54Gly3zHs6NR4uUgnRDW7DY0\";}'
+    'PHPSESSID' => 'qmlqqigfmgjgqg5vhaviivr3bt'
+]
+
+$_SESSION = [
+    '__flash' => []
+    '__returnUrl' => 'http://localhost/planealo_desarrollo/web/'
+    '__id' => 1
+    '__authKey' => 'FCxNRGJia25jro30ecX5r8yVk7nCuaOY'
+    'id_escuela' => 2
+    'nombre_escuela' => 'Club Aves Voladoras'
+    'escuela_activa' => true
+    'escuela_ultima_actualizacion' => 1770397990
+    'idEscuela' => 2
+    'nombreEscuela' => 'Club Aves Voladoras'
+]
+
+$_SERVER = [
+    'REDIRECT_MIBDIRS' => 'C:/xampp/php/extras/mibs'
+    'REDIRECT_MYSQL_HOME' => '\\xampp\\mysql\\bin'
+    'REDIRECT_OPENSSL_CONF' => 'C:/xampp/apache/bin/openssl.cnf'
+    'REDIRECT_PHP_PEAR_SYSCONF_DIR' => '\\xampp\\php'
+    'REDIRECT_PHPRC' => '\\xampp\\php'
+    'REDIRECT_TMP' => '\\xampp\\tmp'
+    'REDIRECT_STATUS' => '200'
+    'MIBDIRS' => 'C:/xampp/php/extras/mibs'
+    'MYSQL_HOME' => '\\xampp\\mysql\\bin'
+    'OPENSSL_CONF' => 'C:/xampp/apache/bin/openssl.cnf'
+    'PHP_PEAR_SYSCONF_DIR' => '\\xampp\\php'
+    'PHPRC' => '\\xampp\\php'
+    'TMP' => '\\xampp\\tmp'
+    'HTTP_HOST' => 'localhost'
+    'HTTP_CONNECTION' => 'keep-alive'
+    'HTTP_PRAGMA' => 'no-cache'
+    'HTTP_CACHE_CONTROL' => 'no-cache'
+    'HTTP_SEC_CH_UA' => '\"Chromium\";v=\"142\", \"Opera GX\";v=\"126\", \"Not_A Brand\";v=\"99\"'
+    'HTTP_SEC_CH_UA_MOBILE' => '?0'
+    'HTTP_SEC_CH_UA_PLATFORM' => '\"Windows\"'
+    'HTTP_UPGRADE_INSECURE_REQUESTS' => '1'
+    'HTTP_USER_AGENT' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36 OPR/126.0.0.0'
+    'HTTP_ACCEPT' => 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7'
+    'HTTP_SEC_FETCH_SITE' => 'same-origin'
+    'HTTP_SEC_FETCH_MODE' => 'navigate'
+    'HTTP_SEC_FETCH_USER' => '?1'
+    'HTTP_SEC_FETCH_DEST' => 'document'
+    'HTTP_REFERER' => 'http://localhost/planealo.sytes.net/web/'
+    'HTTP_ACCEPT_ENCODING' => 'gzip, deflate, br, zstd'
+    'HTTP_ACCEPT_LANGUAGE' => 'en,id;q=0.9,tr;q=0.8,ru;q=0.7'
+    'HTTP_COOKIE' => '_ga=GA1.1.1679908835.1749223008; _identity=9dc3e882c595ff0fa4feeae21489c917fcb86f4f3aef88d6982c5f18402701dea%3A2%3A%7Bi%3A0%3Bs%3A9%3A%22_identity%22%3Bi%3A1%3Bs%3A46%3A%22%5B1%2C%22FCxNRGJia25jro30ecX5r8yVk7nCuaOY%22%2C2592000%5D%22%3B%7D; _csrf=81be198d78a8bda3d78df1cbdd69b980d458fafbe3a0b168ed08dc11cfa55e2ea%3A2%3A%7Bi%3A0%3Bs%3A5%3A%22_csrf%22%3Bi%3A1%3Bs%3A32%3A%222z86aNIx54Gly3zHs6NR4uUgnRDW7DY0%22%3B%7D; PHPSESSID=qmlqqigfmgjgqg5vhaviivr3bt'
+    'PATH' => 'C:\\WINDOWS\\system32;C:\\WINDOWS;C:\\WINDOWS\\System32\\Wbem;C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\;C:\\WINDOWS\\System32\\OpenSSH\\;C:\\xampp\\php;C:\\ProgramData\\ComposerSetup\\bin;C:\\Program Files\\PuTTY\\;C:\\Program Files\\Git\\cmd;C:\\Program Files\\nodejs\\;C:\\Program Files (x86)\\Microsoft SQL Server\\160\\Tools\\Binn\\;C:\\Program Files\\Microsoft SQL Server\\160\\Tools\\Binn\\;C:\\Program Files\\Microsoft SQL Server\\Client SDK\\ODBC\\170\\Tools\\Binn\\;C:\\Program Files\\Microsoft SQL Server\\160\\DTS\\Binn\\;C:\\Program Files (x86)\\Microsoft SQL Server\\160\\DTS\\Binn\\;C:\\Users\\Otic-Sistemas\\AppData\\Local\\Microsoft\\WindowsApps;;C:\\Users\\Otic-Sistemas\\AppData\\Local\\Programs\\Microsoft VS Code\\bin;C:\\Users\\Otic-Sistemas\\AppData\\Roaming\\Composer\\vendor\\bin;C:\\Users\\Otic-Sistemas\\AppData\\Roaming\\npm'
+    'SystemRoot' => 'C:\\WINDOWS'
+    'COMSPEC' => 'C:\\WINDOWS\\system32\\cmd.exe'
+    'PATHEXT' => '.COM;.EXE;.BAT;.CMD;.VBS;.VBE;.JS;.JSE;.WSF;.WSH;.MSC'
+    'WINDIR' => 'C:\\WINDOWS'
+    'SERVER_SIGNATURE' => '<address>Apache/2.4.54 (Win64) OpenSSL/1.1.1p PHP/8.2.0 Server at localhost Port 80</address>
+'
+    'SERVER_SOFTWARE' => 'Apache/2.4.54 (Win64) OpenSSL/1.1.1p PHP/8.2.0'
+    'SERVER_NAME' => 'localhost'
+    'SERVER_ADDR' => '::1'
+    'SERVER_PORT' => '80'
+    'REMOTE_ADDR' => '::1'
+    'DOCUMENT_ROOT' => 'C:/xampp/htdocs'
+    'REQUEST_SCHEME' => 'http'
+    'CONTEXT_PREFIX' => ''
+    'CONTEXT_DOCUMENT_ROOT' => 'C:/xampp/htdocs'
+    'SERVER_ADMIN' => 'postmaster@localhost'
+    'SCRIPT_FILENAME' => 'C:/xampp/htdocs/planealo.sytes.net/web/index.php'
+    'REMOTE_PORT' => '54421'
+    'REDIRECT_URL' => '/planealo.sytes.net/web/aportes/aportes/index'
+    'GATEWAY_INTERFACE' => 'CGI/1.1'
+    'SERVER_PROTOCOL' => 'HTTP/1.1'
+    'REQUEST_METHOD' => 'GET'
+    'QUERY_STRING' => ''
+    'REQUEST_URI' => '/planealo.sytes.net/web/aportes/aportes/index'
+    'SCRIPT_NAME' => '/planealo.sytes.net/web/index.php'
+    'PHP_SELF' => '/planealo.sytes.net/web/index.php'
+    'REQUEST_TIME_FLOAT' => 1770746917.3413
+    'REQUEST_TIME' => 1770746917
+]
+2026-02-12 10:58:46 [::1][1][-][error][tasa-dolar] Error BCV Directo: fopen(https://www.bcv.org.ve/): Failed to open stream: Se produjo un error durante el intento de conexión ya que la parte conectada no respondió adecuadamente tras un periodo de tiempo, o bien se produjo un error en la conexión establecida ya que el host conectado no ha podido responder
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:157
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:105
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:78
+2026-02-12 10:58:46 [::1][1][-][warning][tasa-dolar] ❌ Fuente BCV_Directo falló o tasa inválida: 0
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:112
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:78
+    in C:\xampp\htdocs\planealo.sytes.net\widgets\TasaDolarWidget.php:15
+2026-02-12 10:59:06 [::1][1][-][error][tasa-dolar] Error BCV Alternativo: fopen(https://www.bcv.org.ve/tasas-informativas-sistema-bancario): Failed to open stream: Se produjo un error durante el intento de conexión ya que la parte conectada no respondió adecuadamente tras un periodo de tiempo, o bien se produjo un error en la conexión establecida ya que el host conectado no ha podido responder
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:187
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:105
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:78
+2026-02-12 10:59:06 [::1][1][-][warning][tasa-dolar] ❌ Fuente BCV_Alternativo falló o tasa inválida: 0
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:112
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:78
+    in C:\xampp\htdocs\planealo.sytes.net\widgets\TasaDolarWidget.php:15
+2026-02-12 10:59:21 [::1][1][-][error][tasa-dolar] Error Yahoo Finance: fopen(https://query1.finance.yahoo.com/v8/finance/chart/USDVES=X): Failed to open stream: Se produjo un error durante el intento de conexión ya que la parte conectada no respondió adecuadamente tras un periodo de tiempo, o bien se produjo un error en la conexión establecida ya que el host conectado no ha podido responder
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:286
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:105
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:78
+2026-02-12 10:59:21 [::1][1][-][warning][tasa-dolar] ❌ Fuente EnParalelo falló o tasa inválida: 0
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:112
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:78
+    in C:\xampp\htdocs\planealo.sytes.net\widgets\TasaDolarWidget.php:15
+2026-02-12 10:59:36 [::1][1][-][error][tasa-dolar] Error ExchangeRate-API: fopen(https://api.exchangerate-api.com/v4/latest/USD): Failed to open stream: Se produjo un error durante el intento de conexión ya que la parte conectada no respondió adecuadamente tras un periodo de tiempo, o bien se produjo un error en la conexión establecida ya que el host conectado no ha podido responder
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:317
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:105
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:78
+2026-02-12 10:59:36 [::1][1][-][warning][tasa-dolar] ❌ Fuente API_Respaldo falló o tasa inválida: 0
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:112
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:78
+    in C:\xampp\htdocs\planealo.sytes.net\widgets\TasaDolarWidget.php:15
+2026-02-12 10:59:36 [::1][1][-][error][tasa-dolar] ❌ Todas las fuentes fallaron
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:116
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:78
+    in C:\xampp\htdocs\planealo.sytes.net\widgets\TasaDolarWidget.php:15
+2026-02-12 10:58:23 [::1][1][-][info][application] $_GET = []
+
+$_POST = []
+
+$_FILES = []
+
+$_COOKIE = [
+    '_ga' => 'GA1.1.1679908835.1749223008'
+    '_identity' => '9dc3e882c595ff0fa4feeae21489c917fcb86f4f3aef88d6982c5f18402701dea:2:{i:0;s:9:\"_identity\";i:1;s:46:\"[1,\"FCxNRGJia25jro30ecX5r8yVk7nCuaOY\",2592000]\";}'
+    '_csrf' => '81be198d78a8bda3d78df1cbdd69b980d458fafbe3a0b168ed08dc11cfa55e2ea:2:{i:0;s:5:\"_csrf\";i:1;s:32:\"2z86aNIx54Gly3zHs6NR4uUgnRDW7DY0\";}'
+    'PHPSESSID' => 'qmlqqigfmgjgqg5vhaviivr3bt'
+]
+
+$_SESSION = [
+    '__flash' => []
+    '__returnUrl' => 'http://localhost/planealo_desarrollo/web/'
+    '__id' => 1
+    '__authKey' => 'FCxNRGJia25jro30ecX5r8yVk7nCuaOY'
+    'id_escuela' => 2
+    'nombre_escuela' => 'Club Aves Voladoras'
+    'escuela_activa' => true
+    'escuela_ultima_actualizacion' => 1770397990
+    'idEscuela' => 2
+    'nombreEscuela' => 'Club Aves Voladoras'
+]
+
+$_SERVER = [
+    'REDIRECT_MIBDIRS' => 'C:/xampp/php/extras/mibs'
+    'REDIRECT_MYSQL_HOME' => '\\xampp\\mysql\\bin'
+    'REDIRECT_OPENSSL_CONF' => 'C:/xampp/apache/bin/openssl.cnf'
+    'REDIRECT_PHP_PEAR_SYSCONF_DIR' => '\\xampp\\php'
+    'REDIRECT_PHPRC' => '\\xampp\\php'
+    'REDIRECT_TMP' => '\\xampp\\tmp'
+    'REDIRECT_STATUS' => '200'
+    'MIBDIRS' => 'C:/xampp/php/extras/mibs'
+    'MYSQL_HOME' => '\\xampp\\mysql\\bin'
+    'OPENSSL_CONF' => 'C:/xampp/apache/bin/openssl.cnf'
+    'PHP_PEAR_SYSCONF_DIR' => '\\xampp\\php'
+    'PHPRC' => '\\xampp\\php'
+    'TMP' => '\\xampp\\tmp'
+    'HTTP_HOST' => 'localhost'
+    'HTTP_CONNECTION' => 'keep-alive'
+    'HTTP_SEC_CH_UA' => '\"Chromium\";v=\"142\", \"Opera GX\";v=\"126\", \"Not_A Brand\";v=\"99\"'
+    'HTTP_SEC_CH_UA_MOBILE' => '?0'
+    'HTTP_SEC_CH_UA_PLATFORM' => '\"Windows\"'
+    'HTTP_UPGRADE_INSECURE_REQUESTS' => '1'
+    'HTTP_USER_AGENT' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36 OPR/126.0.0.0'
+    'HTTP_ACCEPT' => 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7'
+    'HTTP_SEC_FETCH_SITE' => 'same-origin'
+    'HTTP_SEC_FETCH_MODE' => 'navigate'
+    'HTTP_SEC_FETCH_USER' => '?1'
+    'HTTP_SEC_FETCH_DEST' => 'document'
+    'HTTP_REFERER' => 'http://localhost/planealo.sytes.net/web/atletas/asistencia/registro-multiple?r=atletas%2Fasistencia%2Fregistro-multiple&id_escuela=2&Asistencia%5Bfecha_practica%5D=2026-02-12'
+    'HTTP_ACCEPT_ENCODING' => 'gzip, deflate, br, zstd'
+    'HTTP_ACCEPT_LANGUAGE' => 'en,id;q=0.9,tr;q=0.8,ru;q=0.7'
+    'HTTP_COOKIE' => '_ga=GA1.1.1679908835.1749223008; _identity=9dc3e882c595ff0fa4feeae21489c917fcb86f4f3aef88d6982c5f18402701dea%3A2%3A%7Bi%3A0%3Bs%3A9%3A%22_identity%22%3Bi%3A1%3Bs%3A46%3A%22%5B1%2C%22FCxNRGJia25jro30ecX5r8yVk7nCuaOY%22%2C2592000%5D%22%3B%7D; _csrf=81be198d78a8bda3d78df1cbdd69b980d458fafbe3a0b168ed08dc11cfa55e2ea%3A2%3A%7Bi%3A0%3Bs%3A5%3A%22_csrf%22%3Bi%3A1%3Bs%3A32%3A%222z86aNIx54Gly3zHs6NR4uUgnRDW7DY0%22%3B%7D; PHPSESSID=qmlqqigfmgjgqg5vhaviivr3bt'
+    'PATH' => 'C:\\WINDOWS\\system32;C:\\WINDOWS;C:\\WINDOWS\\System32\\Wbem;C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\;C:\\WINDOWS\\System32\\OpenSSH\\;C:\\xampp\\php;C:\\ProgramData\\ComposerSetup\\bin;C:\\Program Files\\PuTTY\\;C:\\Program Files\\Git\\cmd;C:\\Program Files\\nodejs\\;C:\\Program Files (x86)\\Microsoft SQL Server\\160\\Tools\\Binn\\;C:\\Program Files\\Microsoft SQL Server\\160\\Tools\\Binn\\;C:\\Program Files\\Microsoft SQL Server\\Client SDK\\ODBC\\170\\Tools\\Binn\\;C:\\Program Files\\Microsoft SQL Server\\160\\DTS\\Binn\\;C:\\Program Files (x86)\\Microsoft SQL Server\\160\\DTS\\Binn\\;C:\\Users\\Otic-Sistemas\\AppData\\Local\\Microsoft\\WindowsApps;;C:\\Users\\Otic-Sistemas\\AppData\\Local\\Programs\\Microsoft VS Code\\bin;C:\\Users\\Otic-Sistemas\\AppData\\Roaming\\Composer\\vendor\\bin;C:\\Users\\Otic-Sistemas\\AppData\\Roaming\\npm'
+    'SystemRoot' => 'C:\\WINDOWS'
+    'COMSPEC' => 'C:\\WINDOWS\\system32\\cmd.exe'
+    'PATHEXT' => '.COM;.EXE;.BAT;.CMD;.VBS;.VBE;.JS;.JSE;.WSF;.WSH;.MSC'
+    'WINDIR' => 'C:\\WINDOWS'
+    'SERVER_SIGNATURE' => '<address>Apache/2.4.54 (Win64) OpenSSL/1.1.1p PHP/8.2.0 Server at localhost Port 80</address>
+'
+    'SERVER_SOFTWARE' => 'Apache/2.4.54 (Win64) OpenSSL/1.1.1p PHP/8.2.0'
+    'SERVER_NAME' => 'localhost'
+    'SERVER_ADDR' => '::1'
+    'SERVER_PORT' => '80'
+    'REMOTE_ADDR' => '::1'
+    'DOCUMENT_ROOT' => 'C:/xampp/htdocs'
+    'REQUEST_SCHEME' => 'http'
+    'CONTEXT_PREFIX' => ''
+    'CONTEXT_DOCUMENT_ROOT' => 'C:/xampp/htdocs'
+    'SERVER_ADMIN' => 'postmaster@localhost'
+    'SCRIPT_FILENAME' => 'C:/xampp/htdocs/planealo.sytes.net/web/index.php'
+    'REMOTE_PORT' => '59188'
+    'REDIRECT_URL' => '/planealo.sytes.net/web/atletas/atletas-registro/create'
+    'GATEWAY_INTERFACE' => 'CGI/1.1'
+    'SERVER_PROTOCOL' => 'HTTP/1.1'
+    'REQUEST_METHOD' => 'GET'
+    'QUERY_STRING' => ''
+    'REQUEST_URI' => '/planealo.sytes.net/web/atletas/atletas-registro/create'
+    'SCRIPT_NAME' => '/planealo.sytes.net/web/index.php'
+    'PHP_SELF' => '/planealo.sytes.net/web/index.php'
+    'REQUEST_TIME_FLOAT' => 1770908303.7543
+    'REQUEST_TIME' => 1770908303
+]
+2026-02-12 10:59:38 [::1][1][qmlqqigfmgjgqg5vhaviivr3bt][error][yii\web\HttpException:404] yii\base\InvalidRouteException: Unable to resolve the request "js/escuela-selector.js". in C:\xampp\htdocs\planealo.sytes.net\vendor\yiisoft\yii2\base\Module.php:564
+Stack trace:
+#0 C:\xampp\htdocs\planealo.sytes.net\vendor\yiisoft\yii2\web\Application.php(103): yii\base\Module->runAction('js/escuela-sele...', Array)
+#1 C:\xampp\htdocs\planealo.sytes.net\vendor\yiisoft\yii2\base\Application.php(387): yii\web\Application->handleRequest(Object(yii\web\Request))
+#2 C:\xampp\htdocs\planealo.sytes.net\web\index.php(12): yii\base\Application->run()
+#3 {main}
+
+Next yii\web\NotFoundHttpException: Página no encontrada. in C:\xampp\htdocs\planealo.sytes.net\vendor\yiisoft\yii2\web\Application.php:115
+Stack trace:
+#0 C:\xampp\htdocs\planealo.sytes.net\vendor\yiisoft\yii2\base\Application.php(387): yii\web\Application->handleRequest(Object(yii\web\Request))
+#1 C:\xampp\htdocs\planealo.sytes.net\web\index.php(12): yii\base\Application->run()
+#2 {main}
+2026-02-12 10:59:37 [::1][1][qmlqqigfmgjgqg5vhaviivr3bt][info][application] $_GET = []
+
+$_POST = []
+
+$_FILES = []
+
+$_COOKIE = [
+    '_ga' => 'GA1.1.1679908835.1749223008'
+    '_identity' => '9dc3e882c595ff0fa4feeae21489c917fcb86f4f3aef88d6982c5f18402701dea:2:{i:0;s:9:\"_identity\";i:1;s:46:\"[1,\"FCxNRGJia25jro30ecX5r8yVk7nCuaOY\",2592000]\";}'
+    '_csrf' => '81be198d78a8bda3d78df1cbdd69b980d458fafbe3a0b168ed08dc11cfa55e2ea:2:{i:0;s:5:\"_csrf\";i:1;s:32:\"2z86aNIx54Gly3zHs6NR4uUgnRDW7DY0\";}'
+    'PHPSESSID' => 'qmlqqigfmgjgqg5vhaviivr3bt'
+]
+
+$_SESSION = [
+    '__flash' => []
+    '__returnUrl' => 'http://localhost/planealo_desarrollo/web/'
+    '__id' => 1
+    '__authKey' => 'FCxNRGJia25jro30ecX5r8yVk7nCuaOY'
+    'id_escuela' => 2
+    'nombre_escuela' => 'Club Aves Voladoras'
+    'escuela_activa' => true
+    'escuela_ultima_actualizacion' => 1770397990
+    'idEscuela' => 2
+    'nombreEscuela' => 'Club Aves Voladoras'
+]
+
+$_SERVER = [
+    'REDIRECT_MIBDIRS' => 'C:/xampp/php/extras/mibs'
+    'REDIRECT_MYSQL_HOME' => '\\xampp\\mysql\\bin'
+    'REDIRECT_OPENSSL_CONF' => 'C:/xampp/apache/bin/openssl.cnf'
+    'REDIRECT_PHP_PEAR_SYSCONF_DIR' => '\\xampp\\php'
+    'REDIRECT_PHPRC' => '\\xampp\\php'
+    'REDIRECT_TMP' => '\\xampp\\tmp'
+    'REDIRECT_STATUS' => '200'
+    'MIBDIRS' => 'C:/xampp/php/extras/mibs'
+    'MYSQL_HOME' => '\\xampp\\mysql\\bin'
+    'OPENSSL_CONF' => 'C:/xampp/apache/bin/openssl.cnf'
+    'PHP_PEAR_SYSCONF_DIR' => '\\xampp\\php'
+    'PHPRC' => '\\xampp\\php'
+    'TMP' => '\\xampp\\tmp'
+    'HTTP_HOST' => 'localhost'
+    'HTTP_CONNECTION' => 'keep-alive'
+    'HTTP_SEC_CH_UA_PLATFORM' => '\"Windows\"'
+    'HTTP_USER_AGENT' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36 OPR/126.0.0.0'
+    'HTTP_SEC_CH_UA' => '\"Chromium\";v=\"142\", \"Opera GX\";v=\"126\", \"Not_A Brand\";v=\"99\"'
+    'HTTP_SEC_CH_UA_MOBILE' => '?0'
+    'HTTP_ACCEPT' => '*/*'
+    'HTTP_SEC_FETCH_SITE' => 'same-origin'
+    'HTTP_SEC_FETCH_MODE' => 'no-cors'
+    'HTTP_SEC_FETCH_DEST' => 'script'
+    'HTTP_REFERER' => 'http://localhost/planealo.sytes.net/web/atletas/atletas-registro/create'
+    'HTTP_ACCEPT_ENCODING' => 'gzip, deflate, br, zstd'
+    'HTTP_ACCEPT_LANGUAGE' => 'en,id;q=0.9,tr;q=0.8,ru;q=0.7'
+    'HTTP_COOKIE' => '_ga=GA1.1.1679908835.1749223008; _identity=9dc3e882c595ff0fa4feeae21489c917fcb86f4f3aef88d6982c5f18402701dea%3A2%3A%7Bi%3A0%3Bs%3A9%3A%22_identity%22%3Bi%3A1%3Bs%3A46%3A%22%5B1%2C%22FCxNRGJia25jro30ecX5r8yVk7nCuaOY%22%2C2592000%5D%22%3B%7D; _csrf=81be198d78a8bda3d78df1cbdd69b980d458fafbe3a0b168ed08dc11cfa55e2ea%3A2%3A%7Bi%3A0%3Bs%3A5%3A%22_csrf%22%3Bi%3A1%3Bs%3A32%3A%222z86aNIx54Gly3zHs6NR4uUgnRDW7DY0%22%3B%7D; PHPSESSID=qmlqqigfmgjgqg5vhaviivr3bt'
+    'PATH' => 'C:\\WINDOWS\\system32;C:\\WINDOWS;C:\\WINDOWS\\System32\\Wbem;C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\;C:\\WINDOWS\\System32\\OpenSSH\\;C:\\xampp\\php;C:\\ProgramData\\ComposerSetup\\bin;C:\\Program Files\\PuTTY\\;C:\\Program Files\\Git\\cmd;C:\\Program Files\\nodejs\\;C:\\Program Files (x86)\\Microsoft SQL Server\\160\\Tools\\Binn\\;C:\\Program Files\\Microsoft SQL Server\\160\\Tools\\Binn\\;C:\\Program Files\\Microsoft SQL Server\\Client SDK\\ODBC\\170\\Tools\\Binn\\;C:\\Program Files\\Microsoft SQL Server\\160\\DTS\\Binn\\;C:\\Program Files (x86)\\Microsoft SQL Server\\160\\DTS\\Binn\\;C:\\Users\\Otic-Sistemas\\AppData\\Local\\Microsoft\\WindowsApps;;C:\\Users\\Otic-Sistemas\\AppData\\Local\\Programs\\Microsoft VS Code\\bin;C:\\Users\\Otic-Sistemas\\AppData\\Roaming\\Composer\\vendor\\bin;C:\\Users\\Otic-Sistemas\\AppData\\Roaming\\npm'
+    'SystemRoot' => 'C:\\WINDOWS'
+    'COMSPEC' => 'C:\\WINDOWS\\system32\\cmd.exe'
+    'PATHEXT' => '.COM;.EXE;.BAT;.CMD;.VBS;.VBE;.JS;.JSE;.WSF;.WSH;.MSC'
+    'WINDIR' => 'C:\\WINDOWS'
+    'SERVER_SIGNATURE' => '<address>Apache/2.4.54 (Win64) OpenSSL/1.1.1p PHP/8.2.0 Server at localhost Port 80</address>
+'
+    'SERVER_SOFTWARE' => 'Apache/2.4.54 (Win64) OpenSSL/1.1.1p PHP/8.2.0'
+    'SERVER_NAME' => 'localhost'
+    'SERVER_ADDR' => '::1'
+    'SERVER_PORT' => '80'
+    'REMOTE_ADDR' => '::1'
+    'DOCUMENT_ROOT' => 'C:/xampp/htdocs'
+    'REQUEST_SCHEME' => 'http'
+    'CONTEXT_PREFIX' => ''
+    'CONTEXT_DOCUMENT_ROOT' => 'C:/xampp/htdocs'
+    'SERVER_ADMIN' => 'postmaster@localhost'
+    'SCRIPT_FILENAME' => 'C:/xampp/htdocs/planealo.sytes.net/web/index.php'
+    'REMOTE_PORT' => '59214'
+    'REDIRECT_URL' => '/planealo.sytes.net/web/js/escuela-selector.js'
+    'GATEWAY_INTERFACE' => 'CGI/1.1'
+    'SERVER_PROTOCOL' => 'HTTP/1.1'
+    'REQUEST_METHOD' => 'GET'
+    'QUERY_STRING' => ''
+    'REQUEST_URI' => '/planealo.sytes.net/web/js/escuela-selector.js'
+    'SCRIPT_NAME' => '/planealo.sytes.net/web/index.php'
+    'PHP_SELF' => '/planealo.sytes.net/web/index.php'
+    'REQUEST_TIME_FLOAT' => 1770908377.1679
+    'REQUEST_TIME' => 1770908377
+]
+2026-02-12 11:05:59 [::1][1][-][error][tasa-dolar] Error BCV Directo: fopen(https://www.bcv.org.ve/): Failed to open stream: Se produjo un error durante el intento de conexión ya que la parte conectada no respondió adecuadamente tras un periodo de tiempo, o bien se produjo un error en la conexión establecida ya que el host conectado no ha podido responder
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:157
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:105
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:78
+2026-02-12 11:05:59 [::1][1][-][warning][tasa-dolar] ❌ Fuente BCV_Directo falló o tasa inválida: 0
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:112
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:78
+    in C:\xampp\htdocs\planealo.sytes.net\widgets\TasaDolarWidget.php:15
+2026-02-12 11:06:19 [::1][1][-][error][tasa-dolar] Error BCV Alternativo: fopen(https://www.bcv.org.ve/tasas-informativas-sistema-bancario): Failed to open stream: Se produjo un error durante el intento de conexión ya que la parte conectada no respondió adecuadamente tras un periodo de tiempo, o bien se produjo un error en la conexión establecida ya que el host conectado no ha podido responder
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:187
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:105
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:78
+2026-02-12 11:06:19 [::1][1][-][warning][tasa-dolar] ❌ Fuente BCV_Alternativo falló o tasa inválida: 0
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:112
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:78
+    in C:\xampp\htdocs\planealo.sytes.net\widgets\TasaDolarWidget.php:15
+2026-02-12 11:06:34 [::1][1][-][error][tasa-dolar] Error Yahoo Finance: fopen(https://query1.finance.yahoo.com/v8/finance/chart/USDVES=X): Failed to open stream: Se produjo un error durante el intento de conexión ya que la parte conectada no respondió adecuadamente tras un periodo de tiempo, o bien se produjo un error en la conexión establecida ya que el host conectado no ha podido responder
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:286
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:105
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:78
+2026-02-12 11:06:34 [::1][1][-][warning][tasa-dolar] ❌ Fuente EnParalelo falló o tasa inválida: 0
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:112
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:78
+    in C:\xampp\htdocs\planealo.sytes.net\widgets\TasaDolarWidget.php:15
+2026-02-12 11:06:49 [::1][1][-][error][tasa-dolar] Error ExchangeRate-API: fopen(https://api.exchangerate-api.com/v4/latest/USD): Failed to open stream: Se produjo un error durante el intento de conexión ya que la parte conectada no respondió adecuadamente tras un periodo de tiempo, o bien se produjo un error en la conexión establecida ya que el host conectado no ha podido responder
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:317
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:105
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:78
+2026-02-12 11:06:49 [::1][1][-][warning][tasa-dolar] ❌ Fuente API_Respaldo falló o tasa inválida: 0
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:112
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:78
+    in C:\xampp\htdocs\planealo.sytes.net\widgets\TasaDolarWidget.php:15
+2026-02-12 11:06:49 [::1][1][-][error][tasa-dolar] ❌ Todas las fuentes fallaron
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:116
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:78
+    in C:\xampp\htdocs\planealo.sytes.net\widgets\TasaDolarWidget.php:15
+2026-02-12 11:05:30 [::1][1][-][info][application] $_GET = []
+
+$_POST = []
+
+$_FILES = []
+
+$_COOKIE = [
+    '_ga' => 'GA1.1.1679908835.1749223008'
+    '_identity' => '9dc3e882c595ff0fa4feeae21489c917fcb86f4f3aef88d6982c5f18402701dea:2:{i:0;s:9:\"_identity\";i:1;s:46:\"[1,\"FCxNRGJia25jro30ecX5r8yVk7nCuaOY\",2592000]\";}'
+    '_csrf' => '81be198d78a8bda3d78df1cbdd69b980d458fafbe3a0b168ed08dc11cfa55e2ea:2:{i:0;s:5:\"_csrf\";i:1;s:32:\"2z86aNIx54Gly3zHs6NR4uUgnRDW7DY0\";}'
+    'PHPSESSID' => 'qmlqqigfmgjgqg5vhaviivr3bt'
+]
+
+$_SESSION = [
+    '__flash' => []
+    '__returnUrl' => 'http://localhost/planealo_desarrollo/web/'
+    '__id' => 1
+    '__authKey' => 'FCxNRGJia25jro30ecX5r8yVk7nCuaOY'
+    'id_escuela' => 2
+    'nombre_escuela' => 'Club Aves Voladoras'
+    'escuela_activa' => true
+    'escuela_ultima_actualizacion' => 1770397990
+    'idEscuela' => 2
+    'nombreEscuela' => 'Club Aves Voladoras'
+]
+
+$_SERVER = [
+    'REDIRECT_MIBDIRS' => 'C:/xampp/php/extras/mibs'
+    'REDIRECT_MYSQL_HOME' => '\\xampp\\mysql\\bin'
+    'REDIRECT_OPENSSL_CONF' => 'C:/xampp/apache/bin/openssl.cnf'
+    'REDIRECT_PHP_PEAR_SYSCONF_DIR' => '\\xampp\\php'
+    'REDIRECT_PHPRC' => '\\xampp\\php'
+    'REDIRECT_TMP' => '\\xampp\\tmp'
+    'REDIRECT_STATUS' => '200'
+    'MIBDIRS' => 'C:/xampp/php/extras/mibs'
+    'MYSQL_HOME' => '\\xampp\\mysql\\bin'
+    'OPENSSL_CONF' => 'C:/xampp/apache/bin/openssl.cnf'
+    'PHP_PEAR_SYSCONF_DIR' => '\\xampp\\php'
+    'PHPRC' => '\\xampp\\php'
+    'TMP' => '\\xampp\\tmp'
+    'HTTP_HOST' => 'localhost'
+    'HTTP_CONNECTION' => 'keep-alive'
+    'HTTP_SEC_CH_UA' => '\"Chromium\";v=\"142\", \"Opera GX\";v=\"126\", \"Not_A Brand\";v=\"99\"'
+    'HTTP_SEC_CH_UA_MOBILE' => '?0'
+    'HTTP_SEC_CH_UA_PLATFORM' => '\"Windows\"'
+    'HTTP_UPGRADE_INSECURE_REQUESTS' => '1'
+    'HTTP_USER_AGENT' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36 OPR/126.0.0.0'
+    'HTTP_ACCEPT' => 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7'
+    'HTTP_SEC_FETCH_SITE' => 'same-origin'
+    'HTTP_SEC_FETCH_MODE' => 'navigate'
+    'HTTP_SEC_FETCH_USER' => '?1'
+    'HTTP_SEC_FETCH_DEST' => 'document'
+    'HTTP_REFERER' => 'http://localhost/planealo.sytes.net/web/atletas/atletas-registro/create'
+    'HTTP_ACCEPT_ENCODING' => 'gzip, deflate, br, zstd'
+    'HTTP_ACCEPT_LANGUAGE' => 'en,id;q=0.9,tr;q=0.8,ru;q=0.7'
+    'HTTP_COOKIE' => '_ga=GA1.1.1679908835.1749223008; _identity=9dc3e882c595ff0fa4feeae21489c917fcb86f4f3aef88d6982c5f18402701dea%3A2%3A%7Bi%3A0%3Bs%3A9%3A%22_identity%22%3Bi%3A1%3Bs%3A46%3A%22%5B1%2C%22FCxNRGJia25jro30ecX5r8yVk7nCuaOY%22%2C2592000%5D%22%3B%7D; _csrf=81be198d78a8bda3d78df1cbdd69b980d458fafbe3a0b168ed08dc11cfa55e2ea%3A2%3A%7Bi%3A0%3Bs%3A5%3A%22_csrf%22%3Bi%3A1%3Bs%3A32%3A%222z86aNIx54Gly3zHs6NR4uUgnRDW7DY0%22%3B%7D; PHPSESSID=qmlqqigfmgjgqg5vhaviivr3bt'
+    'PATH' => 'C:\\WINDOWS\\system32;C:\\WINDOWS;C:\\WINDOWS\\System32\\Wbem;C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\;C:\\WINDOWS\\System32\\OpenSSH\\;C:\\xampp\\php;C:\\ProgramData\\ComposerSetup\\bin;C:\\Program Files\\PuTTY\\;C:\\Program Files\\Git\\cmd;C:\\Program Files\\nodejs\\;C:\\Program Files (x86)\\Microsoft SQL Server\\160\\Tools\\Binn\\;C:\\Program Files\\Microsoft SQL Server\\160\\Tools\\Binn\\;C:\\Program Files\\Microsoft SQL Server\\Client SDK\\ODBC\\170\\Tools\\Binn\\;C:\\Program Files\\Microsoft SQL Server\\160\\DTS\\Binn\\;C:\\Program Files (x86)\\Microsoft SQL Server\\160\\DTS\\Binn\\;C:\\Users\\Otic-Sistemas\\AppData\\Local\\Microsoft\\WindowsApps;;C:\\Users\\Otic-Sistemas\\AppData\\Local\\Programs\\Microsoft VS Code\\bin;C:\\Users\\Otic-Sistemas\\AppData\\Roaming\\Composer\\vendor\\bin;C:\\Users\\Otic-Sistemas\\AppData\\Roaming\\npm'
+    'SystemRoot' => 'C:\\WINDOWS'
+    'COMSPEC' => 'C:\\WINDOWS\\system32\\cmd.exe'
+    'PATHEXT' => '.COM;.EXE;.BAT;.CMD;.VBS;.VBE;.JS;.JSE;.WSF;.WSH;.MSC'
+    'WINDIR' => 'C:\\WINDOWS'
+    'SERVER_SIGNATURE' => '<address>Apache/2.4.54 (Win64) OpenSSL/1.1.1p PHP/8.2.0 Server at localhost Port 80</address>
+'
+    'SERVER_SOFTWARE' => 'Apache/2.4.54 (Win64) OpenSSL/1.1.1p PHP/8.2.0'
+    'SERVER_NAME' => 'localhost'
+    'SERVER_ADDR' => '::1'
+    'SERVER_PORT' => '80'
+    'REMOTE_ADDR' => '::1'
+    'DOCUMENT_ROOT' => 'C:/xampp/htdocs'
+    'REQUEST_SCHEME' => 'http'
+    'CONTEXT_PREFIX' => ''
+    'CONTEXT_DOCUMENT_ROOT' => 'C:/xampp/htdocs'
+    'SERVER_ADMIN' => 'postmaster@localhost'
+    'SCRIPT_FILENAME' => 'C:/xampp/htdocs/planealo.sytes.net/web/index.php'
+    'REMOTE_PORT' => '59332'
+    'REDIRECT_URL' => '/planealo.sytes.net/web/aportes/aportes/index'
+    'GATEWAY_INTERFACE' => 'CGI/1.1'
+    'SERVER_PROTOCOL' => 'HTTP/1.1'
+    'REQUEST_METHOD' => 'GET'
+    'QUERY_STRING' => ''
+    'REQUEST_URI' => '/planealo.sytes.net/web/aportes/aportes/index'
+    'SCRIPT_NAME' => '/planealo.sytes.net/web/index.php'
+    'PHP_SELF' => '/planealo.sytes.net/web/index.php'
+    'REQUEST_TIME_FLOAT' => 1770908730.1538
+    'REQUEST_TIME' => 1770908730
+]
+2026-02-12 11:06:51 [::1][1][qmlqqigfmgjgqg5vhaviivr3bt][error][yii\web\HttpException:404] yii\base\InvalidRouteException: Unable to resolve the request "js/escuela-selector.js". in C:\xampp\htdocs\planealo.sytes.net\vendor\yiisoft\yii2\base\Module.php:564
+Stack trace:
+#0 C:\xampp\htdocs\planealo.sytes.net\vendor\yiisoft\yii2\web\Application.php(103): yii\base\Module->runAction('js/escuela-sele...', Array)
+#1 C:\xampp\htdocs\planealo.sytes.net\vendor\yiisoft\yii2\base\Application.php(387): yii\web\Application->handleRequest(Object(yii\web\Request))
+#2 C:\xampp\htdocs\planealo.sytes.net\web\index.php(12): yii\base\Application->run()
+#3 {main}
+
+Next yii\web\NotFoundHttpException: Página no encontrada. in C:\xampp\htdocs\planealo.sytes.net\vendor\yiisoft\yii2\web\Application.php:115
+Stack trace:
+#0 C:\xampp\htdocs\planealo.sytes.net\vendor\yiisoft\yii2\base\Application.php(387): yii\web\Application->handleRequest(Object(yii\web\Request))
+#1 C:\xampp\htdocs\planealo.sytes.net\web\index.php(12): yii\base\Application->run()
+#2 {main}
+2026-02-12 11:06:50 [::1][1][qmlqqigfmgjgqg5vhaviivr3bt][info][application] $_GET = []
+
+$_POST = []
+
+$_FILES = []
+
+$_COOKIE = [
+    '_ga' => 'GA1.1.1679908835.1749223008'
+    '_identity' => '9dc3e882c595ff0fa4feeae21489c917fcb86f4f3aef88d6982c5f18402701dea:2:{i:0;s:9:\"_identity\";i:1;s:46:\"[1,\"FCxNRGJia25jro30ecX5r8yVk7nCuaOY\",2592000]\";}'
+    '_csrf' => '81be198d78a8bda3d78df1cbdd69b980d458fafbe3a0b168ed08dc11cfa55e2ea:2:{i:0;s:5:\"_csrf\";i:1;s:32:\"2z86aNIx54Gly3zHs6NR4uUgnRDW7DY0\";}'
+    'PHPSESSID' => 'qmlqqigfmgjgqg5vhaviivr3bt'
+]
+
+$_SESSION = [
+    '__flash' => []
+    '__returnUrl' => 'http://localhost/planealo_desarrollo/web/'
+    '__id' => 1
+    '__authKey' => 'FCxNRGJia25jro30ecX5r8yVk7nCuaOY'
+    'id_escuela' => 2
+    'nombre_escuela' => 'Club Aves Voladoras'
+    'escuela_activa' => true
+    'escuela_ultima_actualizacion' => 1770397990
+    'idEscuela' => 2
+    'nombreEscuela' => 'Club Aves Voladoras'
+]
+
+$_SERVER = [
+    'REDIRECT_MIBDIRS' => 'C:/xampp/php/extras/mibs'
+    'REDIRECT_MYSQL_HOME' => '\\xampp\\mysql\\bin'
+    'REDIRECT_OPENSSL_CONF' => 'C:/xampp/apache/bin/openssl.cnf'
+    'REDIRECT_PHP_PEAR_SYSCONF_DIR' => '\\xampp\\php'
+    'REDIRECT_PHPRC' => '\\xampp\\php'
+    'REDIRECT_TMP' => '\\xampp\\tmp'
+    'REDIRECT_STATUS' => '200'
+    'MIBDIRS' => 'C:/xampp/php/extras/mibs'
+    'MYSQL_HOME' => '\\xampp\\mysql\\bin'
+    'OPENSSL_CONF' => 'C:/xampp/apache/bin/openssl.cnf'
+    'PHP_PEAR_SYSCONF_DIR' => '\\xampp\\php'
+    'PHPRC' => '\\xampp\\php'
+    'TMP' => '\\xampp\\tmp'
+    'HTTP_HOST' => 'localhost'
+    'HTTP_CONNECTION' => 'keep-alive'
+    'HTTP_SEC_CH_UA_PLATFORM' => '\"Windows\"'
+    'HTTP_USER_AGENT' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36 OPR/126.0.0.0'
+    'HTTP_SEC_CH_UA' => '\"Chromium\";v=\"142\", \"Opera GX\";v=\"126\", \"Not_A Brand\";v=\"99\"'
+    'HTTP_SEC_CH_UA_MOBILE' => '?0'
+    'HTTP_ACCEPT' => '*/*'
+    'HTTP_SEC_FETCH_SITE' => 'same-origin'
+    'HTTP_SEC_FETCH_MODE' => 'no-cors'
+    'HTTP_SEC_FETCH_DEST' => 'script'
+    'HTTP_REFERER' => 'http://localhost/planealo.sytes.net/web/aportes/aportes/index'
+    'HTTP_ACCEPT_ENCODING' => 'gzip, deflate, br, zstd'
+    'HTTP_ACCEPT_LANGUAGE' => 'en,id;q=0.9,tr;q=0.8,ru;q=0.7'
+    'HTTP_COOKIE' => '_ga=GA1.1.1679908835.1749223008; _identity=9dc3e882c595ff0fa4feeae21489c917fcb86f4f3aef88d6982c5f18402701dea%3A2%3A%7Bi%3A0%3Bs%3A9%3A%22_identity%22%3Bi%3A1%3Bs%3A46%3A%22%5B1%2C%22FCxNRGJia25jro30ecX5r8yVk7nCuaOY%22%2C2592000%5D%22%3B%7D; _csrf=81be198d78a8bda3d78df1cbdd69b980d458fafbe3a0b168ed08dc11cfa55e2ea%3A2%3A%7Bi%3A0%3Bs%3A5%3A%22_csrf%22%3Bi%3A1%3Bs%3A32%3A%222z86aNIx54Gly3zHs6NR4uUgnRDW7DY0%22%3B%7D; PHPSESSID=qmlqqigfmgjgqg5vhaviivr3bt'
+    'PATH' => 'C:\\WINDOWS\\system32;C:\\WINDOWS;C:\\WINDOWS\\System32\\Wbem;C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\;C:\\WINDOWS\\System32\\OpenSSH\\;C:\\xampp\\php;C:\\ProgramData\\ComposerSetup\\bin;C:\\Program Files\\PuTTY\\;C:\\Program Files\\Git\\cmd;C:\\Program Files\\nodejs\\;C:\\Program Files (x86)\\Microsoft SQL Server\\160\\Tools\\Binn\\;C:\\Program Files\\Microsoft SQL Server\\160\\Tools\\Binn\\;C:\\Program Files\\Microsoft SQL Server\\Client SDK\\ODBC\\170\\Tools\\Binn\\;C:\\Program Files\\Microsoft SQL Server\\160\\DTS\\Binn\\;C:\\Program Files (x86)\\Microsoft SQL Server\\160\\DTS\\Binn\\;C:\\Users\\Otic-Sistemas\\AppData\\Local\\Microsoft\\WindowsApps;;C:\\Users\\Otic-Sistemas\\AppData\\Local\\Programs\\Microsoft VS Code\\bin;C:\\Users\\Otic-Sistemas\\AppData\\Roaming\\Composer\\vendor\\bin;C:\\Users\\Otic-Sistemas\\AppData\\Roaming\\npm'
+    'SystemRoot' => 'C:\\WINDOWS'
+    'COMSPEC' => 'C:\\WINDOWS\\system32\\cmd.exe'
+    'PATHEXT' => '.COM;.EXE;.BAT;.CMD;.VBS;.VBE;.JS;.JSE;.WSF;.WSH;.MSC'
+    'WINDIR' => 'C:\\WINDOWS'
+    'SERVER_SIGNATURE' => '<address>Apache/2.4.54 (Win64) OpenSSL/1.1.1p PHP/8.2.0 Server at localhost Port 80</address>
+'
+    'SERVER_SOFTWARE' => 'Apache/2.4.54 (Win64) OpenSSL/1.1.1p PHP/8.2.0'
+    'SERVER_NAME' => 'localhost'
+    'SERVER_ADDR' => '::1'
+    'SERVER_PORT' => '80'
+    'REMOTE_ADDR' => '::1'
+    'DOCUMENT_ROOT' => 'C:/xampp/htdocs'
+    'REQUEST_SCHEME' => 'http'
+    'CONTEXT_PREFIX' => ''
+    'CONTEXT_DOCUMENT_ROOT' => 'C:/xampp/htdocs'
+    'SERVER_ADMIN' => 'postmaster@localhost'
+    'SCRIPT_FILENAME' => 'C:/xampp/htdocs/planealo.sytes.net/web/index.php'
+    'REMOTE_PORT' => '59387'
+    'REDIRECT_URL' => '/planealo.sytes.net/web/js/escuela-selector.js'
+    'GATEWAY_INTERFACE' => 'CGI/1.1'
+    'SERVER_PROTOCOL' => 'HTTP/1.1'
+    'REQUEST_METHOD' => 'GET'
+    'QUERY_STRING' => ''
+    'REQUEST_URI' => '/planealo.sytes.net/web/js/escuela-selector.js'
+    'SCRIPT_NAME' => '/planealo.sytes.net/web/index.php'
+    'PHP_SELF' => '/planealo.sytes.net/web/index.php'
+    'REQUEST_TIME_FLOAT' => 1770908810.5348
+    'REQUEST_TIME' => 1770908810
+]

@@ -18,6 +18,7 @@ class AppAsset extends AssetBundle
     public $js = [
         'js/ged-consolidated.js',
         'js/loadSelect2.js',
+        'js/jsBootstrap5/bootstrap.bundle.min.js'
     ];
     
     public $depends = [

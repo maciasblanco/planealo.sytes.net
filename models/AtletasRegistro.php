@@ -3,9 +3,21 @@
 namespace app\models;
 
 use Yii;
+use yii\db\ActiveRecord;
 
 /**
  * This is the model class for table "atletas.registro".
+ *
+ * PROYECTO SISTEMA DE APORTES Y BECAS - CLUB VOLEIBOL SAN AGUSTÍN
+ * --------------------------------------------------------------
+ * ✅ INTEGRACIÓN COMPLETA:
+ * - Se agregó campo id_familia (FK → atletas.familias)
+ * - Se agregó relación getFamilia()
+ * - Se agregó método getBecaActiva() para consultar beca vigente
+ * - Se agregó getNombreCompleto() para uso en vistas
+ * 
+ * TODO EL CÓDIGO ORIGINAL SE CONSERVA ÍNTEGRAMENTE.
+ * --------------------------------------------------------------
  *
  * @property int $id
  * @property int|null $id_club
@@ -41,19 +53,52 @@ use Yii;
  * @property int|null $user_id
  * @property string|null $telf_emergencia1
  * @property string|null $telf_emergencia2
+ *
+ * // NUEVO CAMPO PARA SISTEMA DE BECAS
+ * @property int|null $id_familia
+ *
+ * // Propiedades virtuales (no persistentes)
+ * @property string $p_nombre_representante
+ * @property string $s_nombre_representante
+ * @property string $p_apellido_representante
+ * @property string $s_apellido_representante
+ * @property int $id_nac_representante
+ * @property string $identificacion_representante
+ * @property string $cell_representante
+ * @property string $nombreEscuelaClub
+ * @property string $categoria
+ * @property int $edad
+ *
+ * // RELACIONES
+ * @property AportesSemanales[] $aportes
+ * @property Escuela $escuela
+ * @property CategoriaAtletas $categoriaRel
+ * @property User $user
+ * @property RegistroRepresentantes $representante
+ * @property Asistencia[] $asistencias
+ * @property Alergias $alergias
+ * @property Enfermedades $enfermedades
+ * @property Discapacidad $discapacidad
+ * @property Nacionalidad $nacionalidad
+ * @property Sexo $sexoModel
+ * @property Familia $familia          // NUEVA RELACIÓN
+ * @property Beca[] $becas            // NUEVA RELACIÓN
  */
-class AtletasRegistro extends \yii\db\ActiveRecord
+class AtletasRegistro extends ActiveRecord
 {
-    public  $p_nombre_representante;
-    public  $s_nombre_representante;
-    public  $p_apellido_representante;
-    public  $s_apellido_representante;
-    public  $id_nac_representante;
-    public  $identificacion_representante;
-    public  $cell_representante;
-    public  $nombreEscuelaClub;
-    public  $categoria;
-    public  $edad;
+    // -------------------------------------------------------------------------
+    // PROPIEDADES VIRTUALES (ORIGINALES)
+    // -------------------------------------------------------------------------
+    public $p_nombre_representante;
+    public $s_nombre_representante;
+    public $p_apellido_representante;
+    public $s_apellido_representante;
+    public $id_nac_representante;
+    public $identificacion_representante;
+    public $cell_representante;
+    public $nombreEscuelaClub;
+    public $categoria;
+    public $edad;
 
     /**
      * {@inheritdoc}
@@ -69,6 +114,9 @@ class AtletasRegistro extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
+            // -----------------------------------------------------------------
+            // REGLAS ORIGINALES (conservadas íntegramente)
+            // -----------------------------------------------------------------
             [['id_escuela', 'id_representante', 'id_alergias', 'id_enfermedades', 'id_discapacidad', 'id_nac', 'sexo', 'u_creacion', 'u_update', 'id_categoria', 'user_id'], 'default', 'value' => null],
             [['id_escuela', 'id_representante', 'id_alergias', 'id_enfermedades', 'id_discapacidad', 'id_nac', 'sexo', 'u_creacion', 'u_update', 'id_categoria', 'user_id'], 'integer'],
             [['identificacion_representante', 'id_nac_representante'], 'integer'],
@@ -77,18 +125,24 @@ class AtletasRegistro extends \yii\db\ActiveRecord
             [['fn', 'd_creacion', 'd_update'], 'safe'],
             [['estatura', 'peso'], 'number'],
             [['asma', 'eliminado'], 'boolean'],
-            
+
             // Campos requeridos del atleta
             [['p_nombre', 'p_apellido', 'id_nac', 'identificacion', 'fn', 'sexo', 'estatura', 'talla_franela', 'talla_short', 'cell', 'telf_emergencia1'], 'required'],
-            
+
             // Campos requeridos del representante
             [['p_nombre_representante', 'p_apellido_representante', 'id_nac_representante', 'identificacion_representante', 'cell_representante'], 'required'],
-            
+
             [['edad', 'categoria'], 'safe'],
-            
-            // ✅ VALIDACIÓN SIMPLIFICADA PARA ESCUELA
+
+            // Escuela
             ['id_escuela', 'required', 'message' => 'La escuela es requerida'],
             ['id_escuela', 'integer'],
+
+            // -----------------------------------------------------------------
+            // NUEVA REGLA PARA id_familia
+            // -----------------------------------------------------------------
+            [['id_familia'], 'integer'],
+            [['id_familia'], 'exist', 'skipOnError' => true, 'targetClass' => Familia::class, 'targetAttribute' => ['id_familia' => 'id_familia']],
         ];
     }
 
@@ -129,30 +183,31 @@ class AtletasRegistro extends \yii\db\ActiveRecord
             'dir_ip' => 'Dirección Ip',
             'id_categoria' => 'Categoría',
             'user_id' => 'User ID',
+            // NUEVO
+            'id_familia' => 'Familia',
         ];
     }
 
-    /**
-     * VALIDACIÓN ANTES DE GUARDAR - PROTECCIÓN CRÍTICA
-     */
+    // -------------------------------------------------------------------------
+    // BEFORESAVE / AFTERSAVE (ORIGINALES - SIN MODIFICACIONES)
+    // -------------------------------------------------------------------------
     public function beforeSave($insert)
     {
         if (!parent::beforeSave($insert)) {
             return false;
         }
-        
+
         // Asegurar que id_escuela tenga valor
         if (empty($this->id_escuela)) {
             $session = Yii::$app->session;
             $this->id_escuela = $session->get('id_escuela');
         }
-        
+
         // Establecer fechas automáticamente
         $currentTime = date('Y-m-d H:i:s');
         $currentUserId = Yii::$app->user->id;
-        
+
         if ($insert) {
-            // Nuevo registro
             if (empty($this->d_creacion)) {
                 $this->d_creacion = $currentTime;
             }
@@ -164,121 +219,168 @@ class AtletasRegistro extends \yii\db\ActiveRecord
             }
             $this->eliminado = false;
         } else {
-            // Actualización
             $this->d_update = $currentTime;
             $this->u_update = $currentUserId;
         }
-        
+
         return true;
     }
 
-    /**
-     * Gets query for [[AportesSemanales]].
-     *
-     * @return \yii\db\ActiveQuery
-     */
+    public function afterSave($insert, $changedAttributes)
+    {
+        parent::afterSave($insert, $changedAttributes);
+
+        if ($insert && empty($this->user_id)) {
+            try {
+                $user = $this->crearUsuarioAtleta();
+                if ($user && $user->id) {
+                    $this->updateAttributes(['user_id' => $user->id]);
+                    Yii::info("Usuario creado y asignado exitosamente para atleta ID: {$this->id}", 'atleta');
+                } else {
+                    Yii::warning('No se pudo crear usuario para atleta', 'atleta');
+                }
+            } catch (\Exception $e) {
+                Yii::error('Excepción en afterSave del atleta: ' . $e->getMessage(), 'atleta');
+            }
+        }
+    }
+
+    // -------------------------------------------------------------------------
+    // RELACIONES ORIGINALES (TODAS CONSERVADAS)
+    // -------------------------------------------------------------------------
     public function getAportes()
     {
         return $this->hasMany(AportesSemanales::class, ['atleta_id' => 'id']);
     }
 
-    /**
-     * Gets query for [[Escuela]].
-     *
-     * @return \yii\db\ActiveQuery
-     */
     public function getEscuela()
     {
         return $this->hasOne(Escuela::class, ['id' => 'id_escuela']);
     }
 
-    /**
-     * Gets query for [[Categoria]].
-     *
-     * @return \yii\db\ActiveQuery
-     */
     public function getCategoria()
     {
         return $this->hasOne(CategoriaAtletas::class, ['id' => 'id_categoria']);
     }
 
-    /**
-     * Calcula la categoría del atleta basándose en su fecha de nacimiento
-     * @return string Categoría en formato "Internacional (Venezolana)"
-     */
-    public function getCategoriaCalculada()
-    {
-        if (!$this->fn) {
-            return 'SIN CATEGORÍA';
-        }
-        
-        $fechaNacimiento = new \DateTime($this->fn);
-        $hoy = new \DateTime();
-        $edad = $hoy->diff($fechaNacimiento)->y;
-        
-        // Buscar la categoría correspondiente en la base de datos
-        $categoria = CategoriaAtletas::find()
-            ->where(['<=', 'edad_minima', $edad])
-            ->andWhere(['>=', 'edad_maxima', $edad])
-            ->andWhere(['activo' => true])
-            ->one();
-        
-        if ($categoria) {
-            return $categoria->nombre . ' (' . $categoria->nombre_venezuela . ')';
-        }
-        
-        return 'SIN CATEGORÍA';
-    }
-
-    /**
-     * Obtiene la categoría desde la relación o la calcula si no existe
-     * @return string
-     */
-    public function getCategoriaNombre()
-    {
-        if ($this->categoria) {
-            return $this->categoria->nombre . ' (' . $this->categoria->nombre_venezuela . ')';
-        }
-        
-        return $this->getCategoriaCalculada();
-    }
-
-    /**
-     * Obtiene solo la edad del atleta
-     * @return int
-     */
-    public function getEdad()
-    {
-        if (!$this->fn) {
-            return 0;
-        }
-        
-        $fechaNacimiento = new \DateTime($this->fn);
-        $hoy = new \DateTime();
-        return $hoy->diff($fechaNacimiento)->y;
-    }
-
-    /**
-     * Gets query for [[User]].
-     * @return \yii\db\ActiveQuery
-     */
     public function getUser()
     {
         return $this->hasOne(User::class, ['id' => 'user_id']);
     }
 
-    /**
-     * Gets query for [[Representante]].
-     * @return \yii\db\ActiveQuery
-     */
     public function getRepresentante()
     {
         return $this->hasOne(RegistroRepresentantes::class, ['id' => 'id_representante']);
     }
 
+    public function getAsistencias()
+    {
+        return $this->hasMany(Asistencia::class, ['id_atleta' => 'id']);
+    }
+
+    public function getAlergias()
+    {
+        return $this->hasOne(Alergias::class, ['id' => 'id_alergias']);
+    }
+
+    public function getEnfermedades()
+    {
+        return $this->hasOne(Enfermedades::class, ['id' => 'id_enfermedades']);
+    }
+
+    public function getDiscapacidad()
+    {
+        return $this->hasOne(Discapacidad::class, ['id' => 'id_discapacidad']);
+    }
+
+    public function getNacionalidad()
+    {
+        return $this->hasOne(Nacionalidad::class, ['id' => 'id_nac']);
+    }
+
+    public function getSexoModel()
+    {
+        return $this->hasOne(Sexo::class, ['id' => 'sexo']);
+    }
+
+    // -------------------------------------------------------------------------
+    // NUEVAS RELACIONES PARA EL SISTEMA DE BECAS
+    // -------------------------------------------------------------------------
+
     /**
-     * Crea usuario automáticamente para el atleta con manejo de transacciones
+     * Relación: atleta pertenece a una familia.
+     * @return \yii\db\ActiveQuery
      */
+    public function getFamilia()
+    {
+        return $this->hasOne(Familia::class, ['id_familia' => 'id_familia']);
+    }
+
+    /**
+     * Relación: atleta puede tener múltiples becas.
+     * @return \yii\db\ActiveQuery
+     */
+    public function getBecas()
+    {
+        return $this->hasMany(Beca::class, ['id_atleta' => 'id']);
+    }
+
+    /**
+     * Obtiene la beca activa del atleta en la fecha actual.
+     * @return Beca|null
+     */
+    public function getBecaActiva()
+    {
+        return $this->getBecas()
+            ->andWhere(['<=', 'fecha_inicio', date('Y-m-d')])
+            ->andWhere(['or', ['fecha_fin' => null], ['>=', 'fecha_fin', date('Y-m-d')]])
+            ->one();
+    }
+
+    // -------------------------------------------------------------------------
+    // MÉTODOS ORIGINALES (CONSERVADOS ÍNTEGRAMENTE)
+    // -------------------------------------------------------------------------
+    public function getCategoriaCalculada()
+    {
+        if (!$this->fn) {
+            return 'SIN CATEGORÍA';
+        }
+
+        $fechaNacimiento = new \DateTime($this->fn);
+        $hoy = new \DateTime();
+        $edad = $hoy->diff($fechaNacimiento)->y;
+
+        $categoria = CategoriaAtletas::find()
+            ->where(['<=', 'edad_minima', $edad])
+            ->andWhere(['>=', 'edad_maxima', $edad])
+            ->andWhere(['activo' => true])
+            ->one();
+
+        if ($categoria) {
+            return $categoria->nombre . ' (' . $categoria->nombre_venezuela . ')';
+        }
+
+        return 'SIN CATEGORÍA';
+    }
+
+    public function getCategoriaNombre()
+    {
+        if ($this->categoria) {
+            return $this->categoria->nombre . ' (' . $this->categoria->nombre_venezuela . ')';
+        }
+        return $this->getCategoriaCalculada();
+    }
+
+    public function getEdad()
+    {
+        if (!$this->fn) {
+            return 0;
+        }
+        $fechaNacimiento = new \DateTime($this->fn);
+        $hoy = new \DateTime();
+        return $hoy->diff($fechaNacimiento)->y;
+    }
+
     public function crearUsuarioAtleta()
     {
         if (empty($this->identificacion)) {
@@ -289,7 +391,7 @@ class AtletasRegistro extends \yii\db\ActiveRecord
         try {
             $user = User::crearUsuarioAutomatico(
                 $this->identificacion,
-                null, // email opcional
+                null,
                 $this->p_nombre . ' ' . $this->p_apellido,
                 'atleta'
             );
@@ -306,81 +408,22 @@ class AtletasRegistro extends \yii\db\ActiveRecord
         }
     }
 
-    /**
-     * After Save event - Crear usuario automáticamente con mejor manejo de errores
-     */
-    public function afterSave($insert, $changedAttributes)
-    {
-        parent::afterSave($insert, $changedAttributes);
-        
-        if ($insert && empty($this->user_id)) {
-            try {
-                // Crear usuario automáticamente para nuevo atleta
-                $user = $this->crearUsuarioAtleta();
-                
-                // Actualizar el user_id si se creó exitosamente
-                if ($user && $user->id) {
-                    $this->updateAttributes(['user_id' => $user->id]);
-                    Yii::info("Usuario creado y asignado exitosamente para atleta ID: {$this->id}", 'atleta');
-                } else {
-                    Yii::warning('No se pudo crear usuario para atleta', 'atleta');
-                }
-            } catch (\Exception $e) {
-                Yii::error('Excepción en afterSave del atleta: ' . $e->getMessage(), 'atleta');
-            }
-        }
-    }
-    /**
-     * Gets query for [[Asistencias]].
-     * RELACIÓN FALTANTE - AGREGADA
-     */
-    public function getAsistencias()
-    {
-        return $this->hasMany(Asistencia::class, ['id_atleta' => 'id']);
-    }
+    // -------------------------------------------------------------------------
+    // NUEVO MÉTODO UTILITARIO
+    // -------------------------------------------------------------------------
 
     /**
-     * Gets query for [[Alergias]].
-     * RELACIÓN FALTANTE - AGREGADA
+     * Devuelve el nombre completo del atleta.
+     * @return string
      */
-    public function getAlergias()
+    public function getNombreCompleto()
     {
-        return $this->hasOne(Alergias::class, ['id' => 'id_alergias']);
-    }
-
-    /**
-     * Gets query for [[Enfermedades]].
-     * RELACIÓN FALTANTE - AGREGADA
-     */
-    public function getEnfermedades()
-    {
-        return $this->hasOne(Enfermedades::class, ['id' => 'id_enfermedades']);
-    }
-
-    /**
-     * Gets query for [[Discapacidad]].
-     * RELACIÓN FALTANTE - AGREGADA
-     */
-    public function getDiscapacidad()
-    {
-        return $this->hasOne(Discapacidad::class, ['id' => 'id_discapacidad']);
-    }
-
-    /**
-     * Gets query for [[Nacionalidad]].
-     * RELACIÓN FALTANTE - AGREGADA
-     */
-    public function getNacionalidad()
-    {
-        return $this->hasOne(Nacionalidad::class, ['id' => 'id_nac']);
-    }
-
-    /**
-     * Gets query for [[SexoModel]].
-     * RELACIÓN FALTANTE - AGREGADA
-     */
-    public function getSexoModel()
-    {
-        return $this->hasOne(Sexo::class, ['id' => 'sexo']);
+        $parts = [
+            $this->p_nombre,
+            $this->s_nombre,
+            $this->p_apellido,
+            $this->s_apellido,
+        ];
+        return implode(' ', array_filter($parts));
     }
 }
