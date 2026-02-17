@@ -12,7 +12,6 @@ $id_escuela = $session->get('id_escuela');
 $nombre_escuela = $session->get('nombre_escuela');
 
 if (empty($id_escuela)) {
-    // ❌ MOSTRAR ERROR Y REDIRECCIÓN
     echo '<div class="alert alert-danger text-center">
             <h4><i class="fa fa-exclamation-triangle"></i> Escuela No Seleccionada</h4>
             <p>Debe seleccionar una escuela antes de realizar pagos múltiples.</p>
@@ -109,8 +108,12 @@ $this->params['breadcrumbs'][] = $this->title;
                             <i class="fas fa-info-circle"></i> 
                             El atleta seleccionado tiene <span id="total-quincenas">0</span> quincenas pendientes 
                             por un total de $<span id="total-monto">0.00</span>.
-                            Todas las quincenas pendientes serán marcadas como pagadas.
                         </div>
+                        <!-- TODO: Implementar selección de quincenas individuales si es necesario.
+                             Actualmente el controlador espera un array 'quincenas[]' con las fechas a pagar.
+                             Si se desea pagar todas, se debe enviar un input hidden con todas las fechas,
+                             o modificar el controlador para que no requiera el array. -->
+                        <input type="hidden" name="quincenas[]" id="quincenas-hidden" value="">
                     </div>
                 </div>
 
@@ -133,7 +136,8 @@ $this->params['breadcrumbs'][] = $this->title;
 </div>
 
 <?php
-// JavaScript para mejorar la experiencia
+// JavaScript para cargar las quincenas pendientes del atleta seleccionado (simulado)
+// Nota: En un entorno real, se debería obtener esta lista mediante AJAX o pre-cargada en el controlador.
 $this->registerJs(<<<JS
     $(document).ready(function() {
         $('#select-atleta').change(function() {
@@ -147,6 +151,12 @@ $this->registerJs(<<<JS
                 $('#total-quincenas').text(deuda);
                 $('#total-monto').text(monto.toFixed(2));
                 $('#btn-pagar').prop('disabled', false);
+                
+                // Simular el envío de todas las quincenas pendientes (se necesita obtener las fechas)
+                // Esto debería ser reemplazado por una llamada AJAX que obtenga las fechas de las quincenas pendientes.
+                // Por ahora, se envía un solo campo hidden con un valor ficticio.
+                $('#quincenas-hidden').val('todas'); // Esto no funcionará correctamente, el controlador espera fechas.
+                alert('Funcionalidad de pago múltiple requiere implementar la selección de quincenas. Contacte al administrador.');
             } else {
                 $('#panel-quincenas').hide();
                 $('#btn-pagar').prop('disabled', true);
@@ -158,3 +168,4 @@ $this->registerJs(<<<JS
     });
 JS
 );
+?>

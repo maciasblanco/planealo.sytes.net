@@ -1,8 +1,7 @@
 <?php
 namespace app\services;
 
-use app\models\extended\BecaExtended;
-use app\models\BecaHistorial;
+use app\models\Beca;
 use app\models\AtletasRegistro;
 use app\models\Familia;
 use app\models\TipoBeca;
@@ -23,8 +22,8 @@ class BecaService
         $fechaLimite = $anioActual . '-03-31';
 
         // Buscar becas activas que vencen el 31 de marzo (usando fecha_vencimiento)
-        $becasAVencer = BecaExtended::find()
-            ->where(['estado' => BecaExtended::ESTADO_ACTIVA])
+        $becasAVencer = Beca::find()
+            ->where(['estado' => Beca::ESTADO_ACTIVA])
             ->andWhere(['<=', 'fecha_vencimiento', $fechaLimite])
             ->all();
 
@@ -61,10 +60,9 @@ class BecaService
             $motivo = '';
 
             // Contar becas activas en la familia (excluyendo la actual)
-            $becasActivasFamilia = BecaExtended::findActivas()
-                ->joinWith('atleta')
-                ->where(['atletas.atletas_registro.familia_id' => $familia->id_familia])
-                ->andWhere(['<>', 'atletas.becas.id_beca', $beca->id_beca])
+            $becasActivasFamilia = Beca::findActivas()
+                ->where(['id_familia' => $familia->id_familia])
+                ->andWhere(['<>', 'id_beca', $beca->id_beca])
                 ->count();
 
             if ($becasActivasFamilia >= 3) {
@@ -74,11 +72,10 @@ class BecaService
 
             // Verificar si es beca de entrenador
             if ($beca->id_tipo_beca == $tipoEntrenador) {
-                $becasEntrenadorActivas = BecaExtended::findActivas()
-                    ->joinWith('atleta')
-                    ->where(['atletas.atletas_registro.familia_id' => $familia->id_familia])
+                $becasEntrenadorActivas = Beca::findActivas()
+                    ->where(['id_familia' => $familia->id_familia])
                     ->andWhere(['id_tipo_beca' => $tipoEntrenador])
-                    ->andWhere(['<>', 'atletas.becas.id_beca', $beca->id_beca])
+                    ->andWhere(['<>', 'id_beca', $beca->id_beca])
                     ->count();
                 if ($becasEntrenadorActivas >= 1) {
                     $puedeRenovar = false;
@@ -88,11 +85,11 @@ class BecaService
 
             // Regla: al menos un atleta sin beca (excepto autorización)
             if (!$beca->autorizacion_excepcion) {
-                $atletasFamilia = AtletasRegistro::find()->where(['familia_id' => $familia->id_familia])->all();
+                $atletasFamilia = AtletasRegistro::find()->where(['id_familia' => $familia->id_familia])->all();
                 $atletasSinBeca = 0;
                 foreach ($atletasFamilia as $a) {
-                    $tieneBecaActiva = BecaExtended::findActivas()
-                        ->where(['id_atleta' => $a->id_atleta])
+                    $tieneBecaActiva = Beca::findActivas()
+                        ->where(['id_atleta' => $a->id])
                         ->exists();
                     if (!$tieneBecaActiva) {
                         $atletasSinBeca++;
@@ -109,51 +106,41 @@ class BecaService
                 $nuevaFechaAsignacion = date('Y-m-d');
 
                 if (!$dryRun) {
-                    // Registrar historial de la beca actual
-                    $historial = new BecaHistorial();
-                    $historial->id_beca = $beca->id_beca;
-                    $historial->estado_anterior = $beca->estado;
-                    $historial->estado_nuevo = BecaExtended::ESTADO_RENOVADA;
-                    $historial->fecha_cambio = date('Y-m-d H:i:s');
-                    $historial->observaciones = "Renovación automática";
-                    $historial->save();
+                    // =========================================================
+                    // NOTA: El registro en historial se omite temporalmente
+                    // porque la estructura de la tabla becas_historial no coincide
+                    // con los campos utilizados originalmente.
+                    // Debe implementarse según la tabla real.
+                    // =========================================================
 
-                    // Marcar beca actual como renovada
-                    $beca->estado = BecaExtended::ESTADO_RENOVADA;
+                    // Marcar beca actual como vencida
+                    $beca->estado = Beca::ESTADO_VENCIDA;
                     $beca->save();
 
                     // Crear nueva beca
-                    $nuevaBeca = new BecaExtended();
+                    $nuevaBeca = new Beca();
                     $nuevaBeca->attributes = [
                         'id_atleta' => $beca->id_atleta,
                         'id_tipo_beca' => $beca->id_tipo_beca,
-                        'id_familia' => $familia->id_familia, // Guardar también la familia
+                        'id_familia' => $familia->id_familia,
                         'fecha_asignacion' => $nuevaFechaAsignacion,
                         'fecha_vencimiento' => $nuevaFechaVencimiento,
-                        'periodo_validez_meses' => 12,
-                        'aprobado_por' => null, // o quien corresponda
-                        'estado' => BecaExtended::ESTADO_ACTIVA,
+                        'periodo_validez_meses' => 12, // Podría calcularse desde el tipo de beca
+                        'aprobado_por' => null,
+                        'estado' => Beca::ESTADO_ACTIVA,
                         'observaciones' => 'Renovación automática de beca ID ' . $beca->id_beca,
                         'renovada_de' => $beca->id_beca,
                         'autorizacion_excepcion' => $beca->autorizacion_excepcion,
                         'eliminado' => false,
-                        // d_creacion se llena automáticamente si la tabla tiene default?
                     ];
                     $nuevaBeca->save();
 
-                    // Historial de la nueva beca
-                    $historialNuevo = new BecaHistorial();
-                    $historialNuevo->id_beca = $nuevaBeca->id_beca;
-                    $historialNuevo->estado_anterior = null;
-                    $historialNuevo->estado_nuevo = BecaExtended::ESTADO_ACTIVA;
-                    $historialNuevo->fecha_cambio = date('Y-m-d H:i:s');
-                    $historialNuevo->observaciones = "Creada por renovación de beca ID " . $beca->id_beca;
-                    $historialNuevo->save();
-
                     $renovadas++;
-                    $output[] = "Renovada beca ID {$beca->id_beca} (atleta {$atleta->nombre}) -> nueva beca ID {$nuevaBeca->id_beca}";
+                    $nombreAtleta = $atleta->p_nombre . ' ' . $atleta->p_apellido;
+                    $output[] = "Renovada beca ID {$beca->id_beca} (atleta {$nombreAtleta}) -> nueva beca ID {$nuevaBeca->id_beca}";
                 } else {
-                    $output[] = "[DRY RUN] Se renovaría beca ID {$beca->id_beca} (atleta {$atleta->nombre})";
+                    $nombreAtleta = $atleta->p_nombre . ' ' . $atleta->p_apellido;
+                    $output[] = "[DRY RUN] Se renovaría beca ID {$beca->id_beca} (atleta {$nombreAtleta})";
                     $renovadas++;
                 }
             } else {

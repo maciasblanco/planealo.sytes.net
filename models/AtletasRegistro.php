@@ -4,6 +4,8 @@ namespace app\models;
 
 use Yii;
 use yii\db\ActiveRecord;
+use yii2tech\ar\softdelete\SoftDeleteBehavior;
+use yii2tech\ar\softdelete\SoftDeleteQueryBehavior;
 
 /**
  * This is the model class for table "atletas.registro".
@@ -425,5 +427,79 @@ class AtletasRegistro extends ActiveRecord
             $this->s_apellido,
         ];
         return implode(' ', array_filter($parts));
+    }
+
+    // =========================================================================
+    // SOFT DELETE BEHAVIOR (NUEVO)
+    // =========================================================================
+
+    /**
+     * {@inheritdoc}
+     */
+    public function behaviors()
+    {
+        return [
+            'softDelete' => [
+                'class' => SoftDeleteBehavior::class,
+                'softDeleteAttributeValues' => [
+                    'eliminado' => true,
+                    // Opcional: actualizar marcas de tiempo
+                    'd_update' => function () {
+                        return date('Y-m-d H:i:s');
+                    },
+                    'u_update' => function () {
+                        return Yii::$app->user->id;
+                    },
+                ],
+                'restoreAttributeValues' => [
+                    'eliminado' => false,
+                    'd_update' => function () {
+                        return date('Y-m-d H:i:s');
+                    },
+                    'u_update' => function () {
+                        return Yii::$app->user->id;
+                    },
+                ],
+            ],
+        ];
+    }
+
+    /**
+     * {@inheritdoc}
+     * @return \yii\db\ActiveQuery con soporte para soft delete
+     */
+    public static function find()
+    {
+        $query = parent::find();
+        $query->attachBehavior('softDelete', SoftDeleteQueryBehavior::class);
+        return $query;
+    }
+
+    /**
+     * Método de conveniencia para restaurar un atleta.
+     */
+    public function restore()
+    {
+        $this->trigger(SoftDeleteBehavior::EVENT_BEFORE_RESTORE);
+        $this->eliminado = false;
+        $this->d_update = date('Y-m-d H:i:s');
+        $this->u_update = Yii::$app->user->id;
+        $result = $this->save(false);
+        $this->trigger(SoftDeleteBehavior::EVENT_AFTER_RESTORE);
+        return $result;
+    }
+
+    /**
+     * Método de conveniencia para soft delete.
+     */
+    public function softDelete()
+    {
+        $this->trigger(SoftDeleteBehavior::EVENT_BEFORE_SOFT_DELETE);
+        $this->eliminado = true;
+        $this->d_update = date('Y-m-d H:i:s');
+        $this->u_update = Yii::$app->user->id;
+        $result = $this->save(false);
+        $this->trigger(SoftDeleteBehavior::EVENT_AFTER_SOFT_DELETE);
+        return $result;
     }
 }

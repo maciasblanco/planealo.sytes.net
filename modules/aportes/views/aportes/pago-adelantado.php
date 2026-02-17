@@ -12,7 +12,6 @@ $id_escuela = $session->get('id_escuela');
 $nombre_escuela = $session->get('nombre_escuela');
 
 if (empty($id_escuela)) {
-    // ❌ MOSTRAR ERROR Y REDIRECCIÓN
     echo '<div class="alert alert-danger text-center">
             <h4><i class="fa fa-exclamation-triangle"></i> Escuela No Seleccionada</h4>
             <p>Debe seleccionar una escuela antes de realizar pagos adelantados.</p>
@@ -24,6 +23,9 @@ if (empty($id_escuela)) {
 $this->title = 'Pago por Adelantado - ' . $nombre_escuela;
 $this->params['breadcrumbs'][] = ['label' => 'Aportes Quincenales', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
+
+// Constante del monto quincenal en USD
+$montoQuincenal = \app\models\AportesSemanales::MONTO_QUINCENAL_USD;
 ?>
 
 <div class="pago-adelantado">
@@ -119,19 +121,17 @@ $this->params['breadcrumbs'][] = $this->title;
                 </div>
             </div>
 
-            <!-- Información de las quincenas que se van a pagar -->
-            <div id="info-quincenas" class="alert alert-info" style="display: none;">
+            <!-- Información general (sin detalle de fechas, ya que el controlador las generará automáticamente) -->
+            <div class="alert alert-info">
                 <i class="fas fa-info-circle"></i> 
-                Se registrarán aportes para las siguientes <span id="cantidad-quincenas">0</span> quincenas futuras:
-                <div id="lista-quincenas" class="mt-2 small">
-                    <!-- La lista de quincenas se generará con JavaScript -->
-                </div>
+                Se registrarán <span id="cantidad-quincenas">0</span> quincenas futuras por un total de $<span id="total-monto">0.00</span>.
+                Las fechas exactas serán calculadas por el sistema según la última quincena pagada.
             </div>
 
             <div class="alert alert-warning">
                 <i class="fas fa-exclamation-triangle"></i> 
                 <strong>Importante:</strong> El pago por adelantado creará registros de aportes para quincenas futuras.
-                Cada quincena tiene un costo de $<?= number_format(app\models\AportesSemanales::MONTO_QUINCENAL, 2) ?>.
+                Cada quincena tiene un costo de $<?= number_format($montoQuincenal, 2) ?>.
             </div>
 
             <div class="form-group text-center">
@@ -147,99 +147,25 @@ $this->params['breadcrumbs'][] = $this->title;
 </div>
 
 <?php
-// JavaScript para calcular el monto y mostrar información - ACTUALIZADO A QUINCENAS
+// JavaScript simplificado: solo calcula el monto total, sin generar lista de fechas (la lógica se centraliza en el controlador)
 $this->registerJs(<<<JS
     $(document).ready(function() {
-        const MONTO_QUINCENAL = parseFloat('<?= app\models\AportesSemanales::MONTO_QUINCENAL ?>');
+        const MONTO_QUINCENAL = parseFloat('$montoQuincenal');
         
         function calcularMonto() {
             const quincenas = parseInt($('#quincenas-adelanto').val());
             const total = quincenas * MONTO_QUINCENAL;
             $('#monto-total').text('$' + total.toFixed(2));
-            
-            // Mostrar/ocultar información adicional
-            if (quincenas > 0 && $('#select-atleta-adelantado').val()) {
-                $('#info-quincenas').show();
-                $('#cantidad-quincenas').text(quincenas);
-                generarListaQuincenas(quincenas);
-            } else {
-                $('#info-quincenas').hide();
-            }
-        }
-        
-        function generarListaQuincenas(quincenas) {
-            let fecha = new Date();
-            let html = '<ul>';
-            
-            // Obtener la próxima fecha de quincena usando la función del modelo
-            // En el controlador se usa AportesSemanales::calcularProximaQuincena()
-            // Para simular en JavaScript, calculamos cada 15 días a partir del 15/01/2026
-            let fechaInicio = new Date('2026-01-15');
-            let hoy = new Date();
-            
-            // Encontrar la próxima quincena después de hoy
-            let fechaActual = new Date(fechaInicio);
-            
-            // Avanzar hasta encontrar una quincena futura o igual a hoy
-            while (fechaActual < hoy) {
-                fechaActual.setDate(fechaActual.getDate() + 15);
-            }
-            
-            // Ajustar para que sea exactamente día 15 o 30 del mes
-            let dia = fechaActual.getDate();
-            if (dia !== 15 && dia !== 30) {
-                // Si no es 15 ni 30, ajustar al próximo 15 o 30
-                if (dia < 15) {
-                    fechaActual.setDate(15);
-                } else if (dia < 30) {
-                    fechaActual.setDate(30);
-                } else {
-                    // Si es mayor a 30, ir al 15 del próximo mes
-                    fechaActual.setMonth(fechaActual.getMonth() + 1);
-                    fechaActual.setDate(15);
-                }
-            }
-            
-            for (let i = 0; i < quincenas; i++) {
-                const fechaStr = fechaActual.toISOString().split('T')[0];
-                const quincenaNum = calcularNumeroQuincena(fechaActual);
-                html += `<li>${fechaStr} (Quincena ${quincenaNum}) - $${MONTO_QUINCENAL.toFixed(2)}</li>`;
-                
-                // Siguiente quincena (15 días después)
-                fechaActual.setDate(fechaActual.getDate() + 15);
-                
-                // Ajustar si el mes tiene menos de 30 días
-                if (fechaActual.getDate() > 30) {
-                    fechaActual.setDate(15);
-                    fechaActual.setMonth(fechaActual.getMonth() + 1);
-                }
-            }
-            
-            html += '</ul>';
-            $('#lista-quincenas').html(html);
-        }
-        
-        function calcularNumeroQuincena(fecha) {
-            // Fecha de inicio: 15/01/2026
-            const inicio = new Date('2026-01-15');
-            const diffTime = Math.abs(fecha - inicio);
-            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-            const numeroQuincena = Math.floor(diffDays / 15) + 1;
-            return numeroQuincena;
+            $('#cantidad-quincenas').text(quincenas);
+            $('#total-monto').text(total.toFixed(2));
         }
         
         // Event listeners
         $('#quincenas-adelanto').change(calcularMonto);
-        $('#select-atleta-adelantado').change(function() {
-            if ($(this).val()) {
-                calcularMonto();
-            } else {
-                $('#info-quincenas').hide();
-            }
-        });
         
         // Calcular monto inicial
         calcularMonto();
     });
 JS
 );
+?>

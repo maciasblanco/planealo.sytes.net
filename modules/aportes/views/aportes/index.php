@@ -206,8 +206,8 @@ $montoQuincenal = app\models\AportesSemanales::MONTO_QUINCENAL_USD;
                                             $quincenasAdelantadas = $item['quincenasAdelantadas'];
 
                                             // Calcular quincenas pagadas y totales
-                                            $quincenasPagadas = $montoPagado / app\models\AportesSemanales::MONTO_QUINCENAL_USD;
-                                            $quincenasDeuda = $montoDeuda / app\models\AportesSemanales::MONTO_QUINCENAL_USD;
+                                            $quincenasPagadas = $montoPagado / $montoQuincenal;
+                                            $quincenasDeuda = $montoDeuda / $montoQuincenal;
                                             $totalQuincenas = $item['totalQuincenas'];
                                             
                                             // Determinar estado

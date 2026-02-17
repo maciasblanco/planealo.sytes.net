@@ -10,68 +10,51 @@ use yii\behaviors\BlameableBehavior;
 /**
  * Modelo para la tabla 'contabilidad.aportes_semanales'.
  * 
- * SOPORTA DOS MODOS DE OPERACIÓN BAJO EL MISMO ESQUEMA QUINCENAL:
- * 
- * 1. MODO ATLETA (ORIGINAL):
- *    - Aportes quincenales por atleta, monto fijo $5.00 USD (con proporcionalidad).
- *    - Manejo dual de moneda (USD/BS) con tasa de cambio.
- *    - Pagos flexibles, adelantados, múltiples, liquidaciones.
- * 
- * 2. MODO FAMILIA (NUEVO CON BECAS):
- *    - Aportes quincenales por familia.
- *    - Monto dinámico = aporte_base * (1 - descuento_multiples_atletas) * (1 - descuento_becas).
- *    - Descuento múltiples atletas: 25% por cada atleta adicional al primero.
- *    - Descuento becas: mayor porcentaje de beca activa entre los atletas de la familia.
- *    - Se registran los componentes del cálculo en campos dedicados.
- * 
- * @property int $id_aporte
- * 
- * // Campos comunes
+ * @property int $id
+ * @property int $atleta_id
+ * @property int $escuela_id
  * @property string $fecha_quincena
  * @property int $numero_quincena
- * @property float $monto
- * @property string $estado
+ * @property float|null $monto
  * @property string|null $fecha_pago
+ * @property string|null $estado
  * @property string|null $metodo_pago
  * @property string|null $comentarios
+ * @property string|null $created_at
+ * @property int|null $u_create
+ * @property int|null $u_update
  * @property bool|null $pago_parcial
+ * @property string|null $update_at
  * @property float|null $tasa_dolar_quincena
  * @property float|null $monto_bs_original
- * @property float|null $tipo_cambio
- * 
- * // Modo Atleta
- * @property int|null $atleta_id
- * @property int|null $escuela_id
- * 
- * // Modo Familia
+ * @property float $tipo_cambio
  * @property int|null $id_familia
- * @property float|null $aporte_base_usado
- * @property float|null $descuento_multiples_atletas
- * @property float|null $descuento_becas
- * 
- * // Auditoría
- * @property string $created_at
- * @property string $updated_at
- * @property int $created_by
- * @property int $updated_by
- * 
- * // Relaciones
+ * @property int|null $id_beca
+ * @property float|null $monto_base
+ * @property float|null $monto_ajuste
+ * @property int|null $total_atletas_familia
+ * @property string|null $formula_aplicada
+ * @property string|null $tipo_aporte
+ *
  * @property AtletasRegistro $atleta
  * @property Escuela $escuela
  * @property Familia $familia
+ * @property Beca $beca
+ * @property User $creador
+ * @property User $actualizador
  */
 class AportesSemanales extends ActiveRecord
 {
-    // =========================================================================
-    // CONSTANTES COMPARTIDAS
-    // =========================================================================
-    const MONTO_QUINCENAL_USD = 5.00;
     const ESTADO_PENDIENTE = 'pendiente';
     const ESTADO_PAGADO = 'pagado';
     const ESTADO_CANCELADO = 'cancelado';
     const FECHA_INICIO_DEUDAS = '2026-01-15';
-    const DIAS_FRACCION = 8;
-    const TASA_CAMBIO_FIJA = 36.5;
+    const MONTO_QUINCENAL_USD = 5.00;
+    const TASA_CAMBIO_FIJA = 36.50;
+
+    const TIPO_APORTE_NORMAL = 'normal';
+    const TIPO_APORTE_ADELANTADO = 'adelantado';
+    const TIPO_APORTE_FLEXIBLE = 'flexible';
 
     /**
      * {@inheritdoc}
@@ -90,13 +73,13 @@ class AportesSemanales extends ActiveRecord
             [
                 'class' => TimestampBehavior::class,
                 'createdAtAttribute' => 'created_at',
-                'updatedAtAttribute' => 'updated_at',
+                'updatedAtAttribute' => 'update_at',
                 'value' => date('Y-m-d H:i:s'),
             ],
             [
                 'class' => BlameableBehavior::class,
-                'createdByAttribute' => 'created_by',
-                'updatedByAttribute' => 'updated_by',
+                'createdByAttribute' => 'u_create',
+                'updatedByAttribute' => 'u_update',
             ],
         ];
     }
@@ -107,51 +90,33 @@ class AportesSemanales extends ActiveRecord
     public function rules()
     {
         return [
-            // -----------------------------------------------------------------
-            // Reglas comunes
-            // -----------------------------------------------------------------
-            [['fecha_quincena', 'numero_quincena', 'monto', 'estado'], 'required'],
-            [['fecha_quincena', 'fecha_pago', 'created_at', 'updated_at'], 'safe'],
-            [['numero_quincena', 'created_by', 'updated_by'], 'integer'],
-            [['monto', 'tasa_dolar_quincena', 'monto_bs_original', 'tipo_cambio',
-              'aporte_base_usado', 'descuento_multiples_atletas', 'descuento_becas'], 'number'],
-            [['comentarios'], 'string'],
+            [['fecha_quincena', 'numero_quincena'], 'required'],
+            [['atleta_id', 'escuela_id', 'id_familia', 'id_beca', 'total_atletas_familia', 'u_create', 'u_update'], 'integer'],
+            [['fecha_quincena', 'fecha_pago', 'created_at', 'update_at'], 'safe'],
+            [['monto', 'monto_bs_original', 'tasa_dolar_quincena', 'tipo_cambio', 'monto_base', 'monto_ajuste'], 'number'],
+            [['comentarios', 'formula_aplicada'], 'string'],
             [['pago_parcial'], 'boolean'],
-            [['estado'], 'string', 'max' => 255],
+            [['estado'], 'string', 'max' => 20],
             [['estado'], 'default', 'value' => self::ESTADO_PENDIENTE],
-            [['metodo_pago'], 'string', 'max' => 255],
+            [['metodo_pago'], 'string', 'max' => 50],
+            [['tipo_aporte'], 'string', 'max' => 20],
+            [['tipo_aporte'], 'default', 'value' => self::TIPO_APORTE_NORMAL],
+            [['tipo_cambio'], 'default', 'value' => self::TASA_CAMBIO_FIJA],
+            [['monto_base'], 'default', 'value' => self::MONTO_QUINCENAL_USD],
+            [['total_atletas_familia'], 'default', 'value' => 1],
+            [['monto_ajuste'], 'default', 'value' => 0.00],
 
-            // -----------------------------------------------------------------
-            // Reglas para MODO ATLETA
-            // -----------------------------------------------------------------
-            [['atleta_id', 'escuela_id'], 'required', 'on' => 'atleta'],
-            [['atleta_id', 'escuela_id'], 'integer'],
             [['atleta_id'], 'exist', 'skipOnError' => true, 'targetClass' => AtletasRegistro::class, 'targetAttribute' => ['atleta_id' => 'id']],
             [['escuela_id'], 'exist', 'skipOnError' => true, 'targetClass' => Escuela::class, 'targetAttribute' => ['escuela_id' => 'id']],
-            // Validación de fecha quincena para modo atleta (>= 15/01/2026)
-            [['fecha_quincena'], 'validateFechaQuincena', 'on' => 'atleta'],
-
-            // -----------------------------------------------------------------
-            // Reglas para MODO FAMILIA
-            // -----------------------------------------------------------------
-            [['id_familia'], 'required', 'on' => 'familia'],
-            [['id_familia'], 'integer'],
             [['id_familia'], 'exist', 'skipOnError' => true, 'targetClass' => Familia::class, 'targetAttribute' => ['id_familia' => 'id_familia']],
-            // Validación de fecha quincena para modo familia (>= 15/01/2026)
-            [['fecha_quincena'], 'validateFechaQuincena', 'on' => 'familia'],
-            // No duplicar aporte para misma familia y fecha quincena
-            [['id_familia', 'fecha_quincena'], 'unique', 'targetAttribute' => ['id_familia', 'fecha_quincena'], 'on' => 'familia'],
+            [['id_beca'], 'exist', 'skipOnError' => true, 'targetClass' => Beca::class, 'targetAttribute' => ['id_beca' => 'id_beca']],
 
-            // -----------------------------------------------------------------
-            // Reglas condicionales según modo (se asignan en beforeValidate)
-            // -----------------------------------------------------------------
-            [['atleta_id', 'escuela_id'], 'default', 'value' => null, 'on' => 'familia'],
-            [['id_familia', 'aporte_base_usado', 'descuento_multiples_atletas', 'descuento_becas'], 'default', 'value' => null, 'on' => 'atleta'],
+            [['fecha_quincena'], 'validateFechaQuincena'],
         ];
     }
 
     /**
-     * Validación personalizada para fecha de quincena (ambos modos).
+     * Valida que la fecha de quincena no sea anterior a la fecha de inicio de deudas.
      */
     public function validateFechaQuincena($attribute, $params)
     {
@@ -166,142 +131,32 @@ class AportesSemanales extends ActiveRecord
     public function attributeLabels()
     {
         return [
-            'id_aporte' => 'ID Aporte',
+            'id' => 'ID',
+            'atleta_id' => 'Atleta',
+            'escuela_id' => 'Escuela',
             'fecha_quincena' => 'Fecha Quincena',
             'numero_quincena' => 'Número Quincena',
             'monto' => 'Monto (USD)',
-            'estado' => 'Estado',
             'fecha_pago' => 'Fecha Pago',
+            'estado' => 'Estado',
             'metodo_pago' => 'Método Pago',
             'comentarios' => 'Comentarios',
+            'created_at' => 'Creado',
+            'u_create' => 'Creado por',
+            'u_update' => 'Actualizado por',
             'pago_parcial' => 'Pago Parcial',
+            'update_at' => 'Actualizado',
             'tasa_dolar_quincena' => 'Tasa Dólar Quincena',
             'monto_bs_original' => 'Monto Original (Bs)',
             'tipo_cambio' => 'Tipo Cambio',
-            'atleta_id' => 'Atleta',
-            'escuela_id' => 'Escuela',
             'id_familia' => 'Familia',
-            'aporte_base_usado' => 'Aporte Base ($)',
-            'descuento_multiples_atletas' => 'Desc. Múltiples Atletas',
-            'descuento_becas' => 'Desc. Becas',
-            'created_at' => 'Creado',
-            'updated_at' => 'Actualizado',
-            'created_by' => 'Creado por',
-            'updated_by' => 'Actualizado por',
+            'id_beca' => 'Beca Aplicada',
+            'monto_base' => 'Monto Base ($)',
+            'monto_ajuste' => 'Ajuste ($)',
+            'total_atletas_familia' => 'Total Atletas en Familia',
+            'formula_aplicada' => 'Fórmula Aplicada',
+            'tipo_aporte' => 'Tipo de Aporte',
         ];
-    }
-
-    // =========================================================================
-    // DETECCIÓN AUTOMÁTICA DE MODO Y SCENARIOS
-    // =========================================================================
-
-    /**
-     * {@inheritdoc}
-     * Asigna el escenario automáticamente según los campos presentes.
-     */
-    public function beforeValidate()
-    {
-        if ($this->id_familia !== null) {
-            $this->scenario = 'familia';
-        } elseif ($this->atleta_id !== null) {
-            $this->scenario = 'atleta';
-        }
-
-        // Si no se pudo determinar, error
-        if (empty($this->scenario)) {
-            $this->addError('id_familia', 'Debe especificar un atleta o una familia.');
-            return false;
-        }
-
-        // Cálculo automático del número de quincena si está vacío
-        if (empty($this->numero_quincena) && !empty($this->fecha_quincena)) {
-            $this->numero_quincena = self::calcularNumeroQuincenaExacta($this->fecha_quincena);
-        }
-
-        // Lógica específica de modo atleta (conversión Bs/USD si aplica)
-        if ($this->scenario === 'atleta') {
-            if (!empty($this->monto_bs) && empty($this->monto)) {
-                if (empty($this->tasa_dia)) {
-                    $this->tasa_dia = self::obtenerTasaDolar($this->fecha_quincena);
-                }
-                $this->monto = self::convertirBsADolares($this->monto_bs, $this->tasa_dia);
-                $this->monto_bs_original = $this->monto_bs;
-                $this->tasa_dolar_quincena = $this->tasa_dia;
-            }
-        }
-
-        return parent::beforeValidate();
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function beforeSave($insert)
-    {
-        if (!parent::beforeSave($insert)) {
-            return false;
-        }
-
-        // Validar fecha quincena (>= 15/01/2026) para ambos modos
-        if ($this->fecha_quincena && strtotime($this->fecha_quincena) < strtotime(self::FECHA_INICIO_DEUDAS)) {
-            $this->addError('fecha_quincena', 'No se pueden crear/modificar aportes con fecha anterior al 15 de enero de 2026.');
-            return false;
-        }
-
-        // Ejecutar lógica según el modo
-        if ($this->scenario === 'familia') {
-            return $this->beforeSaveFamilia($insert);
-        } else {
-            return $this->beforeSaveAtleta($insert);
-        }
-    }
-
-    /**
-     * Lógica beforeSave para MODO FAMILIA.
-     */
-    private function beforeSaveFamilia($insert)
-    {
-        // Calcular el monto con descuentos si es nuevo o cambió la familia/fecha
-        if ($insert || $this->isAttributeChanged('id_familia') || $this->isAttributeChanged('fecha_quincena')) {
-            if (!$this->calcularAportesFamiliares()) {
-                return false;
-            }
-        }
-
-        // Si es pago y no tiene fecha de pago, usar fecha actual
-        if ($this->estado == self::ESTADO_PAGADO && empty($this->fecha_pago)) {
-            $this->fecha_pago = date('Y-m-d');
-        }
-
-        return true;
-    }
-
-    /**
-     * Lógica beforeSave para MODO ATLETA (original).
-     */
-    private function beforeSaveAtleta($insert)
-    {
-        // Si es pago y no tiene fecha de pago, usar fecha actual
-        if ($this->estado == self::ESTADO_PAGADO && empty($this->fecha_pago)) {
-            $this->fecha_pago = date('Y-m-d');
-        }
-
-        // Si no tiene tasa, obtener la tasa del día de la quincena
-        if (empty($this->tasa_dolar_quincena) && !empty($this->fecha_quincena)) {
-            $this->tasa_dolar_quincena = self::obtenerTasaDolar($this->fecha_quincena);
-        }
-
-        // Calcular monto en bolívares si no está establecido
-        if (empty($this->monto_bs_original) && $this->monto && $this->tasa_dolar_quincena) {
-            $this->monto_bs_original = self::convertirDolaresABs($this->monto, $this->tasa_dolar_quincena);
-        }
-
-        // Establecer tipo_cambio si está vacío (para compatibilidad)
-        if (empty($this->tipo_cambio)) {
-            $this->tipo_cambio = self::TASA_CAMBIO_FIJA;
-        }
-
-        return true;
     }
 
     // =========================================================================
@@ -323,25 +178,377 @@ class AportesSemanales extends ActiveRecord
         return $this->hasOne(Familia::class, ['id_familia' => 'id_familia']);
     }
 
+    public function getBeca()
+    {
+        return $this->hasOne(Beca::class, ['id_beca' => 'id_beca']);
+    }
+
     public function getCreador()
     {
-        return $this->hasOne(User::class, ['id' => 'created_by']);
+        return $this->hasOne(User::class, ['id' => 'u_create']);
     }
 
     public function getActualizador()
     {
-        return $this->hasOne(User::class, ['id' => 'updated_by']);
+        return $this->hasOne(User::class, ['id' => 'u_update']);
     }
 
     // =========================================================================
-    // NUEVA LÓGICA: CÁLCULO DE APORTES FAMILIARES CON DESCUENTOS (QUINCENAL)
+    // MÉTODOS PARA ATLETAS (ORIGINALES, ADAPTADOS A LA NUEVA ESTRUCTURA)
     // =========================================================================
 
     /**
-     * Calcula los valores del aporte familiar basándose en la familia vinculada.
-     * Asigna: aporte_base_usado, descuento_multiples_atletas, descuento_becas, monto.
-     *
-     * @return bool True si la familia existe y se pudo calcular.
+     * Genera las quincenas faltantes para un atleta desde la fecha de inicio.
+     * @param int $atleta_id
+     * @return int Número de quincenas generadas
+     */
+    public static function generarQuincenasParaAtleta($atleta_id)
+    {
+        $atleta = AtletasRegistro::findOne($atleta_id);
+        if (!$atleta) {
+            return 0;
+        }
+
+        $fechaInicio = new \DateTime(self::FECHA_INICIO_DEUDAS);
+        $hoy = new \DateTime();
+        $fechasQuincenales = self::calcularFechasQuincenalesPeriodo($fechaInicio, $hoy);
+        $generados = 0;
+
+        foreach ($fechasQuincenales as $fechaQuincena) {
+            $existe = self::find()
+                ->where(['atleta_id' => $atleta_id, 'fecha_quincena' => $fechaQuincena])
+                ->exists();
+
+            if (!$existe) {
+                $aporte = new self();
+                $aporte->atleta_id = $atleta_id;
+                $aporte->escuela_id = $atleta->id_escuela;
+                $aporte->fecha_quincena = $fechaQuincena;
+                $aporte->numero_quincena = self::calcularNumeroQuincenaExacta($fechaQuincena);
+                $aporte->monto = self::MONTO_QUINCENAL_USD;
+                $aporte->estado = self::ESTADO_PENDIENTE;
+                $aporte->pago_parcial = false;
+                $aporte->tipo_cambio = self::TASA_CAMBIO_FIJA;
+                $aporte->tipo_aporte = self::TIPO_APORTE_NORMAL;
+
+                if ($aporte->save()) {
+                    $generados++;
+                }
+            }
+        }
+
+        return $generados;
+    }
+
+    /**
+     * Calcula la deuda total de un atleta (solo aportes pendientes).
+     * @param int $atleta_id
+     * @return float
+     */
+    public static function calcularDeudaAtleta($atleta_id)
+    {
+        return self::find()
+            ->where(['atleta_id' => $atleta_id, 'estado' => self::ESTADO_PENDIENTE])
+            ->andWhere(['>=', 'fecha_quincena', self::FECHA_INICIO_DEUDAS])
+            ->sum('monto') ?? 0.0;
+    }
+
+    /**
+     * Obtiene los atletas con mayores aportes pagados.
+     * @param int|null $escuela_id
+     * @param int $limit
+     * @return array
+     */
+    public static function getTopAtletas($escuela_id = null, $limit = 10)
+    {
+        $query = self::find()
+            ->select(['atleta_id', 'SUM(monto) as total_pagado', 'COUNT(*) as total_aportes'])
+            ->where(['estado' => self::ESTADO_PAGADO])
+            ->andWhere(['>=', 'fecha_quincena', self::FECHA_INICIO_DEUDAS])
+            ->groupBy('atleta_id')
+            ->orderBy(['total_pagado' => SORT_DESC])
+            ->limit($limit);
+
+        if ($escuela_id) {
+            $query->andWhere(['escuela_id' => $escuela_id]);
+        }
+
+        $top = $query->asArray()->all();
+        foreach ($top as &$item) {
+            $item['atleta'] = AtletasRegistro::findOne($item['atleta_id']);
+        }
+        return $top;
+    }
+
+    /**
+     * Procesa un aporte flexible (pago que puede cubrir varias quincenas, incluyendo deudas).
+     * @param int $atleta_id
+     * @param float $montoTotal
+     * @param string|null $fechaPago
+     * @param string $metodoPago
+     * @param string $comentarios
+     * @return array Resultado con estadísticas
+     */
+    public static function procesarAporteFlexible($atleta_id, $montoTotal, $fechaPago = null, $metodoPago = 'efectivo', $comentarios = 'Aporte flexible')
+    {
+        $atleta = AtletasRegistro::findOne($atleta_id);
+        if (!$atleta) {
+            return ['success' => false, 'message' => 'Atleta no encontrado'];
+        }
+
+        $fechaPago = $fechaPago ?: date('Y-m-d');
+        $transaction = Yii::$app->db->beginTransaction();
+
+        try {
+            // Liquidar deudas pendientes en orden cronológico
+            $deudasPendientes = self::find()
+                ->where(['atleta_id' => $atleta_id, 'estado' => self::ESTADO_PENDIENTE])
+                ->andWhere(['>=', 'fecha_quincena', self::FECHA_INICIO_DEUDAS])
+                ->orderBy(['fecha_quincena' => SORT_ASC])
+                ->all();
+
+            $montoRestante = $montoTotal;
+            $deudasLiquidadas = 0;
+            $quincenasNuevas = 0;
+
+            foreach ($deudasPendientes as $deuda) {
+                if ($montoRestante >= $deuda->monto) {
+                    $deuda->estado = self::ESTADO_PAGADO;
+                    $deuda->fecha_pago = $fechaPago;
+                    $deuda->metodo_pago = $metodoPago;
+                    $deuda->comentarios = $comentarios . ' (Liquidación de deuda)';
+                    $deuda->tipo_aporte = self::TIPO_APORTE_FLEXIBLE;
+                    if ($deuda->save()) {
+                        $montoRestante -= $deuda->monto;
+                        $deudasLiquidadas++;
+                    }
+                } else {
+                    break; // No alcanza para más deudas
+                }
+            }
+
+            // Si sobra dinero, crear nuevas quincenas adelantadas
+            if ($montoRestante > 0) {
+                $quincenasCompletas = floor($montoRestante / self::MONTO_QUINCENAL_USD);
+                $montoSobrante = $montoRestante - ($quincenasCompletas * self::MONTO_QUINCENAL_USD);
+
+                // Obtener la última fecha de quincena del atleta
+                $ultimoAporte = self::find()
+                    ->where(['atleta_id' => $atleta_id])
+                    ->orderBy(['fecha_quincena' => SORT_DESC])
+                    ->one();
+
+                if ($ultimoAporte) {
+                    $fechaActual = new \DateTime($ultimoAporte->fecha_quincena);
+                    $fechaActual->modify('+15 days');
+                } else {
+                    $fechaActual = new \DateTime(self::calcularProximaQuincena(new \DateTime()));
+                }
+
+                for ($i = 0; $i < $quincenasCompletas; $i++) {
+                    $fechaQuincena = $fechaActual->format('Y-m-d');
+                    $existe = self::find()->where(['atleta_id' => $atleta_id, 'fecha_quincena' => $fechaQuincena])->exists();
+                    if (!$existe) {
+                        $aporte = new self();
+                        $aporte->atleta_id = $atleta_id;
+                        $aporte->escuela_id = $atleta->id_escuela;
+                        $aporte->fecha_quincena = $fechaQuincena;
+                        $aporte->numero_quincena = self::calcularNumeroQuincenaExacta($fechaQuincena);
+                        $aporte->monto = self::MONTO_QUINCENAL_USD;
+                        $aporte->estado = self::ESTADO_PAGADO;
+                        $aporte->fecha_pago = $fechaPago;
+                        $aporte->metodo_pago = $metodoPago;
+                        $aporte->comentarios = $comentarios . ' - Quincena adelantada (flexible)';
+                        $aporte->pago_parcial = false;
+                        $aporte->tipo_cambio = self::TASA_CAMBIO_FIJA;
+                        $aporte->tipo_aporte = self::TIPO_APORTE_FLEXIBLE;
+                        if ($aporte->save()) {
+                            $quincenasNuevas++;
+                        }
+                    }
+                    $fechaActual->modify('+15 days');
+                }
+
+                if ($montoSobrante > 0) {
+                    // Registrar un pago parcial para la siguiente quincena
+                    $fechaQuincena = $fechaActual->format('Y-m-d');
+                    $existe = self::find()->where(['atleta_id' => $atleta_id, 'fecha_quincena' => $fechaQuincena])->exists();
+                    if (!$existe) {
+                        $aporte = new self();
+                        $aporte->atleta_id = $atleta_id;
+                        $aporte->escuela_id = $atleta->id_escuela;
+                        $aporte->fecha_quincena = $fechaQuincena;
+                        $aporte->numero_quincena = self::calcularNumeroQuincenaExacta($fechaQuincena);
+                        $aporte->monto = $montoSobrante;
+                        $aporte->estado = self::ESTADO_PAGADO;
+                        $aporte->fecha_pago = $fechaPago;
+                        $aporte->metodo_pago = $metodoPago;
+                        $aporte->comentarios = $comentarios . ' - Pago parcial (flexible)';
+                        $aporte->pago_parcial = true;
+                        $aporte->tipo_cambio = self::TASA_CAMBIO_FIJA;
+                        $aporte->tipo_aporte = self::TIPO_APORTE_FLEXIBLE;
+                        if ($aporte->save()) {
+                            $quincenasNuevas++;
+                        }
+                    }
+                }
+            }
+
+            $transaction->commit();
+
+            return [
+                'success' => true,
+                'deudasLiquidadas' => $deudasLiquidadas,
+                'quincenasNuevas' => $quincenasNuevas,
+                'message' => "Procesado: $deudasLiquidadas deudas liquidadas, $quincenasNuevas nuevas quincenas."
+            ];
+        } catch (\Exception $e) {
+            $transaction->rollBack();
+            return ['success' => false, 'message' => 'Error: ' . $e->getMessage()];
+        }
+    }
+
+    /**
+     * Procesa pago múltiple de quincenas seleccionadas.
+     * @param int $atleta_id
+     * @param array $quincenasSeleccionadas (fechas Y-m-d)
+     * @param string $fechaPago
+     * @param string $metodoPago
+     * @param string $comentarios
+     * @return int Número de quincenas pagadas
+     */
+    public static function procesarPagoMultiple($atleta_id, $quincenasSeleccionadas, $fechaPago, $metodoPago = 'efectivo', $comentarios = 'Pago múltiple')
+    {
+        $atleta = AtletasRegistro::findOne($atleta_id);
+        if (!$atleta) {
+            return 0;
+        }
+
+        $pagadas = 0;
+        foreach ($quincenasSeleccionadas as $fechaQuincena) {
+            $aporte = self::find()
+                ->where(['atleta_id' => $atleta_id, 'fecha_quincena' => $fechaQuincena])
+                ->one();
+
+            if (!$aporte) {
+                $aporte = new self();
+                $aporte->atleta_id = $atleta_id;
+                $aporte->escuela_id = $atleta->id_escuela;
+                $aporte->fecha_quincena = $fechaQuincena;
+                $aporte->numero_quincena = self::calcularNumeroQuincenaExacta($fechaQuincena);
+                $aporte->monto = self::MONTO_QUINCENAL_USD;
+                $aporte->pago_parcial = false;
+                $aporte->tipo_cambio = self::TASA_CAMBIO_FIJA;
+                $aporte->tipo_aporte = self::TIPO_APORTE_NORMAL;
+            }
+
+            $aporte->estado = self::ESTADO_PAGADO;
+            $aporte->fecha_pago = $fechaPago;
+            $aporte->metodo_pago = $metodoPago;
+            $aporte->comentarios = $comentarios;
+
+            if ($aporte->save()) {
+                $pagadas++;
+            }
+        }
+        return $pagadas;
+    }
+
+    /**
+     * Procesa pago adelantado de un número de quincenas futuras.
+     * @param int $atleta_id
+     * @param int $quincenasAdelanto
+     * @param string $fechaPago
+     * @param string $metodoPago
+     * @param string $comentarios
+     * @return int Número de quincenas pagadas
+     */
+    public static function procesarPagoAdelantado($atleta_id, $quincenasAdelanto, $fechaPago, $metodoPago = 'efectivo', $comentarios = 'Pago adelantado')
+    {
+        $atleta = AtletasRegistro::findOne($atleta_id);
+        if (!$atleta) {
+            return 0;
+        }
+
+        $fechaActual = new \DateTime();
+        $fechaActual = new \DateTime(self::calcularProximaQuincena($fechaActual));
+        $pagadas = 0;
+
+        for ($i = 0; $i < $quincenasAdelanto; $i++) {
+            $fechaQuincena = $fechaActual->format('Y-m-d');
+            $existe = self::find()
+                ->where(['atleta_id' => $atleta_id, 'fecha_quincena' => $fechaQuincena])
+                ->exists();
+
+            if (!$existe) {
+                $aporte = new self();
+                $aporte->atleta_id = $atleta_id;
+                $aporte->escuela_id = $atleta->id_escuela;
+                $aporte->fecha_quincena = $fechaQuincena;
+                $aporte->numero_quincena = self::calcularNumeroQuincenaExacta($fechaQuincena);
+                $aporte->monto = self::MONTO_QUINCENAL_USD;
+                $aporte->estado = self::ESTADO_PAGADO;
+                $aporte->fecha_pago = $fechaPago;
+                $aporte->metodo_pago = $metodoPago;
+                $aporte->comentarios = $comentarios . " - Quincena $fechaQuincena";
+                $aporte->pago_parcial = false;
+                $aporte->tipo_cambio = self::TASA_CAMBIO_FIJA;
+                $aporte->tipo_aporte = self::TIPO_APORTE_ADELANTADO;
+
+                if ($aporte->save()) {
+                    $pagadas++;
+                }
+            }
+            $fechaActual->modify('+15 days');
+        }
+        return $pagadas;
+    }
+
+    /**
+     * Liquida todas las deudas pendientes de un atleta.
+     * @param int $atleta_id
+     * @param string $fecha_pago
+     * @param string $metodo_pago
+     * @param string $comentarios
+     * @return int Número de deudas liquidadas
+     */
+    public static function liquidarDeudasPendientes($atleta_id, $fecha_pago, $metodo_pago, $comentarios = '')
+    {
+        $deudas = self::find()
+            ->where(['atleta_id' => $atleta_id, 'estado' => self::ESTADO_PENDIENTE])
+            ->andWhere(['>=', 'fecha_quincena', self::FECHA_INICIO_DEUDAS])
+            ->all();
+
+        $liquidadas = 0;
+        foreach ($deudas as $deuda) {
+            $deuda->estado = self::ESTADO_PAGADO;
+            $deuda->fecha_pago = $fecha_pago;
+            $deuda->metodo_pago = $metodo_pago;
+            $deuda->comentarios = $comentarios . ' (Liquidación total)';
+            if ($deuda->save()) {
+                $liquidadas++;
+            }
+        }
+        return $liquidadas;
+    }
+
+    /**
+     * Calcula el número de quincena (1-24) para una fecha dada.
+     * @param string $fecha
+     * @return int
+     */
+    public static function calcularNumeroQuincena($fecha)
+    {
+        return self::calcularNumeroQuincenaExacta($fecha);
+    }
+
+    // =========================================================================
+    // MÉTODOS PARA FAMILIAS
+    // =========================================================================
+
+    /**
+     * Calcula los valores del aporte familiar usando los campos reales de la tabla.
+     * @return bool
      */
     public function calcularAportesFamiliares()
     {
@@ -350,108 +557,59 @@ class AportesSemanales extends ActiveRecord
             return false;
         }
 
-        // 1. Aporte base
-        $this->aporte_base_usado = $familia->getAporteBase();
+        $this->monto_base = $familia->getAporteBase();
+        $totalAtletas = count($familia->atletas);
+        $this->total_atletas_familia = $totalAtletas;
 
-        // 2. Descuento por múltiples atletas
-        $this->descuento_multiples_atletas = $familia->getDescuentoMultipleAtletas();
+        $descuentoMultiple = 0;
+        if ($totalAtletas > 1) {
+            $descuentoMultiple = 0.25 * ($totalAtletas - 1);
+            if ($descuentoMultiple > 0.75) {
+                $descuentoMultiple = 0.75;
+            }
+        }
 
-        // 3. Descuento por becas (máximo porcentaje entre atletas activos)
-        $maxDescuentoBeca = 0.0;
+        $maxDescuentoBeca = 0;
+        $becaAplicada = null;
         foreach ($familia->atletas as $atleta) {
-            $becaActiva = $atleta->getBecaActiva();
-            if ($becaActiva) {
-                $porcentaje = $becaActiva->porcentaje / 100;
-                if ($porcentaje > $maxDescuentoBeca) {
-                    $maxDescuentoBeca = $porcentaje;
+            $beca = $atleta->getBecaActiva();
+            if ($beca) {
+                // Obtener el porcentaje de descuento desde el tipo de beca
+                $tipoBeca = $beca->tipoBeca;
+                if ($tipoBeca) {
+                    $porcentaje = $tipoBeca->porcentaje_descuento / 100;
+                    if ($porcentaje > $maxDescuentoBeca) {
+                        $maxDescuentoBeca = $porcentaje;
+                        $becaAplicada = $beca;
+                    }
                 }
             }
         }
-        $this->descuento_becas = $maxDescuentoBeca;
+        $this->id_beca = $becaAplicada ? $becaAplicada->id_beca : null;
 
-        // 4. Monto final (asignado al campo común 'monto')
-        $monto = $this->aporte_base_usado;
-        $monto *= (1 - $this->descuento_multiples_atletas);
-        $monto *= (1 - $this->descuento_becas);
-        $this->monto = round($monto, 2);
+        $montoFinal = $this->monto_base;
+        $montoFinal *= (1 - $descuentoMultiple);
+        $montoFinal *= (1 - $maxDescuentoBeca);
+        $this->monto_ajuste = round($montoFinal, 2);
 
+        $this->formula_aplicada = sprintf(
+            'Base: %s, Atletas: %d (desc %.2f%%), Beca: %s (desc %.2f%%)',
+            $this->monto_base,
+            $totalAtletas,
+            $descuentoMultiple * 100,
+            $becaAplicada ? ($becaAplicada->tipoBeca->nombre ?? 'Desconocida') : 'Ninguna',
+            $maxDescuentoBeca * 100
+        );
+
+        $this->monto = $this->monto_ajuste;
         return true;
     }
 
     /**
-     * Marca el aporte (cualquier modo) como pagado.
-     *
-     * @param string|null $fechaPago
-     * @param string|null $metodoPago
-     * @return bool
-     */
-    public function marcarPagado($fechaPago = null, $metodoPago = null)
-    {
-        $this->estado = self::ESTADO_PAGADO;
-        $this->fecha_pago = $fechaPago ?: date('Y-m-d');
-        if ($metodoPago) {
-            $this->metodo_pago = $metodoPago;
-        }
-        return $this->save(false, ['estado', 'fecha_pago', 'metodo_pago', 'updated_at', 'updated_by']);
-    }
-
-    /**
-     * Marca el aporte como pendiente.
-     *
-     * @return bool
-     */
-    public function marcarPendiente()
-    {
-        $this->estado = self::ESTADO_PENDIENTE;
-        $this->fecha_pago = null;
-        return $this->save(false, ['estado', 'fecha_pago', 'updated_at', 'updated_by']);
-    }
-
-    /**
-     * Marca el aporte como cancelado.
-     *
-     * @return bool
-     */
-    public function marcarCancelado()
-    {
-        $this->estado = self::ESTADO_CANCELADO;
-        return $this->save(false, ['estado', 'updated_at', 'updated_by']);
-    }
-
-    /**
-     * Verifica si el aporte está pagado.
-     *
-     * @return bool
-     */
-    public function isPagado()
-    {
-        return $this->estado === self::ESTADO_PAGADO;
-    }
-
-    /**
-     * Verifica si el aporte está pendiente.
-     */
-    public function isPendiente()
-    {
-        return $this->estado === self::ESTADO_PENDIENTE;
-    }
-
-    /**
-     * Verifica si el aporte está cancelado.
-     */
-    public function isCancelado()
-    {
-        return $this->estado === self::ESTADO_CANCELADO;
-    }
-
-    /**
-     * Genera los aportes quincenales para una familia desde 15/01/2026.
-     * Respeta el calendario quincenal (15 y último día de cada mes).
-     * No duplica registros existentes.
-     *
+     * Genera los aportes quincenales para una familia.
      * @param int $id_familia
-     * @param string|null $fechaInicio (opcional, por defecto 15/01/2026 o fecha de creación de la familia)
-     * @return int Cantidad de aportes generados.
+     * @param string|null $fechaInicio
+     * @return int
      */
     public static function generarQuincenasParaFamilia($id_familia, $fechaInicio = null)
     {
@@ -460,13 +618,11 @@ class AportesSemanales extends ActiveRecord
             return 0;
         }
 
-        // Fecha de inicio: 15/01/2026 o fecha de creación de la familia (si es posterior)
         $fechaInicioBase = new \DateTime(self::FECHA_INICIO_DEUDAS);
         if ($fechaInicio) {
             $fechaInicio = new \DateTime($fechaInicio);
         } else {
-            // Intentar obtener la fecha de creación de la familia (puede variar según la implementación)
-            $fechaInicio = $familia->created_at ? new \DateTime($familia->created_at) : clone $fechaInicioBase;
+            $fechaInicio = $familia->fecha_registro ? new \DateTime($familia->fecha_registro) : clone $fechaInicioBase;
         }
         if ($fechaInicio < $fechaInicioBase) {
             $fechaInicio = clone $fechaInicioBase;
@@ -478,22 +634,19 @@ class AportesSemanales extends ActiveRecord
 
         foreach ($fechasQuincenales as $fechaQuincena) {
             $existe = self::find()
-                ->where([
-                    'id_familia' => $id_familia,
-                    'fecha_quincena' => $fechaQuincena,
-                ])
+                ->where(['id_familia' => $id_familia, 'fecha_quincena' => $fechaQuincena])
                 ->exists();
 
             if (!$existe) {
                 $aporte = new self();
-                $aporte->scenario = 'familia';
                 $aporte->id_familia = $id_familia;
                 $aporte->fecha_quincena = $fechaQuincena;
                 $aporte->numero_quincena = self::calcularNumeroQuincenaExacta($fechaQuincena);
                 $aporte->estado = self::ESTADO_PENDIENTE;
-                $aporte->pago_parcial = false; // No aplica a familias
-                
-                if ($aporte->save()) {
+                $aporte->pago_parcial = false;
+                $aporte->tipo_aporte = self::TIPO_APORTE_NORMAL;
+
+                if ($aporte->calcularAportesFamiliares() && $aporte->save()) {
                     $generados++;
                 }
             }
@@ -504,8 +657,7 @@ class AportesSemanales extends ActiveRecord
 
     /**
      * Genera quincenas para todas las familias.
-     *
-     * @return int Total de aportes generados.
+     * @return int
      */
     public static function generarQuincenasTodasFamilias()
     {
@@ -518,8 +670,7 @@ class AportesSemanales extends ActiveRecord
     }
 
     /**
-     * Obtiene el resumen de aportes por familia (solo modo familia).
-     *
+     * Resumen de aportes por familia.
      * @param string $fechaInicio
      * @param string $fechaFin
      * @return array
@@ -542,54 +693,166 @@ class AportesSemanales extends ActiveRecord
     }
 
     // =========================================================================
-    // MÉTODOS ORIGINALES (TOTALMENTE CONSERVADOS)
+    // MÉTODOS AUXILIARES COMUNES
     // =========================================================================
 
-    // --- Cálculo de fechas quincenales ---
-    public static function calcularFechasQuincenalesPeriodo($fechaInicio, $fechaFin = null) { /* ... */ }
-    public static function calcularNumeroQuincenaExacta($fecha) { /* ... */ }
-    public static function debePagarFraccion($fechaInscripcion, $fechaQuincena) { /* ... */ }
-    public static function calcularMontoProporcional($fechaInscripcion, $fechaQuincena, $tasaDolar = null) { /* ... */ }
+    /**
+     * Calcula las fechas de quincena (días 15 y último día de cada mes) dentro de un período.
+     * @param \DateTime $fechaInicio
+     * @param \DateTime $fechaFin
+     * @return array
+     */
+    public static function calcularFechasQuincenalesPeriodo($fechaInicio, $fechaFin)
+    {
+        $fechas = [];
+        $inicio = clone $fechaInicio;
+        $fin = clone $fechaFin;
+        $inicio->modify('first day of this month');
 
-    // --- Manejo de moneda ---
-    public static function obtenerTasaDolar($fecha = null) { /* ... */ }
-    public static function convertirBsADolares($monto_bs, $tasa_dolar) { /* ... */ }
-    public static function convertirDolaresABs($monto_usd, $tasa_dolar) { /* ... */ }
-    public function getMontoBs() { /* ... */ }
-    public function getMontoDual() { /* ... */ }
+        while ($inicio <= $fin) {
+            $dia15 = clone $inicio;
+            $dia15->setDate($inicio->format('Y'), $inicio->format('m'), 15);
+            if ($dia15 >= $fechaInicio && $dia15 <= $fechaFin) {
+                $fechas[] = $dia15->format('Y-m-d');
+            }
 
-    // --- Deudas de atletas ---
-    public static function calcularDeudaAtleta($atleta_id) { /* ... */ }
-    public static function calcularMontoDeudaConMoneda($atleta_id) { /* ... */ }
-    public static function calcularMontoDeuda($atleta_id) { /* ... */ }
-    public static function obtenerHistorialDeudas($atleta_id) { /* ... */ }
-    public static function obtenerDeudasPendientes($atleta_id) { /* ... */ }
+            $ultimo = clone $inicio;
+            $ultimo->modify('last day of this month');
+            if ($ultimo >= $fechaInicio && $ultimo <= $fechaFin && $ultimo->format('d') != 15) {
+                $fechas[] = $ultimo->format('Y-m-d');
+            }
 
-    // --- Gestión de quincenas de atletas ---
-    public static function generarQuincenasParaAtleta($atleta_id) { /* ... */ }
-    public static function calcularQuincenasEquivalentes($montoAportado) { /* ... */ }
-    public static function calcularNumeroQuincena($fecha) { /* ... */ }
-    private static function calcularProximaQuincena($fecha) { /* ... */ }
+            $inicio->modify('+1 month');
+        }
 
-    // --- Pagos de atletas ---
-    public static function procesarAporteFlexible($atleta_id, $montoTotal, $fechaPago = null, $metodoPago = 'efectivo', $comentarios = 'Aporte flexible') { /* ... */ }
-    public static function procesarPagoMultiple($atleta_id, $quincenasSeleccionadas, $fechaPago, $metodoPago = 'efectivo', $comentarios = 'Pago múltiple') { /* ... */ }
-    public static function procesarPagoAdelantado($atleta_id, $quincenasAdelanto, $fechaPago, $metodoPago = 'efectivo', $comentarios = 'Pago adelantado') { /* ... */ }
-    public static function liquidarDeudasPendientes($atleta_id, $fecha_pago, $metodo_pago, $comentarios = '') { /* ... */ }
+        return $fechas;
+    }
 
-    // --- Estadísticas de atletas ---
-    public static function getTopAtletas($escuela_id = null, $limit = 10) { /* ... */ }
-    public static function getEstadisticasAtleta($atleta_id) { /* ... */ }
+    /**
+     * Calcula el número de quincena exacto (1-24).
+     * @param string $fecha
+     * @return int
+     */
+    public static function calcularNumeroQuincenaExacta($fecha)
+    {
+        $ts = strtotime($fecha);
+        $mes = (int)date('n', $ts);
+        $dia = (int)date('j', $ts);
+        return ($mes - 1) * 2 + ($dia <= 15 ? 1 : 2);
+    }
 
-    // --- Utilidades de formato ---
-    public function getEstadoLabel() { 
+    /**
+     * Calcula la próxima fecha de quincena a partir de una fecha.
+     * @param \DateTime|string $fecha
+     * @return string Y-m-d
+     */
+    public static function calcularProximaQuincena($fecha)
+    {
+        if (!$fecha instanceof \DateTime) {
+            $fecha = new \DateTime($fecha);
+        }
+        $dia = (int)$fecha->format('d');
+        $mes = (int)$fecha->format('m');
+        $anio = (int)$fecha->format('Y');
+
+        if ($dia < 15) {
+            return $anio . '-' . str_pad($mes, 2, '0', STR_PAD_LEFT) . '-15';
+        } else {
+            $fecha->modify('first day of next month');
+            return $fecha->format('Y-m-d');
+        }
+    }
+
+    /**
+     * Obtiene la tasa de cambio del dólar para una fecha.
+     * @param string|null $fecha
+     * @return float
+     */
+    public static function obtenerTasaDolar($fecha = null)
+    {
+        $fecha = $fecha ?: date('Y-m-d');
+        $tasa = TasaDolar::find()
+            ->where(['fecha_tasa' => $fecha, 'eliminado' => false])
+            ->orderBy(['id' => SORT_DESC])
+            ->one();
+        return $tasa ? $tasa->tasa_dia : self::TASA_CAMBIO_FIJA;
+    }
+
+    /**
+     * Convierte bolívares a dólares.
+     * @param float $monto_bs
+     * @param float $tasa_dolar
+     * @return float
+     */
+    public static function convertirBsADolares($monto_bs, $tasa_dolar)
+    {
+        return round($monto_bs / $tasa_dolar, 2);
+    }
+
+    /**
+     * Convierte dólares a bolívares.
+     * @param float $monto_usd
+     * @param float $tasa_dolar
+     * @return float
+     */
+    public static function convertirDolaresABs($monto_usd, $tasa_dolar)
+    {
+        return round($monto_usd * $tasa_dolar, 2);
+    }
+
+    // =========================================================================
+    // MÉTODOS DE CAMBIO DE ESTADO
+    // =========================================================================
+
+    public function marcarPagado($fechaPago = null, $metodoPago = null)
+    {
+        $this->estado = self::ESTADO_PAGADO;
+        $this->fecha_pago = $fechaPago ?: date('Y-m-d');
+        if ($metodoPago) {
+            $this->metodo_pago = $metodoPago;
+        }
+        return $this->save(false, ['estado', 'fecha_pago', 'metodo_pago', 'update_at', 'u_update']);
+    }
+
+    public function marcarPendiente()
+    {
+        $this->estado = self::ESTADO_PENDIENTE;
+        $this->fecha_pago = null;
+        return $this->save(false, ['estado', 'fecha_pago', 'update_at', 'u_update']);
+    }
+
+    public function marcarCancelado()
+    {
+        $this->estado = self::ESTADO_CANCELADO;
+        return $this->save(false, ['estado', 'update_at', 'u_update']);
+    }
+
+    public function isPagado()
+    {
+        return $this->estado === self::ESTADO_PAGADO;
+    }
+
+    public function isPendiente()
+    {
+        return $this->estado === self::ESTADO_PENDIENTE;
+    }
+
+    public function isCancelado()
+    {
+        return $this->estado === self::ESTADO_CANCELADO;
+    }
+
+    // =========================================================================
+    // UTILIDADES DE FORMATEO
+    // =========================================================================
+
+    public function getEstadoLabel()
+    {
         $estados = [
             self::ESTADO_PENDIENTE => 'Pendiente',
             self::ESTADO_PAGADO => 'Pagado',
-            self::ESTADO_CANCELADO => 'Cancelado'
+            self::ESTADO_CANCELADO => 'Cancelado',
         ];
         return $estados[$this->estado] ?? $this->estado;
     }
-    public function getFechaQuincenaFormateada() { /* ... */ }
-    public function getFechaPagoFormateada() { /* ... */ }
 }

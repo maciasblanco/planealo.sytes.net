@@ -69,6 +69,17 @@ $this->registerCssFile('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15
 
         <p>
             <?= Html::a('<i class="fas fa-running me-2"></i>Registrar Nuevo Atleta', ['create', 'id' => $id_escuela, 'nombre' => $nombre_escuela], ['class' => 'btn btn-success btn-lg']) ?>
+            <?= Html::a('<i class="fas fa-trash-restore me-2"></i>Ver Eliminados', '#', [
+                'class' => 'btn btn-warning btn-lg',
+                'onclick' => 'toggleEliminados(); return false;'
+            ]) ?>
+            <?= Html::a('<i class="fas fa-undo-alt me-2"></i>Restaurar Todos', ['restore-all'], [
+                'class' => 'btn btn-info btn-lg',
+                'data' => [
+                    'confirm' => '¿Está seguro de restaurar TODOS los atletas eliminados?',
+                    'method' => 'post',
+                ],
+            ]) ?>
         </p>
 
         <?= GridView::widget([
@@ -105,7 +116,7 @@ $this->registerCssFile('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15
                     ]),
                     'contentOptions' => ['style' => 'text-transform: uppercase;']
                 ],
-
+                /*
                 // Teléfono del atleta
                 [
                     'attribute' => 'cell',
@@ -117,12 +128,14 @@ $this->registerCssFile('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15
                 ],
 
                 // Deuda en aportes - USANDO EL MODELO APORTES SEMANALES
+                // MOD: Se corrigió el método para calcular monto y quincenas correctamente
                 [
                     'label' => 'DEUDA EN APORTES',
                     'value' => function($model) {
-                        // Usar el método del modelo AportesSemanales para calcular la deuda
-                        $montoDeuda = AportesSemanales::calcularMontoDeuda($model->id);
-                        $semanasDeuda = AportesSemanales::calcularDeudaAtleta($model->id);
+                        // Obtener monto de deuda
+                        $montoDeuda = AportesSemanales::calcularDeudaAtleta($model->id);
+                        // Calcular número de quincenas (basado en monto fijo $5.00)
+                        $semanasDeuda = $montoDeuda > 0 ? floor($montoDeuda / AportesSemanales::MONTO_QUINCENAL_USD) : 0;
                         
                         if ($montoDeuda <= 0) {
                             return 'AL DÍA';
@@ -131,7 +144,7 @@ $this->registerCssFile('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15
                         }
                     },
                     'contentOptions' => function($model) {
-                        $montoDeuda = AportesSemanales::calcularMontoDeuda($model->id);
+                        $montoDeuda = AportesSemanales::calcularDeudaAtleta($model->id);
                         
                         if ($montoDeuda <= 0) {
                             return [
@@ -184,12 +197,31 @@ $this->registerCssFile('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15
                     },
                     'contentOptions' => ['style' => 'text-align: center;']
                 ],
+                */
+                // ✅ NUEVA COLUMNA: Estado (activo/eliminado)
+                [
+                    'attribute' => 'eliminado',
+                    'label' => 'ESTADO',
+                    'value' => function($model) {
+                        return $model->eliminado ? 'ELIMINADO' : 'ACTIVO';
+                    },
+                    'filter' => Html::activeDropDownList($searchModel, 'eliminado', [
+                        '' => 'Todos',
+                        '0' => 'Activos',
+                        '1' => 'Eliminados',
+                    ], ['class' => 'form-control']),
+                    'contentOptions' => function($model) {
+                        return $model->eliminado ? 
+                            ['style' => 'color: red; font-weight: bold;'] : 
+                            ['style' => 'color: green; font-weight: bold;'];
+                    },
+                ],
 
                 [
                     'class' => ActionColumn::className(),
                     'header' => 'ACCIONES',
-                    'template' => '{view} {update} {delete}',
-                    'contentOptions' => ['style' => 'text-align: center; width: 130px;'],
+                    'template' => '{view} {update} {delete} {restore}',
+                    'contentOptions' => ['style' => 'text-align: center; width: 160px;'],
                     'buttons' => [
                         'view' => function ($url, $model) use ($id_escuela, $nombre_escuela) {
                             return Html::a('<i class="fas fa-search"></i>', 
@@ -208,16 +240,36 @@ $this->registerCssFile('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15
                                 ]);
                         },
                         'delete' => function ($url, $model) use ($id_escuela, $nombre_escuela) {
-                            return Html::a('<i class="fas fa-trash-alt"></i>', 
-                                ['delete', 'id' => $model->id, 'id_escuela' => $id_escuela, 'nombre' => $nombre_escuela], 
-                                [
-                                    'class' => 'btn btn-sm btn-danger action-btn',
-                                    'title' => 'Eliminar',
-                                    'data' => [
-                                        'confirm' => '¿Está seguro de que desea eliminar este atleta?',
-                                        'method' => 'post',
-                                    ],
-                                ]);
+                            if (!$model->eliminado) {
+                                // MOD: Mensaje de confirmación con datos del atleta
+                                $nombreCompleto = $model->getNombreCompleto();
+                                return Html::a('<i class="fas fa-trash-alt"></i>', 
+                                    ['delete', 'id' => $model->id, 'id_escuela' => $id_escuela, 'nombre' => $nombre_escuela], 
+                                    [
+                                        'class' => 'btn btn-sm btn-danger action-btn',
+                                        'title' => 'Eliminar',
+                                        'data' => [
+                                            'confirm' => '¿Está seguro de eliminar al atleta ' . $nombreCompleto . '? Esta acción no se puede deshacer.',
+                                            'method' => 'post',
+                                        ],
+                                    ]);
+                            }
+                            return '';
+                        },
+                        'restore' => function ($url, $model) use ($id_escuela, $nombre_escuela) {
+                            if ($model->eliminado) {
+                                return Html::a('<i class="fas fa-undo-alt"></i>', 
+                                    ['restore', 'id' => $model->id, 'id_escuela' => $id_escuela, 'nombre' => $nombre_escuela], 
+                                    [
+                                        'class' => 'btn btn-sm btn-success action-btn',
+                                        'title' => 'Restaurar',
+                                        'data' => [
+                                            'confirm' => '¿Restaurar este atleta?',
+                                            'method' => 'post',
+                                        ],
+                                    ]);
+                            }
+                            return '';
                         },
                     ],
                 ],
@@ -281,3 +333,13 @@ $this->registerCssFile('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15
     box-shadow: 0 0 0 0.2rem rgba(23, 162, 184, 0.25);
 }
 </style>
+
+<script>
+function toggleEliminados() {
+    var filter = document.querySelector('select[name="AtletasRegistroSearch[eliminado]"]');
+    if (filter) {
+        filter.value = filter.value === '1' ? '0' : '1';
+        filter.dispatchEvent(new Event('change'));
+    }
+}
+</script>

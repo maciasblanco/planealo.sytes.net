@@ -11,8 +11,8 @@ use app\models\AtletasRegistro;
  */
 class AtletasRegistroSearch extends AtletasRegistro
 {
-    public $nombreCompleto; // Para búsqueda por nombre completo
-    public $categoriaNombre; // Para búsqueda por categoría
+    public $nombreCompleto;
+    public $categoriaNombre;
 
     /**
      * {@inheritdoc}
@@ -20,10 +20,10 @@ class AtletasRegistroSearch extends AtletasRegistro
     public function rules()
     {
         return [
-            [['id', 'id_club', 'id_escuela', 'id_representante', 'id_alergias', 'id_enfermedades', 'id_discapacidad', 'id_nac', 'identificacion', 'sexo', 'u_creacion', 'u_update', 'id_categoria'], 'integer'],
-            [['p_nombre', 's_nombre', 'p_apellido', 's_apellido', 'fn', 'talla_franela', 'talla_short', 'cell', 'telf', 'd_creacion', 'd_update', 'dir_ip', 'nombreCompleto', 'categoriaNombre'], 'safe'],
+            [['id', 'id_club', 'id_escuela', 'id_representante', 'id_alergias', 'id_enfermedades', 'id_discapacidad', 'id_nac', 'sexo', 'u_creacion', 'u_update', 'id_categoria', 'user_id', 'id_familia'], 'integer'],
+            [['p_nombre', 's_nombre', 'p_apellido', 's_apellido', 'identificacion', 'fn', 'talla_franela', 'talla_short', 'cell', 'telf', 'd_creacion', 'd_update', 'dir_ip', 'nombreEscuelaClub', 'categoria', 'telf_emergencia1', 'telf_emergencia2', 'nombreCompleto', 'categoriaNombre', 'eliminado'], 'safe'],
             [['estatura', 'peso'], 'number'],
-            [['asma', 'eliminado'], 'boolean'],
+            [['asma'], 'boolean'],
         ];
     }
 
@@ -45,10 +45,34 @@ class AtletasRegistroSearch extends AtletasRegistro
      */
     public function search($params)
     {
-        $query = AtletasRegistro::find()->joinWith(['categoria']);
+        $query = AtletasRegistro::find();
+
+        // add conditions that should always apply here
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
+            'sort' => [
+                'attributes' => [
+                    'id',
+                    'p_nombre',
+                    's_nombre',
+                    'p_apellido',
+                    's_apellido',
+                    'identificacion',
+                    'cell',
+                    'd_creacion',
+                    // Campos virtuales
+                    'nombreCompleto' => [
+                        'asc' => ['p_nombre' => SORT_ASC, 'p_apellido' => SORT_ASC],
+                        'desc' => ['p_nombre' => SORT_DESC, 'p_apellido' => SORT_DESC],
+                        'default' => SORT_ASC
+                    ],
+                    'categoriaNombre' => [
+                        'asc' => ['categoria' => SORT_ASC],
+                        'desc' => ['categoria' => SORT_DESC],
+                    ],
+                ],
+            ],
         ]);
 
         $this->load($params);
@@ -57,13 +81,6 @@ class AtletasRegistroSearch extends AtletasRegistro
             // uncomment the following line if you do not want to return any records when validation fails
             // $query->where('0=1');
             return $dataProvider;
-        }
-
-        // ✅ FILTRADO POR ESCUELA DE LA SESIÓN
-        $session = \Yii::$app->session;
-        $id_escuela = $session->get('id_escuela');
-        if ($id_escuela) {
-            $query->andWhere(['atletas.registro.id_escuela' => $id_escuela]);
         }
 
         // grid filtering conditions
@@ -76,7 +93,6 @@ class AtletasRegistroSearch extends AtletasRegistro
             'id_enfermedades' => $this->id_enfermedades,
             'id_discapacidad' => $this->id_discapacidad,
             'id_nac' => $this->id_nac,
-            'identificacion' => $this->identificacion,
             'fn' => $this->fn,
             'sexo' => $this->sexo,
             'estatura' => $this->estatura,
@@ -88,34 +104,41 @@ class AtletasRegistroSearch extends AtletasRegistro
             'u_update' => $this->u_update,
             'eliminado' => $this->eliminado,
             'id_categoria' => $this->id_categoria,
+            'user_id' => $this->user_id,
+            'id_familia' => $this->id_familia,
         ]);
 
         $query->andFilterWhere(['ilike', 'p_nombre', $this->p_nombre])
             ->andFilterWhere(['ilike', 's_nombre', $this->s_nombre])
             ->andFilterWhere(['ilike', 'p_apellido', $this->p_apellido])
             ->andFilterWhere(['ilike', 's_apellido', $this->s_apellido])
+            ->andFilterWhere(['ilike', 'identificacion', $this->identificacion])
             ->andFilterWhere(['ilike', 'talla_franela', $this->talla_franela])
             ->andFilterWhere(['ilike', 'talla_short', $this->talla_short])
             ->andFilterWhere(['ilike', 'cell', $this->cell])
             ->andFilterWhere(['ilike', 'telf', $this->telf])
-            ->andFilterWhere(['ilike', 'dir_ip', $this->dir_ip]);
+            ->andFilterWhere(['ilike', 'dir_ip', $this->dir_ip])
+            ->andFilterWhere(['ilike', 'nombreEscuelaClub', $this->nombreEscuelaClub])
+            ->andFilterWhere(['ilike', 'categoria', $this->categoria])
+            ->andFilterWhere(['ilike', 'telf_emergencia1', $this->telf_emergencia1])
+            ->andFilterWhere(['ilike', 'telf_emergencia2', $this->telf_emergencia2]);
 
-        // ✅ FILTRO POR NOMBRE COMPLETO (búsqueda en todos los campos de nombre)
+        // Filtro para nombre completo (concatenación)
         if (!empty($this->nombreCompleto)) {
-            $query->andWhere(['or',
-                ['ilike', 'p_nombre', $this->nombreCompleto],
-                ['ilike', 's_nombre', $this->nombreCompleto],
-                ['ilike', 'p_apellido', $this->nombreCompleto],
-                ['ilike', 's_apellido', $this->nombreCompleto]
-            ]);
+            $query->andWhere(
+                'CONCAT(p_nombre, \' \', COALESCE(s_nombre,\'\'), \' \', p_apellido, \' \', COALESCE(s_apellido,\'\')) ILIKE :nombre',
+                [':nombre' => '%' . $this->nombreCompleto . '%']
+            );
         }
 
-        // ✅ FILTRO POR CATEGORÍA (búsqueda en la tabla relacionada)
+        // Filtro para categoría (usa el campo 'categoria' que es calculado y guardado)
         if (!empty($this->categoriaNombre)) {
-            $query->andWhere(['or',
-                ['ilike', 'categoria_atletas.nombre', $this->categoriaNombre],
-                ['ilike', 'categoria_atletas.nombre_venezuela', $this->categoriaNombre]
-            ]);
+            $query->andWhere(['ilike', 'categoria', $this->categoriaNombre]);
+        }
+
+        // 🔥 FILTRO POR DEFECTO: solo atletas no eliminados, a menos que se solicite explícitamente ver eliminados
+        if ($this->eliminado === null || $this->eliminado === '') {
+            $query->andWhere(['eliminado' => false]);
         }
 
         return $dataProvider;

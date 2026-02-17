@@ -30,6 +30,8 @@ class AtletasRegistroController extends Controller
                     'class' => VerbFilter::className(),
                     'actions' => [
                         'delete' => ['POST'],
+                        'restore' => ['POST'],
+                        'restore-all' => ['POST'],
                     ],
                 ],
             ]
@@ -230,7 +232,7 @@ class AtletasRegistroController extends Controller
     }
 
     /**
-     * Deletes an existing AtletasRegistro model.
+     * Deletes an existing AtletasRegistro model (soft delete).
      * If deletion is successful, the browser will be redirected to the 'index' page.
      * @param int $id ID
      * @return \yii\web\Response
@@ -238,8 +240,48 @@ class AtletasRegistroController extends Controller
      */
     public function actionDelete($id)
     {
-        $this->findModel($id)->delete();
+        $model = $this->findModel($id);
+        // Soft delete usando el behavior
+        if ($model->softDelete()) {
+            Yii::$app->session->setFlash('success', '✅ Atleta eliminado lógicamente.');
+        } else {
+            Yii::$app->session->setFlash('error', '❌ Error al eliminar el atleta.');
+        }
 
+        return $this->redirect(['index']);
+    }
+
+    /**
+     * Restores a soft-deleted AtletasRegistro model.
+     * @param int $id ID
+     * @return \yii\web\Response
+     * @throws NotFoundHttpException if the model cannot be found
+     */
+    public function actionRestore($id)
+    {
+        $model = $this->findModel($id);
+        if ($model->restore()) {
+            Yii::$app->session->setFlash('success', '✅ Atleta restaurado exitosamente.');
+        } else {
+            Yii::$app->session->setFlash('error', '❌ Error al restaurar el atleta.');
+        }
+
+        return $this->redirect(['index']);
+    }
+
+    /**
+     * Restores all soft-deleted athletes (utility for admin).
+     * @return \yii\web\Response
+     */
+    public function actionRestoreAll()
+    {
+        $count = AtletasRegistro::find()->where(['eliminado' => true])->count();
+        if ($count > 0) {
+            AtletasRegistro::updateAll(['eliminado' => false, 'd_update' => date('Y-m-d H:i:s'), 'u_update' => Yii::$app->user->id], ['eliminado' => true]);
+            Yii::$app->session->setFlash('success', "✅ Se restauraron {$count} atletas.");
+        } else {
+            Yii::$app->session->setFlash('info', 'No hay atletas eliminados para restaurar.');
+        }
         return $this->redirect(['index']);
     }
 
@@ -252,57 +294,13 @@ class AtletasRegistroController extends Controller
      */
     protected function findModel($id)
     {
-        if (($model = AtletasRegistro::findOne(['id' => $id])) !== null) {
+        // Usamos find() sin filtrar eliminados para poder restaurar
+        $model = AtletasRegistro::find()->where(['id' => $id])->one();
+        if ($model !== null) {
             return $model;
         }
 
         throw new NotFoundHttpException('The requested page does not exist.');
-    }
-
-    /**
-     * Acción AJAX para calcular categoría - VERSIÓN ORIGINAL FUNCIONAL
-     */
-    public function actionCalcularCategoria()
-    {
-        Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
-        
-        $edad = Yii::$app->request->post('edad');
-        
-        if ($edad === null || $edad === '') {
-            return ['success' => false, 'categoria' => 'SIN CATEGORÍA'];
-        }
-        
-        $edad = (int)$edad;
-        
-        // Intentar diferentes formas de buscar la categoría activa
-        $categoria = CategoriaAtletas::find()
-            ->where('edad_minima <= :edad AND edad_maxima >= :edad', [':edad' => $edad])
-            ->andWhere(['activo' => true])
-            ->one();
-        
-        // Si no encuentra, intentar con activo = 1 (por si es booleano)
-        if (!$categoria) {
-            $categoria = CategoriaAtletas::find()
-                ->where('edad_minima <= :edad AND edad_maxima >= :edad', [':edad' => $edad])
-                ->andWhere(['activo' => 1])
-                ->one();
-        }
-        
-        // Si aún no encuentra, intentar sin condición de activo
-        if (!$categoria) {
-            $categoria = CategoriaAtletas::find()
-                ->where('edad_minima <= :edad AND edad_maxima >= :edad', [':edad' => $edad])
-                ->one();
-        }
-        
-        if ($categoria) {
-            return [
-                'success' => true, 
-                'categoria' => $categoria->nombre . ' (' . $categoria->nombre_venezuela . ')'
-            ];
-        }
-        
-        return ['success' => false, 'categoria' => 'SIN CATEGORÍA'];
     }
 
     /**

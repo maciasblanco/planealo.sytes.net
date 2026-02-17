@@ -2,54 +2,156 @@
 
 /** @var yii\web\View $this */
 /** @var yii\bootstrap5\ActiveForm $form */
-
 /** @var app\models\LoginForm $model */
 
 use yii\bootstrap5\ActiveForm;
 use yii\bootstrap5\Html;
 
-$this->title = 'Login';
+$this->title = 'Iniciar Sesión';
 $this->params['breadcrumbs'][] = $this->title;
+
+// CSS personalizado para la vista de login (usando registerCss para no violar el protocolo)
+$this->registerCss(<<<CSS
+    .login-container {
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: #f8f9fa;
+    }
+    .login-card {
+        width: 100%;
+        max-width: 1000px;
+        border: none;
+        border-radius: 1rem;
+        overflow: hidden;
+        box-shadow: 0 0.5rem 2rem rgba(0,0,0,0.1);
+        background-color: #fff;
+    }
+    .login-left {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 2rem;
+        min-height: 400px;
+    }
+    .login-left img {
+        max-width: 80%;
+        max-height: 200px;
+        filter: brightness(0) invert(1);
+    }
+    .login-right {
+        padding: 3rem;
+    }
+    .login-right h1 {
+        font-size: 2rem;
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+        color: #333;
+    }
+    .login-right .subtitle {
+        color: #6c757d;
+        margin-bottom: 2rem;
+    }
+    .form-group {
+        margin-bottom: 1.5rem;
+    }
+    .btn-login {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border: none;
+        padding: 0.75rem;
+        font-weight: 600;
+        width: 100%;
+        color: white;
+        border-radius: 0.5rem;
+        transition: all 0.3s;
+    }
+    .btn-login:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 0.5rem 1rem rgba(102, 126, 234, 0.4);
+    }
+    .login-footer {
+        margin-top: 2rem;
+        text-align: center;
+        color: #6c757d;
+    }
+    .login-footer a {
+        color: #667eea;
+        text-decoration: none;
+        font-weight: 500;
+    }
+    .login-footer a:hover {
+        text-decoration: underline;
+    }
+    @media (max-width: 768px) {
+        .login-left {
+            min-height: 200px;
+            padding: 1rem;
+        }
+        .login-left img {
+            max-height: 100px;
+        }
+        .login-right {
+            padding: 2rem;
+        }
+    }
+CSS);
 ?>
-<div class="site-login">
-    <h1><?= Html::encode($this->title) ?></h1>
 
-    <p>Please fill out the following fields to login:</p>
+<div class="login-container">
+    <div class="login-card row g-0">
+        <!-- Columna izquierda: imagen del logo -->
+        <div class="col-md-6 login-left">
+            <img src="<?= Yii::getAlias('@web') ?>/img/logos/logoGed.png" 
+                 alt="Logo GED"
+                 class="img-fluid"
+                 title="Sistema GED - Gestión Escuelas Deportivas">
+        </div>
 
-    <div class="row">
-        <div class="col-lg-5">
+        <!-- Columna derecha: formulario de login -->
+        <div class="col-md-6 login-right">
+            <h1><?= Html::encode($this->title) ?></h1>
+            <p class="subtitle">Ingresa tus credenciales para acceder al sistema</p>
 
             <?php $form = ActiveForm::begin([
                 'id' => 'login-form',
                 'fieldConfig' => [
                     'template' => "{label}\n{input}\n{error}",
-                    'labelOptions' => ['class' => 'col-lg-1 col-form-label mr-lg-3'],
-                    'inputOptions' => ['class' => 'col-lg-3 form-control'],
-                    'errorOptions' => ['class' => 'col-lg-7 invalid-feedback'],
+                    'labelOptions' => ['class' => 'form-label fw-bold'],
+                    'inputOptions' => ['class' => 'form-control form-control-lg'],
+                    'errorOptions' => ['class' => 'invalid-feedback'],
                 ],
             ]); ?>
 
-            <?= $form->field($model, 'username')->textInput(['autofocus' => true]) ?>
+                <?= $form->field($model, 'username')->textInput([
+                    'autofocus' => true,
+                    'placeholder' => 'Ingresa tu usuario'
+                ]) ?>
 
-            <?= $form->field($model, 'password')->passwordInput() ?>
+                <?= $form->field($model, 'password')->passwordInput([
+                    'placeholder' => 'Ingresa tu contraseña'
+                ]) ?>
 
-            <?= $form->field($model, 'rememberMe')->checkbox([
-                'template' => "<div class=\"custom-control custom-checkbox\">{input} {label}</div>\n<div class=\"col-lg-8\">{error}</div>",
-            ]) ?>
+                <?= $form->field($model, 'rememberMe')->checkbox([
+                    'template' => "<div class=\"form-check\">{input} {label}</div>\n{error}",
+                    'class' => 'form-check-input',
+                    'labelOptions' => ['class' => 'form-check-label'],
+                ]) ?>
 
-            <div class="form-group">
-                <div>
-                    <?= Html::submitButton('Login', ['class' => 'btn btn-primary', 'name' => 'login-button']) ?>
+                <div class="form-group">
+                    <?= Html::submitButton(
+                        '<i class="fas fa-sign-in-alt me-2"></i> Iniciar Sesión',
+                        ['class' => 'btn btn-login', 'name' => 'login-button']
+                    ) ?>
                 </div>
-            </div>
 
             <?php ActiveForm::end(); ?>
 
-            <div style="color:#999;">
-                You may login with <strong>admin/admin</strong> or <strong>demo/demo</strong>.<br>
-                To modify the username/password, please check out the code <code>app\models\User::$users</code>.
+            <div class="login-footer">
+                <p>¿No tienes cuenta? <a href="<?= Yii::$app->urlManager->createUrl(['/site/signup']) ?>">Regístrate</a></p>
+                <p><a href="<?= Yii::$app->urlManager->createUrl(['/site/request-password-reset']) ?>">¿Olvidaste tu contraseña?</a></p>
             </div>
-
         </div>
     </div>
 </div>

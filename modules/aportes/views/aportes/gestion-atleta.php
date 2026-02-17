@@ -36,12 +36,9 @@ $this->params['breadcrumbs'][] = $this->title;
 // Obtener tasa actual del dólar desde la base de datos
 $tasaDolarActual = \app\models\TasaDolar::getTasaActual();
 
-// Pre-calcular valores para JavaScript
+// Pre-calcular valores para JavaScript usando constantes del modelo
 $montoQuincenalDolares = \app\models\AportesSemanales::MONTO_QUINCENAL_USD;
 $montoQuincenalBolivares = $tasaDolarActual * $montoQuincenalDolares;
-
-// ✅ CORREGIDO - Usar los atletas permitidos que ya vienen del controlador
-// $atletas ya está definido por el controlador
 ?>
 
 <div class="gestion-atleta">
@@ -191,7 +188,7 @@ $montoQuincenalBolivares = $tasaDolarActual * $montoQuincenalDolares;
                         </div>
                         <div class="col-md-6">
                             <strong>Aporte Quincenal Equivalente:</strong> 
-                            Bs. <?= number_format($tasaDolarActual * 5.00, 2) ?>  <!-- Cambiado 4.00 a 5.00 -->
+                            Bs. <?= number_format($tasaDolarActual * $montoQuincenalDolares, 2) ?>
                         </div>
                     </div>
                 </div>
@@ -230,7 +227,7 @@ $montoQuincenalBolivares = $tasaDolarActual * $montoQuincenalDolares;
                                         'step' => '0.01',
                                         'class' => 'form-control',
                                         'id' => 'monto-dolares-individual',
-                                        'value' => \app\models\AportesSemanales::MONTO_QUINCENAL_USD,
+                                        'value' => $montoQuincenalDolares,
                                         'required' => true
                                     ])->label('Monto ($)') ?>
                                 </div>
@@ -310,11 +307,11 @@ $montoQuincenalBolivares = $tasaDolarActual * $montoQuincenalDolares;
                                 <div class="col-md-12">
                                     <div class="form-group">
                                         <label>Monto Total a Aportar ($) *</label>
-                                        <input type="number" step="0.01" min="4" class="form-control" 
+                                        <input type="number" step="0.01" min="<?= $montoQuincenalDolares ?>" class="form-control" 
                                                name="monto_flexible" id="monto-flexible" 
-                                               value="<?= \app\models\AportesSemanales::MONTO_QUINCENAL_USD ?>" required>
+                                               value="<?= $montoQuincenalDolares ?>" required>
                                         <small class="form-text text-muted">
-                                            Mínimo: $<?= number_format(5.00, 2) ?> (1 quincena)  <!-- Cambiado 4.00 a 5.00 -->
+                                            Mínimo: $<?= number_format($montoQuincenalDolares, 2) ?> (1 quincena)
                                         </small>
                                     </div>
                                 </div>
@@ -594,7 +591,7 @@ $montoQuincenalBolivares = $tasaDolarActual * $montoQuincenalDolares;
                                                 </td>
                                                 <td class="text-right">
                                                     <strong>$<?= number_format($quincena['monto'], 2) ?></strong>
-                                                    <?php if (isset($quincena['es_parcial']) && $quincena['es_parcial']): ?>
+                                                    <?php if (isset($quincena['pago_parcial']) && $quincena['pago_parcial']): ?>
                                                         <br><small class="text-muted">Parcial</small>
                                                     <?php endif; ?>
                                                 </td>
@@ -605,19 +602,22 @@ $montoQuincenalBolivares = $tasaDolarActual * $montoQuincenalDolares;
                                                     <?= isset($quincena['tasa_cambio']) && $quincena['tasa_cambio'] ? number_format($quincena['tasa_cambio'], 2) : '-' ?>
                                                 </td>
                                                 <td class="text-center">
-                                                    <?php if (isset($quincena['tipo_aporte'])): ?>
-                                                        <?php if ($quincena['tipo_aporte'] == 'adelantado'): ?>
-                                                            <span class="badge badge-info">Adelantado</span>
-                                                        <?php elseif ($quincena['tipo_aporte'] == 'flexible'): ?>
-                                                            <span class="badge badge-primary">Flexible</span>
-                                                        <?php elseif ($quincena['tipo_aporte'] == 'parcial'): ?>
-                                                            <span class="badge badge-secondary">Parcial</span>
-                                                        <?php else: ?>
-                                                            <span class="badge badge-light">Normal</span>
-                                                        <?php endif; ?>
-                                                    <?php else: ?>
-                                                        <span class="badge badge-light">Normal</span>
-                                                    <?php endif; ?>
+                                                    <?php
+                                                    $tipo = $quincena['tipo_aporte'] ?? 'normal';
+                                                    $badgeClass = 'badge-light';
+                                                    $label = 'Normal';
+                                                    if ($tipo == 'adelantado') {
+                                                        $badgeClass = 'badge-info';
+                                                        $label = 'Adelantado';
+                                                    } elseif ($tipo == 'flexible') {
+                                                        $badgeClass = 'badge-primary';
+                                                        $label = 'Flexible';
+                                                    } elseif ($tipo == 'parcial') {
+                                                        $badgeClass = 'badge-secondary';
+                                                        $label = 'Parcial';
+                                                    }
+                                                    ?>
+                                                    <span class="badge <?= $badgeClass ?>"><?= $label ?></span>
                                                 </td>
                                                 <td>
                                                     <small><?= isset($quincena['comentarios']) ? Html::encode($quincena['comentarios']) : '-' ?></small>
@@ -693,8 +693,8 @@ $montoQuincenalBolivares = $tasaDolarActual * $montoQuincenalDolares;
 // JavaScript para conversión de moneda y cálculos - VERSIÓN MEJORADA PARA QUINCENAS
 $js = <<<JS
 $(document).ready(function() {
-    const MONTO_QUINCENAL = parseFloat('$montoQuincenalBolivares');
-    const MONTO_QUINCENAL_DOLARES = parseFloat('5.00');  // Cambiado 4.00 a 5.00
+    const MONTO_QUINCENAL_BOLIVARES = parseFloat('$montoQuincenalBolivares');
+    const MONTO_QUINCENAL_DOLARES = parseFloat('$montoQuincenalDolares');
     const TASA_ACTUAL = parseFloat('$tasaDolarActual');
     
     // ===== FUNCIONES DE CONVERSIÓN =====
@@ -791,7 +791,7 @@ $(document).ready(function() {
     $('#monto-flexible').on('input', calcularDesgloseFlexible);
     
     // Pago Múltiple
-    $('input[name="quincenas[]"]').change(function() {
+    $(document).on('change', 'input[name="quincenas[]"]', function() {
         calcularMontoTotalMultiple();
     });
     
