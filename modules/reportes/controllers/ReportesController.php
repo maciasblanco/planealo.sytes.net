@@ -10,6 +10,7 @@ use app\models\RegistroRepresentantes;
 use app\models\AtletasRegistro;
 use app\models\AportesSemanales;
 use app\models\Asistencia;
+use app\models\TasaDolar;
 use app\modules\reportes\models\ReporteAtletasSearch;
 use app\modules\reportes\models\ReporteAsistenciasSearch;
 
@@ -31,14 +32,13 @@ class ReportesController extends Controller
     }
 
     /**
-     * Reporte consolidado de atletas para representantes
+     * Listado de atletas para el representante (vista: reportes-representantes.php)
      */
     public function actionAtletas()
     {
         $searchModel = new ReporteAtletasSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
-        // Obtener datos consolidados para la vista
         $user_id = Yii::$app->user->id;
         $user = Yii::$app->user->identity;
         
@@ -84,7 +84,8 @@ class ReportesController extends Controller
             ]);
         }
 
-        return $this->render('atletas', [
+        // Vista para representantes (listado de atletas)
+        return $this->render('reportes-representantes', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
             'representante' => $representante,
@@ -95,7 +96,7 @@ class ReportesController extends Controller
     }
 
     /**
-     * Reporte detallado de estadísticas por atleta
+     * Detalle de estadísticas de un atleta (vista: reporte-atletas.php)
      */
     public function actionEstadisticasAtleta($id = null)
     {
@@ -137,15 +138,20 @@ class ReportesController extends Controller
         }
 
         $estadisticas = $this->obtenerEstadisticasDetalladas($atleta);
+        $deudasPendientes = $this->obtenerDetalleDeuda($atleta->id);
+        $tasaCambio = $this->obtenerTasaCambioActual();
 
-        return $this->render('estadisticas-atleta', [
+        // Vista para el detalle del atleta
+        return $this->render('reporte-atletas', [
             'atleta' => $atleta,
             'estadisticas' => $estadisticas,
+            'deudasPendientes' => $deudasPendientes,
+            'tasaCambio' => $tasaCambio,
         ]);
     }
 
     /**
-     * Reporte de asistencias con filtros
+     * Reporte de asistencias con filtros (vista: asistencias.php)
      */
     public function actionAsistencias()
     {
@@ -159,7 +165,7 @@ class ReportesController extends Controller
     }
 
     /**
-     * Reporte de deudas pendientes
+     * Reporte de deudas pendientes (vista: deudas-pendientes.php)
      */
     public function actionDeudasPendientes()
     {
@@ -224,9 +230,10 @@ class ReportesController extends Controller
         return $this->generarExcel($reporte);
     }
 
-    /**
-     * Obtiene datos consolidados para un atleta
-     */
+    // =========================================================================
+    // Métodos privados (se mantienen igual que en la versión anterior)
+    // =========================================================================
+
     private function obtenerDatosConsolidados($atleta)
     {
         $deudaPendiente = AportesSemanales::find()
@@ -272,9 +279,6 @@ class ReportesController extends Controller
         ];
     }
 
-    /**
-     * Obtiene la última fecha de asistencia
-     */
     private function obtenerUltimaAsistencia($atletaId)
     {
         return Asistencia::find()
@@ -285,9 +289,6 @@ class ReportesController extends Controller
             ->one();
     }
 
-    /**
-     * Obtiene el próximo aporte pendiente
-     */
     private function obtenerProximoAporte($atletaId)
     {
         return AportesSemanales::find()
@@ -298,19 +299,14 @@ class ReportesController extends Controller
             ->one();
     }
 
-    /**
-     * Obtiene estadísticas detalladas para un atleta
-     */
     private function obtenerEstadisticasDetalladas($atleta)
     {
-        // Obtener datos de los últimos 6 meses
         $estadisticasMensuales = [];
         for ($i = 5; $i >= 0; $i--) {
             $mes = date('Y-m', strtotime("-$i months"));
             $estadisticasMensuales[$mes] = $this->obtenerEstadisticasMensuales($atleta->id, $mes);
         }
 
-        // Totales históricos
         $totalAportes = AportesSemanales::find()
             ->where(['atleta_id' => $atleta->id])
             ->andWhere(['eliminado' => false])
@@ -393,16 +389,28 @@ class ReportesController extends Controller
             ->all();
     }
 
+    private function obtenerTasaCambioActual()
+    {
+        $tasa = TasaDolar::find()
+            ->where(['eliminado' => false])
+            ->orderBy(['fecha_tasa' => SORT_DESC])
+            ->one();
+
+        if ($tasa) {
+            return (float) $tasa->tasa_dia;
+        }
+
+        return 36.50;
+    }
+
     private function generarPdf($reporte)
     {
-        // Implementación básica para PDF
         $content = "Reporte: " . $reporte;
         return $content;
     }
 
     private function generarExcel($reporte)
     {
-        // Implementación básica para Excel
         return "Excel para: " . $reporte;
     }
 }

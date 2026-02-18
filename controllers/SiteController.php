@@ -206,14 +206,29 @@ class SiteController extends Controller
             
             Yii::$app->session->setFlash('success', 'Sesión iniciada correctamente.');
             
-            // ✅ PREVENIR REDIRECCIÓN A LOGIN DESPUÉS DE LOGIN
-            // Si la URL anterior es login o index, redirigir a acceder-sistema
-            $returnUrl = Yii::$app->request->referrer;
-            if (!$returnUrl || strpos($returnUrl, 'login') !== false || strpos($returnUrl, 'index') !== false) {
-                return $this->redirect(['/site/acceder-sistema']);
+            // ==========================================================
+            // FASE 5: REDIRECCIÓN SEGÚN ROL
+            // ==========================================================
+            // Determinar la página de destino según el rol
+            if (Yii::$app->user->can('admin')) {
+                $defaultRedirect = ['/reportes/default/dashboard'];
+            } elseif (Yii::$app->user->can('representante')) {
+                $defaultRedirect = ['/reportes/reportes/atletas'];
+            } elseif (Yii::$app->user->can('atleta')) {
+                $defaultRedirect = ['/reportes/reportes/estadisticas-atleta'];
+            } else {
+                $defaultRedirect = ['/site/index'];
             }
             
-            return $this->goBack();
+            // ✅ PREVENIR REDIRECCIÓN A LOGIN DESPUÉS DE LOGIN
+            // Si la URL anterior es login o index, usar la redirección por rol
+            $returnUrl = Yii::$app->request->referrer;
+            if (!$returnUrl || strpos($returnUrl, 'login') !== false || strpos($returnUrl, 'index') !== false) {
+                return $this->redirect($defaultRedirect);
+            }
+            
+            // Si hay una URL válida de retorno, ir allí
+            return $this->goBack($defaultRedirect);
         } else {
             // Registrar intento fallido si el usuario existe
             if ($model->username) {
@@ -1395,6 +1410,7 @@ class SiteController extends Controller
         $script .= '                        menu.style.display = "none";' . "\n";
         $script .= '                        menu.style.opacity = "0";' . "\n";
         $script .= '                        menu.style.visibility = "hidden";' . "\n";
+        $script .= '                        menu.style.transform = "translateX(-10px)";' . "\n";
         $script .= '                    }' . "\n";
         $script .= '                }, 100);' . "\n";
         $script .= '            };' . "\n";
