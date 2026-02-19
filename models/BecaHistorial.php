@@ -11,12 +11,13 @@ use yii\db\ActiveRecord;
  * @property int $id_beca
  * @property string $fecha_original_inicio
  * @property string|null $fecha_original_fin
- * @property string $fecha_reactivacion
+ * @property string|null $fecha_reactivacion
  * @property string|null $motivo
  * @property int|null $usuario_creacion
  * @property string $fecha_creacion
  * 
  * @property Beca $beca
+ * @property User $usuario
  */
 class BecaHistorial extends ActiveRecord
 {
@@ -28,7 +29,7 @@ class BecaHistorial extends ActiveRecord
     public function rules()
     {
         return [
-            [['id_beca', 'fecha_original_inicio', 'fecha_reactivacion'], 'required'],
+            [['id_beca', 'fecha_original_inicio'], 'required'], // MOD: fecha_reactivacion ya no es requerida
             [['id_beca', 'usuario_creacion'], 'integer'],
             [['fecha_original_inicio', 'fecha_original_fin', 'fecha_reactivacion', 'fecha_creacion'], 'safe'],
             [['motivo'], 'string'],
@@ -57,7 +58,6 @@ class BecaHistorial extends ActiveRecord
 
     public function getUsuario()
     {
-        // Si la tabla de usuarios no es 'user' o no está en 'public', ajusta la relación
         return $this->hasOne(User::class, ['id' => 'usuario_creacion']);
     }
 }

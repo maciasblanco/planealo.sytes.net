@@ -18,9 +18,9 @@ use app\models\Parroquia;
 use yii\web\UploadedFile;
 
 /**
- * EscuelaRegistroController implementa las Fases 1 y 2 del registro de escuelas/clubes
+ * EscuelaPreRegistroController implementa las Fases 1 y 2 del registro de escuelas/clubes
  */
-class EscuelaRegistroController extends Controller
+class EscuelaPreRegistroController  extends Controller
 {
     /**
      * {@inheritdoc}

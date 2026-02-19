@@ -90,7 +90,38 @@ class Beca extends ActiveRecord
             [['id_atleta'], 'exist', 'skipOnError' => true, 'targetClass' => AtletasRegistro::class, 'targetAttribute' => ['id_atleta' => 'id']],
             [['id_tipo_beca'], 'exist', 'skipOnError' => true, 'targetClass' => TipoBeca::class, 'targetAttribute' => ['id_tipo_beca' => 'id_tipo_beca']],
             [['id_familia'], 'exist', 'skipOnError' => true, 'targetClass' => Familia::class, 'targetAttribute' => ['id_familia' => 'id_familia']],
+            
+            // MOD: validación personalizada para evitar múltiples becas activas por atleta
+            ['id_atleta', 'validarUnicaActiva', 'on' => ['default', 'create']],
         ];
+    }
+
+    /**
+     * MOD: Valida que el atleta no tenga otra beca activa (misma o distinto tipo)
+     * @param string $attribute
+     * @param array $params
+     */
+    public function validarUnicaActiva($attribute, $params)
+    {
+        if ($this->estado !== self::ESTADO_ACTIVA) {
+            return; // solo interesa si la beca se va a activar
+        }
+
+        $query = self::find()
+            ->where(['id_atleta' => $this->id_atleta])
+            ->andWhere(['estado' => self::ESTADO_ACTIVA])
+            ->andWhere(['eliminado' => false]);
+
+        // Si estamos actualizando, excluir el registro actual
+        if (!$this->isNewRecord) {
+            $query->andWhere(['<>', 'id_beca', $this->id_beca]);
+        }
+
+        $activaExistente = $query->exists();
+
+        if ($activaExistente) {
+            $this->addError($attribute, 'El atleta ya tiene una beca activa. Debe revocarla antes de asignar una nueva.');
+        }
     }
 
     /**

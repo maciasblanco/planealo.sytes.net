@@ -1,6 +1,6 @@
 <?php
 
-namespace app\modules\escuela_club\controller;
+namespace app\modules\escuela_club\controllers;
 
 use app\models\Club;
 use app\modules\escuela_club\models\ClubRegistroSearch;

@@ -24,7 +24,8 @@ class BecasController extends Controller
     }
 
     /**
-     * Renueva todas las becas activas (debe ejecutarse en marzo).
+     * Renueva todas las becas activas que vencen el 31 de marzo.
+     * Debe ejecutarse en abril (o a finales de marzo) para renovar las becas del nuevo período.
      *
      * @param int $dryRun Si 1, solo simula sin guardar.
      */

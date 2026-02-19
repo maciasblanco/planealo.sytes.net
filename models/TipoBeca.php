@@ -11,6 +11,7 @@ use yii\db\ActiveRecord;
  * @property string $nombre
  * @property string $descripcion
  * @property float $porcentaje_predeterminado
+ * @property int $periodo_validez_meses        // MOD: nuevo campo
  *
  * @property Beca[] $becas
  */
@@ -24,8 +25,9 @@ class TipoBeca extends ActiveRecord
     public function rules()
     {
         return [
-            [['nombre', 'porcentaje_predeterminado'], 'required'],
+            [['nombre', 'porcentaje_predeterminado', 'periodo_validez_meses'], 'required'], // MOD: agregado periodo_validez_meses
             [['porcentaje_predeterminado'], 'number', 'min' => 0, 'max' => 100],
+            [['periodo_validez_meses'], 'integer', 'min' => 1, 'max' => 60], // MOD: validación de meses (1 a 60)
             [['nombre'], 'string', 'max' => 100],
             [['descripcion'], 'string', 'max' => 255],
         ];
@@ -38,6 +40,7 @@ class TipoBeca extends ActiveRecord
             'nombre' => 'Nombre',
             'descripcion' => 'Descripción',
             'porcentaje_predeterminado' => '% Predeterminado',
+            'periodo_validez_meses' => 'Período de Validez (meses)', // MOD: nueva etiqueta
         ];
     }
 

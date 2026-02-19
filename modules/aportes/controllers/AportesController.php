@@ -23,6 +23,7 @@ use app\models\Familia;
 use app\models\Beca;
 use app\models\TipoBeca;
 use app\models\ConfiguracionAporte;
+use app\models\BecaHistorial;  // AÑADIDO para registro histórico
 
 /**
  * AportesController implementa el CRUD para el modelo AportesSemanales.
@@ -1789,7 +1790,7 @@ class AportesController extends Controller
     }
 
     /**
-     * Asigna una beca a un atleta.
+     * Asigna una beca a un atleta con validaciones de negocio.
      * @return string|\yii\web\Response
      */
     public function actionAsignarBeca()
@@ -1800,7 +1801,7 @@ class AportesController extends Controller
         $model->fecha_asignacion = date('Y-m-d');
         $model->estado = Beca::ESTADO_ACTIVA;
 
-        // Solo se pueden asignar becas a atletas de familias (opcional: todos los atletas)
+        // Solo atletas que pertenezcan a una familia
         $atletas = AtletasRegistro::find()
             ->where(['not', ['id_familia' => null]])
             ->andWhere(['eliminado' => false])
@@ -1810,34 +1811,91 @@ class AportesController extends Controller
         $tiposBeca = TipoBeca::find()->all();
 
         if ($this->request->isPost && $model->load($this->request->post())) {
-            // Verificar que no exista una beca activa del mismo tipo para el atleta
-            $activa = Beca::find()
-                ->where(['id_atleta' => $model->id_atleta, 'id_tipo_beca' => $model->id_tipo_beca])
-                ->andWhere(['<=', 'fecha_asignacion', date('Y-m-d')])
-                ->andWhere(['or', ['fecha_vencimiento' => null], ['>=', 'fecha_vencimiento', date('Y-m-d')]])
-                ->exists();
 
-            if ($activa) {
-                Yii::$app->session->setFlash('error', 'El atleta ya tiene una beca activa de este tipo.');
+            // Asignar aprobado_por con el usuario actual
+            $model->aprobado_por = Yii::$app->user->id;
+
+            // Obtener el atleta y su familia
+            $atleta = AtletasRegistro::findOne($model->id_atleta);
+            if (!$atleta) {
+                Yii::$app->session->setFlash('error', 'Atleta no encontrado.');
+                return $this->render('asignar-beca', compact('model', 'atletas', 'tiposBeca'));
+            }
+            $familiaId = $atleta->id_familia;
+            if (!$familiaId) {
+                Yii::$app->session->setFlash('error', 'El atleta no pertenece a una familia.');
+                return $this->render('asignar-beca', compact('model', 'atletas', 'tiposBeca'));
+            }
+            $model->id_familia = $familiaId; // asegurar que quede asignado
+
+            // --- Validaciones de negocio (antes de guardar) ---
+            // 1. Contar becas activas actuales en la familia (excluyendo la nueva)
+            $activasFamilia = Beca::find()
+                ->activa()
+                ->andWhere(['id_familia' => $familiaId])
+                ->count();
+
+            // Máximo 3 becas por familia
+            if ($activasFamilia >= 3) {
+                Yii::$app->session->setFlash('error', 'La familia ya tiene 3 becas activas. No se puede asignar otra.');
+                return $this->render('asignar-beca', compact('model', 'atletas', 'tiposBeca'));
+            }
+
+            // 2. Si es beca de tipo "Entrenador", verificar que no haya otra activa del mismo tipo en la familia
+            $tipoEntrenador = TipoBeca::find()->where(['nombre' => 'Entrenador'])->select('id_tipo_beca')->scalar();
+            if ($tipoEntrenador && $model->id_tipo_beca == $tipoEntrenador) {
+                $entrenadorActiva = Beca::find()
+                    ->activa()
+                    ->andWhere(['id_familia' => $familiaId, 'id_tipo_beca' => $tipoEntrenador])
+                    ->exists();
+                if ($entrenadorActiva) {
+                    Yii::$app->session->setFlash('error', 'La familia ya tiene una beca de Entrenador activa.');
+                    return $this->render('asignar-beca', compact('model', 'atletas', 'tiposBeca'));
+                }
+            }
+
+            // 3. Regla "al menos un atleta sin beca" (a menos que tenga autorización de excepción)
+            if (!$model->autorizacion_excepcion) {
+                $totalAtletasFamilia = AtletasRegistro::find()
+                    ->where(['id_familia' => $familiaId, 'eliminado' => false])
+                    ->count();
+                // atletas sin beca actualmente = total - activasFamilia
+                $sinBecaAhora = $totalAtletasFamilia - $activasFamilia;
+                // después de asignar esta, quedarían sinBecaAhora - 1. Debe ser >= 1
+                if ($sinBecaAhora - 1 < 1) {
+                    Yii::$app->session->setFlash('error', 'Después de asignar esta beca no quedaría ningún atleta sin beca en la familia. Use la autorización de excepción si es necesario.');
+                    return $this->render('asignar-beca', compact('model', 'atletas', 'tiposBeca'));
+                }
+            }
+
+            // Calcular fecha de vencimiento según el período del tipo de beca
+            $tipoBeca = TipoBeca::findOne($model->id_tipo_beca);
+            if ($tipoBeca && $tipoBeca->periodo_validez_meses) {
+                $fecha = new \DateTime($model->fecha_asignacion);
+                $fecha->modify('+' . $tipoBeca->periodo_validez_meses . ' months');
+                $model->fecha_vencimiento = $fecha->format('Y-m-d');
+            }
+
+            // Intentar guardar la beca (las validaciones del modelo, como única activa por atleta, se ejecutan aquí)
+            if ($model->save()) {
+                // --- Registro en historial ---
+                $historial = new BecaHistorial();
+                $historial->id_beca = $model->id_beca;
+                $historial->id_atleta = $model->id_atleta;
+                $historial->id_tipo_beca = $model->id_tipo_beca;
+                $historial->id_familia = $model->id_familia;
+                $historial->fecha_asignacion = $model->fecha_asignacion;
+                $historial->fecha_vencimiento = $model->fecha_vencimiento;
+                $historial->estado = $model->estado;
+                $historial->aprobado_por = $model->aprobado_por;
+                $historial->observaciones = 'Asignación inicial' . ($model->observaciones ? ': ' . $model->observaciones : '');
+                $historial->autorizacion_excepcion = $model->autorizacion_excepcion;
+                $historial->save(); // No se interrumpe si falla el historial, pero se loguea
+                
+                Yii::$app->session->setFlash('success', 'Beca asignada exitosamente.');
+                return $this->redirect(['becas']);
             } else {
-                // Calcular fecha de vencimiento según período del tipo de beca
-                $tipoBeca = TipoBeca::findOne($model->id_tipo_beca);
-                if ($tipoBeca && $tipoBeca->periodo_validez_meses) {
-                    $fecha = new \DateTime($model->fecha_asignacion);
-                    $fecha->modify('+' . $tipoBeca->periodo_validez_meses . ' months');
-                    $model->fecha_vencimiento = $fecha->format('Y-m-d');
-                }
-                // Asignar familia si no viene
-                if (!$model->id_familia) {
-                    $atleta = AtletasRegistro::findOne($model->id_atleta);
-                    $model->id_familia = $atleta ? $atleta->id_familia : null;
-                }
-                if ($model->save()) {
-                    Yii::$app->session->setFlash('success', 'Beca asignada exitosamente.');
-                    return $this->redirect(['becas']);
-                } else {
-                    Yii::$app->session->setFlash('error', 'Error al asignar la beca: ' . json_encode($model->getErrors()));
-                }
+                Yii::$app->session->setFlash('error', 'Error al asignar la beca: ' . implode(', ', $model->getErrorSummary(true)));
             }
         }
 
@@ -2151,5 +2209,16 @@ class AportesController extends Controller
         }
 
         throw new NotFoundHttpException('The requested page does not exist.');
+    }
+    public function actionGetTipoBeca($id)
+    {
+        Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        $tipo = TipoBeca::findOne($id);
+        if ($tipo) {
+            return [
+                'periodo_validez_meses' => $tipo->periodo_validez_meses,
+            ];
+        }
+        return null;
     }
 }
