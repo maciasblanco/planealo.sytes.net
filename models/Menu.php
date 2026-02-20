@@ -5,8 +5,9 @@ namespace app\models;
 use Yii;
 
 /**
- * This is the model class for table "seguridad.menu".
- *
+ * Modelo extendido de menú que agrega campos personalizados
+ * y normaliza la ruta eliminando la barra inicial.
+ * 
  * @property int $id
  * @property string $name
  * @property int|null $parent
@@ -20,37 +21,26 @@ use Yii;
  * @property bool|null $mega_menu
  * @property int|null $mega_menu_columns
  * @property string|null $description
- * @property bool|null $show_as_public_container  // ← NUEVO CAMPO AÑADIDO
+ * @property bool|null $show_as_public_container
  */
-class Menu extends \yii\db\ActiveRecord
+class Menu extends \mdm\admin\models\Menu
 {
-    /**
-     * {@inheritdoc}
-     */
-    public static function tableName()
-    {
-        return 'seguridad.menu';
-    }
-
     /**
      * {@inheritdoc}
      */
     public function rules()
     {
-        return [
-            [['parent', 'route', 'order', 'data', 'permission', 'icon', 'description'], 'default', 'value' => null],
-            [['mega_menu_columns'], 'default', 'value' => 1],
-            [['mega_menu', 'show_as_public_container'], 'default', 'value' => 0], // ← MODIFICADO
-            [['name'], 'required'],
-            [['parent', 'order', 'nivel', 'mega_menu_columns'], 'default', 'value' => null],
-            [['parent', 'order', 'nivel', 'mega_menu_columns'], 'integer'],
-            [['active', 'mega_menu', 'show_as_public_container'], 'boolean'], // ← MODIFICADO
-            [['name'], 'string', 'max' => 128],
-            [['route', 'data', 'description'], 'string', 'max' => 255],
-            [['permission'], 'string', 'max' => 100],
-            [['icon'], 'string', 'max' => 50],
-            [['parent'], 'exist', 'skipOnError' => true, 'targetClass' => Menu::class, 'targetAttribute' => ['parent' => 'id']],
-        ];
+        // Obtenemos las reglas del modelo padre
+        $rules = parent::rules();
+        
+        // Agregamos reglas para los campos adicionales de la tabla seguridad.menu
+        $rules[] = [['show_as_public_container', 'mega_menu', 'active'], 'boolean'];
+        $rules[] = [['mega_menu_columns', 'nivel'], 'integer'];
+        $rules[] = [['description'], 'string', 'max' => 255];
+        $rules[] = [['permission'], 'string', 'max' => 100];
+        $rules[] = [['icon'], 'string', 'max' => 50];
+        
+        return $rules;
     }
 
     /**
@@ -58,21 +48,36 @@ class Menu extends \yii\db\ActiveRecord
      */
     public function attributeLabels()
     {
-        return [
-            'id' => 'ID',
-            'name' => 'Name',
-            'parent' => 'Parent',
-            'route' => 'Route',
-            'order' => 'Order',
-            'data' => 'Data',
-            'active' => 'Active',
-            'permission' => 'Permission',
-            'icon' => 'Icon',
-            'nivel' => 'Nivel',
-            'mega_menu' => 'Mega Menu',
-            'mega_menu_columns' => 'Mega Menu Columns',
-            'description' => 'Description',
-            'show_as_public_container' => 'Show As Public Container', // ← NUEVO LABEL
-        ];
+        // Obtenemos las etiquetas del modelo padre
+        $labels = parent::attributeLabels();
+        
+        // Agregamos etiquetas para los campos adicionales
+        $labels['show_as_public_container'] = 'Mostrar como contenedor público';
+        $labels['mega_menu'] = 'Mega menú';
+        $labels['mega_menu_columns'] = 'Columnas del mega menú';
+        $labels['description'] = 'Descripción';
+        $labels['permission'] = 'Permiso requerido';
+        $labels['icon'] = 'Icono';
+        $labels['nivel'] = 'Nivel';
+        $labels['active'] = 'Activo';
+        
+        return $labels;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function beforeSave($insert)
+    {
+        if (!parent::beforeSave($insert)) {
+            return false;
+        }
+
+        // Eliminar la barra inicial de la ruta si existe
+        if (!empty($this->route) && $this->route[0] === '/') {
+            $this->route = ltrim($this->route, '/');
+        }
+
+        return true;
     }
 }

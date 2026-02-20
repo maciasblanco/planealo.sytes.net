@@ -24,7 +24,7 @@ class ReportesController extends Controller
                 'rules' => [
                     [
                         'allow' => true,
-                        'roles' => ['representante', 'atleta', 'admin'],
+                        'roles' => ['representante', 'atleta', 'admin','superusuario'],
                     ],
                 ],
             ],

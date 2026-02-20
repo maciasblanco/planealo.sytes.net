@@ -5,7 +5,7 @@ namespace app\modules\reportes;
 /**
  * reportes module definition class
  */
-class Reportes extends \yii\base\Module
+class reportes extends \yii\base\Module
 {
     /**
      * {@inheritdoc}

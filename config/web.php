@@ -196,6 +196,7 @@ return [
             'controllerMap' => [
                 'route' => 'app\\controllers\\RouteController',
             ],
+            // NOTA: No se usa 'modelMap' porque la versión instalada no lo soporta
         ],
         'acces' => [
             'class' => 'app\\modules\\acces\\acces',
@@ -255,6 +256,15 @@ return [
         ],
     ],
     // Se eliminó 'on beforeRequest' porque estaba vacío y causaba error
+
+    // ===== MODIFICACIÓN: Contenedor para sobrescribir la clase Menu =====
+    'container' => [
+        'definitions' => [
+            'mdm\admin\models\Menu' => 'app\models\Menu',
+        ],
+    ],
+    // ===== FIN MODIFICACIÓN =====
+
     'params' => [
         'mdm.admin.configs' => [
             'menuTable' => 'seguridad.menu',
