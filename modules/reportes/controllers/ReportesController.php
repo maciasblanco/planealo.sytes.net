@@ -33,17 +33,17 @@ class ReportesController extends Controller
 
     /**
      * Listado de atletas para el representante (vista: reportes-representantes.php)
+     * Ahora el nombre de la acción coincide con el de la vista.
      */
-    public function actionAtletas()
+    public function actionReportesRepresentantes()
     {
         $searchModel = new ReporteAtletasSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         $user_id = Yii::$app->user->id;
-        $user = Yii::$app->user->identity;
         
-        $esRepresentante = in_array('representante', $user->roles ?? []);
-        $esAtleta = in_array('atleta', $user->roles ?? []);
+        $esRepresentante = Yii::$app->user->can('representante');
+        $esAtleta = Yii::$app->user->can('atleta');
         
         $atletas = [];
         $representante = null;
@@ -71,10 +71,19 @@ class ReportesController extends Controller
             }
         }
 
+        // Filtrar el dataProvider para que solo incluya los atletas permitidos
+        $atletasIds = array_map(function($atleta) {
+            return $atleta->id;
+        }, $atletas);
+        $dataProvider->query->andWhere(['id' => $atletasIds]);
+
         $datosAtletas = [];
         foreach ($atletas as $atleta) {
             $datosAtletas[] = $this->obtenerDatosConsolidados($atleta);
         }
+
+        // Obtener tasa de cambio actual
+        $tasaCambio = $this->obtenerTasaCambioActual();
 
         if (Yii::$app->request->isAjax) {
             return $this->renderAjax('_grid_atletas', [
@@ -84,7 +93,6 @@ class ReportesController extends Controller
             ]);
         }
 
-        // Vista para representantes (listado de atletas)
         return $this->render('reportes-representantes', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
@@ -92,6 +100,7 @@ class ReportesController extends Controller
             'datosAtletas' => $datosAtletas,
             'esRepresentante' => $esRepresentante,
             'esAtleta' => $esAtleta,
+            'tasaCambio' => $tasaCambio,
         ]);
     }
 
@@ -141,7 +150,6 @@ class ReportesController extends Controller
         $deudasPendientes = $this->obtenerDetalleDeuda($atleta->id);
         $tasaCambio = $this->obtenerTasaCambioActual();
 
-        // Vista para el detalle del atleta
         return $this->render('reporte-atletas', [
             'atleta' => $atleta,
             'estadisticas' => $estadisticas,
@@ -231,7 +239,7 @@ class ReportesController extends Controller
     }
 
     // =========================================================================
-    // Métodos privados (se mantienen igual que en la versión anterior)
+    // Métodos privados (se mantienen igual)
     // =========================================================================
 
     private function obtenerDatosConsolidados($atleta)

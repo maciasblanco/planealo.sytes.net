@@ -1,16 +1,13 @@
 <?php
 
 use yii\helpers\Html;
-use yii\helpers\Url;
 
 $this->title = 'Estadísticas del Atleta';
 $this->params['breadcrumbs'][] = $this->title;
 
-// Calcular total de deuda a partir de $deudasPendientes
 $deudaTotal = array_sum(array_column($deudasPendientes, 'monto'));
 $deudaDolares = $deudaTotal / $tasaCambio;
 
-// Obtener mes actual
 $mesActual = date('Y-m');
 $estadisticasMes = $estadisticas['mensual'][$mesActual] ?? null;
 $asistenciasMes = $estadisticasMes ? $estadisticasMes['asistencias'] : ['total' => 0, 'asistidas' => 0, 'porcentaje' => 0];
@@ -21,7 +18,6 @@ $totales = $estadisticas['totales'];
 
 <div class="reporte-atletas">
     <div class="container-fluid">
-        <!-- Cabecera -->
         <div class="row mb-4">
             <div class="col-md-12">
                 <div class="card border-primary">
@@ -35,9 +31,7 @@ $totales = $estadisticas['totales'];
             </div>
         </div>
 
-        <!-- Fila 1: Datos del atleta y representante -->
         <div class="row mb-4">
-            <!-- Datos del atleta -->
             <div class="col-md-6">
                 <div class="card border-info h-100">
                     <div class="card-header bg-info text-white">
@@ -56,7 +50,6 @@ $totales = $estadisticas['totales'];
                     </div>
                 </div>
             </div>
-            <!-- Datos del representante -->
             <div class="col-md-6">
                 <div class="card border-warning h-100">
                     <div class="card-header bg-warning text-white">
@@ -80,7 +73,6 @@ $totales = $estadisticas['totales'];
             </div>
         </div>
 
-        <!-- Fila 2: Estado de pagos -->
         <div class="row mb-4">
             <div class="col-md-12">
                 <div class="card <?= $deudaTotal > 0 ? 'border-danger' : 'border-success' ?>">
@@ -157,7 +149,6 @@ $totales = $estadisticas['totales'];
             </div>
         </div>
 
-        <!-- Fila 3: Asistencias del mes y totales -->
         <div class="row mb-4">
             <div class="col-md-6">
                 <div class="card border-info">
@@ -203,7 +194,6 @@ $totales = $estadisticas['totales'];
             </div>
         </div>
 
-        <!-- Fila 4: Historial mensual (últimos 6 meses) -->
         <div class="row">
             <div class="col-md-12">
                 <div class="card border-secondary">

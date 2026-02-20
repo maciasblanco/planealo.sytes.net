@@ -1,13 +1,11 @@
 <?php
 
 use yii\helpers\Html;
-use yii\helpers\Url;
 use yii\grid\GridView;
 
 $this->title = 'Mis Atletas';
 $this->params['breadcrumbs'][] = $this->title;
 
-// Calcular deuda total consolidada
 $deudaTotalConsolidada = array_sum(array_column($datosAtletas, 'deudaPendiente'));
 ?>
 
@@ -26,7 +24,6 @@ $deudaTotalConsolidada = array_sum(array_column($datosAtletas, 'deudaPendiente')
             </div>
         </div>
 
-        <!-- Tarjeta de resumen -->
         <div class="row mb-4">
             <div class="col-md-4">
                 <div class="card border-info">
@@ -47,15 +44,17 @@ $deudaTotalConsolidada = array_sum(array_column($datosAtletas, 'deudaPendiente')
             <div class="col-md-4">
                 <div class="card border-success">
                     <div class="card-body text-center">
-                        <h2 class="text-success"><?= Yii::$app->formatter->asCurrency($deudaTotalConsolidada / 36.5) ?> USD*</h2>
+                        <?php 
+                        $deudaUsd = $deudaTotalConsolidada / $tasaCambio;
+                        ?>
+                        <h2 class="text-success"><?= Yii::$app->formatter->asCurrency($deudaUsd) ?> USD*</h2>
                         <h6 class="text-muted">Aprox. en dólares</h6>
-                        <small>*Tasa referencial</small>
+                        <small>*Tasa: 1 USD = <?= Yii::$app->formatter->asDecimal($tasaCambio, 2) ?> Bs</small>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Tabla de atletas -->
         <div class="row">
             <div class="col-md-12">
                 <div class="card">
@@ -69,9 +68,7 @@ $deudaTotalConsolidada = array_sum(array_column($datosAtletas, 'deudaPendiente')
                             'columns' => [
                                 [
                                     'label' => 'Nombre',
-                                    'value' => function($model) {
-                                        return $model->nombreCompleto;
-                                    },
+                                    'value' => 'nombreCompleto',
                                 ],
                                 'identificacion',
                                 [
