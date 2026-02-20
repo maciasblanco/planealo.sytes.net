@@ -1,7 +1,12 @@
 {
     "name": "yiisoft/yii2-app-basic",
     "description": "Yii 2 Basic Project Template",
-    "keywords": ["yii2", "framework", "basic", "project template"],
+    "keywords": [
+        "yii2",
+        "framework",
+        "basic",
+        "project template"
+    ],
     "homepage": "https://www.yiiframework.com/",
     "type": "project",
     "license": "BSD-3-Clause",
@@ -22,7 +27,7 @@
         "mdmsoft/yii2-admin": "~2.0",
         "mobiledetect/mobiledetectlib": "^4.8",
         "fortawesome/font-awesome": "^6.4.0",
-        "yii2tech/ar-softdelete": "^1.0"
+        "yii2tech/ar-softdelete": "*"
     },
     "require-dev": {
         "yiisoft/yii2-debug": "~2.1.0",
@@ -39,7 +44,7 @@
     },
     "config": {
         "allow-plugins": {
-            "yiisoft/yii2-composer" : true
+            "yiisoft/yii2-composer": true
         },
         "process-timeout": 1800,
         "fxp-asset": {
@@ -71,10 +76,14 @@
             ]
         }
     },
-    "repositories": [
-        {
+    "repositories": {
+        "packagist": {
+            "type": "composer",
+            "url": "https://repo.packagist.org"
+        },
+        "0": {
             "type": "composer",
             "url": "https://asset-packagist.org"
         }
-    ]
+    }
 }
