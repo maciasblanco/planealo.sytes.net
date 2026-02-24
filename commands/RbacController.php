@@ -81,6 +81,20 @@ class RbacController extends Controller
         $viewRepresentedDeudas->ruleName = $representedAporteRule->name;
         $auth->add($viewRepresentedDeudas);
 
+        // Permisos para cambio de contraseña y verificación de email
+        $changeOwnPassword = $auth->createPermission('changeOwnPassword');
+        $changeOwnPassword->description = 'Cambiar su propia contraseña';
+        $auth->add($changeOwnPassword);
+
+        $verifyOwnEmail = $auth->createPermission('verifyOwnEmail');
+        $verifyOwnEmail->description = 'Verificar su propio correo electrónico';
+        $auth->add($verifyOwnEmail);
+
+        // NUEVO PERMISO PARA ACCESO AL MÓDULO GED
+        $accessGedModule = $auth->createPermission('accessGedModule');
+        $accessGedModule->description = 'Acceder al módulo principal GED';
+        $auth->add($accessGedModule);
+
         // ========== CREAR ROLES ==========
         $this->stdout("Creando roles...\n", Console::FG_GREEN);
 
@@ -90,6 +104,9 @@ class RbacController extends Controller
         $auth->addChild($atleta, $viewOwnAsistencias);
         $auth->addChild($atleta, $viewOwnInfo);
         $auth->addChild($atleta, $viewOwnDeudas);
+        $auth->addChild($atleta, $changeOwnPassword);
+        $auth->addChild($atleta, $verifyOwnEmail);
+        $auth->addChild($atleta, $accessGedModule);  // Asignar acceso al módulo GED
 
         $representante = $auth->createRole('representante');
         $auth->add($representante);
@@ -97,6 +114,9 @@ class RbacController extends Controller
         $auth->addChild($representante, $viewRepresentedAsistencias);
         $auth->addChild($representante, $viewRepresentedInfo);
         $auth->addChild($representante, $viewRepresentedDeudas);
+        $auth->addChild($representante, $changeOwnPassword);
+        $auth->addChild($representante, $verifyOwnEmail);
+        $auth->addChild($representante, $accessGedModule);  // Asignar acceso al módulo GED
 
         $admin = $auth->createRole('admin');
         $auth->add($admin);
@@ -106,7 +126,6 @@ class RbacController extends Controller
         // ========== ASIGNAR ROLES DE EJEMPLO ==========
         $this->stdout("Asignando roles de ejemplo...\n", Console::FG_GREEN);
         
-        // Asignar admin al usuario ID 1 (ajusta según necesites)
         try {
             $auth->assign($admin, 1);
             $this->stdout("Rol 'admin' asignado al usuario ID 1\n", Console::FG_BLUE);
@@ -117,7 +136,7 @@ class RbacController extends Controller
         $this->stdout("✅ RBAC inicializado correctamente.\n", Console::FG_GREEN);
         $this->stdout("Reglas creadas: isOwnAporte, isRepresentedAporte\n", Console::FG_CYAN);
         $this->stdout("Roles creados: atleta, representante, admin\n", Console::FG_CYAN);
-        $this->stdout("Permisos creados: viewOwnInfo, viewOwnDeudas, viewRepresentedInfo, viewRepresentedDeudas\n", Console::FG_CYAN);
+        $this->stdout("Permisos creados: viewOwnInfo, viewOwnDeudas, viewRepresentedInfo, viewRepresentedDeudas, changeOwnPassword, verifyOwnEmail, accessGedModule\n", Console::FG_CYAN);
     }
 
     /**

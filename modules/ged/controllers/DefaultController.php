@@ -12,6 +12,7 @@ class DefaultController extends Controller
 {
     /**
      * ✅ COMPORTAMIENTOS DEL CONTROLADOR - BLINDAJE GED
+     * Se requiere el permiso 'accessGedModule' para acceder a cualquier acción del módulo.
      */
     public function behaviors()
     {
@@ -21,7 +22,7 @@ class DefaultController extends Controller
                 'rules' => [
                     [
                         'allow' => true,
-                        //'roles' => ['@'], // Solo usuarios autenticados
+                        'roles' => ['accessGedModule'], // Permiso asignado a atleta y representante
                     ],
                 ],
             ],

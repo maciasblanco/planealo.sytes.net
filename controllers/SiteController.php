@@ -37,9 +37,9 @@ class SiteController extends Controller
                     ],
                     [
                         'actions' => [
-                            'verify-email-first', 
-                            'validate-code', 
-                            'change-password-first', 
+                            'verify-email-first',
+                            'validate-code',
+                            'change-password-first',
                             'resend-code',
                             'acceder-sistema'
                         ],
@@ -84,21 +84,20 @@ class SiteController extends Controller
      */
     public function actionIndex()
     {
-            // DEBUG: Forzar escritura de log
-    Yii::info('=== ACCESO A PÁGINA PRINCIPAL ===', 'app');
-    Yii::info('Usuario: ' . (Yii::$app->user->isGuest ? 'Invitado' : 'Logueado'), 'app');
-    
-    // Verificar si MenuWidget está cargado
-    Yii::info('Cargando MenuWidget...', 'app');
-    
-    // DEBUG: Forzar escritura de log
-    Yii::info('=== ACCESO A PÁGINA PRINCIPAL ===', 'app');
-    Yii::info('Usuario: ' . (Yii::$app->user->isGuest ? 'Invitado' : 'Logueado'), 'app');
-    
-    // Verificar si MenuWidget está cargado
-    Yii::info('Cargando MenuWidget...', 'app');
-    
-    
+        // DEBUG: Forzar escritura de log
+        Yii::info('=== ACCESO A PÁGINA PRINCIPAL ===', 'app');
+        Yii::info('Usuario: ' . (Yii::$app->user->isGuest ? 'Invitado' : 'Logueado'), 'app');
+        
+        // Verificar si MenuWidget está cargado
+        Yii::info('Cargando MenuWidget...', 'app');
+        
+        // DEBUG: Forzar escritura de log
+        Yii::info('=== ACCESO A PÁGINA PRINCIPAL ===', 'app');
+        Yii::info('Usuario: ' . (Yii::$app->user->isGuest ? 'Invitado' : 'Logueado'), 'app');
+        
+        // Verificar si MenuWidget está cargado
+        Yii::info('Cargando MenuWidget...', 'app');
+        
         // ✅ PREVENCIÓN DE BUCLE: Verificar si ya estamos autenticados en página de login
         // ✅ SI YA ESTÁ AUTENTICADO Y ACCEDE AL INDEX, NO HACER NADA ESPECIAL
         // ✅ PERMITIR QUE USUARIOS AUTENTICADOS VEAN EL LANDING
@@ -277,10 +276,13 @@ class SiteController extends Controller
      */
     public function actionVerifyEmailFirst()
     {
+        // MOD: Verificación adicional de autenticación para depuración
         if (Yii::$app->user->isGuest) {
+            Yii::error('Intento de acceso a verify-email-first sin autenticación', 'app');
+            Yii::$app->session->setFlash('error', 'Debe iniciar sesión para continuar.');
             return $this->redirect(['login']);
         }
-        
+
         $user = Yii::$app->user->identity;
         
         // Verificar que sea primer acceso
@@ -715,7 +717,7 @@ class SiteController extends Controller
      * ✅ MÉTODO ADICIONAL: Verificar si hay bucle de redirección
      * Se puede llamar desde JavaScript para debug
      */
-     public function actionCheckRedirectLoop()
+    public function actionCheckRedirectLoop()
     {
         // Solo permitir en desarrollo
         if (!YII_DEBUG && !YII_ENV_DEV) {
@@ -1328,7 +1330,7 @@ class SiteController extends Controller
         $script .= '    if (navbar) {' . "\n";
         $script .= '        var navbarZIndex = parseInt(window.getComputedStyle(navbar).zIndex);' . "\n";
         $script .= '        if (navbarZIndex >= 9999) {' . "\n";
-            $script .= '            problemas.push("⚠️  Navbar tiene z-index alto (" + navbarZIndex + ") que podría tapar submenús");' . "\n";
+        $script .= '            problemas.push("⚠️  Navbar tiene z-index alto (" + navbarZIndex + ") que podría tapar submenús");' . "\n";
         $script .= '        }' . "\n";
         $script .= '    }' . "\n";
         $script .= '    ' . "\n";
@@ -1762,7 +1764,6 @@ class SiteController extends Controller
         $script .= '                }' . "\n";
         $script .= '            };' . "\n";
         $script .= '            ' . "\n";
-        $script .= '            // Nuevo evento mouseleave' . "\n";
         $script .= '            var leaveHandler = function() {' . "\n";
         $script .= '                setTimeout(function() {' . "\n";
         $script .= '                    if (!submenu.matches(":hover") && !menu.matches(":hover")) {' . "\n";
