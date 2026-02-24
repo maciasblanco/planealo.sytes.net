@@ -27,7 +27,7 @@
         "mdmsoft/yii2-admin": "~2.0",
         "mobiledetect/mobiledetectlib": "^4.8",
         "fortawesome/font-awesome": "^6.4.0",
-        "yii2tech/ar-softdelete": "*"
+        "yii2tech/ar-softdelete": "^1.0"
     },
     "require-dev": {
         "yiisoft/yii2-debug": "~2.1.0",
