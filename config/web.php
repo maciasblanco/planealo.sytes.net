@@ -8,8 +8,7 @@ return [
     'basePath' => 'C:\\xampp\\htdocs\\planealo.sytes.net',
     'bootstrap' => [
         'log',
-        'debug',
-        'gii',
+        // debug y gii se cargan condicionalmente en el bloque YII_ENV_DEV
     ],
     'layout' => 'main',
     'aliases' => [
@@ -49,11 +48,21 @@ return [
         'errorHandler' => [
             'errorAction' => 'site/error',
         ],
+        // ========== SECCIÓN CORREGIDA ==========
         'mailer' => [
-            'class' => 'yii\\symfonymailer\\Mailer',
-            'viewPath' => '@app/mail',
-            'useFileTransport' => true,
+            'class' => 'yii\symfonymailer\Mailer',
+            'viewPath' => '@app/mail',               // Directorio donde se encuentran las vistas de correo
+            'useFileTransport' => false,              // false = envío real
+            'transport' => [
+                'scheme' => 'smtp',                    // Usar 'smtp' para STARTTLS en puerto 587
+                'host' => 'smtp.gmail.com',
+                'username' => 'maciasjblancov@gmail.com',
+                'password' => 'efum glzt mtui oaki',   // Contraseña de aplicación (sin espacios)
+                'port' => 465,
+                'encryption' => 'ssl',                  // Importante: 'tls' para puerto 587
+            ],
         ],
+        // =======================================
         'authManager' => [
             'class' => 'yii\\rbac\\DbManager',
             'itemTable' => 'seguridad.auth_item',
@@ -85,7 +94,6 @@ return [
             'enableQueryCache' => true,
             'queryCacheDuration' => 300,
             'queryCache' => 'cache',
-            // Se eliminó 'on afterOpen' porque estaba vacío y causaba error
             'enableLogging' => true,
             'enableProfiling' => true,
             'commandClass' => 'yii\\db\\Command',
@@ -196,7 +204,6 @@ return [
             'controllerMap' => [
                 'route' => 'app\\controllers\\RouteController',
             ],
-            // NOTA: No se usa 'modelMap' porque la versión instalada no lo soporta
         ],
         'acces' => [
             'class' => 'app\\modules\\acces\\acces',
@@ -226,44 +233,13 @@ return [
             'class' => 'app\\modules\\reportes\\reportes',
             'controllerNamespace' => 'app\\modules\\reportes\\controllers',
         ],
-        'debug' => [
-            'class' => 'yii\\debug\\Module',
-            'allowedIPs' => [
-                '201.209.14.141',
-                '127.0.0.1',
-                '::1',
-                '192.168.1.120',
-                'localhost',
-                'planealo.sytes.net',
-                '*.sytes.net',
-                '192.168.1.*',
-                '10.0.*.*',
-            ],
-        ],
-        'gii' => [
-            'class' => 'yii\\gii\\Module',
-            'allowedIPs' => [
-                '201.209.14.141',
-                '127.0.0.1',
-                '::1',
-                '192.168.1.120',
-                'localhost',
-                'planealo.sytes.net',
-                '*.sytes.net',
-                '192.168.1.*',
-                '10.0.*.*',
-            ],
-        ],
     ],
-    // Se eliminó 'on beforeRequest' porque estaba vacío y causaba error
 
-    // ===== MODIFICACIÓN: Contenedor para sobrescribir la clase Menu =====
     'container' => [
         'definitions' => [
             'mdm\admin\models\Menu' => 'app\models\Menu',
         ],
     ],
-    // ===== FIN MODIFICACIÓN =====
 
     'params' => [
         'mdm.admin.configs' => [
@@ -298,6 +274,11 @@ return [
             'site/error',
             'site/about',
             'site/contact',
+            'site/captcha',
+            'site/verify-email-first',
+            'site/validate-code',
+            'site/change-password-first',
+            'site/resend-code',
             'tienda/marketplace/index',
             'tienda/marketplace/buscar',
             'tienda/marketplace/categoria',
@@ -319,3 +300,18 @@ return [
         ],
     ],
 ];
+
+if (YII_ENV_DEV) {
+    $config['bootstrap'][] = 'debug';
+    $config['bootstrap'][] = 'gii';
+
+    $config['modules']['debug'] = [
+        'class' => 'yii\debug\Module',
+        'allowedIPs' => ['*'],
+    ];
+
+    $config['modules']['gii'] = [
+        'class' => 'yii\gii\Module',
+        'allowedIPs' => ['*'],
+    ];
+}

@@ -13,7 +13,7 @@ return [
      */
     'adminEmail' => 'admin@example.com',
     'senderEmail' => 'noreply@example.com',
-    'senderName' => 'Example.com mailer',
+    'senderName' => 'Gestión de Escuelas Deportivas',
     'brand' =>[
         'brandLogo' => 'Club Voleivol Aves Voladoras',
         'acronimoBrandLogo' => 'C.V Aves Voladoras',
