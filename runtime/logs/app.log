@@ -61377,3 +61377,2578 @@ $_SERVER = [
     'REQUEST_TIME_FLOAT' => 1772454175.2951
     'REQUEST_TIME' => 1772454175
 ]
+2026-03-02 12:08:57 [::1][1][uhtlqp6m93te7gqig62teinalp][error][yii\web\HttpException:403] yii\web\ForbiddenHttpException: No tiene permitido ejecutar esta acción. in C:\xampp\htdocs\planealo.sytes.net\vendor\yiisoft\yii2\filters\AccessControl.php:165
+Stack trace:
+#0 C:\xampp\htdocs\planealo.sytes.net\vendor\yiisoft\yii2\filters\AccessControl.php(144): yii\filters\AccessControl->denyAccess(Object(yii\web\User))
+#1 C:\xampp\htdocs\planealo.sytes.net\vendor\yiisoft\yii2\base\ActionFilter.php(83): yii\filters\AccessControl->beforeAction(Object(yii\base\InlineAction))
+#2 [internal function]: yii\base\ActionFilter->beforeFilter(Object(yii\base\ActionEvent))
+#3 C:\xampp\htdocs\planealo.sytes.net\vendor\yiisoft\yii2\base\Component.php(653): call_user_func(Array, Object(yii\base\ActionEvent))
+#4 C:\xampp\htdocs\planealo.sytes.net\vendor\yiisoft\yii2\base\Controller.php(334): yii\base\Component->trigger('beforeAction', Object(yii\base\ActionEvent))
+#5 C:\xampp\htdocs\planealo.sytes.net\vendor\yiisoft\yii2\web\Controller.php(344): yii\base\Controller->beforeAction(Object(yii\base\InlineAction))
+#6 C:\xampp\htdocs\planealo.sytes.net\vendor\yiisoft\yii2\base\Controller.php(195): yii\web\Controller->beforeAction(Object(yii\base\InlineAction))
+#7 C:\xampp\htdocs\planealo.sytes.net\vendor\yiisoft\yii2\base\Module.php(554): yii\base\Controller->runAction('index', Array)
+#8 C:\xampp\htdocs\planealo.sytes.net\vendor\yiisoft\yii2\web\Application.php(112): yii\base\Module->runAction('ged/default/ind...', Array)
+#9 C:\xampp\htdocs\planealo.sytes.net\vendor\yiisoft\yii2\base\Application.php(391): yii\web\Application->handleRequest(Object(yii\web\Request))
+#10 C:\xampp\htdocs\planealo.sytes.net\web\index.php(12): yii\base\Application->run()
+#11 {main}
+2026-03-02 12:08:57 [::1][1][uhtlqp6m93te7gqig62teinalp][info][application] $_GET = []
+
+$_POST = []
+
+$_FILES = []
+
+$_COOKIE = [
+    '_ga' => 'GA1.1.1679908835.1749223008'
+    'PHPSESSID' => 'uhtlqp6m93te7gqig62teinalp'
+    '_csrf' => '052b7c918e29a57673e9a43dd7b0060950f2b65b0138ca3e52d5b7da9ca869f0a:2:{i:0;s:5:\"_csrf\";i:1;s:32:\"6sBatZ-07-JGxFS3hxh8qNGtiN8aQDz0\";}'
+]
+
+$_SESSION = [
+    '__flash' => []
+    '__id' => 1
+    '__authKey' => 'FCxNRGJia25jro30ecX5r8yVk7nCuaOY'
+]
+
+$_SERVER = [
+    'REDIRECT_MIBDIRS' => 'C:/xampp/php/extras/mibs'
+    'REDIRECT_MYSQL_HOME' => '\\xampp\\mysql\\bin'
+    'REDIRECT_OPENSSL_CONF' => 'C:/xampp/apache/bin/openssl.cnf'
+    'REDIRECT_PHP_PEAR_SYSCONF_DIR' => '\\xampp\\php'
+    'REDIRECT_PHPRC' => '\\xampp\\php'
+    'REDIRECT_TMP' => '\\xampp\\tmp'
+    'REDIRECT_STATUS' => '200'
+    'MIBDIRS' => 'C:/xampp/php/extras/mibs'
+    'MYSQL_HOME' => '\\xampp\\mysql\\bin'
+    'OPENSSL_CONF' => 'C:/xampp/apache/bin/openssl.cnf'
+    'PHP_PEAR_SYSCONF_DIR' => '\\xampp\\php'
+    'PHPRC' => '\\xampp\\php'
+    'TMP' => '\\xampp\\tmp'
+    'HTTP_HOST' => 'localhost'
+    'HTTP_CONNECTION' => 'keep-alive'
+    'HTTP_SEC_CH_UA' => '\"Opera GX\";v=\"127\", \"Chromium\";v=\"143\", \"Not A(Brand\";v=\"24\"'
+    'HTTP_SEC_CH_UA_MOBILE' => '?0'
+    'HTTP_SEC_CH_UA_PLATFORM' => '\"Windows\"'
+    'HTTP_UPGRADE_INSECURE_REQUESTS' => '1'
+    'HTTP_USER_AGENT' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36 OPR/127.0.0.0'
+    'HTTP_ACCEPT' => 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7'
+    'HTTP_SEC_FETCH_SITE' => 'same-origin'
+    'HTTP_SEC_FETCH_MODE' => 'navigate'
+    'HTTP_SEC_FETCH_USER' => '?1'
+    'HTTP_SEC_FETCH_DEST' => 'document'
+    'HTTP_REFERER' => 'http://localhost/planealo.sytes.net/web/'
+    'HTTP_ACCEPT_ENCODING' => 'gzip, deflate, br, zstd'
+    'HTTP_ACCEPT_LANGUAGE' => 'en,id;q=0.9,tr;q=0.8,ru;q=0.7'
+    'HTTP_COOKIE' => '_ga=GA1.1.1679908835.1749223008; PHPSESSID=uhtlqp6m93te7gqig62teinalp; _csrf=052b7c918e29a57673e9a43dd7b0060950f2b65b0138ca3e52d5b7da9ca869f0a%3A2%3A%7Bi%3A0%3Bs%3A5%3A%22_csrf%22%3Bi%3A1%3Bs%3A32%3A%226sBatZ-07-JGxFS3hxh8qNGtiN8aQDz0%22%3B%7D'
+    'PATH' => 'C:\\WINDOWS\\system32;C:\\WINDOWS;C:\\WINDOWS\\System32\\Wbem;C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\;C:\\WINDOWS\\System32\\OpenSSH\\;C:\\xampp\\php;C:\\ProgramData\\ComposerSetup\\bin;C:\\Program Files\\PuTTY\\;C:\\Program Files\\Git\\cmd;C:\\Program Files\\nodejs\\;C:\\Program Files (x86)\\Microsoft SQL Server\\160\\Tools\\Binn\\;C:\\Program Files\\Microsoft SQL Server\\160\\Tools\\Binn\\;C:\\Program Files\\Microsoft SQL Server\\Client SDK\\ODBC\\170\\Tools\\Binn\\;C:\\Program Files\\Microsoft SQL Server\\160\\DTS\\Binn\\;C:\\Program Files (x86)\\Microsoft SQL Server\\160\\DTS\\Binn\\;C:\\Users\\Otic-Sistemas\\AppData\\Local\\Microsoft\\WindowsApps;;C:\\Users\\Otic-Sistemas\\AppData\\Local\\Programs\\Microsoft VS Code\\bin;C:\\Users\\Otic-Sistemas\\AppData\\Roaming\\Composer\\vendor\\bin;C:\\Users\\Otic-Sistemas\\AppData\\Roaming\\npm'
+    'SystemRoot' => 'C:\\WINDOWS'
+    'COMSPEC' => 'C:\\WINDOWS\\system32\\cmd.exe'
+    'PATHEXT' => '.COM;.EXE;.BAT;.CMD;.VBS;.VBE;.JS;.JSE;.WSF;.WSH;.MSC'
+    'WINDIR' => 'C:\\WINDOWS'
+    'SERVER_SIGNATURE' => '<address>Apache/2.4.54 (Win64) OpenSSL/1.1.1p PHP/8.2.0 Server at localhost Port 80</address>
+'
+    'SERVER_SOFTWARE' => 'Apache/2.4.54 (Win64) OpenSSL/1.1.1p PHP/8.2.0'
+    'SERVER_NAME' => 'localhost'
+    'SERVER_ADDR' => '::1'
+    'SERVER_PORT' => '80'
+    'REMOTE_ADDR' => '::1'
+    'DOCUMENT_ROOT' => 'C:/xampp/htdocs'
+    'REQUEST_SCHEME' => 'http'
+    'CONTEXT_PREFIX' => ''
+    'CONTEXT_DOCUMENT_ROOT' => 'C:/xampp/htdocs'
+    'SERVER_ADMIN' => 'postmaster@localhost'
+    'SCRIPT_FILENAME' => 'C:/xampp/htdocs/planealo.sytes.net/web/index.php'
+    'REMOTE_PORT' => '53110'
+    'REDIRECT_URL' => '/planealo.sytes.net/web/ged/default/index'
+    'GATEWAY_INTERFACE' => 'CGI/1.1'
+    'SERVER_PROTOCOL' => 'HTTP/1.1'
+    'REQUEST_METHOD' => 'GET'
+    'QUERY_STRING' => ''
+    'REQUEST_URI' => '/planealo.sytes.net/web/ged/default/index'
+    'SCRIPT_NAME' => '/planealo.sytes.net/web/index.php'
+    'PHP_SELF' => '/planealo.sytes.net/web/index.php'
+    'REQUEST_TIME_FLOAT' => 1772467737.3901
+    'REQUEST_TIME' => 1772467737
+]
+2026-03-02 12:09:11 [::1][1][uhtlqp6m93te7gqig62teinalp][error][yii\web\HttpException:403] yii\web\ForbiddenHttpException: No tiene permitido ejecutar esta acción. in C:\xampp\htdocs\planealo.sytes.net\vendor\yiisoft\yii2\filters\AccessControl.php:165
+Stack trace:
+#0 C:\xampp\htdocs\planealo.sytes.net\vendor\yiisoft\yii2\filters\AccessControl.php(144): yii\filters\AccessControl->denyAccess(Object(yii\web\User))
+#1 C:\xampp\htdocs\planealo.sytes.net\vendor\yiisoft\yii2\base\ActionFilter.php(83): yii\filters\AccessControl->beforeAction(Object(yii\base\InlineAction))
+#2 [internal function]: yii\base\ActionFilter->beforeFilter(Object(yii\base\ActionEvent))
+#3 C:\xampp\htdocs\planealo.sytes.net\vendor\yiisoft\yii2\base\Component.php(653): call_user_func(Array, Object(yii\base\ActionEvent))
+#4 C:\xampp\htdocs\planealo.sytes.net\vendor\yiisoft\yii2\base\Controller.php(334): yii\base\Component->trigger('beforeAction', Object(yii\base\ActionEvent))
+#5 C:\xampp\htdocs\planealo.sytes.net\vendor\yiisoft\yii2\web\Controller.php(344): yii\base\Controller->beforeAction(Object(yii\base\InlineAction))
+#6 C:\xampp\htdocs\planealo.sytes.net\vendor\yiisoft\yii2\base\Controller.php(195): yii\web\Controller->beforeAction(Object(yii\base\InlineAction))
+#7 C:\xampp\htdocs\planealo.sytes.net\vendor\yiisoft\yii2\base\Module.php(554): yii\base\Controller->runAction('index', Array)
+#8 C:\xampp\htdocs\planealo.sytes.net\vendor\yiisoft\yii2\web\Application.php(112): yii\base\Module->runAction('ged/default/ind...', Array)
+#9 C:\xampp\htdocs\planealo.sytes.net\vendor\yiisoft\yii2\base\Application.php(391): yii\web\Application->handleRequest(Object(yii\web\Request))
+#10 C:\xampp\htdocs\planealo.sytes.net\web\index.php(12): yii\base\Application->run()
+#11 {main}
+2026-03-02 12:09:10 [::1][1][uhtlqp6m93te7gqig62teinalp][info][application] $_GET = []
+
+$_POST = []
+
+$_FILES = []
+
+$_COOKIE = [
+    '_ga' => 'GA1.1.1679908835.1749223008'
+    'PHPSESSID' => 'uhtlqp6m93te7gqig62teinalp'
+    '_csrf' => '052b7c918e29a57673e9a43dd7b0060950f2b65b0138ca3e52d5b7da9ca869f0a:2:{i:0;s:5:\"_csrf\";i:1;s:32:\"6sBatZ-07-JGxFS3hxh8qNGtiN8aQDz0\";}'
+]
+
+$_SESSION = [
+    '__flash' => []
+    '__id' => 1
+    '__authKey' => 'FCxNRGJia25jro30ecX5r8yVk7nCuaOY'
+]
+
+$_SERVER = [
+    'REDIRECT_MIBDIRS' => 'C:/xampp/php/extras/mibs'
+    'REDIRECT_MYSQL_HOME' => '\\xampp\\mysql\\bin'
+    'REDIRECT_OPENSSL_CONF' => 'C:/xampp/apache/bin/openssl.cnf'
+    'REDIRECT_PHP_PEAR_SYSCONF_DIR' => '\\xampp\\php'
+    'REDIRECT_PHPRC' => '\\xampp\\php'
+    'REDIRECT_TMP' => '\\xampp\\tmp'
+    'REDIRECT_STATUS' => '200'
+    'MIBDIRS' => 'C:/xampp/php/extras/mibs'
+    'MYSQL_HOME' => '\\xampp\\mysql\\bin'
+    'OPENSSL_CONF' => 'C:/xampp/apache/bin/openssl.cnf'
+    'PHP_PEAR_SYSCONF_DIR' => '\\xampp\\php'
+    'PHPRC' => '\\xampp\\php'
+    'TMP' => '\\xampp\\tmp'
+    'HTTP_HOST' => 'localhost'
+    'HTTP_CONNECTION' => 'keep-alive'
+    'HTTP_SEC_CH_UA' => '\"Opera GX\";v=\"127\", \"Chromium\";v=\"143\", \"Not A(Brand\";v=\"24\"'
+    'HTTP_SEC_CH_UA_MOBILE' => '?0'
+    'HTTP_SEC_CH_UA_PLATFORM' => '\"Windows\"'
+    'HTTP_UPGRADE_INSECURE_REQUESTS' => '1'
+    'HTTP_USER_AGENT' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36 OPR/127.0.0.0'
+    'HTTP_ACCEPT' => 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7'
+    'HTTP_SEC_FETCH_SITE' => 'none'
+    'HTTP_SEC_FETCH_MODE' => 'navigate'
+    'HTTP_SEC_FETCH_USER' => '?1'
+    'HTTP_SEC_FETCH_DEST' => 'document'
+    'HTTP_ACCEPT_ENCODING' => 'gzip, deflate, br, zstd'
+    'HTTP_ACCEPT_LANGUAGE' => 'en,id;q=0.9,tr;q=0.8,ru;q=0.7'
+    'HTTP_COOKIE' => '_ga=GA1.1.1679908835.1749223008; PHPSESSID=uhtlqp6m93te7gqig62teinalp; _csrf=052b7c918e29a57673e9a43dd7b0060950f2b65b0138ca3e52d5b7da9ca869f0a%3A2%3A%7Bi%3A0%3Bs%3A5%3A%22_csrf%22%3Bi%3A1%3Bs%3A32%3A%226sBatZ-07-JGxFS3hxh8qNGtiN8aQDz0%22%3B%7D'
+    'PATH' => 'C:\\WINDOWS\\system32;C:\\WINDOWS;C:\\WINDOWS\\System32\\Wbem;C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\;C:\\WINDOWS\\System32\\OpenSSH\\;C:\\xampp\\php;C:\\ProgramData\\ComposerSetup\\bin;C:\\Program Files\\PuTTY\\;C:\\Program Files\\Git\\cmd;C:\\Program Files\\nodejs\\;C:\\Program Files (x86)\\Microsoft SQL Server\\160\\Tools\\Binn\\;C:\\Program Files\\Microsoft SQL Server\\160\\Tools\\Binn\\;C:\\Program Files\\Microsoft SQL Server\\Client SDK\\ODBC\\170\\Tools\\Binn\\;C:\\Program Files\\Microsoft SQL Server\\160\\DTS\\Binn\\;C:\\Program Files (x86)\\Microsoft SQL Server\\160\\DTS\\Binn\\;C:\\Users\\Otic-Sistemas\\AppData\\Local\\Microsoft\\WindowsApps;;C:\\Users\\Otic-Sistemas\\AppData\\Local\\Programs\\Microsoft VS Code\\bin;C:\\Users\\Otic-Sistemas\\AppData\\Roaming\\Composer\\vendor\\bin;C:\\Users\\Otic-Sistemas\\AppData\\Roaming\\npm'
+    'SystemRoot' => 'C:\\WINDOWS'
+    'COMSPEC' => 'C:\\WINDOWS\\system32\\cmd.exe'
+    'PATHEXT' => '.COM;.EXE;.BAT;.CMD;.VBS;.VBE;.JS;.JSE;.WSF;.WSH;.MSC'
+    'WINDIR' => 'C:\\WINDOWS'
+    'SERVER_SIGNATURE' => '<address>Apache/2.4.54 (Win64) OpenSSL/1.1.1p PHP/8.2.0 Server at localhost Port 80</address>
+'
+    'SERVER_SOFTWARE' => 'Apache/2.4.54 (Win64) OpenSSL/1.1.1p PHP/8.2.0'
+    'SERVER_NAME' => 'localhost'
+    'SERVER_ADDR' => '::1'
+    'SERVER_PORT' => '80'
+    'REMOTE_ADDR' => '::1'
+    'DOCUMENT_ROOT' => 'C:/xampp/htdocs'
+    'REQUEST_SCHEME' => 'http'
+    'CONTEXT_PREFIX' => ''
+    'CONTEXT_DOCUMENT_ROOT' => 'C:/xampp/htdocs'
+    'SERVER_ADMIN' => 'postmaster@localhost'
+    'SCRIPT_FILENAME' => 'C:/xampp/htdocs/planealo.sytes.net/web/index.php'
+    'REMOTE_PORT' => '53123'
+    'REDIRECT_URL' => '/planealo.sytes.net/web/ged/default/index'
+    'GATEWAY_INTERFACE' => 'CGI/1.1'
+    'SERVER_PROTOCOL' => 'HTTP/1.1'
+    'REQUEST_METHOD' => 'GET'
+    'QUERY_STRING' => ''
+    'REQUEST_URI' => '/planealo.sytes.net/web/ged/default/index'
+    'SCRIPT_NAME' => '/planealo.sytes.net/web/index.php'
+    'PHP_SELF' => '/planealo.sytes.net/web/index.php'
+    'REQUEST_TIME_FLOAT' => 1772467750.9802
+    'REQUEST_TIME' => 1772467750
+]
+2026-03-02 12:41:57 [::1][1][uhtlqp6m93te7gqig62teinalp][error][yii\web\HttpException:403] yii\web\ForbiddenHttpException: No tiene permitido ejecutar esta acción. in C:\xampp\htdocs\planealo.sytes.net\vendor\yiisoft\yii2\filters\AccessControl.php:165
+Stack trace:
+#0 C:\xampp\htdocs\planealo.sytes.net\vendor\yiisoft\yii2\filters\AccessControl.php(144): yii\filters\AccessControl->denyAccess(Object(yii\web\User))
+#1 C:\xampp\htdocs\planealo.sytes.net\vendor\yiisoft\yii2\base\ActionFilter.php(83): yii\filters\AccessControl->beforeAction(Object(yii\base\InlineAction))
+#2 [internal function]: yii\base\ActionFilter->beforeFilter(Object(yii\base\ActionEvent))
+#3 C:\xampp\htdocs\planealo.sytes.net\vendor\yiisoft\yii2\base\Component.php(653): call_user_func(Array, Object(yii\base\ActionEvent))
+#4 C:\xampp\htdocs\planealo.sytes.net\vendor\yiisoft\yii2\base\Controller.php(334): yii\base\Component->trigger('beforeAction', Object(yii\base\ActionEvent))
+#5 C:\xampp\htdocs\planealo.sytes.net\vendor\yiisoft\yii2\web\Controller.php(344): yii\base\Controller->beforeAction(Object(yii\base\InlineAction))
+#6 C:\xampp\htdocs\planealo.sytes.net\vendor\yiisoft\yii2\base\Controller.php(195): yii\web\Controller->beforeAction(Object(yii\base\InlineAction))
+#7 C:\xampp\htdocs\planealo.sytes.net\vendor\yiisoft\yii2\base\Module.php(554): yii\base\Controller->runAction('index', Array)
+#8 C:\xampp\htdocs\planealo.sytes.net\vendor\yiisoft\yii2\web\Application.php(112): yii\base\Module->runAction('ged/default/ind...', Array)
+#9 C:\xampp\htdocs\planealo.sytes.net\vendor\yiisoft\yii2\base\Application.php(391): yii\web\Application->handleRequest(Object(yii\web\Request))
+#10 C:\xampp\htdocs\planealo.sytes.net\web\index.php(12): yii\base\Application->run()
+#11 {main}
+2026-03-02 12:41:53 [::1][1][uhtlqp6m93te7gqig62teinalp][info][application] $_GET = []
+
+$_POST = []
+
+$_FILES = []
+
+$_COOKIE = [
+    '_ga' => 'GA1.1.1679908835.1749223008'
+    'PHPSESSID' => 'uhtlqp6m93te7gqig62teinalp'
+    '_csrf' => '052b7c918e29a57673e9a43dd7b0060950f2b65b0138ca3e52d5b7da9ca869f0a:2:{i:0;s:5:\"_csrf\";i:1;s:32:\"6sBatZ-07-JGxFS3hxh8qNGtiN8aQDz0\";}'
+]
+
+$_SESSION = [
+    '__flash' => []
+    '__id' => 1
+    '__authKey' => 'FCxNRGJia25jro30ecX5r8yVk7nCuaOY'
+]
+
+$_SERVER = [
+    'REDIRECT_MIBDIRS' => 'C:/xampp/php/extras/mibs'
+    'REDIRECT_MYSQL_HOME' => '\\xampp\\mysql\\bin'
+    'REDIRECT_OPENSSL_CONF' => 'C:/xampp/apache/bin/openssl.cnf'
+    'REDIRECT_PHP_PEAR_SYSCONF_DIR' => '\\xampp\\php'
+    'REDIRECT_PHPRC' => '\\xampp\\php'
+    'REDIRECT_TMP' => '\\xampp\\tmp'
+    'REDIRECT_STATUS' => '200'
+    'MIBDIRS' => 'C:/xampp/php/extras/mibs'
+    'MYSQL_HOME' => '\\xampp\\mysql\\bin'
+    'OPENSSL_CONF' => 'C:/xampp/apache/bin/openssl.cnf'
+    'PHP_PEAR_SYSCONF_DIR' => '\\xampp\\php'
+    'PHPRC' => '\\xampp\\php'
+    'TMP' => '\\xampp\\tmp'
+    'HTTP_HOST' => 'localhost'
+    'HTTP_CONNECTION' => 'keep-alive'
+    'HTTP_CACHE_CONTROL' => 'max-age=0'
+    'HTTP_SEC_CH_UA' => '\"Opera GX\";v=\"127\", \"Chromium\";v=\"143\", \"Not A(Brand\";v=\"24\"'
+    'HTTP_SEC_CH_UA_MOBILE' => '?0'
+    'HTTP_SEC_CH_UA_PLATFORM' => '\"Windows\"'
+    'HTTP_UPGRADE_INSECURE_REQUESTS' => '1'
+    'HTTP_USER_AGENT' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36 OPR/127.0.0.0'
+    'HTTP_ACCEPT' => 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7'
+    'HTTP_SEC_FETCH_SITE' => 'same-origin'
+    'HTTP_SEC_FETCH_MODE' => 'navigate'
+    'HTTP_SEC_FETCH_USER' => '?1'
+    'HTTP_SEC_FETCH_DEST' => 'document'
+    'HTTP_REFERER' => 'http://localhost/planealo.sytes.net/web/'
+    'HTTP_ACCEPT_ENCODING' => 'gzip, deflate, br, zstd'
+    'HTTP_ACCEPT_LANGUAGE' => 'en,id;q=0.9,tr;q=0.8,ru;q=0.7'
+    'HTTP_COOKIE' => '_ga=GA1.1.1679908835.1749223008; PHPSESSID=uhtlqp6m93te7gqig62teinalp; _csrf=052b7c918e29a57673e9a43dd7b0060950f2b65b0138ca3e52d5b7da9ca869f0a%3A2%3A%7Bi%3A0%3Bs%3A5%3A%22_csrf%22%3Bi%3A1%3Bs%3A32%3A%226sBatZ-07-JGxFS3hxh8qNGtiN8aQDz0%22%3B%7D'
+    'PATH' => 'C:\\WINDOWS\\system32;C:\\WINDOWS;C:\\WINDOWS\\System32\\Wbem;C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\;C:\\WINDOWS\\System32\\OpenSSH\\;C:\\xampp\\php;C:\\ProgramData\\ComposerSetup\\bin;C:\\Program Files\\PuTTY\\;C:\\Program Files\\Git\\cmd;C:\\Program Files\\nodejs\\;C:\\Program Files (x86)\\Microsoft SQL Server\\160\\Tools\\Binn\\;C:\\Program Files\\Microsoft SQL Server\\160\\Tools\\Binn\\;C:\\Program Files\\Microsoft SQL Server\\Client SDK\\ODBC\\170\\Tools\\Binn\\;C:\\Program Files\\Microsoft SQL Server\\160\\DTS\\Binn\\;C:\\Program Files (x86)\\Microsoft SQL Server\\160\\DTS\\Binn\\;C:\\Users\\Otic-Sistemas\\AppData\\Local\\Microsoft\\WindowsApps;;C:\\Users\\Otic-Sistemas\\AppData\\Local\\Programs\\Microsoft VS Code\\bin;C:\\Users\\Otic-Sistemas\\AppData\\Roaming\\Composer\\vendor\\bin;C:\\Users\\Otic-Sistemas\\AppData\\Roaming\\npm'
+    'SystemRoot' => 'C:\\WINDOWS'
+    'COMSPEC' => 'C:\\WINDOWS\\system32\\cmd.exe'
+    'PATHEXT' => '.COM;.EXE;.BAT;.CMD;.VBS;.VBE;.JS;.JSE;.WSF;.WSH;.MSC'
+    'WINDIR' => 'C:\\WINDOWS'
+    'SERVER_SIGNATURE' => '<address>Apache/2.4.54 (Win64) OpenSSL/1.1.1p PHP/8.2.0 Server at localhost Port 80</address>
+'
+    'SERVER_SOFTWARE' => 'Apache/2.4.54 (Win64) OpenSSL/1.1.1p PHP/8.2.0'
+    'SERVER_NAME' => 'localhost'
+    'SERVER_ADDR' => '::1'
+    'SERVER_PORT' => '80'
+    'REMOTE_ADDR' => '::1'
+    'DOCUMENT_ROOT' => 'C:/xampp/htdocs'
+    'REQUEST_SCHEME' => 'http'
+    'CONTEXT_PREFIX' => ''
+    'CONTEXT_DOCUMENT_ROOT' => 'C:/xampp/htdocs'
+    'SERVER_ADMIN' => 'postmaster@localhost'
+    'SCRIPT_FILENAME' => 'C:/xampp/htdocs/planealo.sytes.net/web/index.php'
+    'REMOTE_PORT' => '54482'
+    'REDIRECT_URL' => '/planealo.sytes.net/web/ged/default/index'
+    'GATEWAY_INTERFACE' => 'CGI/1.1'
+    'SERVER_PROTOCOL' => 'HTTP/1.1'
+    'REQUEST_METHOD' => 'GET'
+    'QUERY_STRING' => ''
+    'REQUEST_URI' => '/planealo.sytes.net/web/ged/default/index'
+    'SCRIPT_NAME' => '/planealo.sytes.net/web/index.php'
+    'PHP_SELF' => '/planealo.sytes.net/web/index.php'
+    'REQUEST_TIME_FLOAT' => 1772469711.1781
+    'REQUEST_TIME' => 1772469711
+]
+2026-03-02 12:42:08 [::1][1][uhtlqp6m93te7gqig62teinalp][error][yii\web\HttpException:403] yii\web\ForbiddenHttpException: No tiene permitido ejecutar esta acción. in C:\xampp\htdocs\planealo.sytes.net\vendor\yiisoft\yii2\filters\AccessControl.php:165
+Stack trace:
+#0 C:\xampp\htdocs\planealo.sytes.net\vendor\yiisoft\yii2\filters\AccessControl.php(144): yii\filters\AccessControl->denyAccess(Object(yii\web\User))
+#1 C:\xampp\htdocs\planealo.sytes.net\vendor\yiisoft\yii2\base\ActionFilter.php(83): yii\filters\AccessControl->beforeAction(Object(yii\base\InlineAction))
+#2 [internal function]: yii\base\ActionFilter->beforeFilter(Object(yii\base\ActionEvent))
+#3 C:\xampp\htdocs\planealo.sytes.net\vendor\yiisoft\yii2\base\Component.php(653): call_user_func(Array, Object(yii\base\ActionEvent))
+#4 C:\xampp\htdocs\planealo.sytes.net\vendor\yiisoft\yii2\base\Controller.php(334): yii\base\Component->trigger('beforeAction', Object(yii\base\ActionEvent))
+#5 C:\xampp\htdocs\planealo.sytes.net\vendor\yiisoft\yii2\web\Controller.php(344): yii\base\Controller->beforeAction(Object(yii\base\InlineAction))
+#6 C:\xampp\htdocs\planealo.sytes.net\vendor\yiisoft\yii2\base\Controller.php(195): yii\web\Controller->beforeAction(Object(yii\base\InlineAction))
+#7 C:\xampp\htdocs\planealo.sytes.net\vendor\yiisoft\yii2\base\Module.php(554): yii\base\Controller->runAction('index', Array)
+#8 C:\xampp\htdocs\planealo.sytes.net\vendor\yiisoft\yii2\web\Application.php(112): yii\base\Module->runAction('ged/default/ind...', Array)
+#9 C:\xampp\htdocs\planealo.sytes.net\vendor\yiisoft\yii2\base\Application.php(391): yii\web\Application->handleRequest(Object(yii\web\Request))
+#10 C:\xampp\htdocs\planealo.sytes.net\web\index.php(12): yii\base\Application->run()
+#11 {main}
+2026-03-02 12:42:07 [::1][1][uhtlqp6m93te7gqig62teinalp][info][application] $_GET = []
+
+$_POST = []
+
+$_FILES = []
+
+$_COOKIE = [
+    '_ga' => 'GA1.1.1679908835.1749223008'
+    'PHPSESSID' => 'uhtlqp6m93te7gqig62teinalp'
+    '_csrf' => '052b7c918e29a57673e9a43dd7b0060950f2b65b0138ca3e52d5b7da9ca869f0a:2:{i:0;s:5:\"_csrf\";i:1;s:32:\"6sBatZ-07-JGxFS3hxh8qNGtiN8aQDz0\";}'
+]
+
+$_SESSION = [
+    '__flash' => []
+    '__id' => 1
+    '__authKey' => 'FCxNRGJia25jro30ecX5r8yVk7nCuaOY'
+]
+
+$_SERVER = [
+    'REDIRECT_MIBDIRS' => 'C:/xampp/php/extras/mibs'
+    'REDIRECT_MYSQL_HOME' => '\\xampp\\mysql\\bin'
+    'REDIRECT_OPENSSL_CONF' => 'C:/xampp/apache/bin/openssl.cnf'
+    'REDIRECT_PHP_PEAR_SYSCONF_DIR' => '\\xampp\\php'
+    'REDIRECT_PHPRC' => '\\xampp\\php'
+    'REDIRECT_TMP' => '\\xampp\\tmp'
+    'REDIRECT_STATUS' => '200'
+    'MIBDIRS' => 'C:/xampp/php/extras/mibs'
+    'MYSQL_HOME' => '\\xampp\\mysql\\bin'
+    'OPENSSL_CONF' => 'C:/xampp/apache/bin/openssl.cnf'
+    'PHP_PEAR_SYSCONF_DIR' => '\\xampp\\php'
+    'PHPRC' => '\\xampp\\php'
+    'TMP' => '\\xampp\\tmp'
+    'HTTP_HOST' => 'localhost'
+    'HTTP_CONNECTION' => 'keep-alive'
+    'HTTP_PRAGMA' => 'no-cache'
+    'HTTP_CACHE_CONTROL' => 'no-cache'
+    'HTTP_SEC_CH_UA' => '\"Opera GX\";v=\"127\", \"Chromium\";v=\"143\", \"Not A(Brand\";v=\"24\"'
+    'HTTP_SEC_CH_UA_MOBILE' => '?0'
+    'HTTP_SEC_CH_UA_PLATFORM' => '\"Windows\"'
+    'HTTP_UPGRADE_INSECURE_REQUESTS' => '1'
+    'HTTP_USER_AGENT' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36 OPR/127.0.0.0'
+    'HTTP_ACCEPT' => 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7'
+    'HTTP_SEC_FETCH_SITE' => 'same-origin'
+    'HTTP_SEC_FETCH_MODE' => 'navigate'
+    'HTTP_SEC_FETCH_USER' => '?1'
+    'HTTP_SEC_FETCH_DEST' => 'document'
+    'HTTP_REFERER' => 'http://localhost/planealo.sytes.net/web/'
+    'HTTP_ACCEPT_ENCODING' => 'gzip, deflate, br, zstd'
+    'HTTP_ACCEPT_LANGUAGE' => 'en,id;q=0.9,tr;q=0.8,ru;q=0.7'
+    'HTTP_COOKIE' => '_ga=GA1.1.1679908835.1749223008; PHPSESSID=uhtlqp6m93te7gqig62teinalp; _csrf=052b7c918e29a57673e9a43dd7b0060950f2b65b0138ca3e52d5b7da9ca869f0a%3A2%3A%7Bi%3A0%3Bs%3A5%3A%22_csrf%22%3Bi%3A1%3Bs%3A32%3A%226sBatZ-07-JGxFS3hxh8qNGtiN8aQDz0%22%3B%7D'
+    'PATH' => 'C:\\WINDOWS\\system32;C:\\WINDOWS;C:\\WINDOWS\\System32\\Wbem;C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\;C:\\WINDOWS\\System32\\OpenSSH\\;C:\\xampp\\php;C:\\ProgramData\\ComposerSetup\\bin;C:\\Program Files\\PuTTY\\;C:\\Program Files\\Git\\cmd;C:\\Program Files\\nodejs\\;C:\\Program Files (x86)\\Microsoft SQL Server\\160\\Tools\\Binn\\;C:\\Program Files\\Microsoft SQL Server\\160\\Tools\\Binn\\;C:\\Program Files\\Microsoft SQL Server\\Client SDK\\ODBC\\170\\Tools\\Binn\\;C:\\Program Files\\Microsoft SQL Server\\160\\DTS\\Binn\\;C:\\Program Files (x86)\\Microsoft SQL Server\\160\\DTS\\Binn\\;C:\\Users\\Otic-Sistemas\\AppData\\Local\\Microsoft\\WindowsApps;;C:\\Users\\Otic-Sistemas\\AppData\\Local\\Programs\\Microsoft VS Code\\bin;C:\\Users\\Otic-Sistemas\\AppData\\Roaming\\Composer\\vendor\\bin;C:\\Users\\Otic-Sistemas\\AppData\\Roaming\\npm'
+    'SystemRoot' => 'C:\\WINDOWS'
+    'COMSPEC' => 'C:\\WINDOWS\\system32\\cmd.exe'
+    'PATHEXT' => '.COM;.EXE;.BAT;.CMD;.VBS;.VBE;.JS;.JSE;.WSF;.WSH;.MSC'
+    'WINDIR' => 'C:\\WINDOWS'
+    'SERVER_SIGNATURE' => '<address>Apache/2.4.54 (Win64) OpenSSL/1.1.1p PHP/8.2.0 Server at localhost Port 80</address>
+'
+    'SERVER_SOFTWARE' => 'Apache/2.4.54 (Win64) OpenSSL/1.1.1p PHP/8.2.0'
+    'SERVER_NAME' => 'localhost'
+    'SERVER_ADDR' => '::1'
+    'SERVER_PORT' => '80'
+    'REMOTE_ADDR' => '::1'
+    'DOCUMENT_ROOT' => 'C:/xampp/htdocs'
+    'REQUEST_SCHEME' => 'http'
+    'CONTEXT_PREFIX' => ''
+    'CONTEXT_DOCUMENT_ROOT' => 'C:/xampp/htdocs'
+    'SERVER_ADMIN' => 'postmaster@localhost'
+    'SCRIPT_FILENAME' => 'C:/xampp/htdocs/planealo.sytes.net/web/index.php'
+    'REMOTE_PORT' => '54491'
+    'REDIRECT_URL' => '/planealo.sytes.net/web/ged/default/index'
+    'GATEWAY_INTERFACE' => 'CGI/1.1'
+    'SERVER_PROTOCOL' => 'HTTP/1.1'
+    'REQUEST_METHOD' => 'GET'
+    'QUERY_STRING' => ''
+    'REQUEST_URI' => '/planealo.sytes.net/web/ged/default/index'
+    'SCRIPT_NAME' => '/planealo.sytes.net/web/index.php'
+    'PHP_SELF' => '/planealo.sytes.net/web/index.php'
+    'REQUEST_TIME_FLOAT' => 1772469727.7056
+    'REQUEST_TIME' => 1772469727
+]
+2026-03-02 12:42:08 [::1][1][uhtlqp6m93te7gqig62teinalp][error][yii\web\HttpException:403] yii\web\ForbiddenHttpException: No tiene permitido ejecutar esta acción. in C:\xampp\htdocs\planealo.sytes.net\vendor\yiisoft\yii2\filters\AccessControl.php:165
+Stack trace:
+#0 C:\xampp\htdocs\planealo.sytes.net\vendor\yiisoft\yii2\filters\AccessControl.php(144): yii\filters\AccessControl->denyAccess(Object(yii\web\User))
+#1 C:\xampp\htdocs\planealo.sytes.net\vendor\yiisoft\yii2\base\ActionFilter.php(83): yii\filters\AccessControl->beforeAction(Object(yii\base\InlineAction))
+#2 [internal function]: yii\base\ActionFilter->beforeFilter(Object(yii\base\ActionEvent))
+#3 C:\xampp\htdocs\planealo.sytes.net\vendor\yiisoft\yii2\base\Component.php(653): call_user_func(Array, Object(yii\base\ActionEvent))
+#4 C:\xampp\htdocs\planealo.sytes.net\vendor\yiisoft\yii2\base\Controller.php(334): yii\base\Component->trigger('beforeAction', Object(yii\base\ActionEvent))
+#5 C:\xampp\htdocs\planealo.sytes.net\vendor\yiisoft\yii2\web\Controller.php(344): yii\base\Controller->beforeAction(Object(yii\base\InlineAction))
+#6 C:\xampp\htdocs\planealo.sytes.net\vendor\yiisoft\yii2\base\Controller.php(195): yii\web\Controller->beforeAction(Object(yii\base\InlineAction))
+#7 C:\xampp\htdocs\planealo.sytes.net\vendor\yiisoft\yii2\base\Module.php(554): yii\base\Controller->runAction('index', Array)
+#8 C:\xampp\htdocs\planealo.sytes.net\vendor\yiisoft\yii2\web\Application.php(112): yii\base\Module->runAction('ged/default/ind...', Array)
+#9 C:\xampp\htdocs\planealo.sytes.net\vendor\yiisoft\yii2\base\Application.php(391): yii\web\Application->handleRequest(Object(yii\web\Request))
+#10 C:\xampp\htdocs\planealo.sytes.net\web\index.php(12): yii\base\Application->run()
+#11 {main}
+2026-03-02 12:42:08 [::1][1][uhtlqp6m93te7gqig62teinalp][info][application] $_GET = []
+
+$_POST = []
+
+$_FILES = []
+
+$_COOKIE = [
+    '_ga' => 'GA1.1.1679908835.1749223008'
+    'PHPSESSID' => 'uhtlqp6m93te7gqig62teinalp'
+    '_csrf' => '052b7c918e29a57673e9a43dd7b0060950f2b65b0138ca3e52d5b7da9ca869f0a:2:{i:0;s:5:\"_csrf\";i:1;s:32:\"6sBatZ-07-JGxFS3hxh8qNGtiN8aQDz0\";}'
+]
+
+$_SESSION = [
+    '__flash' => []
+    '__id' => 1
+    '__authKey' => 'FCxNRGJia25jro30ecX5r8yVk7nCuaOY'
+]
+
+$_SERVER = [
+    'REDIRECT_MIBDIRS' => 'C:/xampp/php/extras/mibs'
+    'REDIRECT_MYSQL_HOME' => '\\xampp\\mysql\\bin'
+    'REDIRECT_OPENSSL_CONF' => 'C:/xampp/apache/bin/openssl.cnf'
+    'REDIRECT_PHP_PEAR_SYSCONF_DIR' => '\\xampp\\php'
+    'REDIRECT_PHPRC' => '\\xampp\\php'
+    'REDIRECT_TMP' => '\\xampp\\tmp'
+    'REDIRECT_STATUS' => '200'
+    'MIBDIRS' => 'C:/xampp/php/extras/mibs'
+    'MYSQL_HOME' => '\\xampp\\mysql\\bin'
+    'OPENSSL_CONF' => 'C:/xampp/apache/bin/openssl.cnf'
+    'PHP_PEAR_SYSCONF_DIR' => '\\xampp\\php'
+    'PHPRC' => '\\xampp\\php'
+    'TMP' => '\\xampp\\tmp'
+    'HTTP_HOST' => 'localhost'
+    'HTTP_CONNECTION' => 'keep-alive'
+    'HTTP_PRAGMA' => 'no-cache'
+    'HTTP_CACHE_CONTROL' => 'no-cache'
+    'HTTP_SEC_CH_UA' => '\"Opera GX\";v=\"127\", \"Chromium\";v=\"143\", \"Not A(Brand\";v=\"24\"'
+    'HTTP_SEC_CH_UA_MOBILE' => '?0'
+    'HTTP_SEC_CH_UA_PLATFORM' => '\"Windows\"'
+    'HTTP_UPGRADE_INSECURE_REQUESTS' => '1'
+    'HTTP_USER_AGENT' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36 OPR/127.0.0.0'
+    'HTTP_ACCEPT' => 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7'
+    'HTTP_SEC_FETCH_SITE' => 'same-origin'
+    'HTTP_SEC_FETCH_MODE' => 'navigate'
+    'HTTP_SEC_FETCH_USER' => '?1'
+    'HTTP_SEC_FETCH_DEST' => 'document'
+    'HTTP_REFERER' => 'http://localhost/planealo.sytes.net/web/'
+    'HTTP_ACCEPT_ENCODING' => 'gzip, deflate, br, zstd'
+    'HTTP_ACCEPT_LANGUAGE' => 'en,id;q=0.9,tr;q=0.8,ru;q=0.7'
+    'HTTP_COOKIE' => '_ga=GA1.1.1679908835.1749223008; PHPSESSID=uhtlqp6m93te7gqig62teinalp; _csrf=052b7c918e29a57673e9a43dd7b0060950f2b65b0138ca3e52d5b7da9ca869f0a%3A2%3A%7Bi%3A0%3Bs%3A5%3A%22_csrf%22%3Bi%3A1%3Bs%3A32%3A%226sBatZ-07-JGxFS3hxh8qNGtiN8aQDz0%22%3B%7D'
+    'PATH' => 'C:\\WINDOWS\\system32;C:\\WINDOWS;C:\\WINDOWS\\System32\\Wbem;C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\;C:\\WINDOWS\\System32\\OpenSSH\\;C:\\xampp\\php;C:\\ProgramData\\ComposerSetup\\bin;C:\\Program Files\\PuTTY\\;C:\\Program Files\\Git\\cmd;C:\\Program Files\\nodejs\\;C:\\Program Files (x86)\\Microsoft SQL Server\\160\\Tools\\Binn\\;C:\\Program Files\\Microsoft SQL Server\\160\\Tools\\Binn\\;C:\\Program Files\\Microsoft SQL Server\\Client SDK\\ODBC\\170\\Tools\\Binn\\;C:\\Program Files\\Microsoft SQL Server\\160\\DTS\\Binn\\;C:\\Program Files (x86)\\Microsoft SQL Server\\160\\DTS\\Binn\\;C:\\Users\\Otic-Sistemas\\AppData\\Local\\Microsoft\\WindowsApps;;C:\\Users\\Otic-Sistemas\\AppData\\Local\\Programs\\Microsoft VS Code\\bin;C:\\Users\\Otic-Sistemas\\AppData\\Roaming\\Composer\\vendor\\bin;C:\\Users\\Otic-Sistemas\\AppData\\Roaming\\npm'
+    'SystemRoot' => 'C:\\WINDOWS'
+    'COMSPEC' => 'C:\\WINDOWS\\system32\\cmd.exe'
+    'PATHEXT' => '.COM;.EXE;.BAT;.CMD;.VBS;.VBE;.JS;.JSE;.WSF;.WSH;.MSC'
+    'WINDIR' => 'C:\\WINDOWS'
+    'SERVER_SIGNATURE' => '<address>Apache/2.4.54 (Win64) OpenSSL/1.1.1p PHP/8.2.0 Server at localhost Port 80</address>
+'
+    'SERVER_SOFTWARE' => 'Apache/2.4.54 (Win64) OpenSSL/1.1.1p PHP/8.2.0'
+    'SERVER_NAME' => 'localhost'
+    'SERVER_ADDR' => '::1'
+    'SERVER_PORT' => '80'
+    'REMOTE_ADDR' => '::1'
+    'DOCUMENT_ROOT' => 'C:/xampp/htdocs'
+    'REQUEST_SCHEME' => 'http'
+    'CONTEXT_PREFIX' => ''
+    'CONTEXT_DOCUMENT_ROOT' => 'C:/xampp/htdocs'
+    'SERVER_ADMIN' => 'postmaster@localhost'
+    'SCRIPT_FILENAME' => 'C:/xampp/htdocs/planealo.sytes.net/web/index.php'
+    'REMOTE_PORT' => '54492'
+    'REDIRECT_URL' => '/planealo.sytes.net/web/ged/default/index'
+    'GATEWAY_INTERFACE' => 'CGI/1.1'
+    'SERVER_PROTOCOL' => 'HTTP/1.1'
+    'REQUEST_METHOD' => 'GET'
+    'QUERY_STRING' => ''
+    'REQUEST_URI' => '/planealo.sytes.net/web/ged/default/index'
+    'SCRIPT_NAME' => '/planealo.sytes.net/web/index.php'
+    'PHP_SELF' => '/planealo.sytes.net/web/index.php'
+    'REQUEST_TIME_FLOAT' => 1772469728.0778
+    'REQUEST_TIME' => 1772469728
+]
+2026-03-02 12:51:00 [::1][1][uhtlqp6m93te7gqig62teinalp][error][yii\web\HttpException:404] yii\base\InvalidRouteException: Unable to resolve the request "img/logos/escuelas/logo6.png". in C:\xampp\htdocs\planealo.sytes.net\vendor\yiisoft\yii2\base\Module.php:563
+Stack trace:
+#0 C:\xampp\htdocs\planealo.sytes.net\vendor\yiisoft\yii2\web\Application.php(112): yii\base\Module->runAction('img/logos/escue...', Array)
+#1 C:\xampp\htdocs\planealo.sytes.net\vendor\yiisoft\yii2\base\Application.php(391): yii\web\Application->handleRequest(Object(yii\web\Request))
+#2 C:\xampp\htdocs\planealo.sytes.net\web\index.php(12): yii\base\Application->run()
+#3 {main}
+
+Next yii\web\NotFoundHttpException: Página no encontrada. in C:\xampp\htdocs\planealo.sytes.net\vendor\yiisoft\yii2\web\Application.php:124
+Stack trace:
+#0 C:\xampp\htdocs\planealo.sytes.net\vendor\yiisoft\yii2\base\Application.php(391): yii\web\Application->handleRequest(Object(yii\web\Request))
+#1 C:\xampp\htdocs\planealo.sytes.net\web\index.php(12): yii\base\Application->run()
+#2 {main}
+2026-03-02 12:51:00 [::1][1][uhtlqp6m93te7gqig62teinalp][info][application] $_GET = []
+
+$_POST = []
+
+$_FILES = []
+
+$_COOKIE = [
+    '_ga' => 'GA1.1.1679908835.1749223008'
+    'PHPSESSID' => 'uhtlqp6m93te7gqig62teinalp'
+    '_csrf' => '052b7c918e29a57673e9a43dd7b0060950f2b65b0138ca3e52d5b7da9ca869f0a:2:{i:0;s:5:\"_csrf\";i:1;s:32:\"6sBatZ-07-JGxFS3hxh8qNGtiN8aQDz0\";}'
+]
+
+$_SESSION = [
+    '__flash' => []
+    '__id' => 1
+    '__authKey' => 'FCxNRGJia25jro30ecX5r8yVk7nCuaOY'
+    'id_escuela' => 2
+    'nombre_escuela' => 'Club Aves Voladoras'
+    'escuela_activa' => true
+    'escuela_ultima_actualizacion' => 1772470259
+    'idEscuela' => 2
+    'nombreEscuela' => 'Club Aves Voladoras'
+]
+
+$_SERVER = [
+    'REDIRECT_MIBDIRS' => 'C:/xampp/php/extras/mibs'
+    'REDIRECT_MYSQL_HOME' => '\\xampp\\mysql\\bin'
+    'REDIRECT_OPENSSL_CONF' => 'C:/xampp/apache/bin/openssl.cnf'
+    'REDIRECT_PHP_PEAR_SYSCONF_DIR' => '\\xampp\\php'
+    'REDIRECT_PHPRC' => '\\xampp\\php'
+    'REDIRECT_TMP' => '\\xampp\\tmp'
+    'REDIRECT_STATUS' => '200'
+    'MIBDIRS' => 'C:/xampp/php/extras/mibs'
+    'MYSQL_HOME' => '\\xampp\\mysql\\bin'
+    'OPENSSL_CONF' => 'C:/xampp/apache/bin/openssl.cnf'
+    'PHP_PEAR_SYSCONF_DIR' => '\\xampp\\php'
+    'PHPRC' => '\\xampp\\php'
+    'TMP' => '\\xampp\\tmp'
+    'HTTP_HOST' => 'localhost'
+    'HTTP_CONNECTION' => 'keep-alive'
+    'HTTP_SEC_CH_UA_PLATFORM' => '\"Windows\"'
+    'HTTP_USER_AGENT' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36 OPR/127.0.0.0'
+    'HTTP_SEC_CH_UA' => '\"Opera GX\";v=\"127\", \"Chromium\";v=\"143\", \"Not A(Brand\";v=\"24\"'
+    'HTTP_SEC_CH_UA_MOBILE' => '?0'
+    'HTTP_ACCEPT' => 'image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8'
+    'HTTP_SEC_FETCH_SITE' => 'same-origin'
+    'HTTP_SEC_FETCH_MODE' => 'no-cors'
+    'HTTP_SEC_FETCH_DEST' => 'image'
+    'HTTP_REFERER' => 'http://localhost/planealo.sytes.net/web/ged/default/index'
+    'HTTP_ACCEPT_ENCODING' => 'gzip, deflate, br, zstd'
+    'HTTP_ACCEPT_LANGUAGE' => 'en,id;q=0.9,tr;q=0.8,ru;q=0.7'
+    'HTTP_COOKIE' => '_ga=GA1.1.1679908835.1749223008; PHPSESSID=uhtlqp6m93te7gqig62teinalp; _csrf=052b7c918e29a57673e9a43dd7b0060950f2b65b0138ca3e52d5b7da9ca869f0a%3A2%3A%7Bi%3A0%3Bs%3A5%3A%22_csrf%22%3Bi%3A1%3Bs%3A32%3A%226sBatZ-07-JGxFS3hxh8qNGtiN8aQDz0%22%3B%7D'
+    'PATH' => 'C:\\WINDOWS\\system32;C:\\WINDOWS;C:\\WINDOWS\\System32\\Wbem;C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\;C:\\WINDOWS\\System32\\OpenSSH\\;C:\\xampp\\php;C:\\ProgramData\\ComposerSetup\\bin;C:\\Program Files\\PuTTY\\;C:\\Program Files\\Git\\cmd;C:\\Program Files\\nodejs\\;C:\\Program Files (x86)\\Microsoft SQL Server\\160\\Tools\\Binn\\;C:\\Program Files\\Microsoft SQL Server\\160\\Tools\\Binn\\;C:\\Program Files\\Microsoft SQL Server\\Client SDK\\ODBC\\170\\Tools\\Binn\\;C:\\Program Files\\Microsoft SQL Server\\160\\DTS\\Binn\\;C:\\Program Files (x86)\\Microsoft SQL Server\\160\\DTS\\Binn\\;C:\\Users\\Otic-Sistemas\\AppData\\Local\\Microsoft\\WindowsApps;;C:\\Users\\Otic-Sistemas\\AppData\\Local\\Programs\\Microsoft VS Code\\bin;C:\\Users\\Otic-Sistemas\\AppData\\Roaming\\Composer\\vendor\\bin;C:\\Users\\Otic-Sistemas\\AppData\\Roaming\\npm'
+    'SystemRoot' => 'C:\\WINDOWS'
+    'COMSPEC' => 'C:\\WINDOWS\\system32\\cmd.exe'
+    'PATHEXT' => '.COM;.EXE;.BAT;.CMD;.VBS;.VBE;.JS;.JSE;.WSF;.WSH;.MSC'
+    'WINDIR' => 'C:\\WINDOWS'
+    'SERVER_SIGNATURE' => '<address>Apache/2.4.54 (Win64) OpenSSL/1.1.1p PHP/8.2.0 Server at localhost Port 80</address>
+'
+    'SERVER_SOFTWARE' => 'Apache/2.4.54 (Win64) OpenSSL/1.1.1p PHP/8.2.0'
+    'SERVER_NAME' => 'localhost'
+    'SERVER_ADDR' => '::1'
+    'SERVER_PORT' => '80'
+    'REMOTE_ADDR' => '::1'
+    'DOCUMENT_ROOT' => 'C:/xampp/htdocs'
+    'REQUEST_SCHEME' => 'http'
+    'CONTEXT_PREFIX' => ''
+    'CONTEXT_DOCUMENT_ROOT' => 'C:/xampp/htdocs'
+    'SERVER_ADMIN' => 'postmaster@localhost'
+    'SCRIPT_FILENAME' => 'C:/xampp/htdocs/planealo.sytes.net/web/index.php'
+    'REMOTE_PORT' => '54841'
+    'REDIRECT_URL' => '/planealo.sytes.net/web/img/logos/escuelas/logo6.png'
+    'GATEWAY_INTERFACE' => 'CGI/1.1'
+    'SERVER_PROTOCOL' => 'HTTP/1.1'
+    'REQUEST_METHOD' => 'GET'
+    'QUERY_STRING' => ''
+    'REQUEST_URI' => '/planealo.sytes.net/web/img/logos/escuelas/logo6.png'
+    'SCRIPT_NAME' => '/planealo.sytes.net/web/index.php'
+    'PHP_SELF' => '/planealo.sytes.net/web/index.php'
+    'REQUEST_TIME_FLOAT' => 1772470260.376
+    'REQUEST_TIME' => 1772470260
+]
+2026-03-02 12:51:00 [::1][1][uhtlqp6m93te7gqig62teinalp][error][yii\web\HttpException:404] yii\base\InvalidRouteException: Unable to resolve the request "img/logos/escuelas/logo5.png". in C:\xampp\htdocs\planealo.sytes.net\vendor\yiisoft\yii2\base\Module.php:563
+Stack trace:
+#0 C:\xampp\htdocs\planealo.sytes.net\vendor\yiisoft\yii2\web\Application.php(112): yii\base\Module->runAction('img/logos/escue...', Array)
+#1 C:\xampp\htdocs\planealo.sytes.net\vendor\yiisoft\yii2\base\Application.php(391): yii\web\Application->handleRequest(Object(yii\web\Request))
+#2 C:\xampp\htdocs\planealo.sytes.net\web\index.php(12): yii\base\Application->run()
+#3 {main}
+
+Next yii\web\NotFoundHttpException: Página no encontrada. in C:\xampp\htdocs\planealo.sytes.net\vendor\yiisoft\yii2\web\Application.php:124
+Stack trace:
+#0 C:\xampp\htdocs\planealo.sytes.net\vendor\yiisoft\yii2\base\Application.php(391): yii\web\Application->handleRequest(Object(yii\web\Request))
+#1 C:\xampp\htdocs\planealo.sytes.net\web\index.php(12): yii\base\Application->run()
+#2 {main}
+2026-03-02 12:51:00 [::1][1][uhtlqp6m93te7gqig62teinalp][info][application] $_GET = []
+
+$_POST = []
+
+$_FILES = []
+
+$_COOKIE = [
+    '_ga' => 'GA1.1.1679908835.1749223008'
+    'PHPSESSID' => 'uhtlqp6m93te7gqig62teinalp'
+    '_csrf' => '052b7c918e29a57673e9a43dd7b0060950f2b65b0138ca3e52d5b7da9ca869f0a:2:{i:0;s:5:\"_csrf\";i:1;s:32:\"6sBatZ-07-JGxFS3hxh8qNGtiN8aQDz0\";}'
+]
+
+$_SESSION = [
+    '__flash' => []
+    '__id' => 1
+    '__authKey' => 'FCxNRGJia25jro30ecX5r8yVk7nCuaOY'
+    'id_escuela' => 2
+    'nombre_escuela' => 'Club Aves Voladoras'
+    'escuela_activa' => true
+    'escuela_ultima_actualizacion' => 1772470259
+    'idEscuela' => 2
+    'nombreEscuela' => 'Club Aves Voladoras'
+]
+
+$_SERVER = [
+    'REDIRECT_MIBDIRS' => 'C:/xampp/php/extras/mibs'
+    'REDIRECT_MYSQL_HOME' => '\\xampp\\mysql\\bin'
+    'REDIRECT_OPENSSL_CONF' => 'C:/xampp/apache/bin/openssl.cnf'
+    'REDIRECT_PHP_PEAR_SYSCONF_DIR' => '\\xampp\\php'
+    'REDIRECT_PHPRC' => '\\xampp\\php'
+    'REDIRECT_TMP' => '\\xampp\\tmp'
+    'REDIRECT_STATUS' => '200'
+    'MIBDIRS' => 'C:/xampp/php/extras/mibs'
+    'MYSQL_HOME' => '\\xampp\\mysql\\bin'
+    'OPENSSL_CONF' => 'C:/xampp/apache/bin/openssl.cnf'
+    'PHP_PEAR_SYSCONF_DIR' => '\\xampp\\php'
+    'PHPRC' => '\\xampp\\php'
+    'TMP' => '\\xampp\\tmp'
+    'HTTP_HOST' => 'localhost'
+    'HTTP_CONNECTION' => 'keep-alive'
+    'HTTP_SEC_CH_UA_PLATFORM' => '\"Windows\"'
+    'HTTP_USER_AGENT' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36 OPR/127.0.0.0'
+    'HTTP_SEC_CH_UA' => '\"Opera GX\";v=\"127\", \"Chromium\";v=\"143\", \"Not A(Brand\";v=\"24\"'
+    'HTTP_SEC_CH_UA_MOBILE' => '?0'
+    'HTTP_ACCEPT' => 'image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8'
+    'HTTP_SEC_FETCH_SITE' => 'same-origin'
+    'HTTP_SEC_FETCH_MODE' => 'no-cors'
+    'HTTP_SEC_FETCH_DEST' => 'image'
+    'HTTP_REFERER' => 'http://localhost/planealo.sytes.net/web/ged/default/index'
+    'HTTP_ACCEPT_ENCODING' => 'gzip, deflate, br, zstd'
+    'HTTP_ACCEPT_LANGUAGE' => 'en,id;q=0.9,tr;q=0.8,ru;q=0.7'
+    'HTTP_COOKIE' => '_ga=GA1.1.1679908835.1749223008; PHPSESSID=uhtlqp6m93te7gqig62teinalp; _csrf=052b7c918e29a57673e9a43dd7b0060950f2b65b0138ca3e52d5b7da9ca869f0a%3A2%3A%7Bi%3A0%3Bs%3A5%3A%22_csrf%22%3Bi%3A1%3Bs%3A32%3A%226sBatZ-07-JGxFS3hxh8qNGtiN8aQDz0%22%3B%7D'
+    'PATH' => 'C:\\WINDOWS\\system32;C:\\WINDOWS;C:\\WINDOWS\\System32\\Wbem;C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\;C:\\WINDOWS\\System32\\OpenSSH\\;C:\\xampp\\php;C:\\ProgramData\\ComposerSetup\\bin;C:\\Program Files\\PuTTY\\;C:\\Program Files\\Git\\cmd;C:\\Program Files\\nodejs\\;C:\\Program Files (x86)\\Microsoft SQL Server\\160\\Tools\\Binn\\;C:\\Program Files\\Microsoft SQL Server\\160\\Tools\\Binn\\;C:\\Program Files\\Microsoft SQL Server\\Client SDK\\ODBC\\170\\Tools\\Binn\\;C:\\Program Files\\Microsoft SQL Server\\160\\DTS\\Binn\\;C:\\Program Files (x86)\\Microsoft SQL Server\\160\\DTS\\Binn\\;C:\\Users\\Otic-Sistemas\\AppData\\Local\\Microsoft\\WindowsApps;;C:\\Users\\Otic-Sistemas\\AppData\\Local\\Programs\\Microsoft VS Code\\bin;C:\\Users\\Otic-Sistemas\\AppData\\Roaming\\Composer\\vendor\\bin;C:\\Users\\Otic-Sistemas\\AppData\\Roaming\\npm'
+    'SystemRoot' => 'C:\\WINDOWS'
+    'COMSPEC' => 'C:\\WINDOWS\\system32\\cmd.exe'
+    'PATHEXT' => '.COM;.EXE;.BAT;.CMD;.VBS;.VBE;.JS;.JSE;.WSF;.WSH;.MSC'
+    'WINDIR' => 'C:\\WINDOWS'
+    'SERVER_SIGNATURE' => '<address>Apache/2.4.54 (Win64) OpenSSL/1.1.1p PHP/8.2.0 Server at localhost Port 80</address>
+'
+    'SERVER_SOFTWARE' => 'Apache/2.4.54 (Win64) OpenSSL/1.1.1p PHP/8.2.0'
+    'SERVER_NAME' => 'localhost'
+    'SERVER_ADDR' => '::1'
+    'SERVER_PORT' => '80'
+    'REMOTE_ADDR' => '::1'
+    'DOCUMENT_ROOT' => 'C:/xampp/htdocs'
+    'REQUEST_SCHEME' => 'http'
+    'CONTEXT_PREFIX' => ''
+    'CONTEXT_DOCUMENT_ROOT' => 'C:/xampp/htdocs'
+    'SERVER_ADMIN' => 'postmaster@localhost'
+    'SCRIPT_FILENAME' => 'C:/xampp/htdocs/planealo.sytes.net/web/index.php'
+    'REMOTE_PORT' => '54843'
+    'REDIRECT_URL' => '/planealo.sytes.net/web/img/logos/escuelas/logo5.png'
+    'GATEWAY_INTERFACE' => 'CGI/1.1'
+    'SERVER_PROTOCOL' => 'HTTP/1.1'
+    'REQUEST_METHOD' => 'GET'
+    'QUERY_STRING' => ''
+    'REQUEST_URI' => '/planealo.sytes.net/web/img/logos/escuelas/logo5.png'
+    'SCRIPT_NAME' => '/planealo.sytes.net/web/index.php'
+    'PHP_SELF' => '/planealo.sytes.net/web/index.php'
+    'REQUEST_TIME_FLOAT' => 1772470260.41
+    'REQUEST_TIME' => 1772470260
+]
+2026-03-02 12:51:37 [::1][1][-][error][tasa-dolar] Error BCV Directo: fopen(https://www.bcv.org.ve/): Failed to open stream: Se produjo un error durante el intento de conexión ya que la parte conectada no respondió adecuadamente tras un periodo de tiempo, o bien se produjo un error en la conexión establecida ya que el host conectado no ha podido responder
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:157
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:105
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:78
+2026-03-02 12:51:37 [::1][1][-][warning][tasa-dolar] ❌ Fuente BCV_Directo falló o tasa inválida: 0
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:112
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:78
+    in C:\xampp\htdocs\planealo.sytes.net\widgets\TasaDolarWidget.php:15
+2026-03-02 12:51:57 [::1][1][-][error][tasa-dolar] Error BCV Alternativo: fopen(https://www.bcv.org.ve/tasas-informativas-sistema-bancario): Failed to open stream: Se produjo un error durante el intento de conexión ya que la parte conectada no respondió adecuadamente tras un periodo de tiempo, o bien se produjo un error en la conexión establecida ya que el host conectado no ha podido responder
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:187
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:105
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:78
+2026-03-02 12:51:57 [::1][1][-][warning][tasa-dolar] ❌ Fuente BCV_Alternativo falló o tasa inválida: 0
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:112
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:78
+    in C:\xampp\htdocs\planealo.sytes.net\widgets\TasaDolarWidget.php:15
+2026-03-02 12:52:12 [::1][1][-][error][tasa-dolar] Error Yahoo Finance: fopen(https://query1.finance.yahoo.com/v8/finance/chart/USDVES=X): Failed to open stream: Se produjo un error durante el intento de conexión ya que la parte conectada no respondió adecuadamente tras un periodo de tiempo, o bien se produjo un error en la conexión establecida ya que el host conectado no ha podido responder
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:286
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:105
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:78
+2026-03-02 12:52:12 [::1][1][-][warning][tasa-dolar] ❌ Fuente EnParalelo falló o tasa inválida: 0
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:112
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:78
+    in C:\xampp\htdocs\planealo.sytes.net\widgets\TasaDolarWidget.php:15
+2026-03-02 12:52:27 [::1][1][-][error][tasa-dolar] Error ExchangeRate-API: fopen(https://api.exchangerate-api.com/v4/latest/USD): Failed to open stream: Se produjo un error durante el intento de conexión ya que la parte conectada no respondió adecuadamente tras un periodo de tiempo, o bien se produjo un error en la conexión establecida ya que el host conectado no ha podido responder
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:317
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:105
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:78
+2026-03-02 12:52:27 [::1][1][-][warning][tasa-dolar] ❌ Fuente API_Respaldo falló o tasa inválida: 0
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:112
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:78
+    in C:\xampp\htdocs\planealo.sytes.net\widgets\TasaDolarWidget.php:15
+2026-03-02 12:52:27 [::1][1][-][error][tasa-dolar] ❌ Todas las fuentes fallaron
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:116
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:78
+    in C:\xampp\htdocs\planealo.sytes.net\widgets\TasaDolarWidget.php:15
+2026-03-02 12:51:09 [::1][1][-][info][application] $_GET = []
+
+$_POST = []
+
+$_FILES = []
+
+$_COOKIE = [
+    '_ga' => 'GA1.1.1679908835.1749223008'
+    'PHPSESSID' => 'uhtlqp6m93te7gqig62teinalp'
+    '_csrf' => '052b7c918e29a57673e9a43dd7b0060950f2b65b0138ca3e52d5b7da9ca869f0a:2:{i:0;s:5:\"_csrf\";i:1;s:32:\"6sBatZ-07-JGxFS3hxh8qNGtiN8aQDz0\";}'
+]
+
+$_SESSION = [
+    '__flash' => []
+    '__id' => 1
+    '__authKey' => 'FCxNRGJia25jro30ecX5r8yVk7nCuaOY'
+    'id_escuela' => 2
+    'nombre_escuela' => 'Club Aves Voladoras'
+    'escuela_activa' => true
+    'escuela_ultima_actualizacion' => 1772470259
+    'idEscuela' => 2
+    'nombreEscuela' => 'Club Aves Voladoras'
+]
+
+$_SERVER = [
+    'REDIRECT_MIBDIRS' => 'C:/xampp/php/extras/mibs'
+    'REDIRECT_MYSQL_HOME' => '\\xampp\\mysql\\bin'
+    'REDIRECT_OPENSSL_CONF' => 'C:/xampp/apache/bin/openssl.cnf'
+    'REDIRECT_PHP_PEAR_SYSCONF_DIR' => '\\xampp\\php'
+    'REDIRECT_PHPRC' => '\\xampp\\php'
+    'REDIRECT_TMP' => '\\xampp\\tmp'
+    'REDIRECT_STATUS' => '200'
+    'MIBDIRS' => 'C:/xampp/php/extras/mibs'
+    'MYSQL_HOME' => '\\xampp\\mysql\\bin'
+    'OPENSSL_CONF' => 'C:/xampp/apache/bin/openssl.cnf'
+    'PHP_PEAR_SYSCONF_DIR' => '\\xampp\\php'
+    'PHPRC' => '\\xampp\\php'
+    'TMP' => '\\xampp\\tmp'
+    'HTTP_HOST' => 'localhost'
+    'HTTP_CONNECTION' => 'keep-alive'
+    'HTTP_SEC_CH_UA' => '\"Opera GX\";v=\"127\", \"Chromium\";v=\"143\", \"Not A(Brand\";v=\"24\"'
+    'HTTP_SEC_CH_UA_MOBILE' => '?0'
+    'HTTP_SEC_CH_UA_PLATFORM' => '\"Windows\"'
+    'HTTP_UPGRADE_INSECURE_REQUESTS' => '1'
+    'HTTP_USER_AGENT' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36 OPR/127.0.0.0'
+    'HTTP_ACCEPT' => 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7'
+    'HTTP_SEC_FETCH_SITE' => 'same-origin'
+    'HTTP_SEC_FETCH_MODE' => 'navigate'
+    'HTTP_SEC_FETCH_USER' => '?1'
+    'HTTP_SEC_FETCH_DEST' => 'document'
+    'HTTP_REFERER' => 'http://localhost/planealo.sytes.net/web/ged/default/index'
+    'HTTP_ACCEPT_ENCODING' => 'gzip, deflate, br, zstd'
+    'HTTP_ACCEPT_LANGUAGE' => 'en,id;q=0.9,tr;q=0.8,ru;q=0.7'
+    'HTTP_COOKIE' => '_ga=GA1.1.1679908835.1749223008; PHPSESSID=uhtlqp6m93te7gqig62teinalp; _csrf=052b7c918e29a57673e9a43dd7b0060950f2b65b0138ca3e52d5b7da9ca869f0a%3A2%3A%7Bi%3A0%3Bs%3A5%3A%22_csrf%22%3Bi%3A1%3Bs%3A32%3A%226sBatZ-07-JGxFS3hxh8qNGtiN8aQDz0%22%3B%7D'
+    'PATH' => 'C:\\WINDOWS\\system32;C:\\WINDOWS;C:\\WINDOWS\\System32\\Wbem;C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\;C:\\WINDOWS\\System32\\OpenSSH\\;C:\\xampp\\php;C:\\ProgramData\\ComposerSetup\\bin;C:\\Program Files\\PuTTY\\;C:\\Program Files\\Git\\cmd;C:\\Program Files\\nodejs\\;C:\\Program Files (x86)\\Microsoft SQL Server\\160\\Tools\\Binn\\;C:\\Program Files\\Microsoft SQL Server\\160\\Tools\\Binn\\;C:\\Program Files\\Microsoft SQL Server\\Client SDK\\ODBC\\170\\Tools\\Binn\\;C:\\Program Files\\Microsoft SQL Server\\160\\DTS\\Binn\\;C:\\Program Files (x86)\\Microsoft SQL Server\\160\\DTS\\Binn\\;C:\\Users\\Otic-Sistemas\\AppData\\Local\\Microsoft\\WindowsApps;;C:\\Users\\Otic-Sistemas\\AppData\\Local\\Programs\\Microsoft VS Code\\bin;C:\\Users\\Otic-Sistemas\\AppData\\Roaming\\Composer\\vendor\\bin;C:\\Users\\Otic-Sistemas\\AppData\\Roaming\\npm'
+    'SystemRoot' => 'C:\\WINDOWS'
+    'COMSPEC' => 'C:\\WINDOWS\\system32\\cmd.exe'
+    'PATHEXT' => '.COM;.EXE;.BAT;.CMD;.VBS;.VBE;.JS;.JSE;.WSF;.WSH;.MSC'
+    'WINDIR' => 'C:\\WINDOWS'
+    'SERVER_SIGNATURE' => '<address>Apache/2.4.54 (Win64) OpenSSL/1.1.1p PHP/8.2.0 Server at localhost Port 80</address>
+'
+    'SERVER_SOFTWARE' => 'Apache/2.4.54 (Win64) OpenSSL/1.1.1p PHP/8.2.0'
+    'SERVER_NAME' => 'localhost'
+    'SERVER_ADDR' => '::1'
+    'SERVER_PORT' => '80'
+    'REMOTE_ADDR' => '::1'
+    'DOCUMENT_ROOT' => 'C:/xampp/htdocs'
+    'REQUEST_SCHEME' => 'http'
+    'CONTEXT_PREFIX' => ''
+    'CONTEXT_DOCUMENT_ROOT' => 'C:/xampp/htdocs'
+    'SERVER_ADMIN' => 'postmaster@localhost'
+    'SCRIPT_FILENAME' => 'C:/xampp/htdocs/planealo.sytes.net/web/index.php'
+    'REMOTE_PORT' => '54849'
+    'REDIRECT_URL' => '/planealo.sytes.net/web/aportes/aportes/index'
+    'GATEWAY_INTERFACE' => 'CGI/1.1'
+    'SERVER_PROTOCOL' => 'HTTP/1.1'
+    'REQUEST_METHOD' => 'GET'
+    'QUERY_STRING' => ''
+    'REQUEST_URI' => '/planealo.sytes.net/web/aportes/aportes/index'
+    'SCRIPT_NAME' => '/planealo.sytes.net/web/index.php'
+    'PHP_SELF' => '/planealo.sytes.net/web/index.php'
+    'REQUEST_TIME_FLOAT' => 1772470269.1062
+    'REQUEST_TIME' => 1772470269
+]
+2026-03-02 12:52:28 [::1][1][uhtlqp6m93te7gqig62teinalp][error][yii\web\HttpException:404] yii\base\InvalidRouteException: Unable to resolve the request "js/escuela-selector.js". in C:\xampp\htdocs\planealo.sytes.net\vendor\yiisoft\yii2\base\Module.php:563
+Stack trace:
+#0 C:\xampp\htdocs\planealo.sytes.net\vendor\yiisoft\yii2\web\Application.php(112): yii\base\Module->runAction('js/escuela-sele...', Array)
+#1 C:\xampp\htdocs\planealo.sytes.net\vendor\yiisoft\yii2\base\Application.php(391): yii\web\Application->handleRequest(Object(yii\web\Request))
+#2 C:\xampp\htdocs\planealo.sytes.net\web\index.php(12): yii\base\Application->run()
+#3 {main}
+
+Next yii\web\NotFoundHttpException: Página no encontrada. in C:\xampp\htdocs\planealo.sytes.net\vendor\yiisoft\yii2\web\Application.php:124
+Stack trace:
+#0 C:\xampp\htdocs\planealo.sytes.net\vendor\yiisoft\yii2\base\Application.php(391): yii\web\Application->handleRequest(Object(yii\web\Request))
+#1 C:\xampp\htdocs\planealo.sytes.net\web\index.php(12): yii\base\Application->run()
+#2 {main}
+2026-03-02 12:52:28 [::1][1][uhtlqp6m93te7gqig62teinalp][info][application] $_GET = []
+
+$_POST = []
+
+$_FILES = []
+
+$_COOKIE = [
+    '_ga' => 'GA1.1.1679908835.1749223008'
+    'PHPSESSID' => 'uhtlqp6m93te7gqig62teinalp'
+    '_csrf' => '052b7c918e29a57673e9a43dd7b0060950f2b65b0138ca3e52d5b7da9ca869f0a:2:{i:0;s:5:\"_csrf\";i:1;s:32:\"6sBatZ-07-JGxFS3hxh8qNGtiN8aQDz0\";}'
+]
+
+$_SESSION = [
+    '__flash' => []
+    '__id' => 1
+    '__authKey' => 'FCxNRGJia25jro30ecX5r8yVk7nCuaOY'
+    'id_escuela' => 2
+    'nombre_escuela' => 'Club Aves Voladoras'
+    'escuela_activa' => true
+    'escuela_ultima_actualizacion' => 1772470259
+    'idEscuela' => 2
+    'nombreEscuela' => 'Club Aves Voladoras'
+]
+
+$_SERVER = [
+    'REDIRECT_MIBDIRS' => 'C:/xampp/php/extras/mibs'
+    'REDIRECT_MYSQL_HOME' => '\\xampp\\mysql\\bin'
+    'REDIRECT_OPENSSL_CONF' => 'C:/xampp/apache/bin/openssl.cnf'
+    'REDIRECT_PHP_PEAR_SYSCONF_DIR' => '\\xampp\\php'
+    'REDIRECT_PHPRC' => '\\xampp\\php'
+    'REDIRECT_TMP' => '\\xampp\\tmp'
+    'REDIRECT_STATUS' => '200'
+    'MIBDIRS' => 'C:/xampp/php/extras/mibs'
+    'MYSQL_HOME' => '\\xampp\\mysql\\bin'
+    'OPENSSL_CONF' => 'C:/xampp/apache/bin/openssl.cnf'
+    'PHP_PEAR_SYSCONF_DIR' => '\\xampp\\php'
+    'PHPRC' => '\\xampp\\php'
+    'TMP' => '\\xampp\\tmp'
+    'HTTP_HOST' => 'localhost'
+    'HTTP_CONNECTION' => 'keep-alive'
+    'HTTP_SEC_CH_UA_PLATFORM' => '\"Windows\"'
+    'HTTP_USER_AGENT' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36 OPR/127.0.0.0'
+    'HTTP_SEC_CH_UA' => '\"Opera GX\";v=\"127\", \"Chromium\";v=\"143\", \"Not A(Brand\";v=\"24\"'
+    'HTTP_SEC_CH_UA_MOBILE' => '?0'
+    'HTTP_ACCEPT' => '*/*'
+    'HTTP_SEC_FETCH_SITE' => 'same-origin'
+    'HTTP_SEC_FETCH_MODE' => 'no-cors'
+    'HTTP_SEC_FETCH_DEST' => 'script'
+    'HTTP_REFERER' => 'http://localhost/planealo.sytes.net/web/aportes/aportes/index'
+    'HTTP_ACCEPT_ENCODING' => 'gzip, deflate, br, zstd'
+    'HTTP_ACCEPT_LANGUAGE' => 'en,id;q=0.9,tr;q=0.8,ru;q=0.7'
+    'HTTP_COOKIE' => '_ga=GA1.1.1679908835.1749223008; PHPSESSID=uhtlqp6m93te7gqig62teinalp; _csrf=052b7c918e29a57673e9a43dd7b0060950f2b65b0138ca3e52d5b7da9ca869f0a%3A2%3A%7Bi%3A0%3Bs%3A5%3A%22_csrf%22%3Bi%3A1%3Bs%3A32%3A%226sBatZ-07-JGxFS3hxh8qNGtiN8aQDz0%22%3B%7D'
+    'PATH' => 'C:\\WINDOWS\\system32;C:\\WINDOWS;C:\\WINDOWS\\System32\\Wbem;C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\;C:\\WINDOWS\\System32\\OpenSSH\\;C:\\xampp\\php;C:\\ProgramData\\ComposerSetup\\bin;C:\\Program Files\\PuTTY\\;C:\\Program Files\\Git\\cmd;C:\\Program Files\\nodejs\\;C:\\Program Files (x86)\\Microsoft SQL Server\\160\\Tools\\Binn\\;C:\\Program Files\\Microsoft SQL Server\\160\\Tools\\Binn\\;C:\\Program Files\\Microsoft SQL Server\\Client SDK\\ODBC\\170\\Tools\\Binn\\;C:\\Program Files\\Microsoft SQL Server\\160\\DTS\\Binn\\;C:\\Program Files (x86)\\Microsoft SQL Server\\160\\DTS\\Binn\\;C:\\Users\\Otic-Sistemas\\AppData\\Local\\Microsoft\\WindowsApps;;C:\\Users\\Otic-Sistemas\\AppData\\Local\\Programs\\Microsoft VS Code\\bin;C:\\Users\\Otic-Sistemas\\AppData\\Roaming\\Composer\\vendor\\bin;C:\\Users\\Otic-Sistemas\\AppData\\Roaming\\npm'
+    'SystemRoot' => 'C:\\WINDOWS'
+    'COMSPEC' => 'C:\\WINDOWS\\system32\\cmd.exe'
+    'PATHEXT' => '.COM;.EXE;.BAT;.CMD;.VBS;.VBE;.JS;.JSE;.WSF;.WSH;.MSC'
+    'WINDIR' => 'C:\\WINDOWS'
+    'SERVER_SIGNATURE' => '<address>Apache/2.4.54 (Win64) OpenSSL/1.1.1p PHP/8.2.0 Server at localhost Port 80</address>
+'
+    'SERVER_SOFTWARE' => 'Apache/2.4.54 (Win64) OpenSSL/1.1.1p PHP/8.2.0'
+    'SERVER_NAME' => 'localhost'
+    'SERVER_ADDR' => '::1'
+    'SERVER_PORT' => '80'
+    'REMOTE_ADDR' => '::1'
+    'DOCUMENT_ROOT' => 'C:/xampp/htdocs'
+    'REQUEST_SCHEME' => 'http'
+    'CONTEXT_PREFIX' => ''
+    'CONTEXT_DOCUMENT_ROOT' => 'C:/xampp/htdocs'
+    'SERVER_ADMIN' => 'postmaster@localhost'
+    'SCRIPT_FILENAME' => 'C:/xampp/htdocs/planealo.sytes.net/web/index.php'
+    'REMOTE_PORT' => '54849'
+    'REDIRECT_URL' => '/planealo.sytes.net/web/js/escuela-selector.js'
+    'GATEWAY_INTERFACE' => 'CGI/1.1'
+    'SERVER_PROTOCOL' => 'HTTP/1.1'
+    'REQUEST_METHOD' => 'GET'
+    'QUERY_STRING' => ''
+    'REQUEST_URI' => '/planealo.sytes.net/web/js/escuela-selector.js'
+    'SCRIPT_NAME' => '/planealo.sytes.net/web/index.php'
+    'PHP_SELF' => '/planealo.sytes.net/web/index.php'
+    'REQUEST_TIME_FLOAT' => 1772470348.4566
+    'REQUEST_TIME' => 1772470348
+]
+2026-03-02 12:52:54 [::1][1][uhtlqp6m93te7gqig62teinalp][error][yii\base\ViewNotFoundException] yii\base\ViewNotFoundException: The view file does not exist: C:\xampp\htdocs\planealo.sytes.net\modules\aportes\views\aportes\create.php in C:\xampp\htdocs\planealo.sytes.net\vendor\yiisoft\yii2\base\View.php:233
+Stack trace:
+#0 C:\xampp\htdocs\planealo.sytes.net\vendor\yiisoft\yii2\base\View.php(156): yii\base\View->renderFile('C:\\xampp\\htdocs...', Array, Object(app\modules\aportes\controllers\AportesController))
+#1 C:\xampp\htdocs\planealo.sytes.net\vendor\yiisoft\yii2\base\Controller.php(450): yii\base\View->render('create', Array, Object(app\modules\aportes\controllers\AportesController))
+#2 C:\xampp\htdocs\planealo.sytes.net\modules\aportes\controllers\AportesController.php(904): yii\base\Controller->render('create', Array)
+#3 [internal function]: app\modules\aportes\controllers\AportesController->actionCreate()
+#4 C:\xampp\htdocs\planealo.sytes.net\vendor\yiisoft\yii2\base\InlineAction.php(66): call_user_func_array(Array, Array)
+#5 C:\xampp\htdocs\planealo.sytes.net\vendor\yiisoft\yii2\base\Controller.php(197): yii\base\InlineAction->runWithParams(Array)
+#6 C:\xampp\htdocs\planealo.sytes.net\vendor\yiisoft\yii2\base\Module.php(554): yii\base\Controller->runAction('create', Array)
+#7 C:\xampp\htdocs\planealo.sytes.net\vendor\yiisoft\yii2\web\Application.php(112): yii\base\Module->runAction('aportes/aportes...', Array)
+#8 C:\xampp\htdocs\planealo.sytes.net\vendor\yiisoft\yii2\base\Application.php(391): yii\web\Application->handleRequest(Object(yii\web\Request))
+#9 C:\xampp\htdocs\planealo.sytes.net\web\index.php(12): yii\base\Application->run()
+#10 {main}
+2026-03-02 12:52:54 [::1][1][uhtlqp6m93te7gqig62teinalp][info][application] $_GET = [
+    'AportesSemanales' => [
+        'atleta_id' => '44'
+    ]
+]
+
+$_POST = []
+
+$_FILES = []
+
+$_COOKIE = [
+    '_ga' => 'GA1.1.1679908835.1749223008'
+    'PHPSESSID' => 'uhtlqp6m93te7gqig62teinalp'
+    '_csrf' => '052b7c918e29a57673e9a43dd7b0060950f2b65b0138ca3e52d5b7da9ca869f0a:2:{i:0;s:5:\"_csrf\";i:1;s:32:\"6sBatZ-07-JGxFS3hxh8qNGtiN8aQDz0\";}'
+]
+
+$_SESSION = [
+    '__flash' => []
+    '__id' => 1
+    '__authKey' => 'FCxNRGJia25jro30ecX5r8yVk7nCuaOY'
+    'id_escuela' => 2
+    'nombre_escuela' => 'Club Aves Voladoras'
+    'escuela_activa' => true
+    'escuela_ultima_actualizacion' => 1772470259
+    'idEscuela' => 2
+    'nombreEscuela' => 'Club Aves Voladoras'
+]
+
+$_SERVER = [
+    'REDIRECT_MIBDIRS' => 'C:/xampp/php/extras/mibs'
+    'REDIRECT_MYSQL_HOME' => '\\xampp\\mysql\\bin'
+    'REDIRECT_OPENSSL_CONF' => 'C:/xampp/apache/bin/openssl.cnf'
+    'REDIRECT_PHP_PEAR_SYSCONF_DIR' => '\\xampp\\php'
+    'REDIRECT_PHPRC' => '\\xampp\\php'
+    'REDIRECT_TMP' => '\\xampp\\tmp'
+    'REDIRECT_STATUS' => '200'
+    'MIBDIRS' => 'C:/xampp/php/extras/mibs'
+    'MYSQL_HOME' => '\\xampp\\mysql\\bin'
+    'OPENSSL_CONF' => 'C:/xampp/apache/bin/openssl.cnf'
+    'PHP_PEAR_SYSCONF_DIR' => '\\xampp\\php'
+    'PHPRC' => '\\xampp\\php'
+    'TMP' => '\\xampp\\tmp'
+    'HTTP_HOST' => 'localhost'
+    'HTTP_CONNECTION' => 'keep-alive'
+    'HTTP_SEC_CH_UA' => '\"Opera GX\";v=\"127\", \"Chromium\";v=\"143\", \"Not A(Brand\";v=\"24\"'
+    'HTTP_SEC_CH_UA_MOBILE' => '?0'
+    'HTTP_SEC_CH_UA_PLATFORM' => '\"Windows\"'
+    'HTTP_UPGRADE_INSECURE_REQUESTS' => '1'
+    'HTTP_USER_AGENT' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36 OPR/127.0.0.0'
+    'HTTP_ACCEPT' => 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7'
+    'HTTP_SEC_FETCH_SITE' => 'same-origin'
+    'HTTP_SEC_FETCH_MODE' => 'navigate'
+    'HTTP_SEC_FETCH_USER' => '?1'
+    'HTTP_SEC_FETCH_DEST' => 'document'
+    'HTTP_REFERER' => 'http://localhost/planealo.sytes.net/web/aportes/aportes/index'
+    'HTTP_ACCEPT_ENCODING' => 'gzip, deflate, br, zstd'
+    'HTTP_ACCEPT_LANGUAGE' => 'en,id;q=0.9,tr;q=0.8,ru;q=0.7'
+    'HTTP_COOKIE' => '_ga=GA1.1.1679908835.1749223008; PHPSESSID=uhtlqp6m93te7gqig62teinalp; _csrf=052b7c918e29a57673e9a43dd7b0060950f2b65b0138ca3e52d5b7da9ca869f0a%3A2%3A%7Bi%3A0%3Bs%3A5%3A%22_csrf%22%3Bi%3A1%3Bs%3A32%3A%226sBatZ-07-JGxFS3hxh8qNGtiN8aQDz0%22%3B%7D'
+    'PATH' => 'C:\\WINDOWS\\system32;C:\\WINDOWS;C:\\WINDOWS\\System32\\Wbem;C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\;C:\\WINDOWS\\System32\\OpenSSH\\;C:\\xampp\\php;C:\\ProgramData\\ComposerSetup\\bin;C:\\Program Files\\PuTTY\\;C:\\Program Files\\Git\\cmd;C:\\Program Files\\nodejs\\;C:\\Program Files (x86)\\Microsoft SQL Server\\160\\Tools\\Binn\\;C:\\Program Files\\Microsoft SQL Server\\160\\Tools\\Binn\\;C:\\Program Files\\Microsoft SQL Server\\Client SDK\\ODBC\\170\\Tools\\Binn\\;C:\\Program Files\\Microsoft SQL Server\\160\\DTS\\Binn\\;C:\\Program Files (x86)\\Microsoft SQL Server\\160\\DTS\\Binn\\;C:\\Users\\Otic-Sistemas\\AppData\\Local\\Microsoft\\WindowsApps;;C:\\Users\\Otic-Sistemas\\AppData\\Local\\Programs\\Microsoft VS Code\\bin;C:\\Users\\Otic-Sistemas\\AppData\\Roaming\\Composer\\vendor\\bin;C:\\Users\\Otic-Sistemas\\AppData\\Roaming\\npm'
+    'SystemRoot' => 'C:\\WINDOWS'
+    'COMSPEC' => 'C:\\WINDOWS\\system32\\cmd.exe'
+    'PATHEXT' => '.COM;.EXE;.BAT;.CMD;.VBS;.VBE;.JS;.JSE;.WSF;.WSH;.MSC'
+    'WINDIR' => 'C:\\WINDOWS'
+    'SERVER_SIGNATURE' => '<address>Apache/2.4.54 (Win64) OpenSSL/1.1.1p PHP/8.2.0 Server at localhost Port 80</address>
+'
+    'SERVER_SOFTWARE' => 'Apache/2.4.54 (Win64) OpenSSL/1.1.1p PHP/8.2.0'
+    'SERVER_NAME' => 'localhost'
+    'SERVER_ADDR' => '::1'
+    'SERVER_PORT' => '80'
+    'REMOTE_ADDR' => '::1'
+    'DOCUMENT_ROOT' => 'C:/xampp/htdocs'
+    'REQUEST_SCHEME' => 'http'
+    'CONTEXT_PREFIX' => ''
+    'CONTEXT_DOCUMENT_ROOT' => 'C:/xampp/htdocs'
+    'SERVER_ADMIN' => 'postmaster@localhost'
+    'SCRIPT_FILENAME' => 'C:/xampp/htdocs/planealo.sytes.net/web/index.php'
+    'REMOTE_PORT' => '54894'
+    'REDIRECT_URL' => '/planealo.sytes.net/web/aportes/aportes/create'
+    'REDIRECT_QUERY_STRING' => 'AportesSemanales%5Batleta_id%5D=44'
+    'GATEWAY_INTERFACE' => 'CGI/1.1'
+    'SERVER_PROTOCOL' => 'HTTP/1.1'
+    'REQUEST_METHOD' => 'GET'
+    'QUERY_STRING' => 'AportesSemanales%5Batleta_id%5D=44'
+    'REQUEST_URI' => '/planealo.sytes.net/web/aportes/aportes/create?AportesSemanales%5Batleta_id%5D=44'
+    'SCRIPT_NAME' => '/planealo.sytes.net/web/index.php'
+    'PHP_SELF' => '/planealo.sytes.net/web/index.php'
+    'REQUEST_TIME_FLOAT' => 1772470374.3896
+    'REQUEST_TIME' => 1772470374
+]
+2026-03-02 12:53:28 [::1][1][uhtlqp6m93te7gqig62teinalp][error][tasa-dolar] Error BCV Directo: fopen(https://www.bcv.org.ve/): Failed to open stream: Se produjo un error durante el intento de conexión ya que la parte conectada no respondió adecuadamente tras un periodo de tiempo, o bien se produjo un error en la conexión establecida ya que el host conectado no ha podido responder
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:157
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:105
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:78
+2026-03-02 12:53:28 [::1][1][uhtlqp6m93te7gqig62teinalp][warning][tasa-dolar] ❌ Fuente BCV_Directo falló o tasa inválida: 0
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:112
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:78
+    in C:\xampp\htdocs\planealo.sytes.net\modules\aportes\views\aportes\gestion-atleta.php:37
+2026-03-02 12:53:48 [::1][1][uhtlqp6m93te7gqig62teinalp][error][tasa-dolar] Error BCV Alternativo: fopen(https://www.bcv.org.ve/tasas-informativas-sistema-bancario): Failed to open stream: Se produjo un error durante el intento de conexión ya que la parte conectada no respondió adecuadamente tras un periodo de tiempo, o bien se produjo un error en la conexión establecida ya que el host conectado no ha podido responder
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:187
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:105
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:78
+2026-03-02 12:53:48 [::1][1][uhtlqp6m93te7gqig62teinalp][warning][tasa-dolar] ❌ Fuente BCV_Alternativo falló o tasa inválida: 0
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:112
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:78
+    in C:\xampp\htdocs\planealo.sytes.net\modules\aportes\views\aportes\gestion-atleta.php:37
+2026-03-02 12:54:03 [::1][1][uhtlqp6m93te7gqig62teinalp][error][tasa-dolar] Error Yahoo Finance: fopen(https://query1.finance.yahoo.com/v8/finance/chart/USDVES=X): Failed to open stream: Se produjo un error durante el intento de conexión ya que la parte conectada no respondió adecuadamente tras un periodo de tiempo, o bien se produjo un error en la conexión establecida ya que el host conectado no ha podido responder
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:286
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:105
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:78
+2026-03-02 12:54:03 [::1][1][uhtlqp6m93te7gqig62teinalp][warning][tasa-dolar] ❌ Fuente EnParalelo falló o tasa inválida: 0
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:112
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:78
+    in C:\xampp\htdocs\planealo.sytes.net\modules\aportes\views\aportes\gestion-atleta.php:37
+2026-03-02 12:54:18 [::1][1][uhtlqp6m93te7gqig62teinalp][error][tasa-dolar] Error ExchangeRate-API: fopen(https://api.exchangerate-api.com/v4/latest/USD): Failed to open stream: Se produjo un error durante el intento de conexión ya que la parte conectada no respondió adecuadamente tras un periodo de tiempo, o bien se produjo un error en la conexión establecida ya que el host conectado no ha podido responder
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:317
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:105
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:78
+2026-03-02 12:54:18 [::1][1][uhtlqp6m93te7gqig62teinalp][warning][tasa-dolar] ❌ Fuente API_Respaldo falló o tasa inválida: 0
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:112
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:78
+    in C:\xampp\htdocs\planealo.sytes.net\modules\aportes\views\aportes\gestion-atleta.php:37
+2026-03-02 12:54:18 [::1][1][uhtlqp6m93te7gqig62teinalp][error][tasa-dolar] ❌ Todas las fuentes fallaron
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:116
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:78
+    in C:\xampp\htdocs\planealo.sytes.net\modules\aportes\views\aportes\gestion-atleta.php:37
+2026-03-02 12:54:39 [::1][1][uhtlqp6m93te7gqig62teinalp][error][tasa-dolar] Error BCV Directo: fopen(https://www.bcv.org.ve/): Failed to open stream: Se produjo un error durante el intento de conexión ya que la parte conectada no respondió adecuadamente tras un periodo de tiempo, o bien se produjo un error en la conexión establecida ya que el host conectado no ha podido responder
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:157
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:105
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:78
+2026-03-02 12:54:39 [::1][1][uhtlqp6m93te7gqig62teinalp][warning][tasa-dolar] ❌ Fuente BCV_Directo falló o tasa inválida: 0
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:112
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:78
+    in C:\xampp\htdocs\planealo.sytes.net\widgets\TasaDolarWidget.php:15
+2026-03-02 12:54:59 [::1][1][uhtlqp6m93te7gqig62teinalp][error][tasa-dolar] Error BCV Alternativo: fopen(https://www.bcv.org.ve/tasas-informativas-sistema-bancario): Failed to open stream: Se produjo un error durante el intento de conexión ya que la parte conectada no respondió adecuadamente tras un periodo de tiempo, o bien se produjo un error en la conexión establecida ya que el host conectado no ha podido responder
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:187
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:105
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:78
+2026-03-02 12:54:59 [::1][1][uhtlqp6m93te7gqig62teinalp][warning][tasa-dolar] ❌ Fuente BCV_Alternativo falló o tasa inválida: 0
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:112
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:78
+    in C:\xampp\htdocs\planealo.sytes.net\widgets\TasaDolarWidget.php:15
+2026-03-02 12:55:14 [::1][1][uhtlqp6m93te7gqig62teinalp][error][yii\base\ErrorException:1] yii\base\ErrorException: Maximum execution time of 120 seconds exceeded in C:\xampp\htdocs\planealo.sytes.net\vendor\yiisoft\yii2\base\ErrorHandler.php:253
+Stack trace:
+#0 [internal function]: yii\base\ErrorHandler->handleFatalError()
+#1 {main}
+2026-03-02 12:53:06 [::1][1][uhtlqp6m93te7gqig62teinalp][info][application] $_GET = []
+
+$_POST = []
+
+$_FILES = []
+
+$_COOKIE = [
+    '_ga' => 'GA1.1.1679908835.1749223008'
+    'PHPSESSID' => 'uhtlqp6m93te7gqig62teinalp'
+    '_csrf' => '052b7c918e29a57673e9a43dd7b0060950f2b65b0138ca3e52d5b7da9ca869f0a:2:{i:0;s:5:\"_csrf\";i:1;s:32:\"6sBatZ-07-JGxFS3hxh8qNGtiN8aQDz0\";}'
+]
+
+$_SESSION = [
+    '__flash' => []
+    '__id' => 1
+    '__authKey' => 'FCxNRGJia25jro30ecX5r8yVk7nCuaOY'
+    'id_escuela' => 2
+    'nombre_escuela' => 'Club Aves Voladoras'
+    'escuela_activa' => true
+    'escuela_ultima_actualizacion' => 1772470259
+    'idEscuela' => 2
+    'nombreEscuela' => 'Club Aves Voladoras'
+]
+
+$_SERVER = [
+    'REDIRECT_MIBDIRS' => 'C:/xampp/php/extras/mibs'
+    'REDIRECT_MYSQL_HOME' => '\\xampp\\mysql\\bin'
+    'REDIRECT_OPENSSL_CONF' => 'C:/xampp/apache/bin/openssl.cnf'
+    'REDIRECT_PHP_PEAR_SYSCONF_DIR' => '\\xampp\\php'
+    'REDIRECT_PHPRC' => '\\xampp\\php'
+    'REDIRECT_TMP' => '\\xampp\\tmp'
+    'REDIRECT_STATUS' => '200'
+    'MIBDIRS' => 'C:/xampp/php/extras/mibs'
+    'MYSQL_HOME' => '\\xampp\\mysql\\bin'
+    'OPENSSL_CONF' => 'C:/xampp/apache/bin/openssl.cnf'
+    'PHP_PEAR_SYSCONF_DIR' => '\\xampp\\php'
+    'PHPRC' => '\\xampp\\php'
+    'TMP' => '\\xampp\\tmp'
+    'HTTP_HOST' => 'localhost'
+    'HTTP_CONNECTION' => 'keep-alive'
+    'HTTP_SEC_CH_UA' => '\"Opera GX\";v=\"127\", \"Chromium\";v=\"143\", \"Not A(Brand\";v=\"24\"'
+    'HTTP_SEC_CH_UA_MOBILE' => '?0'
+    'HTTP_SEC_CH_UA_PLATFORM' => '\"Windows\"'
+    'HTTP_UPGRADE_INSECURE_REQUESTS' => '1'
+    'HTTP_USER_AGENT' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36 OPR/127.0.0.0'
+    'HTTP_ACCEPT' => 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7'
+    'HTTP_SEC_FETCH_SITE' => 'same-origin'
+    'HTTP_SEC_FETCH_MODE' => 'navigate'
+    'HTTP_SEC_FETCH_USER' => '?1'
+    'HTTP_SEC_FETCH_DEST' => 'document'
+    'HTTP_REFERER' => 'http://localhost/planealo.sytes.net/web/aportes/aportes/index'
+    'HTTP_ACCEPT_ENCODING' => 'gzip, deflate, br, zstd'
+    'HTTP_ACCEPT_LANGUAGE' => 'en,id;q=0.9,tr;q=0.8,ru;q=0.7'
+    'HTTP_COOKIE' => '_ga=GA1.1.1679908835.1749223008; PHPSESSID=uhtlqp6m93te7gqig62teinalp; _csrf=052b7c918e29a57673e9a43dd7b0060950f2b65b0138ca3e52d5b7da9ca869f0a%3A2%3A%7Bi%3A0%3Bs%3A5%3A%22_csrf%22%3Bi%3A1%3Bs%3A32%3A%226sBatZ-07-JGxFS3hxh8qNGtiN8aQDz0%22%3B%7D'
+    'PATH' => 'C:\\WINDOWS\\system32;C:\\WINDOWS;C:\\WINDOWS\\System32\\Wbem;C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\;C:\\WINDOWS\\System32\\OpenSSH\\;C:\\xampp\\php;C:\\ProgramData\\ComposerSetup\\bin;C:\\Program Files\\PuTTY\\;C:\\Program Files\\Git\\cmd;C:\\Program Files\\nodejs\\;C:\\Program Files (x86)\\Microsoft SQL Server\\160\\Tools\\Binn\\;C:\\Program Files\\Microsoft SQL Server\\160\\Tools\\Binn\\;C:\\Program Files\\Microsoft SQL Server\\Client SDK\\ODBC\\170\\Tools\\Binn\\;C:\\Program Files\\Microsoft SQL Server\\160\\DTS\\Binn\\;C:\\Program Files (x86)\\Microsoft SQL Server\\160\\DTS\\Binn\\;C:\\Users\\Otic-Sistemas\\AppData\\Local\\Microsoft\\WindowsApps;;C:\\Users\\Otic-Sistemas\\AppData\\Local\\Programs\\Microsoft VS Code\\bin;C:\\Users\\Otic-Sistemas\\AppData\\Roaming\\Composer\\vendor\\bin;C:\\Users\\Otic-Sistemas\\AppData\\Roaming\\npm'
+    'SystemRoot' => 'C:\\WINDOWS'
+    'COMSPEC' => 'C:\\WINDOWS\\system32\\cmd.exe'
+    'PATHEXT' => '.COM;.EXE;.BAT;.CMD;.VBS;.VBE;.JS;.JSE;.WSF;.WSH;.MSC'
+    'WINDIR' => 'C:\\WINDOWS'
+    'SERVER_SIGNATURE' => '<address>Apache/2.4.54 (Win64) OpenSSL/1.1.1p PHP/8.2.0 Server at localhost Port 80</address>
+'
+    'SERVER_SOFTWARE' => 'Apache/2.4.54 (Win64) OpenSSL/1.1.1p PHP/8.2.0'
+    'SERVER_NAME' => 'localhost'
+    'SERVER_ADDR' => '::1'
+    'SERVER_PORT' => '80'
+    'REMOTE_ADDR' => '::1'
+    'DOCUMENT_ROOT' => 'C:/xampp/htdocs'
+    'REQUEST_SCHEME' => 'http'
+    'CONTEXT_PREFIX' => ''
+    'CONTEXT_DOCUMENT_ROOT' => 'C:/xampp/htdocs'
+    'SERVER_ADMIN' => 'postmaster@localhost'
+    'SCRIPT_FILENAME' => 'C:/xampp/htdocs/planealo.sytes.net/web/index.php'
+    'REMOTE_PORT' => '54906'
+    'REDIRECT_URL' => '/planealo.sytes.net/web/aportes/aportes/gestion-atleta'
+    'GATEWAY_INTERFACE' => 'CGI/1.1'
+    'SERVER_PROTOCOL' => 'HTTP/1.1'
+    'REQUEST_METHOD' => 'GET'
+    'QUERY_STRING' => ''
+    'REQUEST_URI' => '/planealo.sytes.net/web/aportes/aportes/gestion-atleta'
+    'SCRIPT_NAME' => '/planealo.sytes.net/web/index.php'
+    'PHP_SELF' => '/planealo.sytes.net/web/index.php'
+    'REQUEST_TIME_FLOAT' => 1772470386.9507
+    'REQUEST_TIME' => 1772470386
+]
+2026-03-02 13:23:12 [::1][1][uhtlqp6m93te7gqig62teinalp][error][tasa-dolar] Error BCV Directo: fopen(https://www.bcv.org.ve/): Failed to open stream: Se produjo un error durante el intento de conexión ya que la parte conectada no respondió adecuadamente tras un periodo de tiempo, o bien se produjo un error en la conexión establecida ya que el host conectado no ha podido responder
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:157
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:105
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:78
+2026-03-02 13:23:12 [::1][1][uhtlqp6m93te7gqig62teinalp][warning][tasa-dolar] ❌ Fuente BCV_Directo falló o tasa inválida: 0
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:112
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:78
+    in C:\xampp\htdocs\planealo.sytes.net\modules\aportes\views\aportes\gestion-atleta.php:37
+2026-03-02 13:23:32 [::1][1][uhtlqp6m93te7gqig62teinalp][error][tasa-dolar] Error BCV Alternativo: fopen(https://www.bcv.org.ve/tasas-informativas-sistema-bancario): Failed to open stream: Se produjo un error durante el intento de conexión ya que la parte conectada no respondió adecuadamente tras un periodo de tiempo, o bien se produjo un error en la conexión establecida ya que el host conectado no ha podido responder
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:187
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:105
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:78
+2026-03-02 13:23:32 [::1][1][uhtlqp6m93te7gqig62teinalp][warning][tasa-dolar] ❌ Fuente BCV_Alternativo falló o tasa inválida: 0
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:112
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:78
+    in C:\xampp\htdocs\planealo.sytes.net\modules\aportes\views\aportes\gestion-atleta.php:37
+2026-03-02 13:23:47 [::1][1][uhtlqp6m93te7gqig62teinalp][error][tasa-dolar] Error Yahoo Finance: fopen(https://query1.finance.yahoo.com/v8/finance/chart/USDVES=X): Failed to open stream: Se produjo un error durante el intento de conexión ya que la parte conectada no respondió adecuadamente tras un periodo de tiempo, o bien se produjo un error en la conexión establecida ya que el host conectado no ha podido responder
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:286
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:105
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:78
+2026-03-02 13:23:47 [::1][1][uhtlqp6m93te7gqig62teinalp][warning][tasa-dolar] ❌ Fuente EnParalelo falló o tasa inválida: 0
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:112
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:78
+    in C:\xampp\htdocs\planealo.sytes.net\modules\aportes\views\aportes\gestion-atleta.php:37
+2026-03-02 13:24:02 [::1][1][uhtlqp6m93te7gqig62teinalp][error][tasa-dolar] Error ExchangeRate-API: fopen(https://api.exchangerate-api.com/v4/latest/USD): Failed to open stream: Se produjo un error durante el intento de conexión ya que la parte conectada no respondió adecuadamente tras un periodo de tiempo, o bien se produjo un error en la conexión establecida ya que el host conectado no ha podido responder
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:317
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:105
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:78
+2026-03-02 13:24:02 [::1][1][uhtlqp6m93te7gqig62teinalp][warning][tasa-dolar] ❌ Fuente API_Respaldo falló o tasa inválida: 0
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:112
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:78
+    in C:\xampp\htdocs\planealo.sytes.net\modules\aportes\views\aportes\gestion-atleta.php:37
+2026-03-02 13:24:02 [::1][1][uhtlqp6m93te7gqig62teinalp][error][tasa-dolar] ❌ Todas las fuentes fallaron
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:116
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:78
+    in C:\xampp\htdocs\planealo.sytes.net\modules\aportes\views\aportes\gestion-atleta.php:37
+2026-03-02 13:24:24 [::1][1][uhtlqp6m93te7gqig62teinalp][error][tasa-dolar] Error BCV Directo: fopen(https://www.bcv.org.ve/): Failed to open stream: Se produjo un error durante el intento de conexión ya que la parte conectada no respondió adecuadamente tras un periodo de tiempo, o bien se produjo un error en la conexión establecida ya que el host conectado no ha podido responder
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:157
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:105
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:78
+2026-03-02 13:24:24 [::1][1][uhtlqp6m93te7gqig62teinalp][warning][tasa-dolar] ❌ Fuente BCV_Directo falló o tasa inválida: 0
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:112
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:78
+    in C:\xampp\htdocs\planealo.sytes.net\widgets\TasaDolarWidget.php:15
+2026-03-02 13:24:44 [::1][1][uhtlqp6m93te7gqig62teinalp][error][yii\base\ErrorException:1] yii\base\ErrorException: Maximum execution time of 120 seconds exceeded in C:\xampp\htdocs\planealo.sytes.net\vendor\yiisoft\yii2\base\ErrorHandler.php:253
+Stack trace:
+#0 [internal function]: yii\base\ErrorHandler->handleFatalError()
+#1 {main}
+2026-03-02 13:22:40 [::1][1][uhtlqp6m93te7gqig62teinalp][info][application] $_GET = []
+
+$_POST = []
+
+$_FILES = []
+
+$_COOKIE = [
+    '_ga' => 'GA1.1.1679908835.1749223008'
+    'PHPSESSID' => 'uhtlqp6m93te7gqig62teinalp'
+    '_csrf' => '052b7c918e29a57673e9a43dd7b0060950f2b65b0138ca3e52d5b7da9ca869f0a:2:{i:0;s:5:\"_csrf\";i:1;s:32:\"6sBatZ-07-JGxFS3hxh8qNGtiN8aQDz0\";}'
+]
+
+$_SESSION = [
+    '__flash' => []
+    '__id' => 1
+    '__authKey' => 'FCxNRGJia25jro30ecX5r8yVk7nCuaOY'
+    'id_escuela' => 2
+    'nombre_escuela' => 'Club Aves Voladoras'
+    'escuela_activa' => true
+    'escuela_ultima_actualizacion' => 1772470259
+    'idEscuela' => 2
+    'nombreEscuela' => 'Club Aves Voladoras'
+]
+
+$_SERVER = [
+    'REDIRECT_MIBDIRS' => 'C:/xampp/php/extras/mibs'
+    'REDIRECT_MYSQL_HOME' => '\\xampp\\mysql\\bin'
+    'REDIRECT_OPENSSL_CONF' => 'C:/xampp/apache/bin/openssl.cnf'
+    'REDIRECT_PHP_PEAR_SYSCONF_DIR' => '\\xampp\\php'
+    'REDIRECT_PHPRC' => '\\xampp\\php'
+    'REDIRECT_TMP' => '\\xampp\\tmp'
+    'REDIRECT_STATUS' => '200'
+    'MIBDIRS' => 'C:/xampp/php/extras/mibs'
+    'MYSQL_HOME' => '\\xampp\\mysql\\bin'
+    'OPENSSL_CONF' => 'C:/xampp/apache/bin/openssl.cnf'
+    'PHP_PEAR_SYSCONF_DIR' => '\\xampp\\php'
+    'PHPRC' => '\\xampp\\php'
+    'TMP' => '\\xampp\\tmp'
+    'HTTP_HOST' => 'localhost'
+    'HTTP_CONNECTION' => 'keep-alive'
+    'HTTP_CACHE_CONTROL' => 'max-age=0'
+    'HTTP_SEC_CH_UA' => '\"Opera GX\";v=\"127\", \"Chromium\";v=\"143\", \"Not A(Brand\";v=\"24\"'
+    'HTTP_SEC_CH_UA_MOBILE' => '?0'
+    'HTTP_SEC_CH_UA_PLATFORM' => '\"Windows\"'
+    'HTTP_UPGRADE_INSECURE_REQUESTS' => '1'
+    'HTTP_USER_AGENT' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36 OPR/127.0.0.0'
+    'HTTP_ACCEPT' => 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7'
+    'HTTP_SEC_FETCH_SITE' => 'same-origin'
+    'HTTP_SEC_FETCH_MODE' => 'navigate'
+    'HTTP_SEC_FETCH_USER' => '?1'
+    'HTTP_SEC_FETCH_DEST' => 'document'
+    'HTTP_REFERER' => 'http://localhost/planealo.sytes.net/web/aportes/aportes/index'
+    'HTTP_ACCEPT_ENCODING' => 'gzip, deflate, br, zstd'
+    'HTTP_ACCEPT_LANGUAGE' => 'en,id;q=0.9,tr;q=0.8,ru;q=0.7'
+    'HTTP_COOKIE' => '_ga=GA1.1.1679908835.1749223008; PHPSESSID=uhtlqp6m93te7gqig62teinalp; _csrf=052b7c918e29a57673e9a43dd7b0060950f2b65b0138ca3e52d5b7da9ca869f0a%3A2%3A%7Bi%3A0%3Bs%3A5%3A%22_csrf%22%3Bi%3A1%3Bs%3A32%3A%226sBatZ-07-JGxFS3hxh8qNGtiN8aQDz0%22%3B%7D'
+    'PATH' => 'C:\\WINDOWS\\system32;C:\\WINDOWS;C:\\WINDOWS\\System32\\Wbem;C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\;C:\\WINDOWS\\System32\\OpenSSH\\;C:\\xampp\\php;C:\\ProgramData\\ComposerSetup\\bin;C:\\Program Files\\PuTTY\\;C:\\Program Files\\Git\\cmd;C:\\Program Files\\nodejs\\;C:\\Program Files (x86)\\Microsoft SQL Server\\160\\Tools\\Binn\\;C:\\Program Files\\Microsoft SQL Server\\160\\Tools\\Binn\\;C:\\Program Files\\Microsoft SQL Server\\Client SDK\\ODBC\\170\\Tools\\Binn\\;C:\\Program Files\\Microsoft SQL Server\\160\\DTS\\Binn\\;C:\\Program Files (x86)\\Microsoft SQL Server\\160\\DTS\\Binn\\;C:\\Users\\Otic-Sistemas\\AppData\\Local\\Microsoft\\WindowsApps;;C:\\Users\\Otic-Sistemas\\AppData\\Local\\Programs\\Microsoft VS Code\\bin;C:\\Users\\Otic-Sistemas\\AppData\\Roaming\\Composer\\vendor\\bin;C:\\Users\\Otic-Sistemas\\AppData\\Roaming\\npm'
+    'SystemRoot' => 'C:\\WINDOWS'
+    'COMSPEC' => 'C:\\WINDOWS\\system32\\cmd.exe'
+    'PATHEXT' => '.COM;.EXE;.BAT;.CMD;.VBS;.VBE;.JS;.JSE;.WSF;.WSH;.MSC'
+    'WINDIR' => 'C:\\WINDOWS'
+    'SERVER_SIGNATURE' => '<address>Apache/2.4.54 (Win64) OpenSSL/1.1.1p PHP/8.2.0 Server at localhost Port 80</address>
+'
+    'SERVER_SOFTWARE' => 'Apache/2.4.54 (Win64) OpenSSL/1.1.1p PHP/8.2.0'
+    'SERVER_NAME' => 'localhost'
+    'SERVER_ADDR' => '::1'
+    'SERVER_PORT' => '80'
+    'REMOTE_ADDR' => '::1'
+    'DOCUMENT_ROOT' => 'C:/xampp/htdocs'
+    'REQUEST_SCHEME' => 'http'
+    'CONTEXT_PREFIX' => ''
+    'CONTEXT_DOCUMENT_ROOT' => 'C:/xampp/htdocs'
+    'SERVER_ADMIN' => 'postmaster@localhost'
+    'SCRIPT_FILENAME' => 'C:/xampp/htdocs/planealo.sytes.net/web/index.php'
+    'REMOTE_PORT' => '55695'
+    'REDIRECT_URL' => '/planealo.sytes.net/web/aportes/aportes/gestion-atleta'
+    'GATEWAY_INTERFACE' => 'CGI/1.1'
+    'SERVER_PROTOCOL' => 'HTTP/1.1'
+    'REQUEST_METHOD' => 'GET'
+    'QUERY_STRING' => ''
+    'REQUEST_URI' => '/planealo.sytes.net/web/aportes/aportes/gestion-atleta'
+    'SCRIPT_NAME' => '/planealo.sytes.net/web/index.php'
+    'PHP_SELF' => '/planealo.sytes.net/web/index.php'
+    'REQUEST_TIME_FLOAT' => 1772472156.5565
+    'REQUEST_TIME' => 1772472156
+]
+2026-03-02 13:25:18 [::1][1][uhtlqp6m93te7gqig62teinalp][error][tasa-dolar] Error BCV Directo: fopen(https://www.bcv.org.ve/): Failed to open stream: Se produjo un error durante el intento de conexión ya que la parte conectada no respondió adecuadamente tras un periodo de tiempo, o bien se produjo un error en la conexión establecida ya que el host conectado no ha podido responder
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:157
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:105
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:78
+2026-03-02 13:25:18 [::1][1][uhtlqp6m93te7gqig62teinalp][warning][tasa-dolar] ❌ Fuente BCV_Directo falló o tasa inválida: 0
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:112
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:78
+    in C:\xampp\htdocs\planealo.sytes.net\modules\aportes\views\aportes\gestion-atleta.php:37
+2026-03-02 13:25:38 [::1][1][uhtlqp6m93te7gqig62teinalp][error][tasa-dolar] Error BCV Alternativo: fopen(https://www.bcv.org.ve/tasas-informativas-sistema-bancario): Failed to open stream: Se produjo un error durante el intento de conexión ya que la parte conectada no respondió adecuadamente tras un periodo de tiempo, o bien se produjo un error en la conexión establecida ya que el host conectado no ha podido responder
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:187
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:105
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:78
+2026-03-02 13:25:38 [::1][1][uhtlqp6m93te7gqig62teinalp][warning][tasa-dolar] ❌ Fuente BCV_Alternativo falló o tasa inválida: 0
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:112
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:78
+    in C:\xampp\htdocs\planealo.sytes.net\modules\aportes\views\aportes\gestion-atleta.php:37
+2026-03-02 13:25:53 [::1][1][uhtlqp6m93te7gqig62teinalp][error][tasa-dolar] Error Yahoo Finance: fopen(https://query1.finance.yahoo.com/v8/finance/chart/USDVES=X): Failed to open stream: Se produjo un error durante el intento de conexión ya que la parte conectada no respondió adecuadamente tras un periodo de tiempo, o bien se produjo un error en la conexión establecida ya que el host conectado no ha podido responder
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:286
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:105
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:78
+2026-03-02 13:25:53 [::1][1][uhtlqp6m93te7gqig62teinalp][warning][tasa-dolar] ❌ Fuente EnParalelo falló o tasa inválida: 0
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:112
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:78
+    in C:\xampp\htdocs\planealo.sytes.net\modules\aportes\views\aportes\gestion-atleta.php:37
+2026-03-02 13:26:08 [::1][1][uhtlqp6m93te7gqig62teinalp][error][tasa-dolar] Error ExchangeRate-API: fopen(https://api.exchangerate-api.com/v4/latest/USD): Failed to open stream: Se produjo un error durante el intento de conexión ya que la parte conectada no respondió adecuadamente tras un periodo de tiempo, o bien se produjo un error en la conexión establecida ya que el host conectado no ha podido responder
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:317
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:105
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:78
+2026-03-02 13:26:08 [::1][1][uhtlqp6m93te7gqig62teinalp][warning][tasa-dolar] ❌ Fuente API_Respaldo falló o tasa inválida: 0
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:112
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:78
+    in C:\xampp\htdocs\planealo.sytes.net\modules\aportes\views\aportes\gestion-atleta.php:37
+2026-03-02 13:26:08 [::1][1][uhtlqp6m93te7gqig62teinalp][error][tasa-dolar] ❌ Todas las fuentes fallaron
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:116
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:78
+    in C:\xampp\htdocs\planealo.sytes.net\modules\aportes\views\aportes\gestion-atleta.php:37
+2026-03-02 13:26:29 [::1][1][uhtlqp6m93te7gqig62teinalp][error][tasa-dolar] Error BCV Directo: fopen(https://www.bcv.org.ve/): Failed to open stream: Se produjo un error durante el intento de conexión ya que la parte conectada no respondió adecuadamente tras un periodo de tiempo, o bien se produjo un error en la conexión establecida ya que el host conectado no ha podido responder
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:157
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:105
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:78
+2026-03-02 13:26:29 [::1][1][uhtlqp6m93te7gqig62teinalp][warning][tasa-dolar] ❌ Fuente BCV_Directo falló o tasa inválida: 0
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:112
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:78
+    in C:\xampp\htdocs\planealo.sytes.net\widgets\TasaDolarWidget.php:15
+2026-03-02 13:26:49 [::1][1][uhtlqp6m93te7gqig62teinalp][error][tasa-dolar] Error BCV Alternativo: fopen(https://www.bcv.org.ve/tasas-informativas-sistema-bancario): Failed to open stream: Se produjo un error durante el intento de conexión ya que la parte conectada no respondió adecuadamente tras un periodo de tiempo, o bien se produjo un error en la conexión establecida ya que el host conectado no ha podido responder
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:187
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:105
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:78
+2026-03-02 13:26:49 [::1][1][uhtlqp6m93te7gqig62teinalp][warning][tasa-dolar] ❌ Fuente BCV_Alternativo falló o tasa inválida: 0
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:112
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:78
+    in C:\xampp\htdocs\planealo.sytes.net\widgets\TasaDolarWidget.php:15
+2026-03-02 13:27:04 [::1][1][uhtlqp6m93te7gqig62teinalp][error][yii\base\ErrorException:1] yii\base\ErrorException: Maximum execution time of 120 seconds exceeded in C:\xampp\htdocs\planealo.sytes.net\vendor\yiisoft\yii2\base\ErrorHandler.php:253
+Stack trace:
+#0 [internal function]: yii\base\ErrorHandler->handleFatalError()
+#1 {main}
+2026-03-02 13:24:56 [::1][1][uhtlqp6m93te7gqig62teinalp][info][application] $_GET = []
+
+$_POST = []
+
+$_FILES = []
+
+$_COOKIE = [
+    '_ga' => 'GA1.1.1679908835.1749223008'
+    'PHPSESSID' => 'uhtlqp6m93te7gqig62teinalp'
+    '_csrf' => '052b7c918e29a57673e9a43dd7b0060950f2b65b0138ca3e52d5b7da9ca869f0a:2:{i:0;s:5:\"_csrf\";i:1;s:32:\"6sBatZ-07-JGxFS3hxh8qNGtiN8aQDz0\";}'
+]
+
+$_SESSION = [
+    '__flash' => []
+    '__id' => 1
+    '__authKey' => 'FCxNRGJia25jro30ecX5r8yVk7nCuaOY'
+    'id_escuela' => 2
+    'nombre_escuela' => 'Club Aves Voladoras'
+    'escuela_activa' => true
+    'escuela_ultima_actualizacion' => 1772470259
+    'idEscuela' => 2
+    'nombreEscuela' => 'Club Aves Voladoras'
+]
+
+$_SERVER = [
+    'REDIRECT_MIBDIRS' => 'C:/xampp/php/extras/mibs'
+    'REDIRECT_MYSQL_HOME' => '\\xampp\\mysql\\bin'
+    'REDIRECT_OPENSSL_CONF' => 'C:/xampp/apache/bin/openssl.cnf'
+    'REDIRECT_PHP_PEAR_SYSCONF_DIR' => '\\xampp\\php'
+    'REDIRECT_PHPRC' => '\\xampp\\php'
+    'REDIRECT_TMP' => '\\xampp\\tmp'
+    'REDIRECT_STATUS' => '200'
+    'MIBDIRS' => 'C:/xampp/php/extras/mibs'
+    'MYSQL_HOME' => '\\xampp\\mysql\\bin'
+    'OPENSSL_CONF' => 'C:/xampp/apache/bin/openssl.cnf'
+    'PHP_PEAR_SYSCONF_DIR' => '\\xampp\\php'
+    'PHPRC' => '\\xampp\\php'
+    'TMP' => '\\xampp\\tmp'
+    'HTTP_HOST' => 'localhost'
+    'HTTP_CONNECTION' => 'keep-alive'
+    'HTTP_PRAGMA' => 'no-cache'
+    'HTTP_CACHE_CONTROL' => 'no-cache'
+    'HTTP_SEC_CH_UA' => '\"Opera GX\";v=\"127\", \"Chromium\";v=\"143\", \"Not A(Brand\";v=\"24\"'
+    'HTTP_SEC_CH_UA_MOBILE' => '?0'
+    'HTTP_SEC_CH_UA_PLATFORM' => '\"Windows\"'
+    'HTTP_UPGRADE_INSECURE_REQUESTS' => '1'
+    'HTTP_USER_AGENT' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36 OPR/127.0.0.0'
+    'HTTP_ACCEPT' => 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7'
+    'HTTP_SEC_FETCH_SITE' => 'same-origin'
+    'HTTP_SEC_FETCH_MODE' => 'navigate'
+    'HTTP_SEC_FETCH_USER' => '?1'
+    'HTTP_SEC_FETCH_DEST' => 'document'
+    'HTTP_REFERER' => 'http://localhost/planealo.sytes.net/web/aportes/aportes/index'
+    'HTTP_ACCEPT_ENCODING' => 'gzip, deflate, br, zstd'
+    'HTTP_ACCEPT_LANGUAGE' => 'en,id;q=0.9,tr;q=0.8,ru;q=0.7'
+    'HTTP_COOKIE' => '_ga=GA1.1.1679908835.1749223008; PHPSESSID=uhtlqp6m93te7gqig62teinalp; _csrf=052b7c918e29a57673e9a43dd7b0060950f2b65b0138ca3e52d5b7da9ca869f0a%3A2%3A%7Bi%3A0%3Bs%3A5%3A%22_csrf%22%3Bi%3A1%3Bs%3A32%3A%226sBatZ-07-JGxFS3hxh8qNGtiN8aQDz0%22%3B%7D'
+    'PATH' => 'C:\\WINDOWS\\system32;C:\\WINDOWS;C:\\WINDOWS\\System32\\Wbem;C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\;C:\\WINDOWS\\System32\\OpenSSH\\;C:\\xampp\\php;C:\\ProgramData\\ComposerSetup\\bin;C:\\Program Files\\PuTTY\\;C:\\Program Files\\Git\\cmd;C:\\Program Files\\nodejs\\;C:\\Program Files (x86)\\Microsoft SQL Server\\160\\Tools\\Binn\\;C:\\Program Files\\Microsoft SQL Server\\160\\Tools\\Binn\\;C:\\Program Files\\Microsoft SQL Server\\Client SDK\\ODBC\\170\\Tools\\Binn\\;C:\\Program Files\\Microsoft SQL Server\\160\\DTS\\Binn\\;C:\\Program Files (x86)\\Microsoft SQL Server\\160\\DTS\\Binn\\;C:\\Users\\Otic-Sistemas\\AppData\\Local\\Microsoft\\WindowsApps;;C:\\Users\\Otic-Sistemas\\AppData\\Local\\Programs\\Microsoft VS Code\\bin;C:\\Users\\Otic-Sistemas\\AppData\\Roaming\\Composer\\vendor\\bin;C:\\Users\\Otic-Sistemas\\AppData\\Roaming\\npm'
+    'SystemRoot' => 'C:\\WINDOWS'
+    'COMSPEC' => 'C:\\WINDOWS\\system32\\cmd.exe'
+    'PATHEXT' => '.COM;.EXE;.BAT;.CMD;.VBS;.VBE;.JS;.JSE;.WSF;.WSH;.MSC'
+    'WINDIR' => 'C:\\WINDOWS'
+    'SERVER_SIGNATURE' => '<address>Apache/2.4.54 (Win64) OpenSSL/1.1.1p PHP/8.2.0 Server at localhost Port 80</address>
+'
+    'SERVER_SOFTWARE' => 'Apache/2.4.54 (Win64) OpenSSL/1.1.1p PHP/8.2.0'
+    'SERVER_NAME' => 'localhost'
+    'SERVER_ADDR' => '::1'
+    'SERVER_PORT' => '80'
+    'REMOTE_ADDR' => '::1'
+    'DOCUMENT_ROOT' => 'C:/xampp/htdocs'
+    'REQUEST_SCHEME' => 'http'
+    'CONTEXT_PREFIX' => ''
+    'CONTEXT_DOCUMENT_ROOT' => 'C:/xampp/htdocs'
+    'SERVER_ADMIN' => 'postmaster@localhost'
+    'SCRIPT_FILENAME' => 'C:/xampp/htdocs/planealo.sytes.net/web/index.php'
+    'REMOTE_PORT' => '55762'
+    'REDIRECT_URL' => '/planealo.sytes.net/web/aportes/aportes/gestion-atleta'
+    'GATEWAY_INTERFACE' => 'CGI/1.1'
+    'SERVER_PROTOCOL' => 'HTTP/1.1'
+    'REQUEST_METHOD' => 'GET'
+    'QUERY_STRING' => ''
+    'REQUEST_URI' => '/planealo.sytes.net/web/aportes/aportes/gestion-atleta'
+    'SCRIPT_NAME' => '/planealo.sytes.net/web/index.php'
+    'PHP_SELF' => '/planealo.sytes.net/web/index.php'
+    'REQUEST_TIME_FLOAT' => 1772472296.7936
+    'REQUEST_TIME' => 1772472296
+]
+2026-03-02 13:27:36 [::1][1][uhtlqp6m93te7gqig62teinalp][error][tasa-dolar] Error BCV Directo: fopen(https://www.bcv.org.ve/): Failed to open stream: Se produjo un error durante el intento de conexión ya que la parte conectada no respondió adecuadamente tras un periodo de tiempo, o bien se produjo un error en la conexión establecida ya que el host conectado no ha podido responder
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:157
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:105
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:78
+2026-03-02 13:27:36 [::1][1][uhtlqp6m93te7gqig62teinalp][warning][tasa-dolar] ❌ Fuente BCV_Directo falló o tasa inválida: 0
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:112
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:78
+    in C:\xampp\htdocs\planealo.sytes.net\modules\aportes\views\aportes\gestion-atleta.php:37
+2026-03-02 13:27:56 [::1][1][uhtlqp6m93te7gqig62teinalp][error][tasa-dolar] Error BCV Alternativo: fopen(https://www.bcv.org.ve/tasas-informativas-sistema-bancario): Failed to open stream: Se produjo un error durante el intento de conexión ya que la parte conectada no respondió adecuadamente tras un periodo de tiempo, o bien se produjo un error en la conexión establecida ya que el host conectado no ha podido responder
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:187
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:105
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:78
+2026-03-02 13:27:56 [::1][1][uhtlqp6m93te7gqig62teinalp][warning][tasa-dolar] ❌ Fuente BCV_Alternativo falló o tasa inválida: 0
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:112
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:78
+    in C:\xampp\htdocs\planealo.sytes.net\modules\aportes\views\aportes\gestion-atleta.php:37
+2026-03-02 13:28:11 [::1][1][uhtlqp6m93te7gqig62teinalp][error][tasa-dolar] Error Yahoo Finance: fopen(https://query1.finance.yahoo.com/v8/finance/chart/USDVES=X): Failed to open stream: Se produjo un error durante el intento de conexión ya que la parte conectada no respondió adecuadamente tras un periodo de tiempo, o bien se produjo un error en la conexión establecida ya que el host conectado no ha podido responder
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:286
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:105
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:78
+2026-03-02 13:28:11 [::1][1][uhtlqp6m93te7gqig62teinalp][warning][tasa-dolar] ❌ Fuente EnParalelo falló o tasa inválida: 0
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:112
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:78
+    in C:\xampp\htdocs\planealo.sytes.net\modules\aportes\views\aportes\gestion-atleta.php:37
+2026-03-02 13:28:26 [::1][1][uhtlqp6m93te7gqig62teinalp][error][tasa-dolar] Error ExchangeRate-API: fopen(https://api.exchangerate-api.com/v4/latest/USD): Failed to open stream: Se produjo un error durante el intento de conexión ya que la parte conectada no respondió adecuadamente tras un periodo de tiempo, o bien se produjo un error en la conexión establecida ya que el host conectado no ha podido responder
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:317
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:105
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:78
+2026-03-02 13:28:26 [::1][1][uhtlqp6m93te7gqig62teinalp][warning][tasa-dolar] ❌ Fuente API_Respaldo falló o tasa inválida: 0
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:112
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:78
+    in C:\xampp\htdocs\planealo.sytes.net\modules\aportes\views\aportes\gestion-atleta.php:37
+2026-03-02 13:28:26 [::1][1][uhtlqp6m93te7gqig62teinalp][error][tasa-dolar] ❌ Todas las fuentes fallaron
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:116
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:78
+    in C:\xampp\htdocs\planealo.sytes.net\modules\aportes\views\aportes\gestion-atleta.php:37
+2026-03-02 13:28:47 [::1][1][uhtlqp6m93te7gqig62teinalp][error][tasa-dolar] Error BCV Directo: fopen(https://www.bcv.org.ve/): Failed to open stream: Se produjo un error durante el intento de conexión ya que la parte conectada no respondió adecuadamente tras un periodo de tiempo, o bien se produjo un error en la conexión establecida ya que el host conectado no ha podido responder
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:157
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:105
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:78
+2026-03-02 13:28:47 [::1][1][uhtlqp6m93te7gqig62teinalp][warning][tasa-dolar] ❌ Fuente BCV_Directo falló o tasa inválida: 0
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:112
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:78
+    in C:\xampp\htdocs\planealo.sytes.net\widgets\TasaDolarWidget.php:15
+2026-03-02 13:29:07 [::1][1][uhtlqp6m93te7gqig62teinalp][error][tasa-dolar] Error BCV Alternativo: fopen(https://www.bcv.org.ve/tasas-informativas-sistema-bancario): Failed to open stream: Se produjo un error durante el intento de conexión ya que la parte conectada no respondió adecuadamente tras un periodo de tiempo, o bien se produjo un error en la conexión establecida ya que el host conectado no ha podido responder
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:187
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:105
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:78
+2026-03-02 13:29:07 [::1][1][uhtlqp6m93te7gqig62teinalp][warning][tasa-dolar] ❌ Fuente BCV_Alternativo falló o tasa inválida: 0
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:112
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:78
+    in C:\xampp\htdocs\planealo.sytes.net\widgets\TasaDolarWidget.php:15
+2026-03-02 13:29:22 [::1][1][uhtlqp6m93te7gqig62teinalp][error][yii\base\ErrorException:1] yii\base\ErrorException: Maximum execution time of 120 seconds exceeded in C:\xampp\htdocs\planealo.sytes.net\vendor\yiisoft\yii2\base\ErrorHandler.php:253
+Stack trace:
+#0 [internal function]: yii\base\ErrorHandler->handleFatalError()
+#1 {main}
+2026-03-02 13:27:13 [::1][1][uhtlqp6m93te7gqig62teinalp][info][application] $_GET = []
+
+$_POST = []
+
+$_FILES = []
+
+$_COOKIE = [
+    '_ga' => 'GA1.1.1679908835.1749223008'
+    'PHPSESSID' => 'uhtlqp6m93te7gqig62teinalp'
+    '_csrf' => '052b7c918e29a57673e9a43dd7b0060950f2b65b0138ca3e52d5b7da9ca869f0a:2:{i:0;s:5:\"_csrf\";i:1;s:32:\"6sBatZ-07-JGxFS3hxh8qNGtiN8aQDz0\";}'
+]
+
+$_SESSION = [
+    '__flash' => []
+    '__id' => 1
+    '__authKey' => 'FCxNRGJia25jro30ecX5r8yVk7nCuaOY'
+    'id_escuela' => 2
+    'nombre_escuela' => 'Club Aves Voladoras'
+    'escuela_activa' => true
+    'escuela_ultima_actualizacion' => 1772470259
+    'idEscuela' => 2
+    'nombreEscuela' => 'Club Aves Voladoras'
+]
+
+$_SERVER = [
+    'REDIRECT_MIBDIRS' => 'C:/xampp/php/extras/mibs'
+    'REDIRECT_MYSQL_HOME' => '\\xampp\\mysql\\bin'
+    'REDIRECT_OPENSSL_CONF' => 'C:/xampp/apache/bin/openssl.cnf'
+    'REDIRECT_PHP_PEAR_SYSCONF_DIR' => '\\xampp\\php'
+    'REDIRECT_PHPRC' => '\\xampp\\php'
+    'REDIRECT_TMP' => '\\xampp\\tmp'
+    'REDIRECT_STATUS' => '200'
+    'MIBDIRS' => 'C:/xampp/php/extras/mibs'
+    'MYSQL_HOME' => '\\xampp\\mysql\\bin'
+    'OPENSSL_CONF' => 'C:/xampp/apache/bin/openssl.cnf'
+    'PHP_PEAR_SYSCONF_DIR' => '\\xampp\\php'
+    'PHPRC' => '\\xampp\\php'
+    'TMP' => '\\xampp\\tmp'
+    'HTTP_HOST' => 'localhost'
+    'HTTP_CONNECTION' => 'keep-alive'
+    'HTTP_PRAGMA' => 'no-cache'
+    'HTTP_CACHE_CONTROL' => 'no-cache'
+    'HTTP_SEC_CH_UA' => '\"Opera GX\";v=\"127\", \"Chromium\";v=\"143\", \"Not A(Brand\";v=\"24\"'
+    'HTTP_SEC_CH_UA_MOBILE' => '?0'
+    'HTTP_SEC_CH_UA_PLATFORM' => '\"Windows\"'
+    'HTTP_UPGRADE_INSECURE_REQUESTS' => '1'
+    'HTTP_USER_AGENT' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36 OPR/127.0.0.0'
+    'HTTP_ACCEPT' => 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7'
+    'HTTP_SEC_FETCH_SITE' => 'same-origin'
+    'HTTP_SEC_FETCH_MODE' => 'navigate'
+    'HTTP_SEC_FETCH_USER' => '?1'
+    'HTTP_SEC_FETCH_DEST' => 'document'
+    'HTTP_REFERER' => 'http://localhost/planealo.sytes.net/web/aportes/aportes/index'
+    'HTTP_ACCEPT_ENCODING' => 'gzip, deflate, br, zstd'
+    'HTTP_ACCEPT_LANGUAGE' => 'en,id;q=0.9,tr;q=0.8,ru;q=0.7'
+    'HTTP_COOKIE' => '_ga=GA1.1.1679908835.1749223008; PHPSESSID=uhtlqp6m93te7gqig62teinalp; _csrf=052b7c918e29a57673e9a43dd7b0060950f2b65b0138ca3e52d5b7da9ca869f0a%3A2%3A%7Bi%3A0%3Bs%3A5%3A%22_csrf%22%3Bi%3A1%3Bs%3A32%3A%226sBatZ-07-JGxFS3hxh8qNGtiN8aQDz0%22%3B%7D'
+    'PATH' => 'C:\\WINDOWS\\system32;C:\\WINDOWS;C:\\WINDOWS\\System32\\Wbem;C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\;C:\\WINDOWS\\System32\\OpenSSH\\;C:\\xampp\\php;C:\\ProgramData\\ComposerSetup\\bin;C:\\Program Files\\PuTTY\\;C:\\Program Files\\Git\\cmd;C:\\Program Files\\nodejs\\;C:\\Program Files (x86)\\Microsoft SQL Server\\160\\Tools\\Binn\\;C:\\Program Files\\Microsoft SQL Server\\160\\Tools\\Binn\\;C:\\Program Files\\Microsoft SQL Server\\Client SDK\\ODBC\\170\\Tools\\Binn\\;C:\\Program Files\\Microsoft SQL Server\\160\\DTS\\Binn\\;C:\\Program Files (x86)\\Microsoft SQL Server\\160\\DTS\\Binn\\;C:\\Users\\Otic-Sistemas\\AppData\\Local\\Microsoft\\WindowsApps;;C:\\Users\\Otic-Sistemas\\AppData\\Local\\Programs\\Microsoft VS Code\\bin;C:\\Users\\Otic-Sistemas\\AppData\\Roaming\\Composer\\vendor\\bin;C:\\Users\\Otic-Sistemas\\AppData\\Roaming\\npm'
+    'SystemRoot' => 'C:\\WINDOWS'
+    'COMSPEC' => 'C:\\WINDOWS\\system32\\cmd.exe'
+    'PATHEXT' => '.COM;.EXE;.BAT;.CMD;.VBS;.VBE;.JS;.JSE;.WSF;.WSH;.MSC'
+    'WINDIR' => 'C:\\WINDOWS'
+    'SERVER_SIGNATURE' => '<address>Apache/2.4.54 (Win64) OpenSSL/1.1.1p PHP/8.2.0 Server at localhost Port 80</address>
+'
+    'SERVER_SOFTWARE' => 'Apache/2.4.54 (Win64) OpenSSL/1.1.1p PHP/8.2.0'
+    'SERVER_NAME' => 'localhost'
+    'SERVER_ADDR' => '::1'
+    'SERVER_PORT' => '80'
+    'REMOTE_ADDR' => '::1'
+    'DOCUMENT_ROOT' => 'C:/xampp/htdocs'
+    'REQUEST_SCHEME' => 'http'
+    'CONTEXT_PREFIX' => ''
+    'CONTEXT_DOCUMENT_ROOT' => 'C:/xampp/htdocs'
+    'SERVER_ADMIN' => 'postmaster@localhost'
+    'SCRIPT_FILENAME' => 'C:/xampp/htdocs/planealo.sytes.net/web/index.php'
+    'REMOTE_PORT' => '55820'
+    'REDIRECT_URL' => '/planealo.sytes.net/web/aportes/aportes/gestion-atleta'
+    'GATEWAY_INTERFACE' => 'CGI/1.1'
+    'SERVER_PROTOCOL' => 'HTTP/1.1'
+    'REQUEST_METHOD' => 'GET'
+    'QUERY_STRING' => ''
+    'REQUEST_URI' => '/planealo.sytes.net/web/aportes/aportes/gestion-atleta'
+    'SCRIPT_NAME' => '/planealo.sytes.net/web/index.php'
+    'PHP_SELF' => '/planealo.sytes.net/web/index.php'
+    'REQUEST_TIME_FLOAT' => 1772472433.6828
+    'REQUEST_TIME' => 1772472433
+]
+2026-03-02 13:29:22 [::1][-][uhtlqp6m93te7gqig62teinalp][error][yii\base\ErrorException:1] yii\base\ErrorException: Maximum execution time of 120 seconds exceeded in C:\xampp\htdocs\planealo.sytes.net\vendor\yiisoft\yii2\web\Session.php:155
+Stack trace:
+#0 [internal function]: yii\base\ErrorHandler->handleFatalError()
+#1 {main}
+2026-03-02 13:27:16 [::1][-][uhtlqp6m93te7gqig62teinalp][info][application] $_GET = []
+
+$_POST = []
+
+$_FILES = []
+
+$_COOKIE = [
+    '_ga' => 'GA1.1.1679908835.1749223008'
+    'PHPSESSID' => 'uhtlqp6m93te7gqig62teinalp'
+    '_csrf' => '052b7c918e29a57673e9a43dd7b0060950f2b65b0138ca3e52d5b7da9ca869f0a:2:{i:0;s:5:\"_csrf\";i:1;s:32:\"6sBatZ-07-JGxFS3hxh8qNGtiN8aQDz0\";}'
+]
+
+$_SESSION = [
+    '__flash' => []
+    '__id' => 1
+    '__authKey' => 'FCxNRGJia25jro30ecX5r8yVk7nCuaOY'
+    'id_escuela' => 2
+    'nombre_escuela' => 'Club Aves Voladoras'
+    'escuela_activa' => true
+    'escuela_ultima_actualizacion' => 1772470259
+    'idEscuela' => 2
+    'nombreEscuela' => 'Club Aves Voladoras'
+]
+
+$_SERVER = [
+    'REDIRECT_MIBDIRS' => 'C:/xampp/php/extras/mibs'
+    'REDIRECT_MYSQL_HOME' => '\\xampp\\mysql\\bin'
+    'REDIRECT_OPENSSL_CONF' => 'C:/xampp/apache/bin/openssl.cnf'
+    'REDIRECT_PHP_PEAR_SYSCONF_DIR' => '\\xampp\\php'
+    'REDIRECT_PHPRC' => '\\xampp\\php'
+    'REDIRECT_TMP' => '\\xampp\\tmp'
+    'REDIRECT_STATUS' => '200'
+    'MIBDIRS' => 'C:/xampp/php/extras/mibs'
+    'MYSQL_HOME' => '\\xampp\\mysql\\bin'
+    'OPENSSL_CONF' => 'C:/xampp/apache/bin/openssl.cnf'
+    'PHP_PEAR_SYSCONF_DIR' => '\\xampp\\php'
+    'PHPRC' => '\\xampp\\php'
+    'TMP' => '\\xampp\\tmp'
+    'HTTP_HOST' => 'localhost'
+    'HTTP_CONNECTION' => 'keep-alive'
+    'HTTP_PRAGMA' => 'no-cache'
+    'HTTP_CACHE_CONTROL' => 'no-cache'
+    'HTTP_SEC_CH_UA' => '\"Opera GX\";v=\"127\", \"Chromium\";v=\"143\", \"Not A(Brand\";v=\"24\"'
+    'HTTP_SEC_CH_UA_MOBILE' => '?0'
+    'HTTP_SEC_CH_UA_PLATFORM' => '\"Windows\"'
+    'HTTP_UPGRADE_INSECURE_REQUESTS' => '1'
+    'HTTP_USER_AGENT' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36 OPR/127.0.0.0'
+    'HTTP_ACCEPT' => 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7'
+    'HTTP_SEC_FETCH_SITE' => 'same-origin'
+    'HTTP_SEC_FETCH_MODE' => 'navigate'
+    'HTTP_SEC_FETCH_USER' => '?1'
+    'HTTP_SEC_FETCH_DEST' => 'document'
+    'HTTP_REFERER' => 'http://localhost/planealo.sytes.net/web/aportes/aportes/index'
+    'HTTP_ACCEPT_ENCODING' => 'gzip, deflate, br, zstd'
+    'HTTP_ACCEPT_LANGUAGE' => 'en,id;q=0.9,tr;q=0.8,ru;q=0.7'
+    'HTTP_COOKIE' => '_ga=GA1.1.1679908835.1749223008; PHPSESSID=uhtlqp6m93te7gqig62teinalp; _csrf=052b7c918e29a57673e9a43dd7b0060950f2b65b0138ca3e52d5b7da9ca869f0a%3A2%3A%7Bi%3A0%3Bs%3A5%3A%22_csrf%22%3Bi%3A1%3Bs%3A32%3A%226sBatZ-07-JGxFS3hxh8qNGtiN8aQDz0%22%3B%7D'
+    'PATH' => 'C:\\WINDOWS\\system32;C:\\WINDOWS;C:\\WINDOWS\\System32\\Wbem;C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\;C:\\WINDOWS\\System32\\OpenSSH\\;C:\\xampp\\php;C:\\ProgramData\\ComposerSetup\\bin;C:\\Program Files\\PuTTY\\;C:\\Program Files\\Git\\cmd;C:\\Program Files\\nodejs\\;C:\\Program Files (x86)\\Microsoft SQL Server\\160\\Tools\\Binn\\;C:\\Program Files\\Microsoft SQL Server\\160\\Tools\\Binn\\;C:\\Program Files\\Microsoft SQL Server\\Client SDK\\ODBC\\170\\Tools\\Binn\\;C:\\Program Files\\Microsoft SQL Server\\160\\DTS\\Binn\\;C:\\Program Files (x86)\\Microsoft SQL Server\\160\\DTS\\Binn\\;C:\\Users\\Otic-Sistemas\\AppData\\Local\\Microsoft\\WindowsApps;;C:\\Users\\Otic-Sistemas\\AppData\\Local\\Programs\\Microsoft VS Code\\bin;C:\\Users\\Otic-Sistemas\\AppData\\Roaming\\Composer\\vendor\\bin;C:\\Users\\Otic-Sistemas\\AppData\\Roaming\\npm'
+    'SystemRoot' => 'C:\\WINDOWS'
+    'COMSPEC' => 'C:\\WINDOWS\\system32\\cmd.exe'
+    'PATHEXT' => '.COM;.EXE;.BAT;.CMD;.VBS;.VBE;.JS;.JSE;.WSF;.WSH;.MSC'
+    'WINDIR' => 'C:\\WINDOWS'
+    'SERVER_SIGNATURE' => '<address>Apache/2.4.54 (Win64) OpenSSL/1.1.1p PHP/8.2.0 Server at localhost Port 80</address>
+'
+    'SERVER_SOFTWARE' => 'Apache/2.4.54 (Win64) OpenSSL/1.1.1p PHP/8.2.0'
+    'SERVER_NAME' => 'localhost'
+    'SERVER_ADDR' => '::1'
+    'SERVER_PORT' => '80'
+    'REMOTE_ADDR' => '::1'
+    'DOCUMENT_ROOT' => 'C:/xampp/htdocs'
+    'REQUEST_SCHEME' => 'http'
+    'CONTEXT_PREFIX' => ''
+    'CONTEXT_DOCUMENT_ROOT' => 'C:/xampp/htdocs'
+    'SERVER_ADMIN' => 'postmaster@localhost'
+    'SCRIPT_FILENAME' => 'C:/xampp/htdocs/planealo.sytes.net/web/index.php'
+    'REMOTE_PORT' => '55821'
+    'REDIRECT_URL' => '/planealo.sytes.net/web/aportes/aportes/gestion-atleta'
+    'GATEWAY_INTERFACE' => 'CGI/1.1'
+    'SERVER_PROTOCOL' => 'HTTP/1.1'
+    'REQUEST_METHOD' => 'GET'
+    'QUERY_STRING' => ''
+    'REQUEST_URI' => '/planealo.sytes.net/web/aportes/aportes/gestion-atleta'
+    'SCRIPT_NAME' => '/planealo.sytes.net/web/index.php'
+    'PHP_SELF' => '/planealo.sytes.net/web/index.php'
+    'REQUEST_TIME_FLOAT' => 1772472433.5877
+    'REQUEST_TIME' => 1772472433
+]
+2026-03-02 13:29:45 [::1][1][uhtlqp6m93te7gqig62teinalp][error][tasa-dolar] Error BCV Directo: fopen(https://www.bcv.org.ve/): Failed to open stream: Se produjo un error durante el intento de conexión ya que la parte conectada no respondió adecuadamente tras un periodo de tiempo, o bien se produjo un error en la conexión establecida ya que el host conectado no ha podido responder
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:157
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:105
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:78
+2026-03-02 13:29:45 [::1][1][uhtlqp6m93te7gqig62teinalp][warning][tasa-dolar] ❌ Fuente BCV_Directo falló o tasa inválida: 0
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:112
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:78
+    in C:\xampp\htdocs\planealo.sytes.net\modules\aportes\views\aportes\gestion-atleta.php:37
+2026-03-02 13:30:05 [::1][1][uhtlqp6m93te7gqig62teinalp][error][tasa-dolar] Error BCV Alternativo: fopen(https://www.bcv.org.ve/tasas-informativas-sistema-bancario): Failed to open stream: Se produjo un error durante el intento de conexión ya que la parte conectada no respondió adecuadamente tras un periodo de tiempo, o bien se produjo un error en la conexión establecida ya que el host conectado no ha podido responder
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:187
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:105
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:78
+2026-03-02 13:30:05 [::1][1][uhtlqp6m93te7gqig62teinalp][warning][tasa-dolar] ❌ Fuente BCV_Alternativo falló o tasa inválida: 0
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:112
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:78
+    in C:\xampp\htdocs\planealo.sytes.net\modules\aportes\views\aportes\gestion-atleta.php:37
+2026-03-02 13:30:20 [::1][1][uhtlqp6m93te7gqig62teinalp][error][tasa-dolar] Error Yahoo Finance: fopen(https://query1.finance.yahoo.com/v8/finance/chart/USDVES=X): Failed to open stream: Se produjo un error durante el intento de conexión ya que la parte conectada no respondió adecuadamente tras un periodo de tiempo, o bien se produjo un error en la conexión establecida ya que el host conectado no ha podido responder
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:286
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:105
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:78
+2026-03-02 13:30:20 [::1][1][uhtlqp6m93te7gqig62teinalp][warning][tasa-dolar] ❌ Fuente EnParalelo falló o tasa inválida: 0
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:112
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:78
+    in C:\xampp\htdocs\planealo.sytes.net\modules\aportes\views\aportes\gestion-atleta.php:37
+2026-03-02 13:30:35 [::1][1][uhtlqp6m93te7gqig62teinalp][error][tasa-dolar] Error ExchangeRate-API: fopen(https://api.exchangerate-api.com/v4/latest/USD): Failed to open stream: Se produjo un error durante el intento de conexión ya que la parte conectada no respondió adecuadamente tras un periodo de tiempo, o bien se produjo un error en la conexión establecida ya que el host conectado no ha podido responder
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:317
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:105
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:78
+2026-03-02 13:30:35 [::1][1][uhtlqp6m93te7gqig62teinalp][warning][tasa-dolar] ❌ Fuente API_Respaldo falló o tasa inválida: 0
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:112
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:78
+    in C:\xampp\htdocs\planealo.sytes.net\modules\aportes\views\aportes\gestion-atleta.php:37
+2026-03-02 13:30:35 [::1][1][uhtlqp6m93te7gqig62teinalp][error][tasa-dolar] ❌ Todas las fuentes fallaron
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:116
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:78
+    in C:\xampp\htdocs\planealo.sytes.net\modules\aportes\views\aportes\gestion-atleta.php:37
+2026-03-02 13:30:56 [::1][1][uhtlqp6m93te7gqig62teinalp][error][yii\base\ErrorException:1] yii\base\ErrorException: Maximum execution time of 120 seconds exceeded in C:\xampp\htdocs\planealo.sytes.net\vendor\yiisoft\yii2\base\ErrorHandler.php:253
+Stack trace:
+#0 [internal function]: yii\base\ErrorHandler->handleFatalError()
+#1 {main}
+2026-03-02 13:28:39 [::1][1][uhtlqp6m93te7gqig62teinalp][info][application] $_GET = []
+
+$_POST = []
+
+$_FILES = []
+
+$_COOKIE = [
+    '_ga' => 'GA1.1.1679908835.1749223008'
+    'PHPSESSID' => 'uhtlqp6m93te7gqig62teinalp'
+    '_csrf' => '052b7c918e29a57673e9a43dd7b0060950f2b65b0138ca3e52d5b7da9ca869f0a:2:{i:0;s:5:\"_csrf\";i:1;s:32:\"6sBatZ-07-JGxFS3hxh8qNGtiN8aQDz0\";}'
+]
+
+$_SESSION = [
+    '__flash' => []
+    '__id' => 1
+    '__authKey' => 'FCxNRGJia25jro30ecX5r8yVk7nCuaOY'
+    'id_escuela' => 2
+    'nombre_escuela' => 'Club Aves Voladoras'
+    'escuela_activa' => true
+    'escuela_ultima_actualizacion' => 1772470259
+    'idEscuela' => 2
+    'nombreEscuela' => 'Club Aves Voladoras'
+]
+
+$_SERVER = [
+    'REDIRECT_MIBDIRS' => 'C:/xampp/php/extras/mibs'
+    'REDIRECT_MYSQL_HOME' => '\\xampp\\mysql\\bin'
+    'REDIRECT_OPENSSL_CONF' => 'C:/xampp/apache/bin/openssl.cnf'
+    'REDIRECT_PHP_PEAR_SYSCONF_DIR' => '\\xampp\\php'
+    'REDIRECT_PHPRC' => '\\xampp\\php'
+    'REDIRECT_TMP' => '\\xampp\\tmp'
+    'REDIRECT_STATUS' => '200'
+    'MIBDIRS' => 'C:/xampp/php/extras/mibs'
+    'MYSQL_HOME' => '\\xampp\\mysql\\bin'
+    'OPENSSL_CONF' => 'C:/xampp/apache/bin/openssl.cnf'
+    'PHP_PEAR_SYSCONF_DIR' => '\\xampp\\php'
+    'PHPRC' => '\\xampp\\php'
+    'TMP' => '\\xampp\\tmp'
+    'HTTP_HOST' => 'localhost'
+    'HTTP_CONNECTION' => 'keep-alive'
+    'HTTP_SEC_CH_UA' => '\"Opera GX\";v=\"127\", \"Chromium\";v=\"143\", \"Not A(Brand\";v=\"24\"'
+    'HTTP_SEC_CH_UA_MOBILE' => '?0'
+    'HTTP_SEC_CH_UA_PLATFORM' => '\"Windows\"'
+    'HTTP_UPGRADE_INSECURE_REQUESTS' => '1'
+    'HTTP_USER_AGENT' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36 OPR/127.0.0.0'
+    'HTTP_ACCEPT' => 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7'
+    'HTTP_SEC_FETCH_SITE' => 'none'
+    'HTTP_SEC_FETCH_MODE' => 'navigate'
+    'HTTP_SEC_FETCH_USER' => '?1'
+    'HTTP_SEC_FETCH_DEST' => 'document'
+    'HTTP_ACCEPT_ENCODING' => 'gzip, deflate, br, zstd'
+    'HTTP_ACCEPT_LANGUAGE' => 'en,id;q=0.9,tr;q=0.8,ru;q=0.7'
+    'HTTP_COOKIE' => '_ga=GA1.1.1679908835.1749223008; PHPSESSID=uhtlqp6m93te7gqig62teinalp; _csrf=052b7c918e29a57673e9a43dd7b0060950f2b65b0138ca3e52d5b7da9ca869f0a%3A2%3A%7Bi%3A0%3Bs%3A5%3A%22_csrf%22%3Bi%3A1%3Bs%3A32%3A%226sBatZ-07-JGxFS3hxh8qNGtiN8aQDz0%22%3B%7D'
+    'PATH' => 'C:\\WINDOWS\\system32;C:\\WINDOWS;C:\\WINDOWS\\System32\\Wbem;C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\;C:\\WINDOWS\\System32\\OpenSSH\\;C:\\xampp\\php;C:\\ProgramData\\ComposerSetup\\bin;C:\\Program Files\\PuTTY\\;C:\\Program Files\\Git\\cmd;C:\\Program Files\\nodejs\\;C:\\Program Files (x86)\\Microsoft SQL Server\\160\\Tools\\Binn\\;C:\\Program Files\\Microsoft SQL Server\\160\\Tools\\Binn\\;C:\\Program Files\\Microsoft SQL Server\\Client SDK\\ODBC\\170\\Tools\\Binn\\;C:\\Program Files\\Microsoft SQL Server\\160\\DTS\\Binn\\;C:\\Program Files (x86)\\Microsoft SQL Server\\160\\DTS\\Binn\\;C:\\Users\\Otic-Sistemas\\AppData\\Local\\Microsoft\\WindowsApps;;C:\\Users\\Otic-Sistemas\\AppData\\Local\\Programs\\Microsoft VS Code\\bin;C:\\Users\\Otic-Sistemas\\AppData\\Roaming\\Composer\\vendor\\bin;C:\\Users\\Otic-Sistemas\\AppData\\Roaming\\npm'
+    'SystemRoot' => 'C:\\WINDOWS'
+    'COMSPEC' => 'C:\\WINDOWS\\system32\\cmd.exe'
+    'PATHEXT' => '.COM;.EXE;.BAT;.CMD;.VBS;.VBE;.JS;.JSE;.WSF;.WSH;.MSC'
+    'WINDIR' => 'C:\\WINDOWS'
+    'SERVER_SIGNATURE' => '<address>Apache/2.4.54 (Win64) OpenSSL/1.1.1p PHP/8.2.0 Server at localhost Port 80</address>
+'
+    'SERVER_SOFTWARE' => 'Apache/2.4.54 (Win64) OpenSSL/1.1.1p PHP/8.2.0'
+    'SERVER_NAME' => 'localhost'
+    'SERVER_ADDR' => '::1'
+    'SERVER_PORT' => '80'
+    'REMOTE_ADDR' => '::1'
+    'DOCUMENT_ROOT' => 'C:/xampp/htdocs'
+    'REQUEST_SCHEME' => 'http'
+    'CONTEXT_PREFIX' => ''
+    'CONTEXT_DOCUMENT_ROOT' => 'C:/xampp/htdocs'
+    'SERVER_ADMIN' => 'postmaster@localhost'
+    'SCRIPT_FILENAME' => 'C:/xampp/htdocs/planealo.sytes.net/web/index.php'
+    'REMOTE_PORT' => '55879'
+    'REDIRECT_URL' => '/planealo.sytes.net/web/aportes/aportes/gestion-atleta'
+    'GATEWAY_INTERFACE' => 'CGI/1.1'
+    'SERVER_PROTOCOL' => 'HTTP/1.1'
+    'REQUEST_METHOD' => 'GET'
+    'QUERY_STRING' => ''
+    'REQUEST_URI' => '/planealo.sytes.net/web/aportes/aportes/gestion-atleta'
+    'SCRIPT_NAME' => '/planealo.sytes.net/web/index.php'
+    'PHP_SELF' => '/planealo.sytes.net/web/index.php'
+    'REQUEST_TIME_FLOAT' => 1772472519.1316
+    'REQUEST_TIME' => 1772472519
+]
+2026-03-02 13:30:57 [::1][1][-][error][application] Error generando quincenas masivas: SQLSTATE[42703]: Undefined column: 7 ERROR:  no existe la columna «d_creacion» en la relación «aportes_semanales»
+LINE 3: ..., estado, tipo_aporte, tipo_cambio, pago_parcial, d_creacion...
+                                                             ^
+The SQL being executed was: 
+            INSERT INTO contabilidad.aportes_semanales 
+                (atleta_id, escuela_id, fecha_quincena, numero_quincena, monto, estado, tipo_aporte, tipo_cambio, pago_parcial, d_creacion, u_creacion)
+            SELECT 
+                a.id,
+                a.id_escuela,
+                q.fecha,
+                q.numero,
+                5,
+                'pendiente',
+                'normal',
+                36.5,
+                false,
+                NOW(),
+                1
+            FROM atletas.registro a
+            CROSS JOIN (VALUES ('2026-01-15', 1),('2026-01-30', 2),('2026-02-14', 3),('2026-03-01', 5)) AS q(fecha, numero)
+            WHERE a.id_escuela = 2
+              AND a.eliminado = false
+              AND NOT EXISTS (
+                  SELECT 1 FROM contabilidad.aportes_semanales ap
+                  WHERE ap.atleta_id = a.id AND ap.fecha_quincena = q.fecha
+              )
+        
+    in C:\xampp\htdocs\planealo.sytes.net\modules\aportes\controllers\AportesController.php:179
+2026-03-02 13:31:19 [::1][1][-][error][tasa-dolar] Error BCV Directo: fopen(https://www.bcv.org.ve/): Failed to open stream: Se produjo un error durante el intento de conexión ya que la parte conectada no respondió adecuadamente tras un periodo de tiempo, o bien se produjo un error en la conexión establecida ya que el host conectado no ha podido responder
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:157
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:105
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:78
+2026-03-02 13:31:19 [::1][1][-][warning][tasa-dolar] ❌ Fuente BCV_Directo falló o tasa inválida: 0
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:112
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:78
+    in C:\xampp\htdocs\planealo.sytes.net\widgets\TasaDolarWidget.php:15
+2026-03-02 13:31:39 [::1][1][-][error][tasa-dolar] Error BCV Alternativo: fopen(https://www.bcv.org.ve/tasas-informativas-sistema-bancario): Failed to open stream: Se produjo un error durante el intento de conexión ya que la parte conectada no respondió adecuadamente tras un periodo de tiempo, o bien se produjo un error en la conexión establecida ya que el host conectado no ha podido responder
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:187
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:105
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:78
+2026-03-02 13:31:39 [::1][1][-][warning][tasa-dolar] ❌ Fuente BCV_Alternativo falló o tasa inválida: 0
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:112
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:78
+    in C:\xampp\htdocs\planealo.sytes.net\widgets\TasaDolarWidget.php:15
+2026-03-02 13:31:54 [::1][1][-][error][tasa-dolar] Error Yahoo Finance: fopen(https://query1.finance.yahoo.com/v8/finance/chart/USDVES=X): Failed to open stream: Se produjo un error durante el intento de conexión ya que la parte conectada no respondió adecuadamente tras un periodo de tiempo, o bien se produjo un error en la conexión establecida ya que el host conectado no ha podido responder
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:286
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:105
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:78
+2026-03-02 13:31:54 [::1][1][-][warning][tasa-dolar] ❌ Fuente EnParalelo falló o tasa inválida: 0
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:112
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:78
+    in C:\xampp\htdocs\planealo.sytes.net\widgets\TasaDolarWidget.php:15
+2026-03-02 13:32:09 [::1][1][-][error][tasa-dolar] Error ExchangeRate-API: fopen(https://api.exchangerate-api.com/v4/latest/USD): Failed to open stream: Se produjo un error durante el intento de conexión ya que la parte conectada no respondió adecuadamente tras un periodo de tiempo, o bien se produjo un error en la conexión establecida ya que el host conectado no ha podido responder
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:317
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:105
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:78
+2026-03-02 13:32:09 [::1][1][-][warning][tasa-dolar] ❌ Fuente API_Respaldo falló o tasa inválida: 0
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:112
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:78
+    in C:\xampp\htdocs\planealo.sytes.net\widgets\TasaDolarWidget.php:15
+2026-03-02 13:32:09 [::1][1][-][error][tasa-dolar] ❌ Todas las fuentes fallaron
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:116
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:78
+    in C:\xampp\htdocs\planealo.sytes.net\widgets\TasaDolarWidget.php:15
+2026-03-02 13:30:34 [::1][1][-][info][application] $_GET = []
+
+$_POST = []
+
+$_FILES = []
+
+$_COOKIE = [
+    '_ga' => 'GA1.1.1679908835.1749223008'
+    'PHPSESSID' => 'uhtlqp6m93te7gqig62teinalp'
+    '_csrf' => '052b7c918e29a57673e9a43dd7b0060950f2b65b0138ca3e52d5b7da9ca869f0a:2:{i:0;s:5:\"_csrf\";i:1;s:32:\"6sBatZ-07-JGxFS3hxh8qNGtiN8aQDz0\";}'
+]
+
+$_SESSION = [
+    '__flash' => []
+    '__id' => 1
+    '__authKey' => 'FCxNRGJia25jro30ecX5r8yVk7nCuaOY'
+    'id_escuela' => 2
+    'nombre_escuela' => 'Club Aves Voladoras'
+    'escuela_activa' => true
+    'escuela_ultima_actualizacion' => 1772470259
+    'idEscuela' => 2
+    'nombreEscuela' => 'Club Aves Voladoras'
+]
+
+$_SERVER = [
+    'REDIRECT_MIBDIRS' => 'C:/xampp/php/extras/mibs'
+    'REDIRECT_MYSQL_HOME' => '\\xampp\\mysql\\bin'
+    'REDIRECT_OPENSSL_CONF' => 'C:/xampp/apache/bin/openssl.cnf'
+    'REDIRECT_PHP_PEAR_SYSCONF_DIR' => '\\xampp\\php'
+    'REDIRECT_PHPRC' => '\\xampp\\php'
+    'REDIRECT_TMP' => '\\xampp\\tmp'
+    'REDIRECT_STATUS' => '200'
+    'MIBDIRS' => 'C:/xampp/php/extras/mibs'
+    'MYSQL_HOME' => '\\xampp\\mysql\\bin'
+    'OPENSSL_CONF' => 'C:/xampp/apache/bin/openssl.cnf'
+    'PHP_PEAR_SYSCONF_DIR' => '\\xampp\\php'
+    'PHPRC' => '\\xampp\\php'
+    'TMP' => '\\xampp\\tmp'
+    'HTTP_HOST' => 'localhost'
+    'HTTP_CONNECTION' => 'keep-alive'
+    'HTTP_SEC_CH_UA' => '\"Opera GX\";v=\"127\", \"Chromium\";v=\"143\", \"Not A(Brand\";v=\"24\"'
+    'HTTP_SEC_CH_UA_MOBILE' => '?0'
+    'HTTP_SEC_CH_UA_PLATFORM' => '\"Windows\"'
+    'HTTP_UPGRADE_INSECURE_REQUESTS' => '1'
+    'HTTP_USER_AGENT' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36 OPR/127.0.0.0'
+    'HTTP_ACCEPT' => 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7'
+    'HTTP_SEC_FETCH_SITE' => 'same-origin'
+    'HTTP_SEC_FETCH_MODE' => 'navigate'
+    'HTTP_SEC_FETCH_DEST' => 'document'
+    'HTTP_REFERER' => 'http://localhost/planealo.sytes.net/web/ged/default/index'
+    'HTTP_ACCEPT_ENCODING' => 'gzip, deflate, br, zstd'
+    'HTTP_ACCEPT_LANGUAGE' => 'en,id;q=0.9,tr;q=0.8,ru;q=0.7'
+    'HTTP_COOKIE' => '_ga=GA1.1.1679908835.1749223008; PHPSESSID=uhtlqp6m93te7gqig62teinalp; _csrf=052b7c918e29a57673e9a43dd7b0060950f2b65b0138ca3e52d5b7da9ca869f0a%3A2%3A%7Bi%3A0%3Bs%3A5%3A%22_csrf%22%3Bi%3A1%3Bs%3A32%3A%226sBatZ-07-JGxFS3hxh8qNGtiN8aQDz0%22%3B%7D'
+    'PATH' => 'C:\\WINDOWS\\system32;C:\\WINDOWS;C:\\WINDOWS\\System32\\Wbem;C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\;C:\\WINDOWS\\System32\\OpenSSH\\;C:\\xampp\\php;C:\\ProgramData\\ComposerSetup\\bin;C:\\Program Files\\PuTTY\\;C:\\Program Files\\Git\\cmd;C:\\Program Files\\nodejs\\;C:\\Program Files (x86)\\Microsoft SQL Server\\160\\Tools\\Binn\\;C:\\Program Files\\Microsoft SQL Server\\160\\Tools\\Binn\\;C:\\Program Files\\Microsoft SQL Server\\Client SDK\\ODBC\\170\\Tools\\Binn\\;C:\\Program Files\\Microsoft SQL Server\\160\\DTS\\Binn\\;C:\\Program Files (x86)\\Microsoft SQL Server\\160\\DTS\\Binn\\;C:\\Users\\Otic-Sistemas\\AppData\\Local\\Microsoft\\WindowsApps;;C:\\Users\\Otic-Sistemas\\AppData\\Local\\Programs\\Microsoft VS Code\\bin;C:\\Users\\Otic-Sistemas\\AppData\\Roaming\\Composer\\vendor\\bin;C:\\Users\\Otic-Sistemas\\AppData\\Roaming\\npm'
+    'SystemRoot' => 'C:\\WINDOWS'
+    'COMSPEC' => 'C:\\WINDOWS\\system32\\cmd.exe'
+    'PATHEXT' => '.COM;.EXE;.BAT;.CMD;.VBS;.VBE;.JS;.JSE;.WSF;.WSH;.MSC'
+    'WINDIR' => 'C:\\WINDOWS'
+    'SERVER_SIGNATURE' => '<address>Apache/2.4.54 (Win64) OpenSSL/1.1.1p PHP/8.2.0 Server at localhost Port 80</address>
+'
+    'SERVER_SOFTWARE' => 'Apache/2.4.54 (Win64) OpenSSL/1.1.1p PHP/8.2.0'
+    'SERVER_NAME' => 'localhost'
+    'SERVER_ADDR' => '::1'
+    'SERVER_PORT' => '80'
+    'REMOTE_ADDR' => '::1'
+    'DOCUMENT_ROOT' => 'C:/xampp/htdocs'
+    'REQUEST_SCHEME' => 'http'
+    'CONTEXT_PREFIX' => ''
+    'CONTEXT_DOCUMENT_ROOT' => 'C:/xampp/htdocs'
+    'SERVER_ADMIN' => 'postmaster@localhost'
+    'SCRIPT_FILENAME' => 'C:/xampp/htdocs/planealo.sytes.net/web/index.php'
+    'REMOTE_PORT' => '55924'
+    'REDIRECT_URL' => '/planealo.sytes.net/web/aportes/aportes/index'
+    'GATEWAY_INTERFACE' => 'CGI/1.1'
+    'SERVER_PROTOCOL' => 'HTTP/1.1'
+    'REQUEST_METHOD' => 'GET'
+    'QUERY_STRING' => ''
+    'REQUEST_URI' => '/planealo.sytes.net/web/aportes/aportes/index'
+    'SCRIPT_NAME' => '/planealo.sytes.net/web/index.php'
+    'PHP_SELF' => '/planealo.sytes.net/web/index.php'
+    'REQUEST_TIME_FLOAT' => 1772472633.9328
+    'REQUEST_TIME' => 1772472633
+]
+2026-03-02 13:32:11 [::1][1][uhtlqp6m93te7gqig62teinalp][error][yii\web\HttpException:404] yii\base\InvalidRouteException: Unable to resolve the request "js/escuela-selector.js". in C:\xampp\htdocs\planealo.sytes.net\vendor\yiisoft\yii2\base\Module.php:563
+Stack trace:
+#0 C:\xampp\htdocs\planealo.sytes.net\vendor\yiisoft\yii2\web\Application.php(112): yii\base\Module->runAction('js/escuela-sele...', Array)
+#1 C:\xampp\htdocs\planealo.sytes.net\vendor\yiisoft\yii2\base\Application.php(391): yii\web\Application->handleRequest(Object(yii\web\Request))
+#2 C:\xampp\htdocs\planealo.sytes.net\web\index.php(12): yii\base\Application->run()
+#3 {main}
+
+Next yii\web\NotFoundHttpException: Página no encontrada. in C:\xampp\htdocs\planealo.sytes.net\vendor\yiisoft\yii2\web\Application.php:124
+Stack trace:
+#0 C:\xampp\htdocs\planealo.sytes.net\vendor\yiisoft\yii2\base\Application.php(391): yii\web\Application->handleRequest(Object(yii\web\Request))
+#1 C:\xampp\htdocs\planealo.sytes.net\web\index.php(12): yii\base\Application->run()
+#2 {main}
+2026-03-02 13:32:11 [::1][1][uhtlqp6m93te7gqig62teinalp][info][application] $_GET = []
+
+$_POST = []
+
+$_FILES = []
+
+$_COOKIE = [
+    '_ga' => 'GA1.1.1679908835.1749223008'
+    'PHPSESSID' => 'uhtlqp6m93te7gqig62teinalp'
+    '_csrf' => '052b7c918e29a57673e9a43dd7b0060950f2b65b0138ca3e52d5b7da9ca869f0a:2:{i:0;s:5:\"_csrf\";i:1;s:32:\"6sBatZ-07-JGxFS3hxh8qNGtiN8aQDz0\";}'
+]
+
+$_SESSION = [
+    '__flash' => []
+    '__id' => 1
+    '__authKey' => 'FCxNRGJia25jro30ecX5r8yVk7nCuaOY'
+    'id_escuela' => 2
+    'nombre_escuela' => 'Club Aves Voladoras'
+    'escuela_activa' => true
+    'escuela_ultima_actualizacion' => 1772470259
+    'idEscuela' => 2
+    'nombreEscuela' => 'Club Aves Voladoras'
+]
+
+$_SERVER = [
+    'REDIRECT_MIBDIRS' => 'C:/xampp/php/extras/mibs'
+    'REDIRECT_MYSQL_HOME' => '\\xampp\\mysql\\bin'
+    'REDIRECT_OPENSSL_CONF' => 'C:/xampp/apache/bin/openssl.cnf'
+    'REDIRECT_PHP_PEAR_SYSCONF_DIR' => '\\xampp\\php'
+    'REDIRECT_PHPRC' => '\\xampp\\php'
+    'REDIRECT_TMP' => '\\xampp\\tmp'
+    'REDIRECT_STATUS' => '200'
+    'MIBDIRS' => 'C:/xampp/php/extras/mibs'
+    'MYSQL_HOME' => '\\xampp\\mysql\\bin'
+    'OPENSSL_CONF' => 'C:/xampp/apache/bin/openssl.cnf'
+    'PHP_PEAR_SYSCONF_DIR' => '\\xampp\\php'
+    'PHPRC' => '\\xampp\\php'
+    'TMP' => '\\xampp\\tmp'
+    'HTTP_HOST' => 'localhost'
+    'HTTP_CONNECTION' => 'keep-alive'
+    'HTTP_SEC_CH_UA_PLATFORM' => '\"Windows\"'
+    'HTTP_USER_AGENT' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36 OPR/127.0.0.0'
+    'HTTP_SEC_CH_UA' => '\"Opera GX\";v=\"127\", \"Chromium\";v=\"143\", \"Not A(Brand\";v=\"24\"'
+    'HTTP_SEC_CH_UA_MOBILE' => '?0'
+    'HTTP_ACCEPT' => '*/*'
+    'HTTP_SEC_FETCH_SITE' => 'same-origin'
+    'HTTP_SEC_FETCH_MODE' => 'no-cors'
+    'HTTP_SEC_FETCH_DEST' => 'script'
+    'HTTP_REFERER' => 'http://localhost/planealo.sytes.net/web/aportes/aportes/index'
+    'HTTP_ACCEPT_ENCODING' => 'gzip, deflate, br, zstd'
+    'HTTP_ACCEPT_LANGUAGE' => 'en,id;q=0.9,tr;q=0.8,ru;q=0.7'
+    'HTTP_COOKIE' => '_ga=GA1.1.1679908835.1749223008; PHPSESSID=uhtlqp6m93te7gqig62teinalp; _csrf=052b7c918e29a57673e9a43dd7b0060950f2b65b0138ca3e52d5b7da9ca869f0a%3A2%3A%7Bi%3A0%3Bs%3A5%3A%22_csrf%22%3Bi%3A1%3Bs%3A32%3A%226sBatZ-07-JGxFS3hxh8qNGtiN8aQDz0%22%3B%7D'
+    'PATH' => 'C:\\WINDOWS\\system32;C:\\WINDOWS;C:\\WINDOWS\\System32\\Wbem;C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\;C:\\WINDOWS\\System32\\OpenSSH\\;C:\\xampp\\php;C:\\ProgramData\\ComposerSetup\\bin;C:\\Program Files\\PuTTY\\;C:\\Program Files\\Git\\cmd;C:\\Program Files\\nodejs\\;C:\\Program Files (x86)\\Microsoft SQL Server\\160\\Tools\\Binn\\;C:\\Program Files\\Microsoft SQL Server\\160\\Tools\\Binn\\;C:\\Program Files\\Microsoft SQL Server\\Client SDK\\ODBC\\170\\Tools\\Binn\\;C:\\Program Files\\Microsoft SQL Server\\160\\DTS\\Binn\\;C:\\Program Files (x86)\\Microsoft SQL Server\\160\\DTS\\Binn\\;C:\\Users\\Otic-Sistemas\\AppData\\Local\\Microsoft\\WindowsApps;;C:\\Users\\Otic-Sistemas\\AppData\\Local\\Programs\\Microsoft VS Code\\bin;C:\\Users\\Otic-Sistemas\\AppData\\Roaming\\Composer\\vendor\\bin;C:\\Users\\Otic-Sistemas\\AppData\\Roaming\\npm'
+    'SystemRoot' => 'C:\\WINDOWS'
+    'COMSPEC' => 'C:\\WINDOWS\\system32\\cmd.exe'
+    'PATHEXT' => '.COM;.EXE;.BAT;.CMD;.VBS;.VBE;.JS;.JSE;.WSF;.WSH;.MSC'
+    'WINDIR' => 'C:\\WINDOWS'
+    'SERVER_SIGNATURE' => '<address>Apache/2.4.54 (Win64) OpenSSL/1.1.1p PHP/8.2.0 Server at localhost Port 80</address>
+'
+    'SERVER_SOFTWARE' => 'Apache/2.4.54 (Win64) OpenSSL/1.1.1p PHP/8.2.0'
+    'SERVER_NAME' => 'localhost'
+    'SERVER_ADDR' => '::1'
+    'SERVER_PORT' => '80'
+    'REMOTE_ADDR' => '::1'
+    'DOCUMENT_ROOT' => 'C:/xampp/htdocs'
+    'REQUEST_SCHEME' => 'http'
+    'CONTEXT_PREFIX' => ''
+    'CONTEXT_DOCUMENT_ROOT' => 'C:/xampp/htdocs'
+    'SERVER_ADMIN' => 'postmaster@localhost'
+    'SCRIPT_FILENAME' => 'C:/xampp/htdocs/planealo.sytes.net/web/index.php'
+    'REMOTE_PORT' => '55924'
+    'REDIRECT_URL' => '/planealo.sytes.net/web/js/escuela-selector.js'
+    'GATEWAY_INTERFACE' => 'CGI/1.1'
+    'SERVER_PROTOCOL' => 'HTTP/1.1'
+    'REQUEST_METHOD' => 'GET'
+    'QUERY_STRING' => ''
+    'REQUEST_URI' => '/planealo.sytes.net/web/js/escuela-selector.js'
+    'SCRIPT_NAME' => '/planealo.sytes.net/web/index.php'
+    'PHP_SELF' => '/planealo.sytes.net/web/index.php'
+    'REQUEST_TIME_FLOAT' => 1772472731.3893
+    'REQUEST_TIME' => 1772472731
+]
+2026-03-02 13:45:33 [::1][1][uhtlqp6m93te7gqig62teinalp][error][tasa-dolar] Error BCV Directo: fopen(https://www.bcv.org.ve/): Failed to open stream: Se produjo un error durante el intento de conexión ya que la parte conectada no respondió adecuadamente tras un periodo de tiempo, o bien se produjo un error en la conexión establecida ya que el host conectado no ha podido responder
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:157
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:105
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:78
+2026-03-02 13:45:33 [::1][1][uhtlqp6m93te7gqig62teinalp][warning][tasa-dolar] ❌ Fuente BCV_Directo falló o tasa inválida: 0
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:112
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:78
+    in C:\xampp\htdocs\planealo.sytes.net\modules\aportes\views\aportes\gestion-atleta.php:37
+2026-03-02 13:45:53 [::1][1][uhtlqp6m93te7gqig62teinalp][error][tasa-dolar] Error BCV Alternativo: fopen(https://www.bcv.org.ve/tasas-informativas-sistema-bancario): Failed to open stream: Se produjo un error durante el intento de conexión ya que la parte conectada no respondió adecuadamente tras un periodo de tiempo, o bien se produjo un error en la conexión establecida ya que el host conectado no ha podido responder
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:187
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:105
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:78
+2026-03-02 13:45:53 [::1][1][uhtlqp6m93te7gqig62teinalp][warning][tasa-dolar] ❌ Fuente BCV_Alternativo falló o tasa inválida: 0
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:112
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:78
+    in C:\xampp\htdocs\planealo.sytes.net\modules\aportes\views\aportes\gestion-atleta.php:37
+2026-03-02 13:46:08 [::1][1][uhtlqp6m93te7gqig62teinalp][error][tasa-dolar] Error Yahoo Finance: fopen(https://query1.finance.yahoo.com/v8/finance/chart/USDVES=X): Failed to open stream: Se produjo un error durante el intento de conexión ya que la parte conectada no respondió adecuadamente tras un periodo de tiempo, o bien se produjo un error en la conexión establecida ya que el host conectado no ha podido responder
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:286
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:105
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:78
+2026-03-02 13:46:08 [::1][1][uhtlqp6m93te7gqig62teinalp][warning][tasa-dolar] ❌ Fuente EnParalelo falló o tasa inválida: 0
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:112
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:78
+    in C:\xampp\htdocs\planealo.sytes.net\modules\aportes\views\aportes\gestion-atleta.php:37
+2026-03-02 13:46:23 [::1][1][uhtlqp6m93te7gqig62teinalp][error][tasa-dolar] Error ExchangeRate-API: fopen(https://api.exchangerate-api.com/v4/latest/USD): Failed to open stream: Se produjo un error durante el intento de conexión ya que la parte conectada no respondió adecuadamente tras un periodo de tiempo, o bien se produjo un error en la conexión establecida ya que el host conectado no ha podido responder
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:317
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:105
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:78
+2026-03-02 13:46:23 [::1][1][uhtlqp6m93te7gqig62teinalp][warning][tasa-dolar] ❌ Fuente API_Respaldo falló o tasa inválida: 0
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:112
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:78
+    in C:\xampp\htdocs\planealo.sytes.net\modules\aportes\views\aportes\gestion-atleta.php:37
+2026-03-02 13:46:23 [::1][1][uhtlqp6m93te7gqig62teinalp][error][tasa-dolar] ❌ Todas las fuentes fallaron
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:116
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:78
+    in C:\xampp\htdocs\planealo.sytes.net\modules\aportes\views\aportes\gestion-atleta.php:37
+2026-03-02 13:46:44 [::1][1][uhtlqp6m93te7gqig62teinalp][error][tasa-dolar] Error BCV Directo: fopen(https://www.bcv.org.ve/): Failed to open stream: Se produjo un error durante el intento de conexión ya que la parte conectada no respondió adecuadamente tras un periodo de tiempo, o bien se produjo un error en la conexión establecida ya que el host conectado no ha podido responder
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:157
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:105
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:78
+2026-03-02 13:46:44 [::1][1][uhtlqp6m93te7gqig62teinalp][warning][tasa-dolar] ❌ Fuente BCV_Directo falló o tasa inválida: 0
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:112
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:78
+    in C:\xampp\htdocs\planealo.sytes.net\widgets\TasaDolarWidget.php:15
+2026-03-02 13:47:04 [::1][1][uhtlqp6m93te7gqig62teinalp][error][tasa-dolar] Error BCV Alternativo: fopen(https://www.bcv.org.ve/tasas-informativas-sistema-bancario): Failed to open stream: Se produjo un error durante el intento de conexión ya que la parte conectada no respondió adecuadamente tras un periodo de tiempo, o bien se produjo un error en la conexión establecida ya que el host conectado no ha podido responder
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:187
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:105
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:78
+2026-03-02 13:47:04 [::1][1][uhtlqp6m93te7gqig62teinalp][warning][tasa-dolar] ❌ Fuente BCV_Alternativo falló o tasa inválida: 0
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:112
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:78
+    in C:\xampp\htdocs\planealo.sytes.net\widgets\TasaDolarWidget.php:15
+2026-03-02 13:47:19 [::1][1][uhtlqp6m93te7gqig62teinalp][error][yii\base\ErrorException:1] yii\base\ErrorException: Maximum execution time of 120 seconds exceeded in C:\xampp\htdocs\planealo.sytes.net\vendor\yiisoft\yii2\base\ErrorHandler.php:253
+Stack trace:
+#0 [internal function]: yii\base\ErrorHandler->handleFatalError()
+#1 {main}
+2026-03-02 13:45:08 [::1][1][uhtlqp6m93te7gqig62teinalp][info][application] $_GET = []
+
+$_POST = []
+
+$_FILES = []
+
+$_COOKIE = [
+    '_ga' => 'GA1.1.1679908835.1749223008'
+    'PHPSESSID' => 'uhtlqp6m93te7gqig62teinalp'
+    '_csrf' => '052b7c918e29a57673e9a43dd7b0060950f2b65b0138ca3e52d5b7da9ca869f0a:2:{i:0;s:5:\"_csrf\";i:1;s:32:\"6sBatZ-07-JGxFS3hxh8qNGtiN8aQDz0\";}'
+]
+
+$_SESSION = [
+    '__flash' => []
+    '__id' => 1
+    '__authKey' => 'FCxNRGJia25jro30ecX5r8yVk7nCuaOY'
+    'id_escuela' => 2
+    'nombre_escuela' => 'Club Aves Voladoras'
+    'escuela_activa' => true
+    'escuela_ultima_actualizacion' => 1772470259
+    'idEscuela' => 2
+    'nombreEscuela' => 'Club Aves Voladoras'
+]
+
+$_SERVER = [
+    'REDIRECT_MIBDIRS' => 'C:/xampp/php/extras/mibs'
+    'REDIRECT_MYSQL_HOME' => '\\xampp\\mysql\\bin'
+    'REDIRECT_OPENSSL_CONF' => 'C:/xampp/apache/bin/openssl.cnf'
+    'REDIRECT_PHP_PEAR_SYSCONF_DIR' => '\\xampp\\php'
+    'REDIRECT_PHPRC' => '\\xampp\\php'
+    'REDIRECT_TMP' => '\\xampp\\tmp'
+    'REDIRECT_STATUS' => '200'
+    'MIBDIRS' => 'C:/xampp/php/extras/mibs'
+    'MYSQL_HOME' => '\\xampp\\mysql\\bin'
+    'OPENSSL_CONF' => 'C:/xampp/apache/bin/openssl.cnf'
+    'PHP_PEAR_SYSCONF_DIR' => '\\xampp\\php'
+    'PHPRC' => '\\xampp\\php'
+    'TMP' => '\\xampp\\tmp'
+    'HTTP_HOST' => 'localhost'
+    'HTTP_CONNECTION' => 'keep-alive'
+    'HTTP_SEC_CH_UA' => '\"Opera GX\";v=\"127\", \"Chromium\";v=\"143\", \"Not A(Brand\";v=\"24\"'
+    'HTTP_SEC_CH_UA_MOBILE' => '?0'
+    'HTTP_SEC_CH_UA_PLATFORM' => '\"Windows\"'
+    'HTTP_UPGRADE_INSECURE_REQUESTS' => '1'
+    'HTTP_USER_AGENT' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36 OPR/127.0.0.0'
+    'HTTP_ACCEPT' => 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7'
+    'HTTP_SEC_FETCH_SITE' => 'same-origin'
+    'HTTP_SEC_FETCH_MODE' => 'navigate'
+    'HTTP_SEC_FETCH_USER' => '?1'
+    'HTTP_SEC_FETCH_DEST' => 'document'
+    'HTTP_REFERER' => 'http://localhost/planealo.sytes.net/web/aportes/aportes/index'
+    'HTTP_ACCEPT_ENCODING' => 'gzip, deflate, br, zstd'
+    'HTTP_ACCEPT_LANGUAGE' => 'en,id;q=0.9,tr;q=0.8,ru;q=0.7'
+    'HTTP_COOKIE' => '_ga=GA1.1.1679908835.1749223008; PHPSESSID=uhtlqp6m93te7gqig62teinalp; _csrf=052b7c918e29a57673e9a43dd7b0060950f2b65b0138ca3e52d5b7da9ca869f0a%3A2%3A%7Bi%3A0%3Bs%3A5%3A%22_csrf%22%3Bi%3A1%3Bs%3A32%3A%226sBatZ-07-JGxFS3hxh8qNGtiN8aQDz0%22%3B%7D'
+    'PATH' => 'C:\\WINDOWS\\system32;C:\\WINDOWS;C:\\WINDOWS\\System32\\Wbem;C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\;C:\\WINDOWS\\System32\\OpenSSH\\;C:\\xampp\\php;C:\\ProgramData\\ComposerSetup\\bin;C:\\Program Files\\PuTTY\\;C:\\Program Files\\Git\\cmd;C:\\Program Files\\nodejs\\;C:\\Program Files (x86)\\Microsoft SQL Server\\160\\Tools\\Binn\\;C:\\Program Files\\Microsoft SQL Server\\160\\Tools\\Binn\\;C:\\Program Files\\Microsoft SQL Server\\Client SDK\\ODBC\\170\\Tools\\Binn\\;C:\\Program Files\\Microsoft SQL Server\\160\\DTS\\Binn\\;C:\\Program Files (x86)\\Microsoft SQL Server\\160\\DTS\\Binn\\;C:\\Users\\Otic-Sistemas\\AppData\\Local\\Microsoft\\WindowsApps;;C:\\Users\\Otic-Sistemas\\AppData\\Local\\Programs\\Microsoft VS Code\\bin;C:\\Users\\Otic-Sistemas\\AppData\\Roaming\\Composer\\vendor\\bin;C:\\Users\\Otic-Sistemas\\AppData\\Roaming\\npm'
+    'SystemRoot' => 'C:\\WINDOWS'
+    'COMSPEC' => 'C:\\WINDOWS\\system32\\cmd.exe'
+    'PATHEXT' => '.COM;.EXE;.BAT;.CMD;.VBS;.VBE;.JS;.JSE;.WSF;.WSH;.MSC'
+    'WINDIR' => 'C:\\WINDOWS'
+    'SERVER_SIGNATURE' => '<address>Apache/2.4.54 (Win64) OpenSSL/1.1.1p PHP/8.2.0 Server at localhost Port 80</address>
+'
+    'SERVER_SOFTWARE' => 'Apache/2.4.54 (Win64) OpenSSL/1.1.1p PHP/8.2.0'
+    'SERVER_NAME' => 'localhost'
+    'SERVER_ADDR' => '::1'
+    'SERVER_PORT' => '80'
+    'REMOTE_ADDR' => '::1'
+    'DOCUMENT_ROOT' => 'C:/xampp/htdocs'
+    'REQUEST_SCHEME' => 'http'
+    'CONTEXT_PREFIX' => ''
+    'CONTEXT_DOCUMENT_ROOT' => 'C:/xampp/htdocs'
+    'SERVER_ADMIN' => 'postmaster@localhost'
+    'SCRIPT_FILENAME' => 'C:/xampp/htdocs/planealo.sytes.net/web/index.php'
+    'REMOTE_PORT' => '56306'
+    'REDIRECT_URL' => '/planealo.sytes.net/web/aportes/aportes/gestion-atleta'
+    'GATEWAY_INTERFACE' => 'CGI/1.1'
+    'SERVER_PROTOCOL' => 'HTTP/1.1'
+    'REQUEST_METHOD' => 'GET'
+    'QUERY_STRING' => ''
+    'REQUEST_URI' => '/planealo.sytes.net/web/aportes/aportes/gestion-atleta'
+    'SCRIPT_NAME' => '/planealo.sytes.net/web/index.php'
+    'PHP_SELF' => '/planealo.sytes.net/web/index.php'
+    'REQUEST_TIME_FLOAT' => 1772473507.6565
+    'REQUEST_TIME' => 1772473507
+]
+2026-03-02 14:14:01 [::1][1][uhtlqp6m93te7gqig62teinalp][error][tasa-dolar] Error BCV Directo: fopen(https://www.bcv.org.ve/): Failed to open stream: Se produjo un error durante el intento de conexión ya que la parte conectada no respondió adecuadamente tras un periodo de tiempo, o bien se produjo un error en la conexión establecida ya que el host conectado no ha podido responder
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:157
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:105
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:78
+2026-03-02 14:14:01 [::1][1][uhtlqp6m93te7gqig62teinalp][warning][tasa-dolar] ❌ Fuente BCV_Directo falló o tasa inválida: 0
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:112
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:78
+    in C:\xampp\htdocs\planealo.sytes.net\modules\aportes\views\aportes\gestion-atleta.php:37
+2026-03-02 14:14:21 [::1][1][uhtlqp6m93te7gqig62teinalp][error][tasa-dolar] Error BCV Alternativo: fopen(https://www.bcv.org.ve/tasas-informativas-sistema-bancario): Failed to open stream: Se produjo un error durante el intento de conexión ya que la parte conectada no respondió adecuadamente tras un periodo de tiempo, o bien se produjo un error en la conexión establecida ya que el host conectado no ha podido responder
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:187
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:105
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:78
+2026-03-02 14:14:21 [::1][1][uhtlqp6m93te7gqig62teinalp][warning][tasa-dolar] ❌ Fuente BCV_Alternativo falló o tasa inválida: 0
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:112
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:78
+    in C:\xampp\htdocs\planealo.sytes.net\modules\aportes\views\aportes\gestion-atleta.php:37
+2026-03-02 14:14:36 [::1][1][uhtlqp6m93te7gqig62teinalp][error][tasa-dolar] Error Yahoo Finance: fopen(https://query1.finance.yahoo.com/v8/finance/chart/USDVES=X): Failed to open stream: Se produjo un error durante el intento de conexión ya que la parte conectada no respondió adecuadamente tras un periodo de tiempo, o bien se produjo un error en la conexión establecida ya que el host conectado no ha podido responder
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:286
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:105
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:78
+2026-03-02 14:14:36 [::1][1][uhtlqp6m93te7gqig62teinalp][warning][tasa-dolar] ❌ Fuente EnParalelo falló o tasa inválida: 0
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:112
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:78
+    in C:\xampp\htdocs\planealo.sytes.net\modules\aportes\views\aportes\gestion-atleta.php:37
+2026-03-02 14:14:51 [::1][1][uhtlqp6m93te7gqig62teinalp][error][tasa-dolar] Error ExchangeRate-API: fopen(https://api.exchangerate-api.com/v4/latest/USD): Failed to open stream: Se produjo un error durante el intento de conexión ya que la parte conectada no respondió adecuadamente tras un periodo de tiempo, o bien se produjo un error en la conexión establecida ya que el host conectado no ha podido responder
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:317
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:105
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:78
+2026-03-02 14:14:51 [::1][1][uhtlqp6m93te7gqig62teinalp][warning][tasa-dolar] ❌ Fuente API_Respaldo falló o tasa inválida: 0
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:112
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:78
+    in C:\xampp\htdocs\planealo.sytes.net\modules\aportes\views\aportes\gestion-atleta.php:37
+2026-03-02 14:14:51 [::1][1][uhtlqp6m93te7gqig62teinalp][error][tasa-dolar] ❌ Todas las fuentes fallaron
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:116
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:78
+    in C:\xampp\htdocs\planealo.sytes.net\modules\aportes\views\aportes\gestion-atleta.php:37
+2026-03-02 14:15:13 [::1][1][uhtlqp6m93te7gqig62teinalp][error][tasa-dolar] Error BCV Directo: fopen(https://www.bcv.org.ve/): Failed to open stream: Se produjo un error durante el intento de conexión ya que la parte conectada no respondió adecuadamente tras un periodo de tiempo, o bien se produjo un error en la conexión establecida ya que el host conectado no ha podido responder
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:157
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:105
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:78
+2026-03-02 14:15:13 [::1][1][uhtlqp6m93te7gqig62teinalp][warning][tasa-dolar] ❌ Fuente BCV_Directo falló o tasa inválida: 0
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:112
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:78
+    in C:\xampp\htdocs\planealo.sytes.net\widgets\TasaDolarWidget.php:15
+2026-03-02 14:15:33 [::1][1][uhtlqp6m93te7gqig62teinalp][error][yii\base\ErrorException:1] yii\base\ErrorException: Maximum execution time of 120 seconds exceeded in C:\xampp\htdocs\planealo.sytes.net\vendor\yiisoft\yii2\base\ErrorHandler.php:253
+Stack trace:
+#0 [internal function]: yii\base\ErrorHandler->handleFatalError()
+#1 {main}
+2026-03-02 14:13:22 [::1][1][uhtlqp6m93te7gqig62teinalp][info][application] $_GET = []
+
+$_POST = []
+
+$_FILES = []
+
+$_COOKIE = [
+    '_ga' => 'GA1.1.1679908835.1749223008'
+    'PHPSESSID' => 'uhtlqp6m93te7gqig62teinalp'
+    '_csrf' => '052b7c918e29a57673e9a43dd7b0060950f2b65b0138ca3e52d5b7da9ca869f0a:2:{i:0;s:5:\"_csrf\";i:1;s:32:\"6sBatZ-07-JGxFS3hxh8qNGtiN8aQDz0\";}'
+]
+
+$_SESSION = [
+    '__flash' => []
+    '__id' => 1
+    '__authKey' => 'FCxNRGJia25jro30ecX5r8yVk7nCuaOY'
+    'id_escuela' => 2
+    'nombre_escuela' => 'Club Aves Voladoras'
+    'escuela_activa' => true
+    'escuela_ultima_actualizacion' => 1772470259
+    'idEscuela' => 2
+    'nombreEscuela' => 'Club Aves Voladoras'
+]
+
+$_SERVER = [
+    'REDIRECT_MIBDIRS' => 'C:/xampp/php/extras/mibs'
+    'REDIRECT_MYSQL_HOME' => '\\xampp\\mysql\\bin'
+    'REDIRECT_OPENSSL_CONF' => 'C:/xampp/apache/bin/openssl.cnf'
+    'REDIRECT_PHP_PEAR_SYSCONF_DIR' => '\\xampp\\php'
+    'REDIRECT_PHPRC' => '\\xampp\\php'
+    'REDIRECT_TMP' => '\\xampp\\tmp'
+    'REDIRECT_STATUS' => '200'
+    'MIBDIRS' => 'C:/xampp/php/extras/mibs'
+    'MYSQL_HOME' => '\\xampp\\mysql\\bin'
+    'OPENSSL_CONF' => 'C:/xampp/apache/bin/openssl.cnf'
+    'PHP_PEAR_SYSCONF_DIR' => '\\xampp\\php'
+    'PHPRC' => '\\xampp\\php'
+    'TMP' => '\\xampp\\tmp'
+    'HTTP_HOST' => 'localhost'
+    'HTTP_CONNECTION' => 'keep-alive'
+    'HTTP_PRAGMA' => 'no-cache'
+    'HTTP_CACHE_CONTROL' => 'no-cache'
+    'HTTP_SEC_CH_UA' => '\"Opera GX\";v=\"127\", \"Chromium\";v=\"143\", \"Not A(Brand\";v=\"24\"'
+    'HTTP_SEC_CH_UA_MOBILE' => '?0'
+    'HTTP_SEC_CH_UA_PLATFORM' => '\"Windows\"'
+    'HTTP_UPGRADE_INSECURE_REQUESTS' => '1'
+    'HTTP_USER_AGENT' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36 OPR/127.0.0.0'
+    'HTTP_ACCEPT' => 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7'
+    'HTTP_SEC_FETCH_SITE' => 'same-origin'
+    'HTTP_SEC_FETCH_MODE' => 'navigate'
+    'HTTP_SEC_FETCH_USER' => '?1'
+    'HTTP_SEC_FETCH_DEST' => 'document'
+    'HTTP_REFERER' => 'http://localhost/planealo.sytes.net/web/aportes/aportes/index'
+    'HTTP_ACCEPT_ENCODING' => 'gzip, deflate, br, zstd'
+    'HTTP_ACCEPT_LANGUAGE' => 'en,id;q=0.9,tr;q=0.8,ru;q=0.7'
+    'HTTP_COOKIE' => '_ga=GA1.1.1679908835.1749223008; PHPSESSID=uhtlqp6m93te7gqig62teinalp; _csrf=052b7c918e29a57673e9a43dd7b0060950f2b65b0138ca3e52d5b7da9ca869f0a%3A2%3A%7Bi%3A0%3Bs%3A5%3A%22_csrf%22%3Bi%3A1%3Bs%3A32%3A%226sBatZ-07-JGxFS3hxh8qNGtiN8aQDz0%22%3B%7D'
+    'PATH' => 'C:\\WINDOWS\\system32;C:\\WINDOWS;C:\\WINDOWS\\System32\\Wbem;C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\;C:\\WINDOWS\\System32\\OpenSSH\\;C:\\xampp\\php;C:\\ProgramData\\ComposerSetup\\bin;C:\\Program Files\\PuTTY\\;C:\\Program Files\\Git\\cmd;C:\\Program Files\\nodejs\\;C:\\Program Files (x86)\\Microsoft SQL Server\\160\\Tools\\Binn\\;C:\\Program Files\\Microsoft SQL Server\\160\\Tools\\Binn\\;C:\\Program Files\\Microsoft SQL Server\\Client SDK\\ODBC\\170\\Tools\\Binn\\;C:\\Program Files\\Microsoft SQL Server\\160\\DTS\\Binn\\;C:\\Program Files (x86)\\Microsoft SQL Server\\160\\DTS\\Binn\\;C:\\Users\\Otic-Sistemas\\AppData\\Local\\Microsoft\\WindowsApps;;C:\\Users\\Otic-Sistemas\\AppData\\Local\\Programs\\Microsoft VS Code\\bin;C:\\Users\\Otic-Sistemas\\AppData\\Roaming\\Composer\\vendor\\bin;C:\\Users\\Otic-Sistemas\\AppData\\Roaming\\npm'
+    'SystemRoot' => 'C:\\WINDOWS'
+    'COMSPEC' => 'C:\\WINDOWS\\system32\\cmd.exe'
+    'PATHEXT' => '.COM;.EXE;.BAT;.CMD;.VBS;.VBE;.JS;.JSE;.WSF;.WSH;.MSC'
+    'WINDIR' => 'C:\\WINDOWS'
+    'SERVER_SIGNATURE' => '<address>Apache/2.4.54 (Win64) OpenSSL/1.1.1p PHP/8.2.0 Server at localhost Port 80</address>
+'
+    'SERVER_SOFTWARE' => 'Apache/2.4.54 (Win64) OpenSSL/1.1.1p PHP/8.2.0'
+    'SERVER_NAME' => 'localhost'
+    'SERVER_ADDR' => '::1'
+    'SERVER_PORT' => '80'
+    'REMOTE_ADDR' => '::1'
+    'DOCUMENT_ROOT' => 'C:/xampp/htdocs'
+    'REQUEST_SCHEME' => 'http'
+    'CONTEXT_PREFIX' => ''
+    'CONTEXT_DOCUMENT_ROOT' => 'C:/xampp/htdocs'
+    'SERVER_ADMIN' => 'postmaster@localhost'
+    'SCRIPT_FILENAME' => 'C:/xampp/htdocs/planealo.sytes.net/web/index.php'
+    'REMOTE_PORT' => '56987'
+    'REDIRECT_URL' => '/planealo.sytes.net/web/aportes/aportes/gestion-atleta'
+    'GATEWAY_INTERFACE' => 'CGI/1.1'
+    'SERVER_PROTOCOL' => 'HTTP/1.1'
+    'REQUEST_METHOD' => 'GET'
+    'QUERY_STRING' => ''
+    'REQUEST_URI' => '/planealo.sytes.net/web/aportes/aportes/gestion-atleta'
+    'SCRIPT_NAME' => '/planealo.sytes.net/web/index.php'
+    'PHP_SELF' => '/planealo.sytes.net/web/index.php'
+    'REQUEST_TIME_FLOAT' => 1772475199.7269
+    'REQUEST_TIME' => 1772475199
+]
+2026-03-02 14:15:33 [::1][-][uhtlqp6m93te7gqig62teinalp][error][yii\base\ErrorException:1] yii\base\ErrorException: Maximum execution time of 120 seconds exceeded in C:\xampp\htdocs\planealo.sytes.net\vendor\yiisoft\yii2\web\Session.php:155
+Stack trace:
+#0 [internal function]: yii\base\ErrorHandler->handleFatalError()
+#1 {main}
+2026-03-02 14:13:22 [::1][-][uhtlqp6m93te7gqig62teinalp][info][application] $_GET = []
+
+$_POST = []
+
+$_FILES = []
+
+$_COOKIE = [
+    '_ga' => 'GA1.1.1679908835.1749223008'
+    'PHPSESSID' => 'uhtlqp6m93te7gqig62teinalp'
+    '_csrf' => '052b7c918e29a57673e9a43dd7b0060950f2b65b0138ca3e52d5b7da9ca869f0a:2:{i:0;s:5:\"_csrf\";i:1;s:32:\"6sBatZ-07-JGxFS3hxh8qNGtiN8aQDz0\";}'
+]
+
+$_SESSION = [
+    '__flash' => []
+    '__id' => 1
+    '__authKey' => 'FCxNRGJia25jro30ecX5r8yVk7nCuaOY'
+    'id_escuela' => 2
+    'nombre_escuela' => 'Club Aves Voladoras'
+    'escuela_activa' => true
+    'escuela_ultima_actualizacion' => 1772470259
+    'idEscuela' => 2
+    'nombreEscuela' => 'Club Aves Voladoras'
+]
+
+$_SERVER = [
+    'REDIRECT_MIBDIRS' => 'C:/xampp/php/extras/mibs'
+    'REDIRECT_MYSQL_HOME' => '\\xampp\\mysql\\bin'
+    'REDIRECT_OPENSSL_CONF' => 'C:/xampp/apache/bin/openssl.cnf'
+    'REDIRECT_PHP_PEAR_SYSCONF_DIR' => '\\xampp\\php'
+    'REDIRECT_PHPRC' => '\\xampp\\php'
+    'REDIRECT_TMP' => '\\xampp\\tmp'
+    'REDIRECT_STATUS' => '200'
+    'MIBDIRS' => 'C:/xampp/php/extras/mibs'
+    'MYSQL_HOME' => '\\xampp\\mysql\\bin'
+    'OPENSSL_CONF' => 'C:/xampp/apache/bin/openssl.cnf'
+    'PHP_PEAR_SYSCONF_DIR' => '\\xampp\\php'
+    'PHPRC' => '\\xampp\\php'
+    'TMP' => '\\xampp\\tmp'
+    'HTTP_HOST' => 'localhost'
+    'HTTP_CONNECTION' => 'keep-alive'
+    'HTTP_PRAGMA' => 'no-cache'
+    'HTTP_CACHE_CONTROL' => 'no-cache'
+    'HTTP_SEC_CH_UA' => '\"Opera GX\";v=\"127\", \"Chromium\";v=\"143\", \"Not A(Brand\";v=\"24\"'
+    'HTTP_SEC_CH_UA_MOBILE' => '?0'
+    'HTTP_SEC_CH_UA_PLATFORM' => '\"Windows\"'
+    'HTTP_UPGRADE_INSECURE_REQUESTS' => '1'
+    'HTTP_USER_AGENT' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36 OPR/127.0.0.0'
+    'HTTP_ACCEPT' => 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7'
+    'HTTP_SEC_FETCH_SITE' => 'same-origin'
+    'HTTP_SEC_FETCH_MODE' => 'navigate'
+    'HTTP_SEC_FETCH_USER' => '?1'
+    'HTTP_SEC_FETCH_DEST' => 'document'
+    'HTTP_REFERER' => 'http://localhost/planealo.sytes.net/web/aportes/aportes/index'
+    'HTTP_ACCEPT_ENCODING' => 'gzip, deflate, br, zstd'
+    'HTTP_ACCEPT_LANGUAGE' => 'en,id;q=0.9,tr;q=0.8,ru;q=0.7'
+    'HTTP_COOKIE' => '_ga=GA1.1.1679908835.1749223008; PHPSESSID=uhtlqp6m93te7gqig62teinalp; _csrf=052b7c918e29a57673e9a43dd7b0060950f2b65b0138ca3e52d5b7da9ca869f0a%3A2%3A%7Bi%3A0%3Bs%3A5%3A%22_csrf%22%3Bi%3A1%3Bs%3A32%3A%226sBatZ-07-JGxFS3hxh8qNGtiN8aQDz0%22%3B%7D'
+    'PATH' => 'C:\\WINDOWS\\system32;C:\\WINDOWS;C:\\WINDOWS\\System32\\Wbem;C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\;C:\\WINDOWS\\System32\\OpenSSH\\;C:\\xampp\\php;C:\\ProgramData\\ComposerSetup\\bin;C:\\Program Files\\PuTTY\\;C:\\Program Files\\Git\\cmd;C:\\Program Files\\nodejs\\;C:\\Program Files (x86)\\Microsoft SQL Server\\160\\Tools\\Binn\\;C:\\Program Files\\Microsoft SQL Server\\160\\Tools\\Binn\\;C:\\Program Files\\Microsoft SQL Server\\Client SDK\\ODBC\\170\\Tools\\Binn\\;C:\\Program Files\\Microsoft SQL Server\\160\\DTS\\Binn\\;C:\\Program Files (x86)\\Microsoft SQL Server\\160\\DTS\\Binn\\;C:\\Users\\Otic-Sistemas\\AppData\\Local\\Microsoft\\WindowsApps;;C:\\Users\\Otic-Sistemas\\AppData\\Local\\Programs\\Microsoft VS Code\\bin;C:\\Users\\Otic-Sistemas\\AppData\\Roaming\\Composer\\vendor\\bin;C:\\Users\\Otic-Sistemas\\AppData\\Roaming\\npm'
+    'SystemRoot' => 'C:\\WINDOWS'
+    'COMSPEC' => 'C:\\WINDOWS\\system32\\cmd.exe'
+    'PATHEXT' => '.COM;.EXE;.BAT;.CMD;.VBS;.VBE;.JS;.JSE;.WSF;.WSH;.MSC'
+    'WINDIR' => 'C:\\WINDOWS'
+    'SERVER_SIGNATURE' => '<address>Apache/2.4.54 (Win64) OpenSSL/1.1.1p PHP/8.2.0 Server at localhost Port 80</address>
+'
+    'SERVER_SOFTWARE' => 'Apache/2.4.54 (Win64) OpenSSL/1.1.1p PHP/8.2.0'
+    'SERVER_NAME' => 'localhost'
+    'SERVER_ADDR' => '::1'
+    'SERVER_PORT' => '80'
+    'REMOTE_ADDR' => '::1'
+    'DOCUMENT_ROOT' => 'C:/xampp/htdocs'
+    'REQUEST_SCHEME' => 'http'
+    'CONTEXT_PREFIX' => ''
+    'CONTEXT_DOCUMENT_ROOT' => 'C:/xampp/htdocs'
+    'SERVER_ADMIN' => 'postmaster@localhost'
+    'SCRIPT_FILENAME' => 'C:/xampp/htdocs/planealo.sytes.net/web/index.php'
+    'REMOTE_PORT' => '56986'
+    'REDIRECT_URL' => '/planealo.sytes.net/web/aportes/aportes/gestion-atleta'
+    'GATEWAY_INTERFACE' => 'CGI/1.1'
+    'SERVER_PROTOCOL' => 'HTTP/1.1'
+    'REQUEST_METHOD' => 'GET'
+    'QUERY_STRING' => ''
+    'REQUEST_URI' => '/planealo.sytes.net/web/aportes/aportes/gestion-atleta'
+    'SCRIPT_NAME' => '/planealo.sytes.net/web/index.php'
+    'PHP_SELF' => '/planealo.sytes.net/web/index.php'
+    'REQUEST_TIME_FLOAT' => 1772475199.7109
+    'REQUEST_TIME' => 1772475199
+]
+2026-03-02 14:17:21 [::1][1][uhtlqp6m93te7gqig62teinalp][error][tasa-dolar] Error BCV Directo: fopen(https://www.bcv.org.ve/): Failed to open stream: Se produjo un error durante el intento de conexión ya que la parte conectada no respondió adecuadamente tras un periodo de tiempo, o bien se produjo un error en la conexión establecida ya que el host conectado no ha podido responder
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:157
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:105
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:78
+2026-03-02 14:17:21 [::1][1][uhtlqp6m93te7gqig62teinalp][warning][tasa-dolar] ❌ Fuente BCV_Directo falló o tasa inválida: 0
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:112
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:78
+    in C:\xampp\htdocs\planealo.sytes.net\modules\aportes\views\aportes\gestion-atleta.php:37
+2026-03-02 14:17:41 [::1][1][uhtlqp6m93te7gqig62teinalp][error][tasa-dolar] Error BCV Alternativo: fopen(https://www.bcv.org.ve/tasas-informativas-sistema-bancario): Failed to open stream: Se produjo un error durante el intento de conexión ya que la parte conectada no respondió adecuadamente tras un periodo de tiempo, o bien se produjo un error en la conexión establecida ya que el host conectado no ha podido responder
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:187
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:105
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:78
+2026-03-02 14:17:41 [::1][1][uhtlqp6m93te7gqig62teinalp][warning][tasa-dolar] ❌ Fuente BCV_Alternativo falló o tasa inválida: 0
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:112
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:78
+    in C:\xampp\htdocs\planealo.sytes.net\modules\aportes\views\aportes\gestion-atleta.php:37
+2026-03-02 14:17:56 [::1][1][uhtlqp6m93te7gqig62teinalp][error][tasa-dolar] Error Yahoo Finance: fopen(https://query1.finance.yahoo.com/v8/finance/chart/USDVES=X): Failed to open stream: Se produjo un error durante el intento de conexión ya que la parte conectada no respondió adecuadamente tras un periodo de tiempo, o bien se produjo un error en la conexión establecida ya que el host conectado no ha podido responder
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:286
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:105
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:78
+2026-03-02 14:17:56 [::1][1][uhtlqp6m93te7gqig62teinalp][warning][tasa-dolar] ❌ Fuente EnParalelo falló o tasa inválida: 0
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:112
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:78
+    in C:\xampp\htdocs\planealo.sytes.net\modules\aportes\views\aportes\gestion-atleta.php:37
+2026-03-02 14:18:11 [::1][1][uhtlqp6m93te7gqig62teinalp][error][tasa-dolar] Error ExchangeRate-API: fopen(https://api.exchangerate-api.com/v4/latest/USD): Failed to open stream: Se produjo un error durante el intento de conexión ya que la parte conectada no respondió adecuadamente tras un periodo de tiempo, o bien se produjo un error en la conexión establecida ya que el host conectado no ha podido responder
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:317
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:105
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:78
+2026-03-02 14:18:11 [::1][1][uhtlqp6m93te7gqig62teinalp][warning][tasa-dolar] ❌ Fuente API_Respaldo falló o tasa inválida: 0
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:112
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:78
+    in C:\xampp\htdocs\planealo.sytes.net\modules\aportes\views\aportes\gestion-atleta.php:37
+2026-03-02 14:18:11 [::1][1][uhtlqp6m93te7gqig62teinalp][error][tasa-dolar] ❌ Todas las fuentes fallaron
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:116
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:78
+    in C:\xampp\htdocs\planealo.sytes.net\modules\aportes\views\aportes\gestion-atleta.php:37
+2026-03-02 14:18:33 [::1][1][uhtlqp6m93te7gqig62teinalp][error][tasa-dolar] Error BCV Directo: fopen(https://www.bcv.org.ve/): Failed to open stream: Se produjo un error durante el intento de conexión ya que la parte conectada no respondió adecuadamente tras un periodo de tiempo, o bien se produjo un error en la conexión establecida ya que el host conectado no ha podido responder
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:157
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:105
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:78
+2026-03-02 14:18:33 [::1][1][uhtlqp6m93te7gqig62teinalp][warning][tasa-dolar] ❌ Fuente BCV_Directo falló o tasa inválida: 0
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:112
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:78
+    in C:\xampp\htdocs\planealo.sytes.net\widgets\TasaDolarWidget.php:15
+2026-03-02 14:18:53 [::1][1][uhtlqp6m93te7gqig62teinalp][error][tasa-dolar] Error BCV Alternativo: fopen(https://www.bcv.org.ve/tasas-informativas-sistema-bancario): Failed to open stream: Se produjo un error durante el intento de conexión ya que la parte conectada no respondió adecuadamente tras un periodo de tiempo, o bien se produjo un error en la conexión establecida ya que el host conectado no ha podido responder
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:187
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:105
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:78
+2026-03-02 14:18:53 [::1][1][uhtlqp6m93te7gqig62teinalp][warning][tasa-dolar] ❌ Fuente BCV_Alternativo falló o tasa inválida: 0
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:112
+    in C:\xampp\htdocs\planealo.sytes.net\models\TasaDolar.php:78
+    in C:\xampp\htdocs\planealo.sytes.net\widgets\TasaDolarWidget.php:15
+2026-03-02 14:19:08 [::1][1][uhtlqp6m93te7gqig62teinalp][error][yii\base\ErrorException:1] yii\base\ErrorException: Maximum execution time of 120 seconds exceeded in C:\xampp\htdocs\planealo.sytes.net\vendor\yiisoft\yii2\base\ErrorHandler.php:253
+Stack trace:
+#0 [internal function]: yii\base\ErrorHandler->handleFatalError()
+#1 {main}
+2026-03-02 14:16:59 [::1][1][uhtlqp6m93te7gqig62teinalp][info][application] $_GET = []
+
+$_POST = []
+
+$_FILES = []
+
+$_COOKIE = [
+    '_ga' => 'GA1.1.1679908835.1749223008'
+    'PHPSESSID' => 'uhtlqp6m93te7gqig62teinalp'
+    '_csrf' => '052b7c918e29a57673e9a43dd7b0060950f2b65b0138ca3e52d5b7da9ca869f0a:2:{i:0;s:5:\"_csrf\";i:1;s:32:\"6sBatZ-07-JGxFS3hxh8qNGtiN8aQDz0\";}'
+]
+
+$_SESSION = [
+    '__flash' => []
+    '__id' => 1
+    '__authKey' => 'FCxNRGJia25jro30ecX5r8yVk7nCuaOY'
+    'id_escuela' => 2
+    'nombre_escuela' => 'Club Aves Voladoras'
+    'escuela_activa' => true
+    'escuela_ultima_actualizacion' => 1772470259
+    'idEscuela' => 2
+    'nombreEscuela' => 'Club Aves Voladoras'
+]
+
+$_SERVER = [
+    'REDIRECT_MIBDIRS' => 'C:/xampp/php/extras/mibs'
+    'REDIRECT_MYSQL_HOME' => '\\xampp\\mysql\\bin'
+    'REDIRECT_OPENSSL_CONF' => 'C:/xampp/apache/bin/openssl.cnf'
+    'REDIRECT_PHP_PEAR_SYSCONF_DIR' => '\\xampp\\php'
+    'REDIRECT_PHPRC' => '\\xampp\\php'
+    'REDIRECT_TMP' => '\\xampp\\tmp'
+    'REDIRECT_STATUS' => '200'
+    'MIBDIRS' => 'C:/xampp/php/extras/mibs'
+    'MYSQL_HOME' => '\\xampp\\mysql\\bin'
+    'OPENSSL_CONF' => 'C:/xampp/apache/bin/openssl.cnf'
+    'PHP_PEAR_SYSCONF_DIR' => '\\xampp\\php'
+    'PHPRC' => '\\xampp\\php'
+    'TMP' => '\\xampp\\tmp'
+    'HTTP_HOST' => 'localhost'
+    'HTTP_CONNECTION' => 'keep-alive'
+    'HTTP_PRAGMA' => 'no-cache'
+    'HTTP_CACHE_CONTROL' => 'no-cache'
+    'HTTP_SEC_CH_UA' => '\"Opera GX\";v=\"127\", \"Chromium\";v=\"143\", \"Not A(Brand\";v=\"24\"'
+    'HTTP_SEC_CH_UA_MOBILE' => '?0'
+    'HTTP_SEC_CH_UA_PLATFORM' => '\"Windows\"'
+    'HTTP_UPGRADE_INSECURE_REQUESTS' => '1'
+    'HTTP_USER_AGENT' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36 OPR/127.0.0.0'
+    'HTTP_ACCEPT' => 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7'
+    'HTTP_SEC_FETCH_SITE' => 'same-origin'
+    'HTTP_SEC_FETCH_MODE' => 'navigate'
+    'HTTP_SEC_FETCH_USER' => '?1'
+    'HTTP_SEC_FETCH_DEST' => 'document'
+    'HTTP_REFERER' => 'http://localhost/planealo.sytes.net/web/aportes/aportes/index'
+    'HTTP_ACCEPT_ENCODING' => 'gzip, deflate, br, zstd'
+    'HTTP_ACCEPT_LANGUAGE' => 'en,id;q=0.9,tr;q=0.8,ru;q=0.7'
+    'HTTP_COOKIE' => '_ga=GA1.1.1679908835.1749223008; PHPSESSID=uhtlqp6m93te7gqig62teinalp; _csrf=052b7c918e29a57673e9a43dd7b0060950f2b65b0138ca3e52d5b7da9ca869f0a%3A2%3A%7Bi%3A0%3Bs%3A5%3A%22_csrf%22%3Bi%3A1%3Bs%3A32%3A%226sBatZ-07-JGxFS3hxh8qNGtiN8aQDz0%22%3B%7D'
+    'PATH' => 'C:\\WINDOWS\\system32;C:\\WINDOWS;C:\\WINDOWS\\System32\\Wbem;C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\;C:\\WINDOWS\\System32\\OpenSSH\\;C:\\xampp\\php;C:\\ProgramData\\ComposerSetup\\bin;C:\\Program Files\\PuTTY\\;C:\\Program Files\\Git\\cmd;C:\\Program Files\\nodejs\\;C:\\Program Files (x86)\\Microsoft SQL Server\\160\\Tools\\Binn\\;C:\\Program Files\\Microsoft SQL Server\\160\\Tools\\Binn\\;C:\\Program Files\\Microsoft SQL Server\\Client SDK\\ODBC\\170\\Tools\\Binn\\;C:\\Program Files\\Microsoft SQL Server\\160\\DTS\\Binn\\;C:\\Program Files (x86)\\Microsoft SQL Server\\160\\DTS\\Binn\\;C:\\Users\\Otic-Sistemas\\AppData\\Local\\Microsoft\\WindowsApps;;C:\\Users\\Otic-Sistemas\\AppData\\Local\\Programs\\Microsoft VS Code\\bin;C:\\Users\\Otic-Sistemas\\AppData\\Roaming\\Composer\\vendor\\bin;C:\\Users\\Otic-Sistemas\\AppData\\Roaming\\npm'
+    'SystemRoot' => 'C:\\WINDOWS'
+    'COMSPEC' => 'C:\\WINDOWS\\system32\\cmd.exe'
+    'PATHEXT' => '.COM;.EXE;.BAT;.CMD;.VBS;.VBE;.JS;.JSE;.WSF;.WSH;.MSC'
+    'WINDIR' => 'C:\\WINDOWS'
+    'SERVER_SIGNATURE' => '<address>Apache/2.4.54 (Win64) OpenSSL/1.1.1p PHP/8.2.0 Server at localhost Port 80</address>
+'
+    'SERVER_SOFTWARE' => 'Apache/2.4.54 (Win64) OpenSSL/1.1.1p PHP/8.2.0'
+    'SERVER_NAME' => 'localhost'
+    'SERVER_ADDR' => '::1'
+    'SERVER_PORT' => '80'
+    'REMOTE_ADDR' => '::1'
+    'DOCUMENT_ROOT' => 'C:/xampp/htdocs'
+    'REQUEST_SCHEME' => 'http'
+    'CONTEXT_PREFIX' => ''
+    'CONTEXT_DOCUMENT_ROOT' => 'C:/xampp/htdocs'
+    'SERVER_ADMIN' => 'postmaster@localhost'
+    'SCRIPT_FILENAME' => 'C:/xampp/htdocs/planealo.sytes.net/web/index.php'
+    'REMOTE_PORT' => '57105'
+    'REDIRECT_URL' => '/planealo.sytes.net/web/aportes/aportes/gestion-atleta'
+    'GATEWAY_INTERFACE' => 'CGI/1.1'
+    'SERVER_PROTOCOL' => 'HTTP/1.1'
+    'REQUEST_METHOD' => 'GET'
+    'QUERY_STRING' => ''
+    'REQUEST_URI' => '/planealo.sytes.net/web/aportes/aportes/gestion-atleta'
+    'SCRIPT_NAME' => '/planealo.sytes.net/web/index.php'
+    'PHP_SELF' => '/planealo.sytes.net/web/index.php'
+    'REQUEST_TIME_FLOAT' => 1772475419.9081
+    'REQUEST_TIME' => 1772475419
+]
+2026-03-02 14:19:08 [::1][-][uhtlqp6m93te7gqig62teinalp][error][yii\base\ErrorException:1] yii\base\ErrorException: Maximum execution time of 120 seconds exceeded in C:\xampp\htdocs\planealo.sytes.net\vendor\yiisoft\yii2\web\Session.php:155
+Stack trace:
+#0 [internal function]: yii\base\ErrorHandler->handleFatalError()
+#1 {main}
+2026-03-02 14:17:00 [::1][-][uhtlqp6m93te7gqig62teinalp][info][application] $_GET = []
+
+$_POST = []
+
+$_FILES = []
+
+$_COOKIE = [
+    '_ga' => 'GA1.1.1679908835.1749223008'
+    'PHPSESSID' => 'uhtlqp6m93te7gqig62teinalp'
+    '_csrf' => '052b7c918e29a57673e9a43dd7b0060950f2b65b0138ca3e52d5b7da9ca869f0a:2:{i:0;s:5:\"_csrf\";i:1;s:32:\"6sBatZ-07-JGxFS3hxh8qNGtiN8aQDz0\";}'
+]
+
+$_SESSION = [
+    '__flash' => []
+    '__id' => 1
+    '__authKey' => 'FCxNRGJia25jro30ecX5r8yVk7nCuaOY'
+    'id_escuela' => 2
+    'nombre_escuela' => 'Club Aves Voladoras'
+    'escuela_activa' => true
+    'escuela_ultima_actualizacion' => 1772470259
+    'idEscuela' => 2
+    'nombreEscuela' => 'Club Aves Voladoras'
+]
+
+$_SERVER = [
+    'REDIRECT_MIBDIRS' => 'C:/xampp/php/extras/mibs'
+    'REDIRECT_MYSQL_HOME' => '\\xampp\\mysql\\bin'
+    'REDIRECT_OPENSSL_CONF' => 'C:/xampp/apache/bin/openssl.cnf'
+    'REDIRECT_PHP_PEAR_SYSCONF_DIR' => '\\xampp\\php'
+    'REDIRECT_PHPRC' => '\\xampp\\php'
+    'REDIRECT_TMP' => '\\xampp\\tmp'
+    'REDIRECT_STATUS' => '200'
+    'MIBDIRS' => 'C:/xampp/php/extras/mibs'
+    'MYSQL_HOME' => '\\xampp\\mysql\\bin'
+    'OPENSSL_CONF' => 'C:/xampp/apache/bin/openssl.cnf'
+    'PHP_PEAR_SYSCONF_DIR' => '\\xampp\\php'
+    'PHPRC' => '\\xampp\\php'
+    'TMP' => '\\xampp\\tmp'
+    'HTTP_HOST' => 'localhost'
+    'HTTP_CONNECTION' => 'keep-alive'
+    'HTTP_PRAGMA' => 'no-cache'
+    'HTTP_CACHE_CONTROL' => 'no-cache'
+    'HTTP_SEC_CH_UA' => '\"Opera GX\";v=\"127\", \"Chromium\";v=\"143\", \"Not A(Brand\";v=\"24\"'
+    'HTTP_SEC_CH_UA_MOBILE' => '?0'
+    'HTTP_SEC_CH_UA_PLATFORM' => '\"Windows\"'
+    'HTTP_UPGRADE_INSECURE_REQUESTS' => '1'
+    'HTTP_USER_AGENT' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36 OPR/127.0.0.0'
+    'HTTP_ACCEPT' => 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7'
+    'HTTP_SEC_FETCH_SITE' => 'same-origin'
+    'HTTP_SEC_FETCH_MODE' => 'navigate'
+    'HTTP_SEC_FETCH_USER' => '?1'
+    'HTTP_SEC_FETCH_DEST' => 'document'
+    'HTTP_REFERER' => 'http://localhost/planealo.sytes.net/web/aportes/aportes/index'
+    'HTTP_ACCEPT_ENCODING' => 'gzip, deflate, br, zstd'
+    'HTTP_ACCEPT_LANGUAGE' => 'en,id;q=0.9,tr;q=0.8,ru;q=0.7'
+    'HTTP_COOKIE' => '_ga=GA1.1.1679908835.1749223008; PHPSESSID=uhtlqp6m93te7gqig62teinalp; _csrf=052b7c918e29a57673e9a43dd7b0060950f2b65b0138ca3e52d5b7da9ca869f0a%3A2%3A%7Bi%3A0%3Bs%3A5%3A%22_csrf%22%3Bi%3A1%3Bs%3A32%3A%226sBatZ-07-JGxFS3hxh8qNGtiN8aQDz0%22%3B%7D'
+    'PATH' => 'C:\\WINDOWS\\system32;C:\\WINDOWS;C:\\WINDOWS\\System32\\Wbem;C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\;C:\\WINDOWS\\System32\\OpenSSH\\;C:\\xampp\\php;C:\\ProgramData\\ComposerSetup\\bin;C:\\Program Files\\PuTTY\\;C:\\Program Files\\Git\\cmd;C:\\Program Files\\nodejs\\;C:\\Program Files (x86)\\Microsoft SQL Server\\160\\Tools\\Binn\\;C:\\Program Files\\Microsoft SQL Server\\160\\Tools\\Binn\\;C:\\Program Files\\Microsoft SQL Server\\Client SDK\\ODBC\\170\\Tools\\Binn\\;C:\\Program Files\\Microsoft SQL Server\\160\\DTS\\Binn\\;C:\\Program Files (x86)\\Microsoft SQL Server\\160\\DTS\\Binn\\;C:\\Users\\Otic-Sistemas\\AppData\\Local\\Microsoft\\WindowsApps;;C:\\Users\\Otic-Sistemas\\AppData\\Local\\Programs\\Microsoft VS Code\\bin;C:\\Users\\Otic-Sistemas\\AppData\\Roaming\\Composer\\vendor\\bin;C:\\Users\\Otic-Sistemas\\AppData\\Roaming\\npm'
+    'SystemRoot' => 'C:\\WINDOWS'
+    'COMSPEC' => 'C:\\WINDOWS\\system32\\cmd.exe'
+    'PATHEXT' => '.COM;.EXE;.BAT;.CMD;.VBS;.VBE;.JS;.JSE;.WSF;.WSH;.MSC'
+    'WINDIR' => 'C:\\WINDOWS'
+    'SERVER_SIGNATURE' => '<address>Apache/2.4.54 (Win64) OpenSSL/1.1.1p PHP/8.2.0 Server at localhost Port 80</address>
+'
+    'SERVER_SOFTWARE' => 'Apache/2.4.54 (Win64) OpenSSL/1.1.1p PHP/8.2.0'
+    'SERVER_NAME' => 'localhost'
+    'SERVER_ADDR' => '::1'
+    'SERVER_PORT' => '80'
+    'REMOTE_ADDR' => '::1'
+    'DOCUMENT_ROOT' => 'C:/xampp/htdocs'
+    'REQUEST_SCHEME' => 'http'
+    'CONTEXT_PREFIX' => ''
+    'CONTEXT_DOCUMENT_ROOT' => 'C:/xampp/htdocs'
+    'SERVER_ADMIN' => 'postmaster@localhost'
+    'SCRIPT_FILENAME' => 'C:/xampp/htdocs/planealo.sytes.net/web/index.php'
+    'REMOTE_PORT' => '57106'
+    'REDIRECT_URL' => '/planealo.sytes.net/web/aportes/aportes/gestion-atleta'
+    'GATEWAY_INTERFACE' => 'CGI/1.1'
+    'SERVER_PROTOCOL' => 'HTTP/1.1'
+    'REQUEST_METHOD' => 'GET'
+    'QUERY_STRING' => ''
+    'REQUEST_URI' => '/planealo.sytes.net/web/aportes/aportes/gestion-atleta'
+    'SCRIPT_NAME' => '/planealo.sytes.net/web/index.php'
+    'PHP_SELF' => '/planealo.sytes.net/web/index.php'
+    'REQUEST_TIME_FLOAT' => 1772475420.0199
+    'REQUEST_TIME' => 1772475420
+]

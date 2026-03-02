@@ -15,6 +15,7 @@ use yii\web\NotFoundHttpException;
 use yii\web\ForbiddenHttpException;
 use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
+use yii\data\ActiveDataProvider; // <-- AÑADIDO
 
 // =========================================================================
 // NUEVOS MODELOS PARA EL SISTEMA DE FAMILIAS Y BECAS
@@ -119,236 +120,114 @@ class AportesController extends Controller
      */
     public function actionIndex()
     {
-        $this->layout = 'escuelas'; 
+        $this->layout = 'escuelas';
         
-        // OBTENER LA ESCUELA ACTUAL DEL USUARIO
         $id_escuela = Yii::$app->session->get('id_escuela');
-        
         if (!$id_escuela) {
-            Yii::$app->session->setFlash('error', 'No se ha seleccionado una escuela. Por favor, seleccione una escuela primero.');
+            Yii::$app->session->setFlash('error', 'No se ha seleccionado una escuela.');
             return $this->redirect(['/site/index']);
         }
 
-        Yii::info("Buscando atletas para escuela ID: " . $id_escuela);
+        $time_start = microtime(true);
 
-        // OBTENER ATLETAS SEGÚN PERMISOS RBAC
-        $atletas = $this->getAtletasPermitidos($id_escuela);
+        // Obtener query de atletas permitidos
+        $query = $this->getAtletasPermitidosQuery($id_escuela);
 
-        Yii::info("Atletas encontrados: " . count($atletas));
+        $dataProvider = new ActiveDataProvider([
+            'query' => $query,
+            'pagination' => ['pageSize' => 50],
+            'sort' => false,
+        ]);
 
-        if (empty($atletas)) {
-            // Determinar el motivo por el cual no hay atletas
-            $user = Yii::$app->user;
-            $mensaje = '';
-            
-            if ($user->id == 1 || $user->can('admin')) {
-                $mensaje = 'No se encontraron atletas registrados en esta escuela.';
-            } elseif ($user->can('viewOwnAportes')) {
-                $mensaje = 'No tienes un perfil de atleta asignado a tu usuario en esta escuela.';
-            } elseif ($user->can('viewRepresentedAportes')) {
-                $representante = RegistroRepresentantes::find()->where(['user_id' => $user->id])->one();
-                if ($representante) {
-                    $mensaje = 'No tienes atletas asignados como representante en esta escuela.';
-                } else {
-                    $mensaje = 'No estás registrado como representante.';
-                }
-            } else {
-                $mensaje = 'No tienes permisos para ver atletas.';
-            }
-            
-            Yii::$app->session->setFlash('warning', $mensaje);
-            return $this->render('index', [
-                'atletasConEstadisticas' => [],
-                'totalRecaudado' => 0,
-                'pendientes' => 0,
-                'deudaTotal' => 0,
-                'atletasConDeuda' => 0,
-                'topAtletas' => [],
-                'totalAtletas' => 0,
-                'erroresProcesamiento' => []
-            ]);
-        }
+        $time_query = microtime(true);
+        Yii::info("Tiempo en obtener query de atletas: " . ($time_query - $time_start));
 
-        // Calcular estadísticas para cada atleta (SOLO DESDE 15/01/2026)
+        // Obtener los atletas de la página actual
+        $atletas = $dataProvider->getModels();
+        $atletasIds = array_map(function($a) { return $a->id; }, $atletas);
+
+        $time_models = microtime(true);
+        Yii::info("Tiempo en obtener modelos de atletas: " . ($time_models - $time_query));
+
+        // Obtener resumen de aportes para estos atletas
+        $resumenAtletas = AportesSemanales::getResumenAtletas($atletasIds);
+
+        $time_resumen = microtime(true);
+        Yii::info("Tiempo en getResumenAtletas: " . ($time_resumen - $time_models));
+
+        // Construir array para la vista
         $atletasConEstadisticas = [];
         $totalRecaudado = 0;
         $deudaTotal = 0;
         $atletasConDeuda = 0;
-        $erroresProcesamiento = [];
 
         foreach ($atletas as $atleta) {
-            try {
-                Yii::info("=== PROCESANDO ATLETA: " . $atleta->id . " - " . $atleta->p_nombre . " " . $atleta->p_apellido . " ===");
-                
-                // Verificar permisos específicos para este atleta
-                if (!$this->tienePermisoVerAtleta($atleta)) {
-                    Yii::info("Usuario no tiene permisos para ver atleta: " . $atleta->id);
-                    continue;
-                }
+            $data = $resumenAtletas[$atleta->id] ?? [
+                'total_pagado' => 0,
+                'total_pendiente' => 0,
+                'total_adelantado' => 0,
+                'quincenas_pagadas' => 0,
+                'quincenas_pendientes' => 0,
+                'quincenas_adelantadas' => 0,
+                'total_quincenas' => 0,
+            ];
 
-                // Fecha de creación del atleta para debug
-                $fechaCreacion = $atleta->fecha_creacion ?? 'No especificada';
-                Yii::info("Fecha creación atleta: " . $fechaCreacion);
+            $montoPagado = (float)$data['total_pagado'];
+            $montoDeuda = (float)$data['total_pendiente'];
+            $montoAdelantado = (float)$data['total_adelantado'];
+            $quincenasAdelantadas = $data['quincenas_adelantadas'];
+            $quincenasPagadas = $data['quincenas_pagadas'];
+            $quincenasPendientes = $data['quincenas_pendientes'];
+            $totalQuincenas = $data['total_quincenas'];
 
-                // GENERAR QUINCENAS AUTOMÁTICAMENTE desde la fecha de inicio (15/01/2026)
-                $quincenasGeneradas = 0;
-                try {
-                    $quincenasGeneradas = AportesSemanales::generarQuincenasParaAtleta($atleta->id);
-                    Yii::info("Quincenas generadas para atleta {$atleta->id}: {$quincenasGeneradas}");
-                } catch (\Exception $e) {
-                    $errorMsg = "Error generando quincenas para atleta {$atleta->id}: " . $e->getMessage();
-                    Yii::error($errorMsg);
-                    $erroresProcesamiento[] = $errorMsg;
-                }
-                
-                // Calcular montos PAGADOS (SOLO DESDE 15/01/2026)
-                $montoPagado = 0;
-                try {
-                    $montoPagado = AportesSemanales::find()
-                        ->where(['atleta_id' => $atleta->id, 'estado' => 'pagado'])
-                        ->andWhere(['>=', 'fecha_quincena', '2026-01-15']) // FILTRO CRÍTICO
-                        ->sum('monto');
-                    $montoPagado = $montoPagado ? floatval($montoPagado) : 0;
-                    Yii::info("Monto pagado atleta {$atleta->id}: {$montoPagado}");
-                } catch (\Exception $e) {
-                    $errorMsg = "Error calculando monto pagado para atleta {$atleta->id}: " . $e->getMessage();
-                    Yii::warning($errorMsg);
-                    $erroresProcesamiento[] = $errorMsg;
-                }
+            $atletasConEstadisticas[] = [
+                'atleta' => $atleta,
+                'montoPagado' => $montoPagado,
+                'montoDeuda' => $montoDeuda,
+                'montoAdelantado' => $montoAdelantado,
+                'quincenasAdelantadas' => $quincenasAdelantadas,
+                'quincenasGeneradas' => 0,
+                'totalQuincenas' => $totalQuincenas,
+                'quincenasPagadas' => $quincenasPagadas,
+                'quincenasPendientes' => $quincenasPendientes,
+                'error' => false
+            ];
 
-                // Calcular montos PENDIENTES (deuda) (SOLO DESDE 15/01/2026)
-                $montoDeuda = 0;
-                try {
-                    $montoDeuda = AportesSemanales::find()
-                        ->where(['atleta_id' => $atleta->id, 'estado' => 'pendiente'])
-                        ->andWhere(['>=', 'fecha_quincena', '2026-01-15']) // FILTRO CRÍTICO
-                        ->sum('monto');
-                    $montoDeuda = $montoDeuda ? floatval($montoDeuda) : 0;
-                    Yii::info("Monto deuda atleta {$atleta->id}: {$montoDeuda}");
-                } catch (\Exception $e) {
-                    $errorMsg = "Error calculando monto deuda para atleta {$atleta->id}: " . $e->getMessage();
-                    Yii::warning($errorMsg);
-                    $erroresProcesamiento[] = $errorMsg;
-                }
-
-                // Calcular adelantados (pagos con fecha_quincena futura) (SOLO DESDE 15/01/2026)
-                $montoAdelantado = 0;
-                $quincenasAdelantadas = 0;
-                try {
-                    $hoy = date('Y-m-d');
-                    $montoAdelantado = AportesSemanales::find()
-                        ->where(['atleta_id' => $atleta->id, 'estado' => 'pagado'])
-                        ->andWhere(['>', 'fecha_quincena', $hoy])
-                        ->andWhere(['>=', 'fecha_quincena', '2026-01-15']) // FILTRO CRÍTICO
-                        ->sum('monto');
-                    $montoAdelantado = $montoAdelantado ? floatval($montoAdelantado) : 0;
-                    $quincenasAdelantadas = $montoAdelantado / AportesSemanales::MONTO_QUINCENAL_USD;
-                    Yii::info("Monto adelantado atleta {$atleta->id}: {$montoAdelantado}");
-                } catch (\Exception $e) {
-                    $errorMsg = "Error calculando adelantados para atleta {$atleta->id}: " . $e->getMessage();
-                    Yii::warning($errorMsg);
-                    $erroresProcesamiento[] = $errorMsg;
-                }
-
-                // Información detallada del atleta (SOLO DESDE 15/01/2026)
-                $totalQuincenas = AportesSemanales::find()
-                    ->where(['atleta_id' => $atleta->id])
-                    ->andWhere(['>=', 'fecha_quincena', '2026-01-15']) // FILTRO CRÍTICO
-                    ->count();
-                $quincenasPagadas = AportesSemanales::find()
-                    ->where(['atleta_id' => $atleta->id, 'estado' => 'pagado'])
-                    ->andWhere(['>=', 'fecha_quincena', '2026-01-15']) // FILTRO CRÍTICO
-                    ->count();
-                $quincenasPendientes = AportesSemanales::find()
-                    ->where(['atleta_id' => $atleta->id, 'estado' => 'pendiente'])
-                    ->andWhere(['>=', 'fecha_quincena', '2026-01-15']) // FILTRO CRÍTICO
-                    ->count();
-                
-                Yii::info("RESUMEN ATLETA {$atleta->id}: Total quincenas: {$totalQuincenas}, Pagadas: {$quincenasPagadas}, Pendientes: {$quincenasPendientes}");
-
-                $atletasConEstadisticas[] = [
-                    'atleta' => $atleta,
-                    'montoPagado' => $montoPagado,
-                    'montoDeuda' => $montoDeuda,
-                    'montoAdelantado' => $montoAdelantado,
-                    'quincenasAdelantadas' => $quincenasAdelantadas,
-                    'quincenasGeneradas' => $quincenasGeneradas,
-                    'totalQuincenas' => $totalQuincenas,
-                    'quincenasPagadas' => $quincenasPagadas,
-                    'quincenasPendientes' => $quincenasPendientes,
-                    'error' => false
-                ];
-
-                // Acumular para estadísticas generales
-                $totalRecaudado += $montoPagado;
-                $deudaTotal += $montoDeuda;
-                if ($montoDeuda > 0) {
-                    $atletasConDeuda++;
-                }
-
-            } catch (\Exception $e) {
-                $errorMsg = "Error crítico procesando atleta {$atleta->id}: " . $e->getMessage();
-                Yii::error($errorMsg);
-                $erroresProcesamiento[] = $errorMsg;
-                
-                // Incluir el atleta incluso si hay error, con valores por defecto
-                $atletasConEstadisticas[] = [
-                    'atleta' => $atleta,
-                    'montoPagado' => 0,
-                    'montoDeuda' => 0,
-                    'montoAdelantado' => 0,
-                    'quincenasAdelantadas' => 0,
-                    'quincenasGeneradas' => 0,
-                    'totalQuincenas' => 0,
-                    'quincenasPagadas' => 0,
-                    'quincenasPendientes' => 0,
-                    'error' => true
-                ];
+            $totalRecaudado += $montoPagado;
+            $deudaTotal += $montoDeuda;
+            if ($montoDeuda > 0) {
+                $atletasConDeuda++;
             }
         }
 
-        // DEBUG: Información final detallada
-        Yii::info("=== RESUMEN FINAL PROCESAMIENTO ===");
-        Yii::info("Total atletas encontrados: " . count($atletas));
-        Yii::info("Total atletas procesados: " . count($atletasConEstadisticas));
-        Yii::info("Total recaudado: " . $totalRecaudado);
-        Yii::info("Deuda total: " . $deudaTotal);
-        Yii::info("Atletas con deuda: " . $atletasConDeuda);
-        Yii::info("Errores durante procesamiento: " . count($erroresProcesamiento));
+        $time_loop = microtime(true);
+        Yii::info("Tiempo en bucle de construcción: " . ($time_loop - $time_resumen));
 
-        // Estadísticas generales (SOLO DESDE 15/01/2026)
-        $pendientes = 0;
-        try {
-            $atletasPermitidosIds = array_map(function($a) { return $a->id; }, $atletas);
-            $pendientes = AportesSemanales::find()
-                ->where(['estado' => 'pendiente', 'escuela_id' => $id_escuela])
-                ->andWhere(['in', 'atleta_id', $atletasPermitidosIds])
-                ->andWhere(['>=', 'fecha_quincena', '2026-01-15']) // FILTRO CRÍTICO
-                ->count();
-            Yii::info("Total aportes pendientes en escuela: " . $pendientes);
-        } catch (\Exception $e) {
-            Yii::warning("Error contando pendientes: " . $e->getMessage());
-            $pendientes = 0;
-        }
+        // Top atletas (global, no paginado)
+        $topAtletas = AportesSemanales::getTopAtletas($id_escuela, 10);
 
-        $topAtletas = [];
-        try {
-            $topAtletas = $this->getTopAtletasPermitidos($id_escuela, $atletas);
-            Yii::info("Top atletas encontrados: " . count($topAtletas));
-        } catch (\Exception $e) {
-            Yii::warning("Error obteniendo top atletas: " . $e->getMessage());
-            $topAtletas = [];
-        }
+        $time_top = microtime(true);
+        Yii::info("Tiempo en getTopAtletas: " . ($time_top - $time_loop));
+
+        // Pendientes totales
+        $pendientes = AportesSemanales::find()
+            ->where(['escuela_id' => $id_escuela, 'estado' => AportesSemanales::ESTADO_PENDIENTE])
+            ->andWhere(['>=', 'fecha_quincena', AportesSemanales::FECHA_INICIO_DEUDAS])
+            ->count();
+
+        $time_end = microtime(true);
+        Yii::info("Tiempo total de actionIndex: " . ($time_end - $time_start));
 
         return $this->render('index', [
+            'dataProvider' => $dataProvider,
             'atletasConEstadisticas' => $atletasConEstadisticas,
             'totalRecaudado' => $totalRecaudado,
             'pendientes' => $pendientes,
             'deudaTotal' => $deudaTotal,
             'atletasConDeuda' => $atletasConDeuda,
             'topAtletas' => $topAtletas,
-            'totalAtletas' => count($atletas),
-            'erroresProcesamiento' => $erroresProcesamiento
+            'totalAtletas' => $dataProvider->totalCount,
+            'erroresProcesamiento' => []
         ]);
     }
 
@@ -1984,6 +1863,53 @@ class AportesController extends Controller
     // -------------------------------------------------------------------------
 
     /**
+     * Obtiene un ActiveQuery para los atletas que el usuario actual tiene permiso de ver en la escuela indicada.
+     * @param int $id_escuela
+     * @return \yii\db\ActiveQuery
+     */
+    protected function getAtletasPermitidosQuery($id_escuela)
+    {
+        $user = Yii::$app->user;
+
+        // Superadmin y admin: ven todos los atletas de la escuela
+        if ($user->id == 1 || $user->can('admin')) {
+            return AtletasRegistro::find()
+                ->where(['id_escuela' => $id_escuela, 'eliminado' => false]);
+        }
+
+        $query = AtletasRegistro::find()
+            ->where(['id_escuela' => $id_escuela, 'eliminado' => false])
+            ->andWhere(['or']); // Inicializar condición OR
+
+        $conditions = ['or'];
+
+        if ($user->can('viewOwnAportes')) {
+            $conditions[] = ['user_id' => $user->id];
+        }
+
+        if ($user->can('viewRepresentedAportes')) {
+            $representante = RegistroRepresentantes::find()->where(['user_id' => $user->id])->one();
+            if ($representante) {
+                // Suponiendo que existe una tabla atleta_representante
+                $subQuery = (new \yii\db\Query())
+                    ->select('atleta_id')
+                    ->from('atleta_representante')
+                    ->where(['representante_id' => $representante->id]);
+                $conditions[] = ['id' => $subQuery];
+            }
+        }
+
+        if (count($conditions) > 1) {
+            $query->andWhere($conditions);
+        } else {
+            // Si no hay condiciones, retornar una consulta que no devuelva nada
+            $query->andWhere('0=1');
+        }
+
+        return $query;
+    }
+
+    /**
      * Obtiene los atletas que el usuario actual tiene permiso de ver en la escuela indicada.
      * @param int $id_escuela
      * @return AtletasRegistro[]
@@ -2210,6 +2136,7 @@ class AportesController extends Controller
 
         throw new NotFoundHttpException('The requested page does not exist.');
     }
+
     public function actionGetTipoBeca($id)
     {
         Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
@@ -2220,5 +2147,22 @@ class AportesController extends Controller
             ];
         }
         return null;
+    }
+
+    /**
+     * Genera las quincenas faltantes para la escuela actual.
+     * @return \yii\web\Response
+     */
+    public function actionGenerarQuincenas()
+    {
+        $id_escuela = Yii::$app->session->get('id_escuela');
+        if (!$id_escuela) {
+            Yii::$app->session->setFlash('error', 'No hay escuela seleccionada.');
+            return $this->redirect(['index']);
+        }
+
+        $count = AportesSemanales::generarQuincenasMasivo($id_escuela);
+        Yii::$app->session->setFlash('success', "Se generaron $count nuevas quincenas.");
+        return $this->redirect(['index']);
     }
 }

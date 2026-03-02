@@ -855,4 +855,139 @@ class AportesSemanales extends ActiveRecord
         ];
         return $estados[$this->estado] ?? $this->estado;
     }
+
+    // =========================================================================
+    // NUEVOS MÉTODOS OPTIMIZADOS (2026-03-02) - CORREGIDOS
+    // =========================================================================
+
+    /**
+     * Genera todas las quincenas faltantes para una escuela en una sola operación masiva,
+     * procesando los atletas en lotes para evitar timeouts.
+     * @param int $escuela_id
+     * @return int Número de registros insertados
+     */
+    public static function generarQuincenasMasivo($escuela_id)
+    {
+        $fechaInicio = self::FECHA_INICIO_DEUDAS; // '2026-01-15'
+        $hoy = date('Y-m-d');
+        $monto = self::MONTO_QUINCENAL_USD;
+
+        // Generar lista de fechas de quincena con su número correspondiente
+        $fechasConNumero = [];
+        $current = new \DateTime($fechaInicio);
+        $end = new \DateTime($hoy);
+        while ($current <= $end) {
+            $fecha = $current->format('Y-m-d');
+            $numero = self::calcularNumeroQuincenaExacta($fecha);
+            $fechasConNumero[] = ['fecha' => $fecha, 'numero' => $numero];
+            $current->modify('+15 days');
+        }
+
+        if (empty($fechasConNumero)) {
+            return 0;
+        }
+
+        // Obtener IDs de atletas de la escuela
+        $atletas = AtletasRegistro::find()
+            ->select(['id'])
+            ->where(['id_escuela' => $escuela_id, 'eliminado' => false])
+            ->asArray()
+            ->all();
+        $atletasIds = array_column($atletas, 'id');
+
+        $totalInsertados = 0;
+        $batchSize = 100; // Tamaño de lote
+
+        // Procesar atletas en lotes
+        foreach (array_chunk($atletasIds, $batchSize) as $chunk) {
+            // Construir cláusula VALUES para cada atleta y cada fecha
+            $values = [];
+            foreach ($chunk as $atletaId) {
+                foreach ($fechasConNumero as $item) {
+                    $values[] = "({$atletaId}, '{$item['fecha']}', {$item['numero']})";
+                }
+            }
+            if (empty($values)) {
+                continue;
+            }
+
+            $valuesSql = implode(',', $values);
+            $sql = "
+                INSERT INTO contabilidad.aportes_semanales 
+                    (atleta_id, escuela_id, fecha_quincena, numero_quincena, monto, estado, tipo_aporte, tipo_cambio, pago_parcial, created_at, u_create)
+                SELECT 
+                    v.atleta_id,
+                    :escuela_id,
+                    v.fecha,
+                    v.numero,
+                    :monto,
+                    :estado,
+                    :tipo_aporte,
+                    :tipo_cambio,
+                    false,
+                    NOW(),
+                    :user_id
+                FROM (VALUES $valuesSql) AS v(atleta_id, fecha, numero)
+                WHERE NOT EXISTS (
+                    SELECT 1 FROM contabilidad.aportes_semanales ap
+                    WHERE ap.atleta_id = v.atleta_id AND ap.fecha_quincena = v.fecha
+                )
+            ";
+
+            $params = [
+                ':escuela_id' => $escuela_id,
+                ':monto' => $monto,
+                ':estado' => self::ESTADO_PENDIENTE,
+                ':tipo_aporte' => self::TIPO_APORTE_NORMAL,
+                ':tipo_cambio' => self::TASA_CAMBIO_FIJA,
+                ':user_id' => Yii::$app->user->id,
+            ];
+
+            $totalInsertados += Yii::$app->db->createCommand($sql, $params)->execute();
+        }
+
+        return $totalInsertados;
+    }
+
+    /**
+     * Obtiene un resumen completo de aportes para una lista de IDs de atletas.
+     * @param array $atletaIds
+     * @return array [atleta_id => [total_pagado, total_pendiente, total_adelantado, quincenas_pagadas, quincenas_pendientes, total_quincenas]]
+     */
+    public static function getResumenAtletas($atletaIds)
+    {
+        if (empty($atletaIds)) {
+            return [];
+        }
+
+        $hoy = date('Y-m-d');
+        $resumen = self::find()
+            ->select([
+                'atleta_id',
+                'SUM(CASE WHEN estado = :pagado AND fecha_quincena <= :hoy THEN monto ELSE 0 END) as total_pagado',
+                'SUM(CASE WHEN estado = :pendiente THEN monto ELSE 0 END) as total_pendiente',
+                'SUM(CASE WHEN estado = :pagado AND fecha_quincena > :hoy THEN monto ELSE 0 END) as total_adelantado',
+                'COUNT(CASE WHEN estado = :pagado AND fecha_quincena <= :hoy THEN 1 END) as quincenas_pagadas',
+                'COUNT(CASE WHEN estado = :pendiente THEN 1 END) as quincenas_pendientes',
+                'COUNT(CASE WHEN estado = :pagado AND fecha_quincena > :hoy THEN 1 END) as quincenas_adelantadas',
+                'COUNT(*) as total_quincenas',
+            ])
+            ->addParams([
+                ':pagado' => self::ESTADO_PAGADO,
+                ':pendiente' => self::ESTADO_PENDIENTE,
+                ':hoy' => $hoy,
+            ])
+            ->where(['atleta_id' => $atletaIds])
+            ->andWhere(['>=', 'fecha_quincena', self::FECHA_INICIO_DEUDAS])
+            ->groupBy('atleta_id')
+            ->asArray()
+            ->all();
+
+        // Re-indexar por atleta_id
+        $result = [];
+        foreach ($resumen as $row) {
+            $result[$row['atleta_id']] = $row;
+        }
+        return $result;
+    }
 }

@@ -41,6 +41,7 @@ return [
             'class' => 'yii\\caching\\FileCache',
         ],
         'user' => [
+            'class' => 'app\\components\\User',   // ← clase personalizada
             'identityClass' => 'app\\models\\User',
             'enableAutoLogin' => false,
             'loginUrl' => ['site/login'],
@@ -267,7 +268,7 @@ return [
         ],
     ],
     'as access' => [
-        'class' => 'mdm\\admin\\components\\AccessControl',
+        'class' => 'app\\components\\AdminAccessControl', // Clase personalizada
         'allowActions' => [
             'site/index',
             'site/login',
