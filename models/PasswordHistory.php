@@ -9,7 +9,9 @@ use Yii;
  * @property int $id
  * @property int $user_id
  * @property string $password_hash
- * @property string|null $created_at
+ * @property string|null $changed_at
+ * @property string|null $changed_by_ip
+ * @property string|null $reason
  *
  * @property User $user
  */
@@ -33,8 +35,11 @@ class PasswordHistory extends \yii\db\ActiveRecord
         return [
             [['user_id', 'password_hash'], 'required'],
             [['user_id'], 'integer'],
-            [['created_at'], 'safe'],
+            [['changed_at'], 'safe'],
             [['password_hash'], 'string', 'max' => 255],
+            [['changed_by_ip'], 'string', 'max' => 45],
+            [['reason'], 'string', 'max' => 50],
+            [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::class, 'targetAttribute' => ['user_id' => 'id']],
         ];
     }
 
@@ -47,7 +52,9 @@ class PasswordHistory extends \yii\db\ActiveRecord
             'id' => 'ID',
             'user_id' => 'Usuario ID',
             'password_hash' => 'Hash de Contraseña',
-            'created_at' => 'Fecha de Creación',
+            'changed_at' => 'Fecha de Cambio',
+            'changed_by_ip' => 'IP de Cambio',
+            'reason' => 'Motivo',
         ];
     }
 
@@ -66,13 +73,16 @@ class PasswordHistory extends \yii\db\ActiveRecord
      * 
      * @param int $userId ID del usuario
      * @param string $passwordHash Hash de la contraseña
+     * @param string|null $reason Motivo del cambio
      * @return bool
      */
-    public static function addToHistory($userId, $passwordHash)
+    public static function addToHistory($userId, $passwordHash, $reason = 'password_change')
     {
         $history = new self();
         $history->user_id = $userId;
         $history->password_hash = $passwordHash;
+        $history->changed_by_ip = Yii::$app->request->userIP;
+        $history->reason = $reason;
         
         if ($history->save()) {
             // Limitar el historial a MAX_HISTORY registros
@@ -87,15 +97,24 @@ class PasswordHistory extends \yii\db\ActiveRecord
      * Verifica si una contraseña ya fue utilizada anteriormente por el usuario
      * 
      * @param int $userId ID del usuario
-     * @param string $passwordHash Hash de la contraseña a verificar
+     * @param string $password (texto plano)
      * @return bool
      */
-    public static function isPasswordUsed($userId, $passwordHash)
+    public static function isPasswordUsed($userId, $password)
     {
-        return self::find()
+        $histories = self::find()
             ->where(['user_id' => $userId])
-            ->andWhere(['password_hash' => $passwordHash])
-            ->exists();
+            ->orderBy(['changed_at' => SORT_DESC])
+            ->limit(self::MAX_HISTORY)
+            ->all();
+
+        foreach ($histories as $history) {
+            if (Yii::$app->security->validatePassword($password, $history->password_hash)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**
@@ -107,7 +126,7 @@ class PasswordHistory extends \yii\db\ActiveRecord
     {
         $records = self::find()
             ->where(['user_id' => $userId])
-            ->orderBy(['created_at' => SORT_DESC])
+            ->orderBy(['changed_at' => SORT_DESC])
             ->all();
 
         if (count($records) > self::MAX_HISTORY) {
@@ -134,7 +153,7 @@ class PasswordHistory extends \yii\db\ActiveRecord
     {
         $query = self::find()
             ->where(['user_id' => $userId])
-            ->orderBy(['created_at' => SORT_DESC]);
+            ->orderBy(['changed_at' => SORT_DESC]);
             
         if ($limit > 0) {
             $query->limit($limit);
@@ -144,13 +163,29 @@ class PasswordHistory extends \yii\db\ActiveRecord
     }
 
     /**
+     * Obtiene la fecha del último cambio de contraseña
+     * 
+     * @param int $userId
+     * @return string|null
+     */
+    public static function getLastChangeDate($userId)
+    {
+        $lastHistory = self::find()
+            ->where(['user_id' => $userId])
+            ->orderBy(['changed_at' => SORT_DESC])
+            ->one();
+
+        return $lastHistory ? $lastHistory->changed_at : null;
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function beforeSave($insert)
     {
         if (parent::beforeSave($insert)) {
-            if ($insert && empty($this->created_at)) {
-                $this->created_at = date('Y-m-d H:i:s');
+            if ($insert && empty($this->changed_at)) {
+                $this->changed_at = date('Y-m-d H:i:s');
             }
             return true;
         }

@@ -353,7 +353,7 @@ class User extends ActiveRecord implements IdentityInterface
         // Verificar si ya fue usada (últimas 5)
         $lastPasswords = PasswordHistory::find()
             ->where(['user_id' => $this->id])
-            ->orderBy(['created_at' => SORT_DESC])
+            ->orderBy(['changed_at' => SORT_DESC])  // MOD CORRECCIÓN: Cambiado de created_at a changed_at
             ->limit(5)
             ->all();
             

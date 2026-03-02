@@ -200,7 +200,8 @@ return [
     'modules' => [
         'admin' => [
             'class' => 'mdm\\admin\\Module',
-            'mainLayout' => '@app/views/layouts/mainAdminlte.php',
+            'viewPath' => '@app/views/admin',
+            'mainLayout' => '@app/views/layouts/main.php',
             'controllerMap' => [
                 'route' => 'app\\controllers\\RouteController',
             ],

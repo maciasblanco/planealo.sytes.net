@@ -9,12 +9,15 @@ use yii\bootstrap5\ActiveForm;
 $this->title = 'Validar Código de Verificación';
 $this->params['breadcrumbs'][] = $this->title;
 
-// Calcular tiempo restante
-$expiresAt = strtotime($session->expires_at);
+// MOD CORRECCIÓN: Usar code_expires_at en lugar de expires_at
+$expiresAt = strtotime($session->code_expires_at);
 $currentTime = time();
 $timeLeft = max(0, $expiresAt - $currentTime);
 $minutesLeft = floor($timeLeft / 60);
 $secondsLeft = $timeLeft % 60;
+//die(__FILE__);
+// MOD CORRECCIÓN: Calcular intentos fallidos a partir de attempts_remaining
+$failedAttempts = 3 - $session->attempts_remaining;
 
 // CSS específico para esta vista
 $css = <<<CSS
@@ -232,7 +235,7 @@ $this->registerCss($css);
                         <i class="fas fa-envelope me-1"></i> Email de destino
                     </div>
                     <div class="email-value">
-                        <?= Html::encode($session->email_sent) ?>
+                        <?= Html::encode($session->email) ?>
                     </div>
                 </div>
 
@@ -248,11 +251,11 @@ $this->registerCss($css);
                 </div>
 
                 <!-- Advertencia de intentos -->
-                <?php if ($session->attempts > 0): ?>
+                <?php if ($failedAttempts > 0): ?>
                     <div class="attempts-warning">
                         <i class="fas fa-exclamation-triangle me-2"></i>
                         <strong>Intentos fallidos:</strong> 
-                        <span class="attempts-count"><?= $session->attempts ?></span> de 3
+                        <span class="attempts-count"><?= $failedAttempts ?></span> de 3
                         <br>
                         <small>Después de 3 intentos fallidos, la sesión será bloqueada.</small>
                     </div>
@@ -289,7 +292,7 @@ $this->registerCss($css);
                     </div>
                 </div>
 
-                <?= $form->field($model, 'token')->hiddenInput(['value' => $session->token])->label(false) ?>
+                <?= $form->field($model, 'token')->hiddenInput(['value' => $session->session_token])->label(false) ?>
 
                 <div class="d-grid gap-2 mt-4">
                     <?= Html::submitButton('<i class="fas fa-check-circle me-2"></i> Validar Código', [
@@ -305,7 +308,7 @@ $this->registerCss($css);
                 <div class="action-buttons mt-4">
                     <?= Html::a(
                         '<i class="fas fa-redo me-1"></i> Reenviar código',
-                        ['site/resend-code', 'token' => $session->token],
+                        ['site/resend-code', 'token' => $session->session_token],
                         [
                             'class' => 'btn btn-outline-primary btn-code-action',
                             'data' => [

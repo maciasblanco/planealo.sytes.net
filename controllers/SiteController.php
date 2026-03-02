@@ -164,12 +164,15 @@ class SiteController extends Controller
             
             Yii::$app->session->setFlash('success', 'Sesión iniciada correctamente.');
             
+            // Redirección por defecto según rol (similar a redirectBasedOnRole)
             if (Yii::$app->user->can('admin')) {
                 $defaultRedirect = ['/reportes/default/dashboard'];
             } elseif (Yii::$app->user->can('representante')) {
                 $defaultRedirect = ['/reportes/reportes/atletas'];
             } elseif (Yii::$app->user->can('atleta')) {
                 $defaultRedirect = ['/reportes/reportes/estadisticas-atleta'];
+            } elseif (Yii::$app->user->can('entrenador')) {
+                $defaultRedirect = ['/ged/default/index'];
             } else {
                 $defaultRedirect = ['/site/index'];
             }
@@ -320,10 +323,11 @@ class SiteController extends Controller
             return $this->redirect(['login']);
         }
         
-        $model = new \yii\base\DynamicModel(['code']);
-        $model->addRule(['code'], 'required')
-              ->addRule(['code'], 'string', ['length' => 6])
-              ->addRule(['code'], 'match', ['pattern' => '/^\d{6}$/']);
+        // MOD CORRECCIÓN: Cambiado de 'code' a 'verification_code' para que coincida con la vista
+        $model = new \yii\base\DynamicModel(['verification_code']);
+        $model->addRule(['verification_code'], 'required')
+              ->addRule(['verification_code'], 'string', ['length' => 6])
+              ->addRule(['verification_code'], 'match', ['pattern' => '/^\d{6}$/']);
         
         if ($model->load(Yii::$app->request->post()) && $model->validate()) {
             if ($session->attempts_remaining <= 0) {
@@ -334,7 +338,7 @@ class SiteController extends Controller
                 return $this->redirect(['login']);
             }
             
-            if ($session->verification_code === $model->code) {
+            if ($session->verification_code === $model->verification_code) {
                 $session->status = VerificationSession::STATUS_VERIFIED;
                 $session->save();
                 
@@ -386,22 +390,32 @@ class SiteController extends Controller
             return $this->redirect(['acceder-sistema']);
         }
         
-        $model = new \yii\base\DynamicModel(['newPassword', 'newPasswordConfirm']);
-        $model->addRule(['newPassword', 'newPasswordConfirm'], 'required')
-              ->addRule(['newPassword'], 'string', ['min' => 8])
-              ->addRule(['newPasswordConfirm'], 'compare', ['compareAttribute' => 'newPassword']);
+        // MOD CORRECCIÓN: Cambiado para que coincida EXACTAMENTE con la vista
+        $model = new \yii\base\DynamicModel(['new_password', 'confirm_password']);
+        $model->addRule(['new_password', 'confirm_password'], 'required')
+              ->addRule(['new_password'], 'string', ['min' => 8])
+              ->addRule(['confirm_password'], 'compare', ['compareAttribute' => 'new_password']);
         
         if ($model->load(Yii::$app->request->post()) && $model->validate()) {
-            $result = $user->changePasswordWithValidation($model->newPassword);
+            $result = $user->changePasswordWithValidation($model->new_password);
             
             if ($result['success']) {
                 Yii::$app->session->setFlash('success', $result['message']);
                 
-                if ($user->isFirstAccess()) {
-                    return $this->redirect(['acceder-sistema']);
-                }
+                // ===== NUEVA LÓGICA: ASIGNAR ROL SEGÚN PERFIL =====
+                $rolAsignado = $this->asignarRolSegunPerfil($user);
                 
-                return $this->redirect(['site/index']);
+                if ($rolAsignado) {
+                    // Tiene perfil definido, redirigir según su rol
+                    return $this->redirectBasedOnRole($user);
+                } else {
+                    // No tiene perfil, mostrar mensaje de espera
+                    Yii::$app->session->setFlash('info', 
+                        'Su cuenta ha sido creada pero no tiene un perfil asignado (atleta/representante/entrenador). ' .
+                        'Un administrador verificará su acceso en un máximo de 12 horas. Recibirá una notificación cuando esté activa.'
+                    );
+                    return $this->redirect(['site/index']);
+                }
             } else {
                 Yii::$app->session->setFlash('error', $result['message']);
             }
@@ -411,6 +425,126 @@ class SiteController extends Controller
             'model' => $model,
             'user' => $user,
         ]);
+    }
+
+    /**
+     * Asigna el rol correspondiente según el perfil del usuario
+     * 
+     * @param User $user
+     * @return bool True si se asignó un rol, False si no tiene perfil
+     */
+    private function asignarRolSegunPerfil($user)
+    {
+        $auth = Yii::$app->authManager;
+        $userId = $user->id;
+        $cedula = $user->cedula;
+        
+        // 1. Verificar si es ATLETA
+        $atleta = (new \yii\db\Query())
+            ->from('atletas.registro')
+            ->where(['user_id' => $userId])
+            ->orWhere(['identificacion' => $cedula])
+            ->one();
+        
+        if ($atleta) {
+            // Asignar rol de atleta
+            $rol = $auth->getRole('atleta');
+            if ($rol && !$auth->getAssignment('atleta', $userId)) {
+                $auth->assign($rol, $userId);
+                
+                // Actualizar user_id en la tabla de atletas si es necesario
+                if (empty($atleta['user_id'])) {
+                    Yii::$app->db->createCommand()
+                        ->update('atletas.registro', 
+                            ['user_id' => $userId], 
+                            ['id' => $atleta['id']]
+                        )->execute();
+                }
+                
+                Yii::info("Rol 'atleta' asignado automáticamente al usuario {$userId}", 'app');
+            }
+            return true;
+        }
+        
+        // 2. Verificar si es REPRESENTANTE
+        $representante = (new \yii\db\Query())
+            ->from('atletas.registro_representantes')
+            ->where(['user_id' => $userId])
+            ->orWhere(['identificacion' => $cedula])
+            ->one();
+        
+        if ($representante) {
+            // Asignar rol de representante
+            $rol = $auth->getRole('representante');
+            if ($rol && !$auth->getAssignment('representante', $userId)) {
+                $auth->assign($rol, $userId);
+                
+                // Actualizar user_id en la tabla de representantes si es necesario
+                if (empty($representante['user_id'])) {
+                    Yii::$app->db->createCommand()
+                        ->update('atletas.registro_representantes', 
+                            ['user_id' => $userId], 
+                            ['id' => $representante['id']]
+                        )->execute();
+                }
+                
+                Yii::info("Rol 'representante' asignado automáticamente al usuario {$userId}", 'app');
+            }
+            return true;
+        }
+        
+        // 3. Verificar si es ENTRENADOR (Encargado de escuela)
+        $entrenador = (new \yii\db\Query())
+            ->from('atletas.encargado_escuela')
+            ->where(['user_id' => $userId])
+            ->orWhere(['identificacion' => $cedula])
+            ->one();
+        
+        if ($entrenador) {
+            // Asignar rol de entrenador (si existe, si no, usar admin)
+            $rol = $auth->getRole('entrenador') ?? $auth->getRole('admin');
+            if ($rol && !$auth->getAssignment($rol->name, $userId)) {
+                $auth->assign($rol, $userId);
+                
+                // Actualizar user_id en la tabla de encargados si es necesario
+                if (empty($entrenador['user_id'])) {
+                    Yii::$app->db->createCommand()
+                        ->update('atletas.encargado_escuela', 
+                            ['user_id' => $userId], 
+                            ['id' => $entrenador['id']]
+                        )->execute();
+                }
+                
+                Yii::info("Rol 'entrenador' asignado automáticamente al usuario {$userId}", 'app');
+            }
+            return true;
+        }
+        
+        // 4. No tiene perfil definido
+        Yii::info("Usuario {$userId} no tiene perfil definido (atleta/representante/entrenador)", 'app');
+        return false;
+    }
+
+    /**
+     * Redirige según el rol del usuario
+     * 
+     * @param User $user
+     * @return Response
+     */
+    private function redirectBasedOnRole($user)
+    {
+        if (Yii::$app->user->can('admin')) {
+            return $this->redirect(['/reportes/default/dashboard']);
+        } elseif (Yii::$app->user->can('representante')) {
+            return $this->redirect(['/reportes/reportes/atletas']);
+        } elseif (Yii::$app->user->can('atleta')) {
+            return $this->redirect(['/reportes/reportes/estadisticas-atleta']);
+        } elseif (Yii::$app->user->can('entrenador')) {
+            return $this->redirect(['/ged/default/index']);
+        } else {
+            // Si tiene rol pero no está en las condiciones anteriores
+            return $this->redirect(['site/index']);
+        }
     }
 
     /**
@@ -1199,5 +1333,38 @@ class SiteController extends Controller
         $script .= '})();' . "\n";
         
         return $script;
+    }
+    
+    /**
+     * Limpiar caché de vistas (solo desarrollo)
+     */
+    public function actionClearViewCache()
+    {
+        if (!YII_DEBUG && !YII_ENV_DEV) {
+            throw new \yii\web\NotFoundHttpException();
+        }
+        
+        if (Yii::$app->cache) {
+            Yii::$app->cache->flush();
+        }
+        
+        // Limpiar caché de vistas
+        if (function_exists('opcache_reset')) {
+            opcache_reset();
+        }
+        
+        // Forzar recompilación de vistas
+        $viewPath = Yii::getAlias('@runtime/views');
+        if (is_dir($viewPath)) {
+            $files = glob($viewPath . '/*.php');
+            foreach ($files as $file) {
+                if (is_file($file)) {
+                    unlink($file);
+                }
+            }
+        }
+        
+        Yii::$app->session->setFlash('success', 'Caché de vistas limpiado correctamente');
+        return $this->redirect(Yii::$app->request->referrer ?: ['site/index']);
     }
 }
