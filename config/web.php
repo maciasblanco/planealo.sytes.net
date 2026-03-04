@@ -5,7 +5,7 @@ return [
     'name' => 'Escuela Polideportiva y Cultural San Agustín',
     'language' => 'es',
     'timeZone' => 'America/Caracas',
-    'basePath' => 'C:\\xampp\\htdocs\\planealo.sytes.net',
+    'basePath' => 'C:\\xampp\\htdocs\\planealo_desarrollo',
     'bootstrap' => [
         'log',
         // debug y gii se cargan condicionalmente en el bloque YII_ENV_DEV
@@ -41,7 +41,7 @@ return [
             'class' => 'yii\\caching\\FileCache',
         ],
         'user' => [
-            'class' => 'app\\components\\User',   // ← clase personalizada
+            'class' => 'app\\components\\User',
             'identityClass' => 'app\\models\\User',
             'enableAutoLogin' => false,
             'loginUrl' => ['site/login'],
@@ -49,27 +49,26 @@ return [
         'errorHandler' => [
             'errorAction' => 'site/error',
         ],
-        // ========== SECCIÓN CORREGIDA ==========
         'mailer' => [
             'class' => 'yii\symfonymailer\Mailer',
-            'viewPath' => '@app/mail',               // Directorio donde se encuentran las vistas de correo
-            'useFileTransport' => false,              // false = envío real
+            'viewPath' => '@app/mail',
+            'useFileTransport' => false,
             'transport' => [
-                'scheme' => 'smtp',                    // Usar 'smtp' para STARTTLS en puerto 587
+                'scheme' => 'smtp',
                 'host' => 'smtp.gmail.com',
                 'username' => 'maciasjblancov@gmail.com',
-                'password' => 'efum glzt mtui oaki',   // Contraseña de aplicación (sin espacios)
+                'password' => 'efum glzt mtui oaki',
                 'port' => 465,
-                'encryption' => 'ssl',                  // Importante: 'tls' para puerto 587
+                'encryption' => 'ssl',
             ],
         ],
-        // =======================================
         'authManager' => [
             'class' => 'yii\\rbac\\DbManager',
             'itemTable' => 'seguridad.auth_item',
             'itemChildTable' => 'seguridad.auth_item_child',
             'assignmentTable' => 'seguridad.auth_assignment',
             'ruleTable' => 'seguridad.auth_rule',
+            'defaultRoles' => ['invitado'], // ← Asigna rol 'invitado' a usuarios no autenticados
         ],
         'db' => [
             'class' => 'yii\\db\\Connection',
@@ -267,40 +266,49 @@ return [
             'sessionTimeout' => 1800,
         ],
     ],
+
+    // ========== FILTRO DE ACCESO CORREGIDO ==========
     'as access' => [
-        'class' => 'app\\components\\AdminAccessControl', // Clase personalizada
-        'allowActions' => [
-            'site/index',
-            'site/login',
-            'site/logout',
-            'site/error',
-            'site/about',
-            'site/contact',
-            'site/captcha',
-            'site/verify-email-first',
-            'site/validate-code',
-            'site/change-password-first',
-            'site/resend-code',
-            'tienda/marketplace/index',
-            'tienda/marketplace/buscar',
-            'tienda/marketplace/categoria',
-            'tienda/marketplace/producto',
-            'municipio/get-by-edo',
-            'parroquia/get-by-muni',
-            'parroquia/get-by-muni-cod',
-            'tasa-dolar/index',
-            'admin/user/signup',
-            'admin/user/request-password-reset',
-            'admin/user/reset-password',
-            'site/debug-menu',
-            'site/test-menu-widget',
-            'site/clear-cache',
-            'site/get-mobile-menu',
-            'debug/menu',
-            'admin/default/login',
-            'admin/default/error',
+        'class' => 'yii\filters\AccessControl',
+        'rules' => [
+            // 1. Superusuario (ID 1) siempre permitido
+            [
+                'allow' => true,
+                'matchCallback' => function ($rule, $action) {
+                    return !Yii::$app->user->isGuest && Yii::$app->user->id == 1;
+                },
+            ],
+            // 2. Acciones públicas explícitas
+            [
+                'allow' => true,
+                'matchCallback' => function ($rule, $action) {
+                    $route = $action->getUniqueId(); // ✅ Ruta completa con módulos
+                    $allowActions = [
+                        'site/index', 'site/login', 'site/logout', 'site/error', 'site/about',
+                        'site/contact', 'site/captcha', 'site/verify-email-first',
+                        'site/validate-code', 'site/change-password-first', 'site/resend-code',
+                        'tienda/marketplace/index', 'tienda/marketplace/buscar',
+                        'tienda/marketplace/categoria', 'tienda/marketplace/producto',
+                        'municipio/get-by-edo', 'parroquia/get-by-muni', 'parroquia/get-by-muni-cod',
+                        'tasa-dolar/index', 'admin/user/signup', 'admin/user/request-password-reset',
+                        'admin/user/reset-password', 'site/debug-menu', 'site/test-menu-widget',
+                        'site/clear-cache', 'site/get-mobile-menu', 'debug/menu',
+                        'admin/default/login', 'admin/default/error',
+                    ];
+                    return in_array($route, $allowActions);
+                },
+            ],
+            // 3. Acceso basado en permisos RBAC para CUALQUIER usuario (invitado o autenticado)
+            [
+                'allow' => true,
+                'matchCallback' => function ($rule, $action) {
+                    $route = $action->getUniqueId(); // ✅ Ruta completa
+                    return Yii::$app->user->can($route);
+                },
+            ],
         ],
     ],
+    // =================================================
 ];
 
 if (YII_ENV_DEV) {
