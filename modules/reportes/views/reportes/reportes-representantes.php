@@ -1,121 +1,140 @@
 <?php
-
 use yii\helpers\Html;
 use yii\grid\GridView;
+use yii\helpers\Url;
 
-$this->title = 'Mis Atletas';
+/* @var $this yii\web\View */
+/* @var $searchModel app\modules\reportes\models\ReporteAtletasSearch */
+/* @var $dataProvider yii\data\ActiveDataProvider */
+/* @var $representante app\models\RegistroRepresentantes|null */
+/* @var $datosAtletas array */
+/* @var $esRepresentante bool */
+/* @var $esAtleta bool */
+/* @var $esPersonalAutorizado bool */
+/* @var $tasaCambio float */
+
+$this->title = 'Reporte de Atletas';
 $this->params['breadcrumbs'][] = $this->title;
-
-$deudaTotalConsolidada = array_sum(array_column($datosAtletas, 'deudaPendiente'));
 ?>
 
-<div class="reportes-representantes">
-    <div class="container-fluid">
-        <div class="row mb-4">
-            <div class="col-md-12">
-                <div class="card border-primary">
-                    <div class="card-header bg-primary text-white">
-                        <h3 class="card-title mb-0">
-                            <i class="fas fa-users mr-2"></i> 
-                            Atletas a mi cargo
-                        </h3>
-                    </div>
-                </div>
-            </div>
-        </div>
+<div class="reporte-atletas-index">
+    <h1><?= Html::encode($this->title) ?></h1>
 
-        <div class="row mb-4">
-            <div class="col-md-4">
-                <div class="card border-info">
-                    <div class="card-body text-center">
-                        <h2><?= count($datosAtletas) ?></h2>
-                        <h6 class="text-muted">Total atletas</h6>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="card border-warning">
-                    <div class="card-body text-center">
-                        <h2 class="text-warning"><?= Yii::$app->formatter->asCurrency($deudaTotalConsolidada) ?></h2>
-                        <h6 class="text-muted">Deuda total consolidada</h6>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="card border-success">
-                    <div class="card-body text-center">
-                        <?php 
-                        $deudaUsd = $deudaTotalConsolidada / $tasaCambio;
-                        ?>
-                        <h2 class="text-success"><?= Yii::$app->formatter->asCurrency($deudaUsd) ?> USD*</h2>
-                        <h6 class="text-muted">Aprox. en dólares</h6>
-                        <small>*Tasa: 1 USD = <?= Yii::$app->formatter->asDecimal($tasaCambio, 2) ?> Bs</small>
-                    </div>
-                </div>
-            </div>
+    <?php if ($esPersonalAutorizado && empty($datosAtletas)): ?>
+        <div class="alert alert-warning">
+            No hay atletas registrados en la escuela activa.
         </div>
+    <?php endif; ?>
 
-        <div class="row">
-            <div class="col-md-12">
-                <div class="card">
-                    <div class="card-header">
-                        <h5 class="card-title mb-0">Listado de atletas</h5>
-                    </div>
-                    <div class="card-body">
-                        <?= GridView::widget([
-                            'dataProvider' => $dataProvider,
-                            'filterModel' => $searchModel,
-                            'columns' => [
-                                [
-                                    'label' => 'Nombre',
-                                    'value' => 'nombreCompleto',
-                                ],
-                                'identificacion',
-                                [
-                                    'label' => 'Categoría',
-                                    'value' => function($model) {
-                                        return $model->categoria ? $model->categoria->nombre_venezuela : ($model->categoriaCalculada ?: 'N/A');
-                                    },
-                                ],
-                                [
-                                    'label' => 'Deuda actual',
-                                    'value' => function($model) use ($datosAtletas) {
-                                        foreach ($datosAtletas as $dato) {
-                                            if ($dato['atleta']->id == $model->id) {
-                                                return Yii::$app->formatter->asCurrency($dato['deudaPendiente']);
-                                            }
-                                        }
-                                        return Yii::$app->formatter->asCurrency(0);
-                                    },
-                                    'contentOptions' => ['class' => 'text-danger'],
-                                ],
-                                [
-                                    'label' => '% Asistencia mes',
-                                    'value' => function($model) use ($datosAtletas) {
-                                        foreach ($datosAtletas as $dato) {
-                                            if ($dato['atleta']->id == $model->id) {
-                                                return $dato['porcentajeAsistencia'] . '%';
-                                            }
-                                        }
-                                        return '0%';
-                                    },
-                                ],
-                                [
-                                    'class' => 'yii\grid\ActionColumn',
-                                    'template' => '{view}',
-                                    'buttons' => [
-                                        'view' => function ($url, $model) {
-                                            return Html::a('<i class="fas fa-eye"></i> Ver detalle', 
-                                                ['reportes/estadisticas-atleta', 'id' => $model->id], 
-                                                ['class' => 'btn btn-sm btn-primary']);
-                                        },
-                                    ],
-                                ],
-                            ],
-                        ]); ?>
-                    </div>
-                </div>
-            </div>
+    <?= GridView::widget([
+        'dataProvider' => $dataProvider,
+        'filterModel' => $searchModel,
+        'columns' => [
+            ['class' => 'yii\grid\SerialColumn'],
+            [
+                'attribute' => 'p_nombre',
+                'label' => 'Nombre',
+                'value' => function($model) {
+                    return $model->p_nombre . ' ' . $model->p_apellido;
+                }
+            ],
+            'identificacion',
+            [
+                'attribute' => 'id_escuela',
+                'label' => 'Escuela',
+                'value' => function($model) {
+                    return $model->escuela ? $model->escuela->nombre : 'N/A';
+                }
+            ],
+            // Columna de beca activa
+            [
+                'label' => 'Beca Activa',
+                'format' => 'raw',
+                'value' => function($model) use ($datosAtletas) {
+                    // Buscar en $datosAtletas el índice correspondiente (esto es un hack rápido)
+                    // En un caso real, sería mejor agregar un método al modelo o pasar un array indexado
+                    foreach ($datosAtletas as $dato) {
+                        if ($dato['atleta']->id == $model->id) {
+                            $tieneBeca = $dato['becaActiva'];
+                            break;
+                        }
+                    }
+                    return $tieneBeca 
+                        ? '<span class="badge badge-success">Sí</span>' 
+                        : '<span class="badge badge-secondary">No</span>';
+                }
+            ],
+            // Columnas de resumen (opcional, ya existentes)
+            [
+                'label' => 'Deuda Pendiente',
+                'value' => function($model) use ($datosAtletas) {
+                    foreach ($datosAtletas as $dato) {
+                        if ($dato['atleta']->id == $model->id) {
+                            return '$' . number_format($dato['deudaPendiente'], 2);
+                        }
+                    }
+                    return '$0.00';
+                }
+            ],
+            [
+                'label' => '% Asistencia (mes)',
+                'value' => function($model) use ($datosAtletas) {
+                    foreach ($datosAtletas as $dato) {
+                        if ($dato['atleta']->id == $model->id) {
+                            return $dato['porcentajeAsistencia'] . '%';
+                        }
+                    }
+                    return '0%';
+                }
+            ],
+            // Botones de acción
+            [
+                'class' => 'yii\grid\ActionColumn',
+                'template' => '{view} {recibo-pago} {recibo-cobro} {gestion-beca}',
+                'buttons' => [
+                    'view' => function ($url, $model) {
+                        return Html::a('<i class="fas fa-chart-bar"></i>', 
+                            ['estadisticas-atleta', 'id' => $model->id], 
+                            ['title' => 'Estadísticas', 'class' => 'btn btn-info btn-xs']
+                        );
+                    },
+                    'recibo-pago' => function ($url, $model) {
+                        return Html::a('<i class="fas fa-receipt"></i>', 
+                            ['recibo-pago', 'id' => $model->id], 
+                            ['title' => 'Recibo de Pago (Fase 2)', 'class' => 'btn btn-success btn-xs']
+                        );
+                    },
+                    'recibo-cobro' => function ($url, $model) {
+                        return Html::a('<i class="fas fa-file-invoice"></i>', 
+                            ['recibo-cobro', 'id' => $model->id], 
+                            ['title' => 'Recibo de Cobro (Fase 3)', 'class' => 'btn btn-warning btn-xs']
+                        );
+                    },
+                    'gestion-beca' => function ($url, $model) use ($esPersonalAutorizado) {
+                        if (!$esPersonalAutorizado) {
+                            return '';
+                        }
+                        // Aquí deberías colocar la URL correcta para gestionar becas
+                        // Por ejemplo, si existe un controlador BecaController con actionAsignar
+                        return Html::a('<i class="fas fa-medal"></i>', 
+                            ['/becas/beca/asignar', 'id_atleta' => $model->id], 
+                            ['title' => 'Gestionar Beca', 'class' => 'btn btn-primary btn-xs']
+                        );
+                    },
+                ],
+            ],
+        ],
+    ]); ?>
+
+    <?php if ($representante): ?>
+        <div class="alert alert-info">
+            <strong>Representante:</strong> <?= Html::encode($representante->p_nombre . ' ' . $representante->p_apellido) ?>
         </div>
-    </div>
+    <?php endif; ?>
+
+    <?php if ($esPersonalAutorizado): ?>
+        <div class="alert alert-info">
+            <strong>Escuela activa:</strong> <?= Html::encode(Yii::$app->session->get('nombre_escuela')) ?> (ID: <?= Yii::$app->session->get('id_escuela') ?>)
+        </div>
+    <?php endif; ?>
 </div>

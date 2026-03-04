@@ -11,6 +11,8 @@ use app\models\AtletasRegistro;
 use app\models\AportesSemanales;
 use app\models\Asistencia;
 use app\models\TasaDolar;
+use app\models\Beca;
+use app\models\TipoBeca;
 use app\modules\reportes\models\ReporteAtletasSearch;
 use app\modules\reportes\models\ReporteAsistenciasSearch;
 
@@ -24,7 +26,7 @@ class ReportesController extends Controller
                 'rules' => [
                     [
                         'allow' => true,
-                        'roles' => ['representante', 'atleta', 'admin','superusuario'],
+                        'roles' => ['representante', 'atleta', 'admin', 'superusuario', 'profesor'],
                     ],
                 ],
             ],
@@ -32,8 +34,7 @@ class ReportesController extends Controller
     }
 
     /**
-     * Listado de atletas para el representante (vista: reportes-representantes.php)
-     * Ahora el nombre de la acción coincide con el de la vista.
+     * Listado de atletas según el rol.
      */
     public function actionReportesRepresentantes()
     {
@@ -41,14 +42,26 @@ class ReportesController extends Controller
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         $user_id = Yii::$app->user->id;
-        
+        $esPersonalAutorizado = (Yii::$app->user->id == 1 
+                                 || Yii::$app->user->can('admin') 
+                                 || Yii::$app->user->can('superusuario') 
+                                 || Yii::$app->user->can('profesor'));
         $esRepresentante = Yii::$app->user->can('representante');
         $esAtleta = Yii::$app->user->can('atleta');
         
         $atletas = [];
         $representante = null;
 
-        if ($esRepresentante) {
+        if ($esPersonalAutorizado) {
+            $id_escuela = Yii::$app->session->get('id_escuela');
+            if (!$id_escuela) {
+                Yii::$app->session->setFlash('error', 'Debe seleccionar una escuela.');
+                return $this->redirect(['/ged/default/select-escuela']);
+            }
+            $atletas = AtletasRegistro::find()
+                ->where(['id_escuela' => $id_escuela, 'eliminado' => false])
+                ->all();
+        } elseif ($esRepresentante) {
             $representante = RegistroRepresentantes::find()
                 ->where(['user_id' => $user_id])
                 ->one();
@@ -71,7 +84,6 @@ class ReportesController extends Controller
             }
         }
 
-        // Filtrar el dataProvider para que solo incluya los atletas permitidos
         $atletasIds = array_map(function($atleta) {
             return $atleta->id;
         }, $atletas);
@@ -79,10 +91,11 @@ class ReportesController extends Controller
 
         $datosAtletas = [];
         foreach ($atletas as $atleta) {
-            $datosAtletas[] = $this->obtenerDatosConsolidados($atleta);
+            $datos = $this->obtenerDatosConsolidados($atleta);
+            $datos['becaActiva'] = $this->tieneBecaActiva($atleta->id);
+            $datosAtletas[] = $datos;
         }
 
-        // Obtener tasa de cambio actual
         $tasaCambio = $this->obtenerTasaCambioActual();
 
         if (Yii::$app->request->isAjax) {
@@ -100,19 +113,23 @@ class ReportesController extends Controller
             'datosAtletas' => $datosAtletas,
             'esRepresentante' => $esRepresentante,
             'esAtleta' => $esAtleta,
+            'esPersonalAutorizado' => $esPersonalAutorizado,
             'tasaCambio' => $tasaCambio,
         ]);
     }
 
     /**
-     * Detalle de estadísticas de un atleta (vista: reporte-atletas.php)
+     * Estadísticas detalladas de un atleta.
      */
     public function actionEstadisticasAtleta($id = null)
     {
         $user_id = Yii::$app->user->id;
+        $esPersonalAutorizado = (Yii::$app->user->id == 1 
+                                 || Yii::$app->user->can('admin') 
+                                 || Yii::$app->user->can('superusuario') 
+                                 || Yii::$app->user->can('profesor'));
         
-        // Si es atleta, solo puede ver sus propias estadísticas
-        if (Yii::$app->user->can('atleta') && !Yii::$app->user->can('admin')) {
+        if (Yii::$app->user->can('atleta') && !$esPersonalAutorizado) {
             $atleta = AtletasRegistro::find()
                 ->where(['user_id' => $user_id])
                 ->one();
@@ -136,8 +153,7 @@ class ReportesController extends Controller
             throw new \yii\web\NotFoundHttpException('Atleta no encontrado.');
         }
 
-        // Verificar permisos para representantes
-        if (Yii::$app->user->can('representante') && !Yii::$app->user->can('admin')) {
+        if (Yii::$app->user->can('representante') && !$esPersonalAutorizado) {
             $representante = RegistroRepresentantes::find()
                 ->where(['user_id' => $user_id])
                 ->one();
@@ -159,7 +175,93 @@ class ReportesController extends Controller
     }
 
     /**
-     * Reporte de asistencias con filtros (vista: asistencias.php)
+     * Recibo de pagos realizados por el atleta.
+     */
+    public function actionReciboPago($id)
+    {
+        $atleta = AtletasRegistro::findOne($id);
+        if (!$atleta) {
+            throw new \yii\web\NotFoundHttpException('Atleta no encontrado.');
+        }
+
+        if (!$this->puedeVerAtleta($atleta)) {
+            throw new \yii\web\ForbiddenHttpException('No tiene permisos para ver este atleta.');
+        }
+
+        $aportesPagados = AportesSemanales::find()
+            ->where(['atleta_id' => $id, 'estado' => AportesSemanales::ESTADO_PAGADO])
+            ->andWhere(['>=', 'fecha_quincena', AportesSemanales::FECHA_INICIO_DEUDAS])
+            ->orderBy(['fecha_quincena' => SORT_DESC])
+            ->all();
+
+        $totalPagado = array_sum(array_column($aportesPagados, 'monto'));
+
+        $representante = $atleta->representante;
+        $escuela = $atleta->escuela;
+        $tasaCambio = $this->obtenerTasaCambioActual();
+        $datosPago = $this->obtenerDatosPagoEscuela($escuela);
+
+        return $this->render('recibo-pago', [
+            'atleta' => $atleta,
+            'representante' => $representante,
+            'escuela' => $escuela,
+            'aportes' => $aportesPagados,
+            'totalPagado' => $totalPagado,
+            'tasaCambio' => $tasaCambio,
+            'datosPago' => $datosPago,
+        ]);
+    }
+
+    /**
+     * Recibo de cobro (deudas pendientes).
+     */
+    public function actionReciboCobro($id)
+    {
+        $atleta = AtletasRegistro::findOne($id);
+        if (!$atleta) {
+            throw new \yii\web\NotFoundHttpException('Atleta no encontrado.');
+        }
+
+        if (!$this->puedeVerAtleta($atleta)) {
+            throw new \yii\web\ForbiddenHttpException('No tiene permisos para ver este atleta.');
+        }
+
+        $deudasPendientes = AportesSemanales::find()
+            ->where(['atleta_id' => $id, 'estado' => AportesSemanales::ESTADO_PENDIENTE])
+            ->andWhere(['>=', 'fecha_quincena', AportesSemanales::FECHA_INICIO_DEUDAS])
+            ->orderBy(['fecha_quincena' => SORT_ASC])
+            ->all();
+
+        $totalDeuda = array_sum(array_column($deudasPendientes, 'monto'));
+
+        $becaActiva = Beca::find()
+            ->where(['id_atleta' => $id, 'estado' => 'ACTIVA'])
+            ->one();
+        $porcentajeBeca = 0;
+        if ($becaActiva && $becaActiva->tipoBeca) {
+            $porcentajeBeca = $becaActiva->tipoBeca->porcentaje_descuento;
+        }
+
+        $representante = $atleta->representante;
+        $escuela = $atleta->escuela;
+        $tasaCambio = $this->obtenerTasaCambioActual();
+        $datosPago = $this->obtenerDatosPagoEscuela($escuela);
+
+        return $this->render('recibo-cobro', [
+            'atleta' => $atleta,
+            'representante' => $representante,
+            'escuela' => $escuela,
+            'deudas' => $deudasPendientes,
+            'totalDeuda' => $totalDeuda,
+            'becaActiva' => $becaActiva,
+            'porcentajeBeca' => $porcentajeBeca,
+            'tasaCambio' => $tasaCambio,
+            'datosPago' => $datosPago,
+        ]);
+    }
+
+    /**
+     * Reporte de asistencias con filtros.
      */
     public function actionAsistencias()
     {
@@ -173,33 +275,49 @@ class ReportesController extends Controller
     }
 
     /**
-     * Reporte de deudas pendientes (vista: deudas-pendientes.php)
+     * Reporte de deudas pendientes (consolidado).
      */
     public function actionDeudasPendientes()
     {
         $user_id = Yii::$app->user->id;
-        $user = Yii::$app->user->identity;
+        $esPersonalAutorizado = (Yii::$app->user->id == 1 
+                                 || Yii::$app->user->can('admin') 
+                                 || Yii::$app->user->can('superusuario') 
+                                 || Yii::$app->user->can('profesor'));
         
         $deudas = [];
         
-        if (in_array('representante', $user->roles ?? [])) {
+        if ($esPersonalAutorizado) {
+            $id_escuela = Yii::$app->session->get('id_escuela');
+            if ($id_escuela) {
+                $atletas = AtletasRegistro::find()
+                    ->where(['id_escuela' => $id_escuela, 'eliminado' => false])
+                    ->all();
+                foreach ($atletas as $atleta) {
+                    $deudaAtleta = AportesSemanales::find()
+                        ->where(['atleta_id' => $atleta->id, 'estado' => AportesSemanales::ESTADO_PENDIENTE])
+                        ->sum('monto') ?? 0;
+                    if ($deudaAtleta > 0) {
+                        $deudas[] = [
+                            'atleta' => $atleta,
+                            'monto' => $deudaAtleta,
+                            'detalle' => $this->obtenerDetalleDeuda($atleta->id)
+                        ];
+                    }
+                }
+            }
+        } elseif (Yii::$app->user->can('representante')) {
             $representante = RegistroRepresentantes::find()
                 ->where(['user_id' => $user_id])
                 ->one();
-
             if ($representante) {
                 $atletas = AtletasRegistro::find()
-                    ->where(['id_representante' => $representante->id])
-                    ->andWhere(['eliminado' => false])
+                    ->where(['id_representante' => $representante->id, 'eliminado' => false])
                     ->all();
-
                 foreach ($atletas as $atleta) {
                     $deudaAtleta = AportesSemanales::find()
-                        ->where(['atleta_id' => $atleta->id])
-                        ->andWhere(['pagado' => false])
-                        ->andWhere(['eliminado' => false])
+                        ->where(['atleta_id' => $atleta->id, 'estado' => AportesSemanales::ESTADO_PENDIENTE])
                         ->sum('monto') ?? 0;
-
                     if ($deudaAtleta > 0) {
                         $deudas[] = [
                             'atleta' => $atleta,
@@ -218,36 +336,78 @@ class ReportesController extends Controller
     }
 
     /**
-     * Exportar reporte a PDF
+     * Exportar reporte a PDF (placeholder).
      */
     public function actionExportarPdf($reporte)
     {
         Yii::$app->response->format = Response::FORMAT_RAW;
         Yii::$app->response->headers->add('Content-Type', 'application/pdf');
-
-        // Lógica para generar PDF según el tipo de reporte
         return $this->generarPdf($reporte);
     }
 
     /**
-     * Exportar reporte a Excel
+     * Exportar reporte a Excel (placeholder).
      */
     public function actionExportarExcel($reporte)
     {
-        // Lógica para generar Excel
         return $this->generarExcel($reporte);
     }
 
     // =========================================================================
-    // Métodos privados (se mantienen igual)
+    // MÉTODOS PRIVADOS
     // =========================================================================
+
+    /**
+     * Verifica si el usuario puede ver los datos de un atleta.
+     */
+    private function puedeVerAtleta($atleta)
+    {
+        $user = Yii::$app->user;
+        $esPersonalAutorizado = ($user->id == 1 
+                                 || $user->can('admin') 
+                                 || $user->can('superusuario') 
+                                 || $user->can('profesor'));
+        
+        if ($esPersonalAutorizado) {
+            return true;
+        }
+        if ($user->can('representante')) {
+            $representante = RegistroRepresentantes::find()->where(['user_id' => $user->id])->one();
+            return $representante && $atleta->id_representante == $representante->id;
+        }
+        if ($user->can('atleta')) {
+            return $atleta->user_id == $user->id;
+        }
+        return false;
+    }
+
+    /**
+     * Determina si un atleta tiene una beca activa.
+     */
+    private function tieneBecaActiva($atleta_id)
+    {
+        return Beca::find()
+            ->where(['id_atleta' => $atleta_id, 'estado' => 'ACTIVA'])
+            ->exists();
+    }
+
+    /**
+     * Obtiene los datos de pago de la escuela.
+     */
+    private function obtenerDatosPagoEscuela($escuela)
+    {
+        $nombreEscuela = $escuela ? $escuela->nombre : 'la escuela';
+        // Datos de pago proporcionados por el usuario
+        $texto = "Pago Móvil: 0102 11408051 04262137308 a nombre de {$nombreEscuela}.\n";
+        $texto .= "También puede realizar el pago en efectivo en la dirección de la escuela.";
+        return $texto;
+    }
 
     private function obtenerDatosConsolidados($atleta)
     {
         $deudaPendiente = AportesSemanales::find()
             ->where(['atleta_id' => $atleta->id])
-            ->andWhere(['pagado' => false])
-            ->andWhere(['eliminado' => false])
+            ->andWhere(['estado' => AportesSemanales::ESTADO_PENDIENTE])
             ->sum('monto') ?? 0;
 
         $fechaInicio = date('Y-m-01');
@@ -255,8 +415,8 @@ class ReportesController extends Controller
 
         $asistencias = Asistencia::find()
             ->where(['id_atleta' => $atleta->id])
-            ->andWhere(['>=', 'fecha', $fechaInicio])
-            ->andWhere(['<=', 'fecha', $fechaFin])
+            ->andWhere(['>=', 'fecha_practica', $fechaInicio])
+            ->andWhere(['<=', 'fecha_practica', $fechaFin])
             ->andWhere(['eliminado' => false])
             ->all();
 
@@ -293,7 +453,7 @@ class ReportesController extends Controller
             ->where(['id_atleta' => $atletaId])
             ->andWhere(['asistio' => true])
             ->andWhere(['eliminado' => false])
-            ->orderBy(['fecha' => SORT_DESC])
+            ->orderBy(['fecha_practica' => SORT_DESC])
             ->one();
     }
 
@@ -301,9 +461,8 @@ class ReportesController extends Controller
     {
         return AportesSemanales::find()
             ->where(['atleta_id' => $atletaId])
-            ->andWhere(['pagado' => false])
-            ->andWhere(['eliminado' => false])
-            ->orderBy(['fecha' => SORT_ASC])
+            ->andWhere(['estado' => AportesSemanales::ESTADO_PENDIENTE])
+            ->orderBy(['fecha_quincena' => SORT_ASC])
             ->one();
     }
 
@@ -317,13 +476,11 @@ class ReportesController extends Controller
 
         $totalAportes = AportesSemanales::find()
             ->where(['atleta_id' => $atleta->id])
-            ->andWhere(['eliminado' => false])
             ->sum('monto') ?? 0;
 
         $totalAsistencias = Asistencia::find()
             ->where(['id_atleta' => $atleta->id])
             ->andWhere(['asistio' => true])
-            ->andWhere(['eliminado' => false])
             ->count();
 
         return [
@@ -342,8 +499,8 @@ class ReportesController extends Controller
 
         $asistenciasMes = Asistencia::find()
             ->where(['id_atleta' => $atletaId])
-            ->andWhere(['>=', 'fecha', $fechaInicio])
-            ->andWhere(['<=', 'fecha', $fechaFin])
+            ->andWhere(['>=', 'fecha_practica', $fechaInicio])
+            ->andWhere(['<=', 'fecha_practica', $fechaFin])
             ->andWhere(['eliminado' => false])
             ->all();
 
@@ -358,9 +515,8 @@ class ReportesController extends Controller
 
         $aportesMes = AportesSemanales::find()
             ->where(['atleta_id' => $atletaId])
-            ->andWhere(['>=', 'fecha', $fechaInicio])
-            ->andWhere(['<=', 'fecha', $fechaFin])
-            ->andWhere(['eliminado' => false])
+            ->andWhere(['>=', 'fecha_quincena', $fechaInicio])
+            ->andWhere(['<=', 'fecha_quincena', $fechaFin])
             ->all();
 
         $totalAportes = 0;
@@ -368,7 +524,7 @@ class ReportesController extends Controller
         
         foreach ($aportesMes as $aporte) {
             $totalAportes += $aporte->monto;
-            if ($aporte->pagado) {
+            if ($aporte->estado === AportesSemanales::ESTADO_PAGADO) {
                 $aportesPagados += $aporte->monto;
             }
         }
@@ -390,10 +546,8 @@ class ReportesController extends Controller
     private function obtenerDetalleDeuda($atletaId)
     {
         return AportesSemanales::find()
-            ->where(['atleta_id' => $atletaId])
-            ->andWhere(['pagado' => false])
-            ->andWhere(['eliminado' => false])
-            ->orderBy(['fecha' => SORT_ASC])
+            ->where(['atleta_id' => $atletaId, 'estado' => AportesSemanales::ESTADO_PENDIENTE])
+            ->orderBy(['fecha_quincena' => SORT_ASC])
             ->all();
     }
 
@@ -403,18 +557,12 @@ class ReportesController extends Controller
             ->where(['eliminado' => false])
             ->orderBy(['fecha_tasa' => SORT_DESC])
             ->one();
-
-        if ($tasa) {
-            return (float) $tasa->tasa_dia;
-        }
-
-        return 36.50;
+        return $tasa ? (float) $tasa->tasa_dia : 36.50;
     }
 
     private function generarPdf($reporte)
     {
-        $content = "Reporte: " . $reporte;
-        return $content;
+        return "PDF para: " . $reporte;
     }
 
     private function generarExcel($reporte)
