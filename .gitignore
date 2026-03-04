@@ -86,3 +86,4 @@ docker-compose.override.yml
 # =============================================runtime/debug/*
 runtime/logs/*
 runtime/cache/*
+runtime/logs/*.log
