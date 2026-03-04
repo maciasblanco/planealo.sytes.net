@@ -166,11 +166,16 @@ class ReportesController extends Controller
         $deudasPendientes = $this->obtenerDetalleDeuda($atleta->id);
         $tasaCambio = $this->obtenerTasaCambioActual();
 
+        // Obtener usuario actual para mostrar en lugar del representante si es administrativo
+        $usuarioActual = Yii::$app->user->identity;
+
         return $this->render('reporte-atletas', [
             'atleta' => $atleta,
             'estadisticas' => $estadisticas,
             'deudasPendientes' => $deudasPendientes,
             'tasaCambio' => $tasaCambio,
+            'esPersonalAutorizado' => $esPersonalAutorizado,
+            'usuarioActual' => $usuarioActual,
         ]);
     }
 

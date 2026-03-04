@@ -14,6 +14,16 @@ $asistenciasMes = $estadisticasMes ? $estadisticasMes['asistencias'] : ['total' 
 $aportesMes = $estadisticasMes ? $estadisticasMes['aportes'] : ['total' => 0, 'pagados' => 0, 'pendientes' => 0];
 
 $totales = $estadisticas['totales'];
+
+// Función auxiliar para obtener nombre completo del representante
+function nombreCompletoRepresentante($rep) {
+    if (!$rep) return '';
+    $nombre = $rep->p_nombre;
+    if (!empty($rep->s_nombre)) $nombre .= ' ' . $rep->s_nombre;
+    $apellido = $rep->p_apellido;
+    if (!empty($rep->s_apellido)) $apellido .= ' ' . $rep->s_apellido;
+    return trim($nombre . ' ' . $apellido);
+}
 ?>
 
 <div class="reporte-atletas">
@@ -43,7 +53,6 @@ $totales = $estadisticas['totales'];
                             <tr><th>Cédula:</th><td><?= Html::encode($atleta->identificacion) ?></td></tr>
                             <tr><th>Fecha nacimiento:</th><td><?= Yii::$app->formatter->asDate($atleta->fn) ?> (<?= $atleta->edad ?> años)</td></tr>
                             <tr><th>Teléfono:</th><td><?= Html::encode($atleta->cell ?: 'No registrado') ?></td></tr>
-                            <tr><th>Correo:</th><td><?= Html::encode($atleta->email ?: 'No registrado') ?></td></tr>
                             <tr><th>Escuela:</th><td><?= $atleta->escuela ? Html::encode($atleta->escuela->nombre) : 'No asignada' ?></td></tr>
                             <tr><th>Categoría:</th><td><?= $atleta->categoria ? Html::encode($atleta->categoria->nombre_venezuela) : ($atleta->categoriaCalculada ?: 'No asignada') ?></td></tr>
                         </table>
@@ -53,20 +62,35 @@ $totales = $estadisticas['totales'];
             <div class="col-md-6">
                 <div class="card border-warning h-100">
                     <div class="card-header bg-warning text-white">
-                        <h5 class="card-title mb-0"><i class="fas fa-user-tie mr-2"></i> Datos del Representante</h5>
+                        <h5 class="card-title mb-0"><i class="fas fa-user-tie mr-2"></i> 
+                            <?= $esPersonalAutorizado ? 'Consultado por' : 'Datos del Representante' ?>
+                        </h5>
                     </div>
                     <div class="card-body">
-                        <?php if ($atleta->representante): ?>
-                        <table class="table table-sm table-borderless">
-                            <tr><th>Nombre completo:</th><td><?= Html::encode($atleta->representante->nombreCompleto) ?></td></tr>
-                            <tr><th>Cédula:</th><td><?= Html::encode($atleta->representante->identificacion) ?></td></tr>
-                            <tr><th>Teléfono:</th><td><?= Html::encode($atleta->representante->cell ?: 'No registrado') ?></td></tr>
-                            <tr><th>Correo:</th><td><?= Html::encode($atleta->representante->email ?: 'No registrado') ?></td></tr>
-                            <tr><th>Dirección:</th><td><?= Html::encode($atleta->representante->direccion ?: 'No registrada') ?></td></tr>
-                            <tr><th>Relación:</th><td><?= Html::encode($atleta->representante->parentesco ?: 'No especificada') ?></td></tr>
-                        </table>
+                        <?php if ($esPersonalAutorizado): ?>
+                            <?php if ($usuarioActual): ?>
+                                <table class="table table-sm table-borderless">
+                                    <tr><th>Usuario:</th><td><?= Html::encode($usuarioActual->username) ?></td></tr>
+                                    <tr><th>Rol(es):</th><td>
+                                        <?php
+                                        $roles = array_keys(Yii::$app->authManager->getRolesByUser($usuarioActual->id));
+                                        echo Html::encode(implode(', ', $roles));
+                                        ?>
+                                    </td></tr>
+                                </table>
+                            <?php else: ?>
+                                <p class="text-muted text-center">No se pudo identificar el usuario.</p>
+                            <?php endif; ?>
                         <?php else: ?>
-                        <p class="text-muted text-center">No hay representante asignado.</p>
+                            <?php if ($atleta->representante): ?>
+                                <table class="table table-sm table-borderless">
+                                    <tr><th>Nombre completo:</th><td><?= Html::encode(nombreCompletoRepresentante($atleta->representante)) ?></td></tr>
+                                    <tr><th>Cédula:</th><td><?= Html::encode($atleta->representante->identificacion) ?></td></tr>
+                                    <tr><th>Teléfono:</th><td><?= Html::encode($atleta->representante->cell ?: 'No registrado') ?></td></tr>
+                                </table>
+                            <?php else: ?>
+                                <p class="text-muted text-center">No hay representante asignado.</p>
+                            <?php endif; ?>
                         <?php endif; ?>
                     </div>
                 </div>
@@ -106,7 +130,7 @@ $totales = $estadisticas['totales'];
                                         $<?= number_format($deudaDolares, 2) ?>
                                     </h3>
                                     <h6 class="text-muted">Total Deuda (USD)</h6>
-                                    <small>Tasa: 1 USD = <?= $tasaCambio ?> Bs</small>
+                                    <small>Tasa: 1 USD = <?= number_format($tasaCambio, 2) ?> Bs</small>
                                 </div>
                             </div>
                         </div>
@@ -118,21 +142,19 @@ $totales = $estadisticas['totales'];
                                 <table class="table table-sm table-bordered">
                                     <thead>
                                         <tr>
-                                            <th>Fecha</th>
-                                            <th>Concepto</th>
+                                            <th>Fecha Quincena</th>
+                                            <th>N° Quincena</th>
                                             <th>Monto (Bs)</th>
                                             <th>Monto (USD)</th>
-                                            <th>Vencimiento</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         <?php foreach ($deudasPendientes as $deuda): ?>
                                         <tr>
-                                            <td><?= Yii::$app->formatter->asDate($deuda->fecha) ?></td>
-                                            <td><?= Html::encode($deuda->concepto ?: 'Aporte semanal') ?></td>
+                                            <td><?= Yii::$app->formatter->asDate($deuda->fecha_quincena) ?></td>
+                                            <td class="text-center"><?= $deuda->numero_quincena ?></td>
                                             <td class="text-danger"><?= Yii::$app->formatter->asCurrency($deuda->monto) ?></td>
                                             <td>$<?= number_format($deuda->monto / $tasaCambio, 2) ?></td>
-                                            <td><?= Yii::$app->formatter->asDate($deuda->fecha_vencimiento) ?></td>
                                         </tr>
                                         <?php endforeach; ?>
                                     </tbody>
