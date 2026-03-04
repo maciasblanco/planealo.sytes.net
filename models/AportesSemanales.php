@@ -918,7 +918,7 @@ class AportesSemanales extends ActiveRecord
                 SELECT 
                     v.atleta_id,
                     :escuela_id,
-                    v.fecha,
+                    v.fecha::date,   -- Conversión explícita a date
                     v.numero,
                     :monto,
                     :estado,
@@ -930,7 +930,7 @@ class AportesSemanales extends ActiveRecord
                 FROM (VALUES $valuesSql) AS v(atleta_id, fecha, numero)
                 WHERE NOT EXISTS (
                     SELECT 1 FROM contabilidad.aportes_semanales ap
-                    WHERE ap.atleta_id = v.atleta_id AND ap.fecha_quincena = v.fecha
+                    WHERE ap.atleta_id = v.atleta_id AND ap.fecha_quincena = v.fecha::date
                 )
             ";
 
@@ -989,5 +989,83 @@ class AportesSemanales extends ActiveRecord
             $result[$row['atleta_id']] = $row;
         }
         return $result;
+    }
+
+    // =========================================================================
+    // NUEVO MÉTODO OPTIMIZADO PARA UN SOLO ATLETA (2026-03-04)
+    // =========================================================================
+
+    /**
+     * Genera las quincenas faltantes para un atleta específico usando una sola consulta SQL.
+     * @param int $atleta_id
+     * @return int Número de registros insertados
+     */
+    public static function generarQuincenasParaAtletaMasivo($atleta_id)
+    {
+        $atleta = AtletasRegistro::findOne($atleta_id);
+        if (!$atleta) {
+            return 0;
+        }
+
+        $fechaInicio = self::FECHA_INICIO_DEUDAS;
+        $hoy = date('Y-m-d');
+        $monto = self::MONTO_QUINCENAL_USD;
+
+        // Generar lista de fechas de quincena con su número correspondiente
+        $fechasConNumero = [];
+        $current = new \DateTime($fechaInicio);
+        $end = new \DateTime($hoy);
+        while ($current <= $end) {
+            $fecha = $current->format('Y-m-d');
+            $numero = self::calcularNumeroQuincenaExacta($fecha);
+            $fechasConNumero[] = ['fecha' => $fecha, 'numero' => $numero];
+            $current->modify('+15 days');
+        }
+
+        if (empty($fechasConNumero)) {
+            return 0;
+        }
+
+        // Construir cláusula VALUES
+        $values = [];
+        foreach ($fechasConNumero as $item) {
+            $values[] = "('{$item['fecha']}', {$item['numero']})";
+        }
+        $valuesSql = implode(',', $values);
+
+        $sql = "
+            INSERT INTO contabilidad.aportes_semanales 
+                (atleta_id, escuela_id, fecha_quincena, numero_quincena, monto, estado, tipo_aporte, tipo_cambio, pago_parcial, created_at, u_create)
+            SELECT 
+                :atleta_id,
+                :escuela_id,
+                q.fecha::date,   -- Conversión explícita a date
+                q.numero,
+                :monto,
+                :estado,
+                :tipo_aporte,
+                :tipo_cambio,
+                false,
+                NOW(),
+                :user_id
+            FROM (VALUES $valuesSql) AS q(fecha, numero)
+            WHERE NOT EXISTS (
+                SELECT 1 FROM contabilidad.aportes_semanales ap
+                WHERE ap.atleta_id = :atleta_id AND ap.fecha_quincena = q.fecha::date
+            )
+        ";
+
+        $params = [
+            ':atleta_id' => $atleta_id,
+            ':escuela_id' => $atleta->id_escuela,
+            ':monto' => $monto,
+            ':estado' => self::ESTADO_PENDIENTE,
+            ':tipo_aporte' => self::TIPO_APORTE_NORMAL,
+            ':tipo_cambio' => self::TASA_CAMBIO_FIJA,
+            ':user_id' => Yii::$app->user->id,
+        ];
+
+        $count = Yii::$app->db->createCommand($sql, $params)->execute();
+        return $count;
     }
 }

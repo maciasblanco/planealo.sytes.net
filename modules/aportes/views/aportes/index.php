@@ -186,10 +186,13 @@ $montoQuincenal = app\models\AportesSemanales::MONTO_QUINCENAL_USD;
                                         <tr>
                                             <th class="text-center">#</th>
                                             <th>Atleta</th>
+                                            <!-- Columnas eliminadas (comentadas) por solicitud: Quincenas, Pagadas, Pendientes, Adelantadas -->
+                                            <!--
                                             <th class="text-center">Quincenas</th>
                                             <th class="text-center">Pagadas</th>
                                             <th class="text-center">Pendientes</th>
                                             <th class="text-center">Adelantadas</th>
+                                            -->
                                             <th class="text-right">Monto Pagado (USD)</th>
                                             <th class="text-right">Deuda (USD)</th>
                                             <th class="text-center">Estado</th>
@@ -231,12 +234,15 @@ $montoQuincenal = app\models\AportesSemanales::MONTO_QUINCENAL_USD;
                                                     <strong><?= Html::encode($atleta->p_nombre . ' ' . $atleta->p_apellido) ?></strong>
                                                     <br>
                                                     <small class="text-muted">
-                                                        <?= Html::encode($atleta->cedula ?? 'Sin cédula') ?>
+                                                        <!-- CORREGIDO: Se usa 'identificacion' en lugar de 'cedula' -->
+                                                        <?= Html::encode($atleta->identificacion ?? 'Sin identificación') ?>
                                                         <?php if ($item['error']): ?>
                                                             <span class="label label-danger">Error en procesamiento</span>
                                                         <?php endif; ?>
                                                     </small>
                                                 </td>
+                                                <!-- Celdas eliminadas (comentadas) -->
+                                                <!--
                                                 <td class="text-center">
                                                     <span class="badge bg-blue"><?= $totalQuincenas ?></span>
                                                 </td>
@@ -257,6 +263,7 @@ $montoQuincenal = app\models\AportesSemanales::MONTO_QUINCENAL_USD;
                                                         <span class="badge bg-gray">0</span>
                                                     <?php endif; ?>
                                                 </td>
+                                                -->
                                                 <td class="text-right">
                                                     <strong class="text-green">$<?= number_format($montoPagado, 2) ?></strong>
                                                     <?php if ($montoAdelantado > 0): ?>
@@ -316,7 +323,8 @@ $montoQuincenal = app\models\AportesSemanales::MONTO_QUINCENAL_USD;
                                     </tbody>
                                     <tfoot>
                                         <tr class="bg-gray">
-                                            <th colspan="6" class="text-right">TOTALES:</th>
+                                            <!-- Ajuste de colspan: antes era 6 (por #, Atleta, 4 columnas) ahora solo # y Atleta = 2 -->
+                                            <th colspan="2" class="text-right">TOTALES:</th>
                                             <th class="text-right">
                                                 <strong class="text-green">$<?= number_format($totalRecaudado, 2) ?></strong>
                                             </th>

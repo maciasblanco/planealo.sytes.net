@@ -5,7 +5,7 @@ return [
     'name' => 'Escuela Polideportiva y Cultural San Agustín',
     'language' => 'es',
     'timeZone' => 'America/Caracas',
-    'basePath' => 'C:\\xampp\\htdocs\\planealo_desarrollo',
+    'basePath' =>  dirname(__DIR__),
     'bootstrap' => [
         'log',
         // debug y gii se cargan condicionalmente en el bloque YII_ENV_DEV

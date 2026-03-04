@@ -15,7 +15,7 @@ use yii\web\NotFoundHttpException;
 use yii\web\ForbiddenHttpException;
 use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
-use yii\data\ActiveDataProvider; // <-- AÑADIDO
+use yii\data\ActiveDataProvider;
 
 // =========================================================================
 // NUEVOS MODELOS PARA EL SISTEMA DE FAMILIAS Y BECAS
@@ -120,6 +120,9 @@ class AportesController extends Controller
      */
     public function actionIndex()
     {
+        // Aumentar tiempo de ejecución para evitar timeout durante diagnóstico
+        set_time_limit(300);
+
         $this->layout = 'escuelas';
         
         $id_escuela = Yii::$app->session->get('id_escuela');
@@ -135,7 +138,7 @@ class AportesController extends Controller
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
-            'pagination' => ['pageSize' => 50],
+            'pagination' => ['pageSize' => 20], // Reducido a 20 para mayor velocidad
             'sort' => false,
         ]);
 
@@ -204,16 +207,26 @@ class AportesController extends Controller
         Yii::info("Tiempo en bucle de construcción: " . ($time_loop - $time_resumen));
 
         // Top atletas (global, no paginado)
-        $topAtletas = AportesSemanales::getTopAtletas($id_escuela, 10);
+        $topAtletas = [];
+        try {
+            $topAtletas = AportesSemanales::getTopAtletas($id_escuela, 10);
+        } catch (\Exception $e) {
+            Yii::error("Error en getTopAtletas: " . $e->getMessage());
+        }
 
         $time_top = microtime(true);
         Yii::info("Tiempo en getTopAtletas: " . ($time_top - $time_loop));
 
         // Pendientes totales
-        $pendientes = AportesSemanales::find()
-            ->where(['escuela_id' => $id_escuela, 'estado' => AportesSemanales::ESTADO_PENDIENTE])
-            ->andWhere(['>=', 'fecha_quincena', AportesSemanales::FECHA_INICIO_DEUDAS])
-            ->count();
+        $pendientes = 0;
+        try {
+            $pendientes = AportesSemanales::find()
+                ->where(['escuela_id' => $id_escuela, 'estado' => AportesSemanales::ESTADO_PENDIENTE])
+                ->andWhere(['>=', 'fecha_quincena', AportesSemanales::FECHA_INICIO_DEUDAS])
+                ->count();
+        } catch (\Exception $e) {
+            Yii::error("Error contando pendientes: " . $e->getMessage());
+        }
 
         $time_end = microtime(true);
         Yii::info("Tiempo total de actionIndex: " . ($time_end - $time_start));
@@ -239,10 +252,10 @@ class AportesController extends Controller
      */
     public function actionGestionAtleta($atleta_id = null)
     {
+        $time_start = microtime(true);
         $this->layout = 'escuelas'; 
-        // OBTENER LA ESCUELA ACTUAL DEL USUARIO
-        $id_escuela = Yii::$app->session->get('id_escuela');
         
+        $id_escuela = Yii::$app->session->get('id_escuela');
         if (!$id_escuela) {
             Yii::$app->session->setFlash('error', 'No se ha seleccionado una escuela.');
             return $this->redirect(['index']);
@@ -256,42 +269,47 @@ class AportesController extends Controller
         $quincenasPendientes = [];
         $posicionTop = null;
 
-        // Si se seleccionó un atleta
         if ($atleta_id) {
+            $time_before_atleta = microtime(true);
             $atleta = AtletasRegistro::findOne($atleta_id);
+            Yii::info("Tiempo findOne atleta: " . (microtime(true) - $time_before_atleta));
+
             if ($atleta) {
-                // VERIFICAR PERMISOS RBAC PARA ESTE ATLETA
                 if (!$this->tienePermisoVerAtleta($atleta)) {
                     throw new ForbiddenHttpException('No tiene permisos para gestionar los aportes de este atleta.');
                 }
                 
-                // Verificar que el atleta pertenece a la escuela
                 if ($atleta->id_escuela != $id_escuela) {
                     Yii::$app->session->setFlash('error', 'El atleta no pertenece a su escuela.');
                     return $this->redirect(['gestion-atleta']);
                 }
                 
-                // Generar quincenas automáticamente (SOLO DESDE 15/01/2026)
-                AportesSemanales::generarQuincenasParaAtleta($atleta_id);
-                
-                // Obtener información de deudas (SOLO DESDE 15/01/2026)
+                // --- GENERACIÓN OPTIMIZADA DE QUINCENAS ---
+                $time_before_quincenas = microtime(true);
+                $quincenasGeneradas = AportesSemanales::generarQuincenasParaAtletaMasivo($atleta_id);
+                Yii::info("Tiempo generarQuincenasMasivo: " . (microtime(true) - $time_before_quincenas) . " - Generadas: $quincenasGeneradas");
+
+                // --- HISTORIAL LIMITADO A 50 REGISTROS ---
+                $time_before_historial = microtime(true);
                 $historialDeudas = AportesSemanales::find()
                     ->where(['atleta_id' => $atleta_id])
-                    ->andWhere(['>=', 'fecha_quincena', '2026-01-15']) // FILTRO CRÍTICO
-                    ->orderBy(['fecha_quincena' => SORT_ASC])
+                    ->andWhere(['>=', 'fecha_quincena', '2026-01-15'])
+                    ->orderBy(['fecha_quincena' => SORT_DESC])
+                    ->limit(50)
                     ->asArray()
                     ->all();
+                Yii::info("Tiempo consulta historial (limit 50): " . (microtime(true) - $time_before_historial));
                     
+                $time_before_deuda = microtime(true);
                 $quincenasDeuda = AportesSemanales::find()
                     ->where(['atleta_id' => $atleta_id, 'estado' => 'pendiente'])
-                    ->andWhere(['>=', 'fecha_quincena', '2026-01-15']) // FILTRO CRÍTICO
+                    ->andWhere(['>=', 'fecha_quincena', '2026-01-15'])
                     ->count();
-                    
                 $montoDeuda = AportesSemanales::find()
                     ->where(['atleta_id' => $atleta_id, 'estado' => 'pendiente'])
-                    ->andWhere(['>=', 'fecha_quincena', '2026-01-15']) // FILTRO CRÍTICO
-                    ->sum('monto');
-                $montoDeuda = $montoDeuda ? floatval($montoDeuda) : 0;
+                    ->andWhere(['>=', 'fecha_quincena', '2026-01-15'])
+                    ->sum('monto') ?? 0;
+                Yii::info("Tiempo cálculos deuda: " . (microtime(true) - $time_before_deuda));
                     
                 $quincenasPendientes = array_filter($historialDeudas, function($quincena) {
                     return $quincena['estado'] == 'pendiente';
@@ -299,8 +317,9 @@ class AportesController extends Controller
             }
         }
 
-        // OBTENER ATLETAS PERMITIDOS SEGÚN RBAC
+        $time_before_atletas = microtime(true);
         $atletas = $this->getAtletasPermitidos($id_escuela);
+        Yii::info("Tiempo getAtletasPermitidos: " . (microtime(true) - $time_before_atletas));
 
         // Procesar formularios
         if (Yii::$app->request->isPost) {
@@ -676,6 +695,9 @@ class AportesController extends Controller
             }
             $model->numero_quincena = $this->calcularNumeroQuincena($model->fecha_quincena);
         }
+
+        $time_end = microtime(true);
+        Yii::info("TIEMPO TOTAL actionGestionAtleta: " . ($time_end - $time_start) . " segundos");
 
         return $this->render('gestion-atleta', [
             'model' => $model,

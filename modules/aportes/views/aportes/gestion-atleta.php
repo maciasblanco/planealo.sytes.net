@@ -33,8 +33,15 @@ $this->title = 'Gestión Integral de Aportes - ' . $nombre_escuela;
 $this->params['breadcrumbs'][] = ['label' => 'Aportes Quincenales', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 
-// Obtener tasa actual del dólar desde la base de datos
-$tasaDolarActual = \app\models\TasaDolar::getTasaActual();
+// --- OBTENER TASA DE CAMBIO DESDE LA BASE DE DATOS CON CACHÉ ---
+$tasaDolarActual = Yii::$app->cache->getOrSet('tasa_dolar_actual', function () {
+    // Buscar la última tasa no eliminada en la tabla tasa_dolar
+    $ultimaTasa = \app\models\TasaDolar::find()
+        ->where(['eliminado' => false])
+        ->orderBy(['fecha_tasa' => SORT_DESC, 'id' => SORT_DESC])
+        ->one();
+    return $ultimaTasa ? (float) $ultimaTasa->tasa_dia : \app\models\AportesSemanales::TASA_CAMBIO_FIJA;
+}, 3600); // Caché de 1 hora
 
 // Pre-calcular valores para JavaScript usando constantes del modelo
 $montoQuincenalDolares = \app\models\AportesSemanales::MONTO_QUINCENAL_USD;
@@ -184,7 +191,7 @@ $montoQuincenalBolivares = $tasaDolarActual * $montoQuincenalDolares;
                         <div class="col-md-6">
                             <strong><i class="fas fa-dollar-sign"></i> Tasa de Cambio Actual:</strong> 
                             Bs. <?= number_format($tasaDolarActual, 2) ?> por $1.00
-                            <br><small class="text-muted">Obtenida automáticamente del sistema</small>
+                            <br><small class="text-muted">Última tasa registrada (actualizada cada hora)</small>
                         </div>
                         <div class="col-md-6">
                             <strong>Aporte Quincenal Equivalente:</strong> 
@@ -244,7 +251,7 @@ $montoQuincenalBolivares = $tasaDolarActual * $montoQuincenalDolares;
                                         <div class="form-control-plaintext border rounded p-2 bg-light">
                                             <strong>Bs. <?= number_format($tasaDolarActual, 2) ?></strong>
                                         </div>
-                                        <small class="form-text text-muted">Tasa obtenida automáticamente del sistema</small>
+                                        <small class="form-text text-muted">Última tasa registrada (actualizada cada hora)</small>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
@@ -325,6 +332,7 @@ $montoQuincenalBolivares = $tasaDolarActual * $montoQuincenalDolares;
                                             <strong>Bs. <?= number_format($tasaDolarActual, 2) ?></strong>
                                             <input type="hidden" name="tasa_cambio_flexible" id="tasa-cambio-flexible" value="<?= $tasaDolarActual ?>">
                                         </div>
+                                        <small class="form-text text-muted">Última tasa registrada (actualizada cada hora)</small>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
@@ -418,6 +426,7 @@ $montoQuincenalBolivares = $tasaDolarActual * $montoQuincenalDolares;
                                                 <strong>Bs. <?= number_format($tasaDolarActual, 2) ?></strong>
                                                 <input type="hidden" id="tasa-cambio-multiple" name="tasa_cambio_multiple" value="<?= $tasaDolarActual ?>">
                                             </div>
+                                            <small class="form-text text-muted">Última tasa registrada (actualizada cada hora)</small>
                                         </div>
                                     </div>
                                     <div class="col-md-6">
@@ -494,6 +503,7 @@ $montoQuincenalBolivares = $tasaDolarActual * $montoQuincenalDolares;
                                             <strong>Bs. <?= number_format($tasaDolarActual, 2) ?></strong>
                                             <input type="hidden" id="tasa-cambio-adelanto" name="tasa_cambio_adelanto" value="<?= $tasaDolarActual ?>">
                                         </div>
+                                        <small class="form-text text-muted">Última tasa registrada (actualizada cada hora)</small>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
