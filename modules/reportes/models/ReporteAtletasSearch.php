@@ -25,9 +25,11 @@ class ReporteAtletasSearch extends AtletasRegistro
     {
         $query = AtletasRegistro::find()
             ->where(['eliminado' => false])
-            ->with(['escuela', 'categoria', 'representante']);
+            // IMPORTANTE: joinWith permite ordenar por campos de la tabla relacionada 'categoria'
+            ->joinWith(['categoria'])
+            ->with(['escuela', 'representante']);
 
-        // Aplicar filtros según el rol del usuario
+        // Filtros según rol del usuario
         if (Yii::$app->user->can('representante')) {
             $representante = \app\models\RegistroRepresentantes::find()
                 ->where(['user_id' => Yii::$app->user->id])
@@ -39,30 +41,32 @@ class ReporteAtletasSearch extends AtletasRegistro
             $query->andWhere(['user_id' => Yii::$app->user->id]);
         }
 
-        // joinWith para permitir ordenar por categoría
-        $query->joinWith(['categoria']);
-
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
             'sort' => [
                 'defaultOrder' => [
-                    'categoria.nombre' => SORT_ASC,
+                    // Ordenar por el nombre de la categoría (campo de la tabla relacionada)
+                    'categoria.nombre_venezuela' => SORT_ASC,
+                    // Luego por primer apellido
                     'p_apellido' => SORT_ASC,
-                    'p_nombre' => SORT_ASC,
                 ],
+                // Definir atributos para que el ordenamiento por estos campos funcione también en clics
                 'attributes' => [
                     'p_nombre',
-                    'p_apellido',
                     'identificacion',
                     'id_escuela',
                     'id_categoria',
-                    'sexo',
-                    'categoria.nombre' => [
-                        'asc' => ['categoria_atletas.nombre' => SORT_ASC],
-                        'desc' => ['categoria_atletas.nombre' => SORT_DESC],
+                    'categoria.nombre_venezuela' => [
+                        'asc' => ['categoria.nombre_venezuela' => SORT_ASC],
+                        'desc' => ['categoria.nombre_venezuela' => SORT_DESC],
                         'label' => 'Categoría',
                     ],
+                    'p_apellido',
+                    // Podrías agregar otros atributos si los necesitas
                 ],
+            ],
+            'pagination' => [
+                'pageSize' => 20, // Ajusta según convenga
             ],
         ]);
 

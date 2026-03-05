@@ -51,18 +51,19 @@ $puedeGestionarBecas = $esContador || $esSuperusuario;
                     return $model->escuela ? $model->escuela->nombre : 'N/A';
                 }
             ],
-            // Categoría
+            // CATEGORÍA CORREGIDA: usa el getter categoriaNombre que combina asignada y calculada
             [
-                'attribute' => 'id_categoria',
                 'label' => 'Categoría',
                 'value' => function($model) {
-                    return $model->categoria ? $model->categoria->nombre : 'Sin categoría';
+                    return $model->categoriaNombre;
                 },
                 'filter' => \yii\helpers\ArrayHelper::map(
                     \app\models\CategoriaAtletas::find()->orderBy('nombre')->all(),
                     'id',
                     'nombre'
                 ),
+                // Atributo para filtrado (filtra por id_categoria, solo asignadas)
+                'attribute' => 'id_categoria',
             ],
             // Beca activa (muestra el nombre del tipo de beca si existe)
             [

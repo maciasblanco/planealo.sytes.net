@@ -94,7 +94,25 @@ class ReportesController extends Controller
         $datosAtletas = [];
         foreach ($atletas as $atleta) {
             $datos = $this->obtenerDatosConsolidados($atleta);
-            $datos['becaActiva'] = $this->tieneBecaActiva($atleta->id);
+            
+            // Obtener beca activa y su porcentaje de descuento
+            $becaActiva = Beca::find()
+                ->where(['id_atleta' => $atleta->id, 'estado' => 'ACTIVA'])
+                ->one();
+            
+            $porcentajeBeca = 0;
+            $becaNombre = null;
+            if ($becaActiva && $becaActiva->tipoBeca) {
+                $porcentajeBeca = $becaActiva->tipoBeca->porcentaje_descuento;
+                $becaNombre = $becaActiva->tipoBeca->nombre;
+            }
+            
+            // Calcular deuda con descuento aplicado
+            $deudaOriginal = $datos['deudaPendiente'];
+            $deudaConDescuento = $deudaOriginal * (1 - $porcentajeBeca / 100);
+            $datos['deudaPendiente'] = round($deudaConDescuento, 2);
+            $datos['becaNombre'] = $becaNombre;
+            
             $datosAtletas[] = $datos;
         }
 
@@ -386,16 +404,6 @@ class ReportesController extends Controller
             return $atleta->user_id == $user->id;
         }
         return false;
-    }
-
-    /**
-     * Determina si un atleta tiene una beca activa.
-     */
-    private function tieneBecaActiva($atleta_id)
-    {
-        return Beca::find()
-            ->where(['id_atleta' => $atleta_id, 'estado' => 'ACTIVA'])
-            ->exists();
     }
 
     /**
