@@ -340,7 +340,7 @@ class AportesSemanales extends ActiveRecord
 
                 if ($ultimoAporte) {
                     $fechaActual = new \DateTime($ultimoAporte->fecha_quincena);
-                    $fechaActual->modify('+15 days');
+                    $fechaActual = self::obtenerSiguienteQuincena($fechaActual);
                 } else {
                     $fechaActual = new \DateTime(self::calcularProximaQuincena(new \DateTime()));
                 }
@@ -366,7 +366,7 @@ class AportesSemanales extends ActiveRecord
                             $quincenasNuevas++;
                         }
                     }
-                    $fechaActual->modify('+15 days');
+                    $fechaActual = self::obtenerSiguienteQuincena($fechaActual);
                 }
 
                 if ($montoSobrante > 0) {
@@ -499,7 +499,7 @@ class AportesSemanales extends ActiveRecord
                     $pagadas++;
                 }
             }
-            $fechaActual->modify('+15 days');
+            $fechaActual = self::obtenerSiguienteQuincena($fechaActual);
         }
         return $pagadas;
     }
@@ -756,11 +756,24 @@ class AportesSemanales extends ActiveRecord
         $anio = (int)$fecha->format('Y');
 
         if ($dia < 15) {
+            // Si es antes del 15, la próxima quincena es el 15 de este mes
             return $anio . '-' . str_pad($mes, 2, '0', STR_PAD_LEFT) . '-15';
         } else {
-            $fecha->modify('first day of next month');
+            // Si es 15 o después, la próxima quincena es el último día del mes actual
+            $fecha->modify('last day of this month');
             return $fecha->format('Y-m-d');
         }
+    }
+
+    /**
+     * Obtiene la siguiente fecha de quincena a partir de una fecha dada (como objeto DateTime).
+     * @param \DateTime $fecha
+     * @return \DateTime
+     */
+    private static function obtenerSiguienteQuincena(\DateTime $fecha)
+    {
+        $fechaStr = self::calcularProximaQuincena($fecha);
+        return new \DateTime($fechaStr);
     }
 
     /**
@@ -868,19 +881,16 @@ class AportesSemanales extends ActiveRecord
      */
     public static function generarQuincenasMasivo($escuela_id)
     {
-        $fechaInicio = self::FECHA_INICIO_DEUDAS; // '2026-01-15'
-        $hoy = date('Y-m-d');
-        $monto = self::MONTO_QUINCENAL_USD;
-
-        // Generar lista de fechas de quincena con su número correspondiente
+        $fechaInicio = new \DateTime(self::FECHA_INICIO_DEUDAS);
+        $hoy = new \DateTime();
         $fechasConNumero = [];
-        $current = new \DateTime($fechaInicio);
-        $end = new \DateTime($hoy);
-        while ($current <= $end) {
-            $fecha = $current->format('Y-m-d');
-            $numero = self::calcularNumeroQuincenaExacta($fecha);
-            $fechasConNumero[] = ['fecha' => $fecha, 'numero' => $numero];
-            $current->modify('+15 days');
+        $fechasQuincenales = self::calcularFechasQuincenalesPeriodo($fechaInicio, $hoy);
+
+        foreach ($fechasQuincenales as $fecha) {
+            $fechasConNumero[] = [
+                'fecha' => $fecha,
+                'numero' => self::calcularNumeroQuincenaExacta($fecha)
+            ];
         }
 
         if (empty($fechasConNumero)) {
@@ -936,7 +946,7 @@ class AportesSemanales extends ActiveRecord
 
             $params = [
                 ':escuela_id' => $escuela_id,
-                ':monto' => $monto,
+                ':monto' => self::MONTO_QUINCENAL_USD,
                 ':estado' => self::ESTADO_PENDIENTE,
                 ':tipo_aporte' => self::TIPO_APORTE_NORMAL,
                 ':tipo_cambio' => self::TASA_CAMBIO_FIJA,
@@ -992,7 +1002,7 @@ class AportesSemanales extends ActiveRecord
     }
 
     // =========================================================================
-    // NUEVO MÉTODO OPTIMIZADO PARA UN SOLO ATLETA (2026-03-04)
+    // NUEVO MÉTODO OPTIMIZADO PARA UN SOLO ATLETA (2026-03-04) - CORREGIDO
     // =========================================================================
 
     /**
@@ -1007,19 +1017,16 @@ class AportesSemanales extends ActiveRecord
             return 0;
         }
 
-        $fechaInicio = self::FECHA_INICIO_DEUDAS;
-        $hoy = date('Y-m-d');
-        $monto = self::MONTO_QUINCENAL_USD;
-
-        // Generar lista de fechas de quincena con su número correspondiente
+        $fechaInicio = new \DateTime(self::FECHA_INICIO_DEUDAS);
+        $hoy = new \DateTime();
         $fechasConNumero = [];
-        $current = new \DateTime($fechaInicio);
-        $end = new \DateTime($hoy);
-        while ($current <= $end) {
-            $fecha = $current->format('Y-m-d');
-            $numero = self::calcularNumeroQuincenaExacta($fecha);
-            $fechasConNumero[] = ['fecha' => $fecha, 'numero' => $numero];
-            $current->modify('+15 days');
+        $fechasQuincenales = self::calcularFechasQuincenalesPeriodo($fechaInicio, $hoy);
+
+        foreach ($fechasQuincenales as $fecha) {
+            $fechasConNumero[] = [
+                'fecha' => $fecha,
+                'numero' => self::calcularNumeroQuincenaExacta($fecha)
+            ];
         }
 
         if (empty($fechasConNumero)) {
@@ -1058,7 +1065,7 @@ class AportesSemanales extends ActiveRecord
         $params = [
             ':atleta_id' => $atleta_id,
             ':escuela_id' => $atleta->id_escuela,
-            ':monto' => $monto,
+            ':monto' => self::MONTO_QUINCENAL_USD,
             ':estado' => self::ESTADO_PENDIENTE,
             ':tipo_aporte' => self::TIPO_APORTE_NORMAL,
             ':tipo_cambio' => self::TASA_CAMBIO_FIJA,

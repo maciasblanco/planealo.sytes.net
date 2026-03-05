@@ -31,20 +31,40 @@ function emailLink($asunto, $cuerpo) {
     return "mailto:?subject=$asunto&body=$cuerpo";
 }
 
-// Preparar texto resumen para compartir
+// Calcular monto con descuento de beca si aplica
+$descuento = 0;
+$totalConDescuento = $totalDeuda;
+if ($becaActiva && $porcentajeBeca > 0) {
+    $descuento = $totalDeuda * ($porcentajeBeca / 100);
+    $totalConDescuento = $totalDeuda - $descuento;
+}
+
+// Preparar texto resumen para compartir (ahora incluye el total con descuento)
 $resumen = "NOTIFICACIÓN DE COBRO\n";
 $resumen .= "Atleta: {$atleta->p_nombre} {$atleta->p_apellido}\n";
 if ($representante) {
     $resumen .= "Representante: {$representante->p_nombre} {$representante->p_apellido} - CI: {$representante->identificacion}\n";
 }
-$resumen .= "Monto total adeudado: $" . number_format($totalDeuda, 2) . "\n";
-if ($porcentajeBeca > 0) {
-    $descuento = $totalDeuda * ($porcentajeBeca / 100);
-    $resumen .= "Beca activa: {$porcentajeBeca}% de descuento (equivalente a $" . number_format($descuento, 2) . ")\n";
+if ($becaActiva) {
+    $resumen .= "Total adeudado (sin beca): $" . number_format($totalDeuda, 2) . "\n";
+    $resumen .= "Beca activa: {$porcentajeBeca}% de descuento\n";
+    $resumen .= "Descuento: $" . number_format($descuento, 2) . "\n";
+    $resumen .= "Total a pagar (con beca): $" . number_format($totalConDescuento, 2) . "\n";
+} else {
+    $resumen .= "Monto total adeudado: $" . number_format($totalDeuda, 2) . "\n";
 }
 $resumen .= "Tasa de cambio: Bs. " . number_format($tasaCambio, 2) . " por USD\n";
 $resumen .= "Datos para el pago: $datosPago\n";
 $resumen .= "Generado: " . date('d/m/Y H:i');
+
+// --- Obtener datos de sesión para el logo ---
+$logoUrl = Yii::$app->session->get('logo_url');
+$nombreEscuela = Yii::$app->session->get('nombre_escuela', $escuela->nombre ?? '');
+$tamanoLogo = Yii::$app->session->get('tamano_logo', '200x200');
+list($ancho, $alto) = explode('x', $tamanoLogo);
+
+// Calcular número de pagos atrasados
+$numDeudas = count($deudas);
 ?>
 
 <div class="recibo-cobro">
@@ -54,13 +74,17 @@ $resumen .= "Generado: " . date('d/m/Y H:i');
                 <div class="box-header with-border">
                     <div class="row">
                         <div class="col-xs-4">
-                            <?php if ($escuela && $escuela->logo): ?>
-                                <img src="<?= Yii::getAlias('@web') . '/' . $escuela->logo ?>" 
-                                     alt="Logo <?= Html::encode($escuela->nombre) ?>" 
-                                     style="max-height: 80px; max-width: 200px;">
+                            <?php if ($logoUrl): ?>
+                                <img src="<?= $logoUrl ?>" 
+                                     alt="Logo <?= Html::encode($nombreEscuela) ?>" 
+                                     style="max-height: <?= $alto ?>px; max-width: <?= $ancho ?>px;"
+                                     onerror="this.style.display='none'; this.parentNode.querySelector('.logo-fallback').classList.remove('d-none');">
+                                <div class="logo-fallback d-none" style="width: <?= $ancho ?>px; height: <?= $alto ?>px; background: #f0f0f0; display: flex; align-items: center; justify-content: center; color: #999;">
+                                    <?= Html::encode($nombreEscuela) ?>
+                                </div>
                             <?php else: ?>
-                                <div style="width: 200px; height: 80px; background: #f0f0f0; display: flex; align-items: center; justify-content: center; color: #999;">
-                                    Logo de la escuela
+                                <div style="width: <?= $ancho ?>px; height: <?= $alto ?>px; background: #f0f0f0; display: flex; align-items: center; justify-content: center; color: #999;">
+                                    <?= Html::encode($nombreEscuela) ?>
                                 </div>
                             <?php endif; ?>
                         </div>
@@ -95,18 +119,24 @@ $resumen .= "Generado: " . date('d/m/Y H:i');
 
                     <hr>
 
-                    <!-- Información de deuda y beca -->
+                    <!-- Información de deuda y beca (modificada para reflejar descuento) -->
                     <div class="row">
                         <div class="col-md-6">
                             <h4>Resumen de Deuda</h4>
-                            <p><strong>Total adeudado:</strong> <span style="font-size: 1.5em; color: #dc3545;">$<?= number_format($totalDeuda, 2) ?></span></p>
-                            <p><strong>Equivalente en Bs:</strong> Bs. <?= number_format($totalDeuda * $tasaCambio, 2) ?> (tasa Bs. <?= number_format($tasaCambio, 2) ?>)</p>
+                            <?php if ($becaActiva): ?>
+                                <p><strong>Total adeudado (sin beca):</strong> <span style="font-size: 1.2em;">$<?= number_format($totalDeuda, 2) ?></span></p>
+                                <p><strong>Descuento por beca (<?= $porcentajeBeca ?>%):</strong> <span class="text-success">- $<?= number_format($descuento, 2) ?></span></p>
+                                <p><strong>Total a pagar (con beca):</strong> <span style="font-size: 1.5em; color: #28a745;">$<?= number_format($totalConDescuento, 2) ?></span></p>
+                            <?php else: ?>
+                                <p><strong>Total adeudado:</strong> <span style="font-size: 1.5em; color: #dc3545;">$<?= number_format($totalDeuda, 2) ?></span></p>
+                            <?php endif; ?>
+                            <p><strong>Equivalente en Bs:</strong> Bs. <?= number_format($totalConDescuento * $tasaCambio, 2) ?> (tasa Bs. <?= number_format($tasaCambio, 2) ?>)</p>
+                            <p><strong>Número de pagos atrasados:</strong> <?= $numDeudas ?></p>
                         </div>
                         <div class="col-md-6">
                             <h4>Beca Activa</h4>
                             <?php if ($becaActiva): ?>
                                 <p><span class="badge badge-success">Sí</span> - <?= Html::encode($becaActiva->tipoBeca->nombre ?? 'Beca') ?> (<?= $porcentajeBeca ?>% descuento)</p>
-                                <p><strong>Descuento aproximado:</strong> $<?= number_format($totalDeuda * ($porcentajeBeca / 100), 2) ?></p>
                             <?php else: ?>
                                 <p><span class="badge badge-secondary">No</span></p>
                             <?php endif; ?>
@@ -115,8 +145,8 @@ $resumen .= "Generado: " . date('d/m/Y H:i');
 
                     <hr>
 
-                    <!-- Detalle de quincenas pendientes -->
-                    <h4>Quincenas Pendientes</h4>
+                    <!-- Detalle de quincenas pendientes (muestra montos originales sin descuento) -->
+                    <h4>Quincenas Pendientes (montos base)</h4>
                     <?php if (empty($deudas)): ?>
                         <p class="text-success">El atleta no tiene deudas pendientes.</p>
                     <?php else: ?>
@@ -126,7 +156,7 @@ $resumen .= "Generado: " . date('d/m/Y H:i');
                                     <tr>
                                         <th>Fecha Quincena</th>
                                         <th>N° Quincena</th>
-                                        <th>Monto (USD)</th>
+                                        <th>Monto Base (USD)</th>
                                         <th>Monto Estimado (Bs)</th>
                                         <th>Días de atraso</th>
                                     </tr>
@@ -146,13 +176,32 @@ $resumen .= "Generado: " . date('d/m/Y H:i');
                                 </tbody>
                                 <tfoot>
                                     <tr>
-                                        <th colspan="2" class="text-right">Total:</th>
+                                        <th colspan="2" class="text-right">Total base:</th>
                                         <th class="text-right">$<?= number_format($totalDeuda, 2) ?></th>
                                         <th class="text-right">Bs. <?= number_format($totalDeuda * $tasaCambio, 2) ?></th>
                                         <th></th>
                                     </tr>
+                                    <?php if ($becaActiva): ?>
+                                    <tr class="table-success">
+                                        <th colspan="2" class="text-right">Total con beca (<?= $porcentajeBeca ?>% desc.):</th>
+                                        <th class="text-right text-success">$<?= number_format($totalConDescuento, 2) ?></th>
+                                        <th class="text-right text-success">Bs. <?= number_format($totalConDescuento * $tasaCambio, 2) ?></th>
+                                        <th></th>
+                                    </tr>
+                                    <?php endif; ?>
                                 </tfoot>
                             </table>
+                        </div>
+                        
+                        <!-- NOTIFICACIÓN DE POLÍTICA DE SUSPENSIÓN (siempre visible) -->
+                        <div class="alert alert-info mt-3" style="border-left: 5px solid #17a2b8; background-color: #d1ecf1; color: #0c5460;">
+                            <i class="fas fa-info-circle" style="font-size: 1.5rem; margin-right: 10px;"></i>
+                            <strong>Política de la escuela:</strong> Al acumular <strong>3 o más pagos atrasados</strong>, 
+                            el atleta será suspendido temporalmente de las prácticas hasta que regularice su situación. 
+                            Actualmente, este atleta tiene <strong><?= $numDeudas ?> pago(s) atrasado(s)</strong>.
+                            <?php if ($numDeudas >= 3): ?>
+                                <br><span class="text-danger"><i class="fas fa-exclamation-triangle"></i> ¡Ha alcanzado el límite! Se aplicará la suspensión si no se regulariza.</span>
+                            <?php endif; ?>
                         </div>
                     <?php endif; ?>
 
@@ -198,6 +247,10 @@ $this->registerCss("
     .btn, .box-footer, .breadcrumb, .navbar, .footer, .back-to-top, .sidebar-left, .main-footer {
         display: none !important;
     }
+    img {
+        max-width: 100% !important;
+        height: auto !important;
+    }
     .box {
         border: 1px solid #000 !important;
         box-shadow: none !important;
@@ -216,6 +269,11 @@ $this->registerCss("
     table th, table td {
         border: 1px solid #000;
         padding: 5px;
+    }
+    .alert {
+        border: 1px solid #17a2b8 !important;
+        background-color: #fff !important;
+        color: #000 !important;
     }
 }
 ");

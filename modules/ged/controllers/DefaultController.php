@@ -227,8 +227,8 @@ class DefaultController extends Controller
     }
 
     /**
-     * ✅ ACTUALIZAR SESIÓN ESCUELA - MÉTODO AUXILIAR
-     * Actualiza la sesión con los datos de la escuela
+     * ✅ ACTUALIZAR SESIÓN ESCUELA - MÉTODO AUXILIAR CORREGIDO
+     * Actualiza la sesión con los datos de la escuela, incluyendo la URL del logo.
      */
     private function actualizarSesionEscuela($id_escuela)
     {
@@ -238,6 +238,13 @@ class DefaultController extends Controller
             $session = Yii::$app->session;
             $session->set('id_escuela', $escuela->id);
             $session->set('nombre_escuela', $escuela->nombre);
+            
+            // ✅ Guardar URL completa del logo (si existe)
+            $session->set('logo_url', $escuela->getLogoUrl());
+            
+            // ✅ Tamaño por defecto del logo (para uso en vistas)
+            $session->set('tamano_logo', '200x200');
+            
             $session->set('escuela_activa', true);
             $session->set('escuela_ultima_actualizacion', time());
             
@@ -248,8 +255,8 @@ class DefaultController extends Controller
     }
 
     /**
-     * ✅ LIMPIAR SESIÓN ESCUELA - MÉTODO AUXILIAR MEJORADO
-     * Elimina todos los datos de escuela de la sesión de forma segura
+     * ✅ LIMPIAR SESIÓN ESCUELA - MÉTODO AUXILIAR CORREGIDO
+     * Elimina todos los datos de escuela de la sesión de forma segura.
      */
     private function limpiarSesionEscuela()
     {
@@ -258,6 +265,8 @@ class DefaultController extends Controller
         // ✅ NUEVO SISTEMA GED
         $session->remove('id_escuela');
         $session->remove('nombre_escuela');
+        $session->remove('logo_url');
+        $session->remove('tamano_logo');
         $session->remove('escuela_activa');
         $session->remove('escuela_ultima_actualizacion');
         $session->remove('en_redireccion_ged');

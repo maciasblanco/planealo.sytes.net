@@ -39,11 +39,31 @@ class ReporteAtletasSearch extends AtletasRegistro
             $query->andWhere(['user_id' => Yii::$app->user->id]);
         }
 
+        // joinWith para permitir ordenar por categoría
+        $query->joinWith(['categoria']);
+
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
             'sort' => [
-                'defaultOrder' => ['p_apellido' => SORT_ASC]
-            ]
+                'defaultOrder' => [
+                    'categoria.nombre' => SORT_ASC,
+                    'p_apellido' => SORT_ASC,
+                    'p_nombre' => SORT_ASC,
+                ],
+                'attributes' => [
+                    'p_nombre',
+                    'p_apellido',
+                    'identificacion',
+                    'id_escuela',
+                    'id_categoria',
+                    'sexo',
+                    'categoria.nombre' => [
+                        'asc' => ['categoria_atletas.nombre' => SORT_ASC],
+                        'desc' => ['categoria_atletas.nombre' => SORT_DESC],
+                        'label' => 'Categoría',
+                    ],
+                ],
+            ],
         ]);
 
         $this->load($params);

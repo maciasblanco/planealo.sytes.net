@@ -15,6 +15,11 @@ use yii\helpers\Url;
 
 $this->title = 'Reporte de Atletas';
 $this->params['breadcrumbs'][] = $this->title;
+
+// Determinar si el usuario actual es contador o superusuario (ID 1)
+$esContador = Yii::$app->user->can('contador');
+$esSuperusuario = Yii::$app->user->id == 1;
+$puedeGestionarBecas = $esContador || $esSuperusuario;
 ?>
 
 <div class="reporte-atletas-index">
@@ -46,25 +51,45 @@ $this->params['breadcrumbs'][] = $this->title;
                     return $model->escuela ? $model->escuela->nombre : 'N/A';
                 }
             ],
-            // Columna de beca activa
+            // Categoría
+            [
+                'attribute' => 'id_categoria',
+                'label' => 'Categoría',
+                'value' => function($model) {
+                    return $model->categoria ? $model->categoria->nombre : 'Sin categoría';
+                },
+                'filter' => \yii\helpers\ArrayHelper::map(
+                    \app\models\CategoriaAtletas::find()->orderBy('nombre')->all(),
+                    'id',
+                    'nombre'
+                ),
+            ],
+            // Beca activa (muestra el nombre del tipo de beca si existe)
             [
                 'label' => 'Beca Activa',
                 'format' => 'raw',
                 'value' => function($model) use ($datosAtletas) {
-                    // Buscar en $datosAtletas el índice correspondiente (esto es un hack rápido)
-                    // En un caso real, sería mejor agregar un método al modelo o pasar un array indexado
+                    $becaNombre = null;
                     foreach ($datosAtletas as $dato) {
                         if ($dato['atleta']->id == $model->id) {
-                            $tieneBeca = $dato['becaActiva'];
+                            $becaNombre = $dato['becaNombre'] ?? null;
                             break;
                         }
                     }
-                    return $tieneBeca 
-                        ? '<span class="badge badge-success">Sí</span>' 
-                        : '<span class="badge badge-secondary">No</span>';
+                    if ($becaNombre) {
+                        return Html::tag('span', Html::encode($becaNombre), [
+                            'class' => 'badge',
+                            'style' => 'background-color: #e2e3e5; color: #000; font-weight: normal;'
+                        ]);
+                    } else {
+                        return Html::tag('span', 'No', [
+                            'class' => 'badge',
+                            'style' => 'background-color: #f8f9fa; color: #6c757d; border: 1px solid #ced4da; font-weight: normal;'
+                        ]);
+                    }
                 }
             ],
-            // Columnas de resumen (opcional, ya existentes)
+            // Deuda pendiente
             [
                 'label' => 'Deuda Pendiente',
                 'value' => function($model) use ($datosAtletas) {
@@ -76,6 +101,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     return '$0.00';
                 }
             ],
+            // % Asistencia del mes
             [
                 'label' => '% Asistencia (mes)',
                 'value' => function($model) use ($datosAtletas) {
@@ -93,32 +119,46 @@ $this->params['breadcrumbs'][] = $this->title;
                 'template' => '{view} {recibo-pago} {recibo-cobro} {gestion-beca}',
                 'buttons' => [
                     'view' => function ($url, $model) {
-                        return Html::a('<i class="fas fa-chart-bar"></i>', 
+                        return Html::a('<i class="fas fa-chart-bar"></i> Estadísticas', 
                             ['estadisticas-atleta', 'id' => $model->id], 
-                            ['title' => 'Estadísticas', 'class' => 'btn btn-info btn-xs']
+                            [
+                                'title' => 'Ver estadísticas detalladas del atleta',
+                                'class' => 'btn btn-info btn-xs',
+                                'style' => 'margin-right: 2px;'
+                            ]
                         );
                     },
                     'recibo-pago' => function ($url, $model) {
-                        return Html::a('<i class="fas fa-receipt"></i>', 
+                        return Html::a('<i class="fas fa-receipt"></i> Pago', 
                             ['recibo-pago', 'id' => $model->id], 
-                            ['title' => 'Recibo de Pago (Fase 2)', 'class' => 'btn btn-success btn-xs']
+                            [
+                                'title' => 'Generar recibo de pago',
+                                'class' => 'btn btn-success btn-xs',
+                                'style' => 'margin-right: 2px;'
+                            ]
                         );
                     },
                     'recibo-cobro' => function ($url, $model) {
-                        return Html::a('<i class="fas fa-file-invoice"></i>', 
+                        return Html::a('<i class="fas fa-file-invoice"></i> Cobro', 
                             ['recibo-cobro', 'id' => $model->id], 
-                            ['title' => 'Recibo de Cobro (Fase 3)', 'class' => 'btn btn-warning btn-xs']
+                            [
+                                'title' => 'Generar notificación de cobro',
+                                'class' => 'btn btn-warning btn-xs',
+                                'style' => 'margin-right: 2px;'
+                            ]
                         );
                     },
-                    'gestion-beca' => function ($url, $model) use ($esPersonalAutorizado) {
-                        if (!$esPersonalAutorizado) {
+                    'gestion-beca' => function ($url, $model) use ($puedeGestionarBecas) {
+                        if (!$puedeGestionarBecas) {
                             return '';
                         }
-                        // Aquí deberías colocar la URL correcta para gestionar becas
-                        // Por ejemplo, si existe un controlador BecaController con actionAsignar
-                        return Html::a('<i class="fas fa-medal"></i>', 
-                            ['/becas/beca/asignar', 'id_atleta' => $model->id], 
-                            ['title' => 'Gestionar Beca', 'class' => 'btn btn-primary btn-xs']
+                        return Html::a('<i class="fas fa-medal"></i> Beca', 
+                            ['/aportes/aportes/asignar-beca', 'id_atleta' => $model->id], 
+                            [
+                                'title' => 'Asignar o gestionar beca',
+                                'class' => 'btn btn-primary btn-xs',
+                                'style' => 'margin-right: 2px;'
+                            ]
                         );
                     },
                 ],

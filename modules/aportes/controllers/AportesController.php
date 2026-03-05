@@ -46,6 +46,16 @@ use app\models\BecaHistorial;  // AÑADIDO para registro histórico
  * ✅ ACTUALIZADO: Monto quincenal $5.00 (antes $4.00)
  * ✅ MEJORADO: Cálculo de número de quincena unificado en el controlador
  * ✅ MEJORADO: Pagos flexibles y adelantados ahora etiquetados correctamente
+ * 
+ * MODIFICADO: Se añade redirección a comprobante después de cualquier pago.
+ * Se crea acción comprobante que muestra el detalle y permite compartir.
+ * 
+ * MODIFICACIÓN 2026-03-05: Corrección en historial de becas – se elimina asignación de
+ * propiedades inexistentes en BecaHistorial y se usan campos correctos (id_beca,
+ * fecha_original_inicio, fecha_original_fin, motivo, usuario_creacion).
+ * 
+ * MODIFICACIÓN 2026-03-05 (2): Se asigna fecha_reactivacion = fecha_asignacion para
+ * cumplir con la restricción NOT NULL de la columna fecha_reactivacion.
  */
 class AportesController extends Controller
 {
@@ -353,6 +363,7 @@ class AportesController extends Controller
                                 ->all();
                             
                             $deudasLiquidadas = 0;
+                            $ids = []; // IDs de aportes procesados
                             if (!empty($deudasPendientes)) {
                                 foreach ($deudasPendientes as $deuda) {
                                     $deuda->estado = 'pagado';
@@ -361,6 +372,7 @@ class AportesController extends Controller
                                     $deuda->comentarios = $model->comentarios . " (Liquidación de deuda pendiente)";
                                     if ($deuda->save()) {
                                         $deudasLiquidadas++;
+                                        $ids[] = $deuda->id;
                                     } else {
                                         throw new \Exception("Error al liquidar deuda: " . implode(', ', $deuda->getErrors()));
                                     }
@@ -371,12 +383,16 @@ class AportesController extends Controller
                                 );
                             } else {
                                 if ($model->save()) {
+                                    $ids[] = $model->id;
                                     Yii::$app->session->setFlash('success', 'Aporte individual registrado exitosamente.');
                                 } else {
                                     throw new \Exception('Error al guardar el aporte: ' . implode(', ', $model->getErrorSummary(true)));
                                 }
                             }
                             $transaction->commit();
+                            if (!empty($ids)) {
+                                return $this->redirect(['comprobante', 'ids' => implode(',', $ids)]);
+                            }
                             return $this->redirect(['gestion-atleta', 'atleta_id' => $model->atleta_id]);
                         } catch (\Exception $e) {
                             $transaction->rollBack();
@@ -423,6 +439,7 @@ class AportesController extends Controller
                         $montoDisponible = $monto_flexible;
                         $deudasLiquidadas = 0;
                         $quincenasNuevas = 0;
+                        $ids = []; // IDs de aportes procesados
                         
                         foreach ($deudasPendientes as $deuda) {
                             if ($montoDisponible >= AportesSemanales::MONTO_QUINCENAL_USD) {
@@ -433,6 +450,7 @@ class AportesController extends Controller
                                 if ($deuda->save()) {
                                     $montoDisponible -= AportesSemanales::MONTO_QUINCENAL_USD;
                                     $deudasLiquidadas++;
+                                    $ids[] = $deuda->id;
                                 } else {
                                     throw new \Exception("Error al liquidar deuda flexible: " . implode(', ', $deuda->getErrors()));
                                 }
@@ -452,10 +470,10 @@ class AportesController extends Controller
                             
                             if ($ultimo_aporte) {
                                 $fecha_actual = new \DateTime($ultimo_aporte->fecha_quincena);
-                                $fecha_actual->modify('+15 days');
+                                $fecha_actual = AportesSemanales::obtenerSiguienteQuincena($fecha_actual);
                             } else {
                                 $fecha_actual = new \DateTime();
-                                $fecha_actual = new \DateTime($this->calcularProximaQuincena($fecha_actual));
+                                $fecha_actual = new \DateTime(AportesSemanales::calcularProximaQuincena($fecha_actual));
                             }
 
                             for ($i = 0; $i < $quincenas_completas; $i++) {
@@ -470,20 +488,23 @@ class AportesController extends Controller
                                     $aporte->atleta_id = $atleta_id_flexible;
                                     $aporte->escuela_id = $atleta->id_escuela;
                                     $aporte->fecha_quincena = $fecha_quincena;
-                                    $aporte->numero_quincena = $this->calcularNumeroQuincena($fecha_quincena);
+                                    $aporte->numero_quincena = AportesSemanales::calcularNumeroQuincenaExacta($fecha_quincena);
                                     $aporte->monto = AportesSemanales::MONTO_QUINCENAL_USD;
                                     $aporte->estado = 'pagado';
                                     $aporte->fecha_pago = $fecha_pago_flexible;
                                     $aporte->metodo_pago = $metodo_pago_flexible;
                                     $aporte->comentarios = $comentarios_flexible . " - Aporte flexible quincena completa (después de liquidar deudas)";
                                     $aporte->tipo_aporte = AportesSemanales::TIPO_APORTE_FLEXIBLE;
+                                    $aporte->tipo_cambio = AportesSemanales::obtenerTasaDolar($fecha_pago_flexible);
+                                    $aporte->monto_bs_original = $aporte->monto * $aporte->tipo_cambio;
 
                                     if ($aporte->save()) {
                                         $quincenasNuevas++;
+                                        $ids[] = $aporte->id;
                                     }
                                 }
 
-                                $fecha_actual->modify('+15 days');
+                                $fecha_actual = AportesSemanales::obtenerSiguienteQuincena($fecha_actual);
                             }
 
                             if ($monto_restante > 0) {
@@ -498,7 +519,7 @@ class AportesController extends Controller
                                     $aporte_parcial->atleta_id = $atleta_id_flexible;
                                     $aporte_parcial->escuela_id = $atleta->id_escuela;
                                     $aporte_parcial->fecha_quincena = $fecha_quincena;
-                                    $aporte_parcial->numero_quincena = $this->calcularNumeroQuincena($fecha_quincena);
+                                    $aporte_parcial->numero_quincena = AportesSemanales::calcularNumeroQuincenaExacta($fecha_quincena);
                                     $aporte_parcial->monto = $monto_restante;
                                     $aporte_parcial->estado = 'pagado';
                                     $aporte_parcial->fecha_pago = $fecha_pago_flexible;
@@ -506,9 +527,12 @@ class AportesController extends Controller
                                     $aporte_parcial->comentarios = $comentarios_flexible . " - Aporte flexible parcial (después de liquidar deudas)";
                                     $aporte_parcial->tipo_aporte = AportesSemanales::TIPO_APORTE_FLEXIBLE;
                                     $aporte_parcial->pago_parcial = true;
+                                    $aporte_parcial->tipo_cambio = AportesSemanales::obtenerTasaDolar($fecha_pago_flexible);
+                                    $aporte_parcial->monto_bs_original = $aporte_parcial->monto * $aporte_parcial->tipo_cambio;
 
                                     if ($aporte_parcial->save()) {
                                         $quincenasNuevas++;
+                                        $ids[] = $aporte_parcial->id;
                                     }
                                 }
                             }
@@ -528,6 +552,9 @@ class AportesController extends Controller
                         }
                         
                         Yii::$app->session->setFlash('success', $mensaje);
+                        if (!empty($ids)) {
+                            return $this->redirect(['comprobante', 'ids' => implode(',', $ids)]);
+                        }
                         return $this->redirect(['gestion-atleta', 'atleta_id' => $atleta_id_flexible]);
                         
                     } catch (\Exception $e) {
@@ -566,6 +593,7 @@ class AportesController extends Controller
                     }
 
                     $quincenasPagadas = 0;
+                    $ids = [];
 
                     foreach ($quincenasSeleccionadas as $fechaQuincena) {
                         $aporte = AportesSemanales::find()
@@ -582,7 +610,7 @@ class AportesController extends Controller
                             $aporte->fecha_quincena = $fechaQuincena;
                             
                             $fechaObj = new \DateTime($fechaQuincena);
-                            $aporte->numero_quincena = $this->calcularNumeroQuincena($fechaQuincena);
+                            $aporte->numero_quincena = AportesSemanales::calcularNumeroQuincenaExacta($fechaQuincena);
                             $aporte->monto = AportesSemanales::MONTO_QUINCENAL_USD;
                         }
 
@@ -590,9 +618,12 @@ class AportesController extends Controller
                         $aporte->fecha_pago = $fechaPago;
                         $aporte->metodo_pago = $metodoPago;
                         $aporte->comentarios = $comentarios;
+                        $aporte->tipo_cambio = AportesSemanales::obtenerTasaDolar($fechaPago);
+                        $aporte->monto_bs_original = $aporte->monto * $aporte->tipo_cambio;
 
                         if ($aporte->save()) {
                             $quincenasPagadas++;
+                            $ids[] = $aporte->id;
                         } else {
                             Yii::error("Error al guardar aporte múltiple: " . implode(', ', $aporte->getErrors()));
                         }
@@ -600,6 +631,7 @@ class AportesController extends Controller
 
                     if ($quincenasPagadas > 0) {
                         Yii::$app->session->setFlash('success', "Se registró el pago de {$quincenasPagadas} quincenas mediante pago múltiple.");
+                        return $this->redirect(['comprobante', 'ids' => implode(',', $ids)]);
                     } else {
                         Yii::$app->session->setFlash('warning', 'No se pudo registrar ningún pago.');
                     }
@@ -630,9 +662,10 @@ class AportesController extends Controller
                     }
 
                     $fechaActual = new \DateTime();
-                    $fechaActual = new \DateTime($this->calcularProximaQuincena($fechaActual));
+                    $fechaActual = new \DateTime(AportesSemanales::calcularProximaQuincena($fechaActual));
 
                     $quincenasPagadas = 0;
+                    $ids = [];
 
                     for ($i = 0; $i < $quincenasAdelanto; $i++) {
                         $fechaQuincena = $fechaActual->format('Y-m-d');
@@ -649,26 +682,30 @@ class AportesController extends Controller
                             $aporte->atleta_id = $atleta_id_adelanto;
                             $aporte->escuela_id = $atleta->id_escuela;
                             $aporte->fecha_quincena = $fechaQuincena;
-                            $aporte->numero_quincena = $this->calcularNumeroQuincena($fechaQuincena);
+                            $aporte->numero_quincena = AportesSemanales::calcularNumeroQuincenaExacta($fechaQuincena);
                             $aporte->monto = AportesSemanales::MONTO_QUINCENAL_USD;
                             $aporte->estado = 'pagado';
                             $aporte->fecha_pago = $fechaPago;
                             $aporte->metodo_pago = $metodoPago;
                             $aporte->comentarios = $comentarios . " - Quincena {$fechaQuincena} (Adelantado)";
                             $aporte->tipo_aporte = AportesSemanales::TIPO_APORTE_ADELANTADO;
+                            $aporte->tipo_cambio = AportesSemanales::obtenerTasaDolar($fechaPago);
+                            $aporte->monto_bs_original = $aporte->monto * $aporte->tipo_cambio;
 
                             if ($aporte->save()) {
                                 $quincenasPagadas++;
+                                $ids[] = $aporte->id;
                             } else {
                                 Yii::error("Error al guardar aporte adelantado: " . implode(', ', $aporte->getErrors()));
                             }
                         }
 
-                        $fechaActual->modify('+15 days');
+                        $fechaActual = AportesSemanales::obtenerSiguienteQuincena($fechaActual);
                     }
 
                     if ($quincenasPagadas > 0) {
                         Yii::$app->session->setFlash('success', "Se registró el pago por adelantado de {$quincenasPagadas} quincenas.");
+                        return $this->redirect(['comprobante', 'ids' => implode(',', $ids)]);
                     } else {
                         Yii::$app->session->setFlash('warning', 'No se pudo registrar ningún pago adelantado. Puede que las quincenas ya estén pagadas.');
                     }
@@ -689,7 +726,7 @@ class AportesController extends Controller
             
             // Establecer fecha de la próxima quincena (asegurar >= 15/01/2026)
             $hoy = new \DateTime();
-            $model->fecha_quincena = $this->calcularProximaQuincena($hoy);
+            $model->fecha_quincena = AportesSemanales::calcularProximaQuincena($hoy);
             if (strtotime($model->fecha_quincena) < strtotime('2026-01-15')) {
                 $model->fecha_quincena = '2026-01-15';
             }
@@ -770,7 +807,7 @@ class AportesController extends Controller
                 // Asegurar que la fecha sea quincena y >= 2026-01-15
                 if (empty($model->fecha_quincena)) {
                     $hoy = new \DateTime();
-                    $model->fecha_quincena = $this->calcularProximaQuincena($hoy);
+                    $model->fecha_quincena = AportesSemanales::calcularProximaQuincena($hoy);
                 }
                 if (strtotime($model->fecha_quincena) < strtotime('2026-01-15')) {
                     $model->fecha_quincena = '2026-01-15';
@@ -795,7 +832,7 @@ class AportesController extends Controller
             
             // Establecer fecha de la próxima quincena
             $hoy = new \DateTime();
-            $model->fecha_quincena = $this->calcularProximaQuincena($hoy);
+            $model->fecha_quincena = AportesSemanales::calcularProximaQuincena($hoy);
             if (strtotime($model->fecha_quincena) < strtotime('2026-01-15')) {
                 $model->fecha_quincena = '2026-01-15';
             }
@@ -925,6 +962,7 @@ class AportesController extends Controller
             }
 
             $quincenasPagadas = 0;
+            $ids = [];
 
             foreach ($quincenas as $fecha_quincena) {
                 // Buscar si ya existe un aporte para esta fecha
@@ -943,7 +981,7 @@ class AportesController extends Controller
                     $aporte->fecha_quincena = $fecha_quincena;
                     
                     $fechaObj = new \DateTime($fecha_quincena);
-                    $aporte->numero_quincena = $this->calcularNumeroQuincena($fecha_quincena);
+                    $aporte->numero_quincena = AportesSemanales::calcularNumeroQuincenaExacta($fecha_quincena);
                     $aporte->monto = AportesSemanales::MONTO_QUINCENAL_USD;
                 }
 
@@ -951,9 +989,12 @@ class AportesController extends Controller
                 $aporte->fecha_pago = $fecha_pago;
                 $aporte->metodo_pago = $metodo_pago;
                 $aporte->comentarios = $comentarios;
+                $aporte->tipo_cambio = AportesSemanales::obtenerTasaDolar($fecha_pago);
+                $aporte->monto_bs_original = $aporte->monto * $aporte->tipo_cambio;
 
                 if ($aporte->save()) {
                     $quincenasPagadas++;
+                    $ids[] = $aporte->id;
                 }
             }
 
@@ -961,6 +1002,7 @@ class AportesController extends Controller
                 Yii::$app->session->setFlash('success', 
                     "Se registró el pago de {$quincenasPagadas} quincenas para {$atleta->p_nombre} {$atleta->p_apellido}."
                 );
+                return $this->redirect(['comprobante', 'ids' => implode(',', $ids)]);
             } else {
                 Yii::$app->session->setFlash('warning', 'No se pudo registrar ningún pago.');
             }
@@ -1003,9 +1045,10 @@ class AportesController extends Controller
             }
 
             $fechaActual = new \DateTime();
-            $fechaActual = new \DateTime($this->calcularProximaQuincena($fechaActual));
+            $fechaActual = new \DateTime(AportesSemanales::calcularProximaQuincena($fechaActual));
 
             $quincenasPagadas = 0;
+            $ids = [];
 
             for ($i = 0; $i < $quincenas_adelanto; $i++) {
                 $fechaQuincena = $fechaActual->format('Y-m-d');
@@ -1023,26 +1066,30 @@ class AportesController extends Controller
                     $aporte->atleta_id = $atleta_id;
                     $aporte->escuela_id = $atleta->id_escuela;
                     $aporte->fecha_quincena = $fechaQuincena;
-                    $aporte->numero_quincena = $this->calcularNumeroQuincena($fechaQuincena);
+                    $aporte->numero_quincena = AportesSemanales::calcularNumeroQuincenaExacta($fechaQuincena);
                     $aporte->monto = AportesSemanales::MONTO_QUINCENAL_USD;
                     $aporte->estado = 'pagado';
                     $aporte->fecha_pago = $fecha_pago;
                     $aporte->metodo_pago = $metodo_pago;
                     $aporte->comentarios = $comentarios . " - Quincena {$fechaQuincena} (Adelantado)";
                     $aporte->tipo_aporte = AportesSemanales::TIPO_APORTE_ADELANTADO;
+                    $aporte->tipo_cambio = AportesSemanales::obtenerTasaDolar($fecha_pago);
+                    $aporte->monto_bs_original = $aporte->monto * $aporte->tipo_cambio;
 
                     if ($aporte->save()) {
                         $quincenasPagadas++;
+                        $ids[] = $aporte->id;
                     }
                 }
 
-                $fechaActual->modify('+15 days');
+                $fechaActual = AportesSemanales::obtenerSiguienteQuincena($fechaActual);
             }
 
             if ($quincenasPagadas > 0) {
                 Yii::$app->session->setFlash('success', 
                     "Se registró el pago por adelantado de {$quincenasPagadas} quincenas para {$atleta->p_nombre} {$atleta->p_apellido}."
                 );
+                return $this->redirect(['comprobante', 'ids' => implode(',', $ids)]);
             } else {
                 Yii::$app->session->setFlash('warning', 'No se pudo registrar ningún pago adelantado.');
             }
@@ -1071,7 +1118,7 @@ class AportesController extends Controller
 
         // Calcular fecha de la próxima quincena
         $hoy = new \DateTime();
-        $fechaQuincena = $this->calcularProximaQuincena($hoy);
+        $fechaQuincena = AportesSemanales::calcularProximaQuincena($hoy);
         $numeroQuincena = $this->calcularNumeroQuincena($fechaQuincena);
 
         if ($this->request->isPost) {
@@ -1107,6 +1154,8 @@ class AportesController extends Controller
                     $nuevoAporte->fecha_pago = date('Y-m-d');
                     $nuevoAporte->metodo_pago = 'efectivo';
                     $nuevoAporte->comentarios = 'Registro masivo quincenal';
+                    $nuevoAporte->tipo_cambio = AportesSemanales::obtenerTasaDolar(date('Y-m-d'));
+                    $nuevoAporte->monto_bs_original = $nuevoAporte->monto * $nuevoAporte->tipo_cambio;
                     
                     if ($nuevoAporte->save()) {
                         $registrosCreados++;
@@ -1332,7 +1381,7 @@ class AportesController extends Controller
                     $aporte->fecha_quincena = $fecha_quincena;
                     
                     $fechaObj = new \DateTime($fecha_quincena);
-                    $aporte->numero_quincena = $this->calcularNumeroQuincena($fecha_quincena);
+                    $aporte->numero_quincena = AportesSemanales::calcularNumeroQuincenaExacta($fecha_quincena);
                     $aporte->monto = AportesSemanales::MONTO_QUINCENAL_USD;
                 }
 
@@ -1381,7 +1430,7 @@ class AportesController extends Controller
             }
 
             $fechaActual = new \DateTime();
-            $fechaActual = new \DateTime($this->calcularProximaQuincena($fechaActual));
+            $fechaActual = new \DateTime(AportesSemanales::calcularProximaQuincena($fechaActual));
 
             $quincenasPagadas = 0;
 
@@ -1400,7 +1449,7 @@ class AportesController extends Controller
                     $aporte->atleta_id = $atleta_id;
                     $aporte->escuela_id = $atleta->id_escuela;
                     $aporte->fecha_quincena = $fechaQuincena;
-                    $aporte->numero_quincena = $this->calcularNumeroQuincena($fechaQuincena);
+                    $aporte->numero_quincena = AportesSemanales::calcularNumeroQuincenaExacta($fechaQuincena);
                     $aporte->monto = AportesSemanales::MONTO_QUINCENAL_USD;
                     $aporte->estado = 'pagado';
                     $aporte->fecha_pago = $fecha_pago;
@@ -1413,7 +1462,7 @@ class AportesController extends Controller
                     }
                 }
 
-                $fechaActual->modify('+15 days');
+                $fechaActual = AportesSemanales::obtenerSiguienteQuincena($fechaActual);
             }
 
             return [
@@ -1782,17 +1831,14 @@ class AportesController extends Controller
                 // --- Registro en historial ---
                 $historial = new BecaHistorial();
                 $historial->id_beca = $model->id_beca;
-                $historial->id_atleta = $model->id_atleta;
-                $historial->id_tipo_beca = $model->id_tipo_beca;
-                $historial->id_familia = $model->id_familia;
-                $historial->fecha_asignacion = $model->fecha_asignacion;
-                $historial->fecha_vencimiento = $model->fecha_vencimiento;
-                $historial->estado = $model->estado;
-                $historial->aprobado_por = $model->aprobado_por;
-                $historial->observaciones = 'Asignación inicial' . ($model->observaciones ? ': ' . $model->observaciones : '');
-                $historial->autorizacion_excepcion = $model->autorizacion_excepcion;
+                $historial->fecha_original_inicio = $model->fecha_asignacion;
+                $historial->fecha_original_fin = $model->fecha_vencimiento;
+                $historial->fecha_reactivacion = $model->fecha_asignacion; // 🔧 CORREGIDO: se asigna la misma fecha de inicio
+                $historial->motivo = $model->observaciones ?: 'Asignación inicial' . ($model->autorizacion_excepcion ? ' (con excepción)' : '');
+                $historial->usuario_creacion = Yii::$app->user->id;
+                // fecha_creacion se establecerá automáticamente por defecto de la BD
                 $historial->save(); // No se interrumpe si falla el historial, pero se loguea
-                
+
                 Yii::$app->session->setFlash('success', 'Beca asignada exitosamente.');
                 return $this->redirect(['becas']);
             } else {
@@ -1877,7 +1923,84 @@ class AportesController extends Controller
     }
 
     // =========================================================================
-    // 3. MÉTODOS AUXILIARES PARA CONTROL DE ACCESO (ATLETAS + FAMILIAS)
+    // 3. NUEVA ACCIÓN: COMPROBANTE DE PAGO
+    // =========================================================================
+
+    /**
+     * Muestra el comprobante de uno o varios pagos.
+     * @param string $ids IDs separados por coma
+     * @return string
+     * @throws NotFoundHttpException si no se encuentran los aportes
+     * @throws ForbiddenHttpException si no hay permisos
+     */
+    public function actionComprobante($ids)
+    {
+        $this->layout = 'escuelas';
+        $idArray = explode(',', $ids);
+        $idArray = array_filter(array_map('intval', $idArray));
+
+        if (empty($idArray)) {
+            throw new NotFoundHttpException('No se especificaron aportes.');
+        }
+
+        $aportes = AportesSemanales::find()
+            ->where(['id' => $idArray])
+            ->orderBy(['fecha_quincena' => SORT_ASC])
+            ->all();
+
+        if (empty($aportes)) {
+            throw new NotFoundHttpException('No se encontraron los aportes especificados.');
+        }
+
+        // Verificar permisos para el primer aporte (todos deben ser del mismo atleta/familia)
+        if (!$this->tienePermisoVerAporte($aportes[0])) {
+            throw new ForbiddenHttpException('No tiene permisos para ver este comprobante.');
+        }
+
+        // Obtener datos adicionales
+        $primerAporte = $aportes[0];
+        $atleta = $primerAporte->atleta;
+        $escuela = $primerAporte->escuela;
+
+        // Obtener representante del atleta (si existe)
+        $representante = null;
+        if ($atleta && $atleta->id_representante) {
+            $representante = RegistroRepresentantes::findOne($atleta->id_representante);
+        }
+
+        // Calcular iniciales de la escuela (primeras letras de cada palabra, máximo 4)
+        $nombreEscuela = $escuela->nombre;
+        $palabras = preg_split('/\s+/', $nombreEscuela);
+        $iniciales = '';
+        foreach ($palabras as $palabra) {
+            if (!empty($palabra)) {
+                $iniciales .= strtoupper(substr($palabra, 0, 1));
+                if (strlen($iniciales) >= 4) break;
+            }
+        }
+        // Si tiene menos de 4 caracteres, completar con 'X'
+        $iniciales = str_pad($iniciales, 4, 'X', STR_PAD_RIGHT);
+
+        // Generar código aleatorio de 8 caracteres (mayúsculas y números)
+        $caracteres = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+        $aleatorio = '';
+        for ($i = 0; $i < 8; $i++) {
+            $aleatorio .= $caracteres[random_int(0, strlen($caracteres) - 1)];
+        }
+        $codigoUnico = $iniciales . $aleatorio;
+
+        return $this->render('comprobante', [
+            'aportes' => $aportes,
+            'ids' => $ids,
+            'atleta' => $atleta,
+            'escuela' => $escuela,
+            'representante' => $representante,
+            'codigoUnico' => $codigoUnico,
+        ]);
+    }
+
+    // =========================================================================
+    // 4. MÉTODOS AUXILIARES PARA CONTROL DE ACCESO (ATLETAS + FAMILIAS)
     // =========================================================================
 
     // -------------------------------------------------------------------------

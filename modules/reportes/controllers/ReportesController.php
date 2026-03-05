@@ -87,7 +87,9 @@ class ReportesController extends Controller
         $atletasIds = array_map(function($atleta) {
             return $atleta->id;
         }, $atletas);
-        $dataProvider->query->andWhere(['id' => $atletasIds]);
+        
+        // 🔧 CORREGIDO: Usar nombre completo de la columna para evitar ambigüedad con JOIN
+        $dataProvider->query->andWhere(['atletas.registro.id' => $atletasIds]);
 
         $datosAtletas = [];
         foreach ($atletas as $atleta) {

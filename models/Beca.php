@@ -150,6 +150,12 @@ class Beca extends ActiveRecord
         ];
     }
 
+    // 🔧 CORRECCIÓN: Sobrescribir find() para usar BecaQuery
+    public static function find()
+    {
+        return new BecaQuery(get_called_class());
+    }
+
     /**
      * Relación con el atleta.
      */
