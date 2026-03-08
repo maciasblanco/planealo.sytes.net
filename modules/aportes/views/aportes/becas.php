@@ -10,6 +10,7 @@ use yii\widgets\Pjax;
 /** @var int $totalBecas */
 /** @var int $becasMerito */
 /** @var int $becasEntrenador */
+/** @var int $proximasAVencer (opcional) */
 
 // ✅ VALIDACIÓN DE SESIÓN - BLINDAJE GED
 $session = Yii::$app->session;
@@ -36,8 +37,10 @@ $this->params['breadcrumbs'][] = $this->title;
             <h1><i class="fas fa-medal text-warning"></i> <?= Html::encode($this->title) ?></h1>
         </div>
         <div class="col-md-4 text-right">
+            <?= Html::a('<i class="fas fa-clock"></i> Propuestas Pendientes', ['propuestas-pendientes'], ['class' => 'btn btn-warning']) ?>
             <?= Html::a('<i class="fas fa-plus"></i> Asignar Nueva Beca', ['asignar-beca'], ['class' => 'btn btn-success']) ?>
             <?= Html::a('<i class="fas fa-arrow-left"></i> Volver', ['index'], ['class' => 'btn btn-default']) ?>
+            <?= Html::a('<i class="fas fa-list"></i> Ver atletas y becas', ['lista-atletas-becas'], ['class' => 'btn btn-info']) ?>
         </div>
     </div>
 
@@ -54,7 +57,7 @@ $this->params['breadcrumbs'][] = $this->title;
         </div>
     </div>
 
-    <!-- Estadísticas rápidas -->
+    <!-- Estadísticas rápidas (se mantienen igual, el controlador debe proveerlas) -->
     <div class="row mb-4">
         <div class="col-md-3">
             <div class="info-box bg-info">
@@ -101,7 +104,7 @@ $this->params['breadcrumbs'][] = $this->title;
             'allModels' => $becas,
             'pagination' => ['pageSize' => 20],
             'sort' => [
-                'attributes' => ['fecha_asignacion', 'estado', 'atleta.p_nombre', 'tipoBeca.nombre'],
+                'attributes' => ['fecha_asignacion', 'estado_aprobacion', 'atleta.p_nombre', 'tipoBeca.nombre'],
             ],
         ]),
         'tableOptions' => ['class' => 'table table-striped table-bordered table-hover'],
@@ -134,7 +137,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'contentOptions' => function($model) {
                     $hoy = time();
                     $venc = strtotime($model->fecha_vencimiento);
-                    if ($model->estado == 'ACTIVA' && $venc < $hoy) {
+                    if ($model->estado_aprobacion == 'ACTIVA' && !$model->estado_ciclo && $venc < $hoy) {
                         return ['class' => 'bg-danger text-white'];
                     }
                     return [];
@@ -142,19 +145,39 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
             [
                 'attribute' => 'estado',
+                'label' => 'Estado',
                 'value' => function($model) {
-                    $estados = [
-                        'ACTIVA' => 'Activa',
-                        'VENCIDA' => 'Vencida',
-                        'REVOCADA' => 'Revocada',
-                    ];
-                    return $estados[$model->estado] ?? $model->estado;
+                    // Lógica combinada de estado_aprobacion y estado_ciclo
+                    if ($model->estado_aprobacion == 'PENDIENTE') {
+                        return 'Pendiente';
+                    }
+                    if ($model->estado_aprobacion == 'RECHAZADA') {
+                        return 'Rechazada';
+                    }
+                    if ($model->estado_aprobacion == 'ACTIVA') {
+                        if ($model->estado_ciclo == 'REVOCADA') {
+                            return 'Revocada';
+                        }
+                        if ($model->estado_ciclo == 'VENCIDA') {
+                            return 'Vencida';
+                        }
+                        return 'Activa';
+                    }
+                    return $model->estado_aprobacion;
                 },
                 'contentOptions' => function($model) {
                     $class = '';
-                    if ($model->estado == 'ACTIVA') $class = 'badge bg-success';
-                    if ($model->estado == 'VENCIDA') $class = 'badge bg-danger';
-                    if ($model->estado == 'REVOCADA') $class = 'badge bg-secondary';
+                    if ($model->estado_aprobacion == 'PENDIENTE') {
+                        $class = 'badge bg-warning';
+                    } elseif ($model->estado_aprobacion == 'ACTIVA' && !$model->estado_ciclo) {
+                        $class = 'badge bg-success';
+                    } elseif ($model->estado_aprobacion == 'RECHAZADA') {
+                        $class = 'badge bg-dark';
+                    } elseif ($model->estado_ciclo == 'REVOCADA') {
+                        $class = 'badge bg-secondary';
+                    } elseif ($model->estado_ciclo == 'VENCIDA') {
+                        $class = 'badge bg-danger';
+                    }
                     return ['class' => $class];
                 },
             ],
@@ -166,8 +189,8 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
             [
                 'class' => 'yii\grid\ActionColumn',
-                'template' => '{view} {revocar} {historial}',
-                'headerOptions' => ['style' => 'width:120px'],
+                'template' => '{view} {update} {revocar} {historial}',
+                'headerOptions' => ['style' => 'width:150px'],
                 'buttons' => [
                     'view' => function ($url, $model) {
                         return Html::a('<i class="fas fa-eye"></i>', ['view-beca', 'id' => $model->id_beca], [
@@ -175,8 +198,18 @@ $this->params['breadcrumbs'][] = $this->title;
                             'class' => 'btn btn-info btn-xs',
                         ]);
                     },
+                    'update' => function ($url, $model) {
+                        // Solo permitir editar si está pendiente (entrenador) o activa (admin) - se puede ajustar según permisos
+                        if ($model->estado_aprobacion == 'PENDIENTE' || $model->estado_aprobacion == 'ACTIVA') {
+                            return Html::a('<i class="fas fa-edit"></i>', ['update-beca', 'id' => $model->id_beca], [
+                                'title' => 'Editar',
+                                'class' => 'btn btn-primary btn-xs',
+                            ]);
+                        }
+                        return '';
+                    },
                     'revocar' => function ($url, $model) {
-                        if ($model->estado == 'ACTIVA') {
+                        if ($model->estado_aprobacion == 'ACTIVA' && !$model->estado_ciclo) {
                             return Html::a('<i class="fas fa-ban"></i>', ['revocar-beca', 'id_beca' => $model->id_beca], [
                                 'title' => 'Revocar beca',
                                 'class' => 'btn btn-danger btn-xs',
@@ -201,15 +234,16 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <?php Pjax::end(); ?>
 
-    <!-- Información adicional -->
+    <!-- Información adicional con reglas actualizadas -->
     <div class="alert alert-light border mt-4">
         <h6><i class="fas fa-info-circle text-info"></i> Reglas de negocio para becas</h6>
         <ul class="mb-0">
-            <li>Máximo 3 becas activas por familia.</li>
-            <li>Máximo 1 beca de tipo "Entrenador" por familia.</li>
-            <li>Cada atleta puede tener solo una beca activa.</li>
-            <li>Al menos un atleta por familia debe estar sin beca (excepto con autorización de excepción).</li>
-            <li>Las becas se renuevan automáticamente cada año si cumplen las condiciones.</li>
+            <li><strong>Propuesta:</strong> Los entrenadores pueden proponer nuevas becas, quedan en estado <span class="badge bg-warning">Pendiente</span>.</li>
+            <li><strong>Aprobación:</strong> Solo el administrador puede aprobar o rechazar propuestas.</li>
+            <li><strong>Duración:</strong> Las becas aprobadas tienen vigencia hasta el 1 de julio del año siguiente, y se renuevan automáticamente cada julio (excepto las de tipo "Entrenador").</li>
+            <li><strong>Renovación:</strong> Becas renovables se extienden por un año más; las no renovables (Entrenador) pasan a <span class="badge bg-danger">Vencida</span> al cumplir el plazo.</li>
+            <li><strong>Revocación:</strong> El administrador puede revocar una beca activa en cualquier momento.</li>
+            <li>Máximo 3 becas activas por familia, máximo 1 beca de Entrenador por familia, y un atleta no puede tener dos becas activas simultáneamente.</li>
         </ul>
     </div>
 </div>
@@ -223,8 +257,10 @@ $css = <<<CSS
     border-radius: 0.25rem;
 }
 .badge.bg-success { background-color: #28a745; color: white; }
+.badge.bg-warning { background-color: #ffc107; color: black; }
 .badge.bg-danger { background-color: #dc3545; color: white; }
 .badge.bg-secondary { background-color: #6c757d; color: white; }
+.badge.bg-dark { background-color: #343a40; color: white; }
 .bg-danger.text-white td { background-color: #f8d7da !important; }
 CSS;
 $this->registerCss($css);

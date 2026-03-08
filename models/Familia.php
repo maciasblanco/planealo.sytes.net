@@ -9,15 +9,31 @@ use yii\db\ActiveRecord;
  * Modelo para la tabla 'atletas.familias'.
  *
  * @property int $id_familia
- * @property string $nombre_representante
- * @property string $email
- * @property string $telefono
- * @property string $direccion
- * @property float $aporte_base_personalizado (opcional, null = usa configuración general)
- * @property string $created_at
- * @property string $updated_at
+ * @property int|null $id_representante
+ * @property string $codigo_familia
+ * @property string|null $direccion
+ * @property string|null $telefono
+ * @property string|null $email
+ * @property string|null $situacion_economica
+ * @property string|null $fecha_registro
+ * @property bool|null $activa
+ * @property string|null $observaciones
+ * @property string|null $d_creacion
+ * @property int|null $u_creacion
+ * @property string|null $d_update
+ * @property int|null $u_update
+ * @property bool|null $eliminado
+ * @property string|null $dir_ip
  *
- * @property Atleta[] $atletas
+ * // Campos adicionales (pueden existir o no en la BD, se manejan como atributos virtuales)
+ * @property float|null $aporte_base_personalizado
+ *
+ * // Propiedad virtual para nombre del representante (obtenida vía getter)
+ * @property string $nombre_representante
+ *
+ * // Relaciones
+ * @property RegistroRepresentantes $representante
+ * @property AtletasRegistro[] $atletas
  * @property AporteSemanal[] $aportesSemanales
  */
 class Familia extends ActiveRecord
@@ -36,12 +52,24 @@ class Familia extends ActiveRecord
     public function rules()
     {
         return [
-            [['nombre_representante', 'email'], 'required'],
-            [['aporte_base_personalizado'], 'number', 'min' => 0],
-            [['created_at', 'updated_at'], 'safe'],
-            [['nombre_representante', 'email', 'telefono', 'direccion'], 'string', 'max' => 255],
+            // Columnas reales de la tabla
+            [['id_representante', 'u_creacion', 'u_update'], 'integer'],
+            [['direccion', 'observaciones'], 'string'],
+            [['fecha_registro', 'd_creacion', 'd_update'], 'safe'],
+            [['activa', 'eliminado'], 'boolean'],
+            [['codigo_familia'], 'string', 'max' => 20],
+            [['telefono'], 'string', 'max' => 20],
+            [['email'], 'string', 'max' => 100],
+            [['situacion_economica'], 'string', 'max' => 50],
+            [['dir_ip'], 'string', 'max' => 45],
             [['email'], 'email'],
-            [['email'], 'unique'],
+            [['codigo_familia'], 'unique'],
+            [['codigo_familia'], 'required'],
+
+            // Campo adicional (virtual) – se permite asignación masiva pero no se guarda en BD
+            [['aporte_base_personalizado'], 'number', 'min' => 0],
+
+            // nombre_representante es un getter, no se guarda ni valida
         ];
     }
 
@@ -52,31 +80,84 @@ class Familia extends ActiveRecord
     {
         return [
             'id_familia' => 'ID Familia',
-            'nombre_representante' => 'Representante',
-            'email' => 'Correo Electrónico',
-            'telefono' => 'Teléfono',
+            'id_representante' => 'Representante',
+            'codigo_familia' => 'Código de Familia',
             'direccion' => 'Dirección',
+            'telefono' => 'Teléfono',
+            'email' => 'Correo Electrónico',
+            'situacion_economica' => 'Situación Económica',
+            'fecha_registro' => 'Fecha de Registro',
+            'activa' => 'Activa',
+            'observaciones' => 'Observaciones',
+            'd_creacion' => 'Creado',
+            'u_creacion' => 'Usuario Creación',
+            'd_update' => 'Actualizado',
+            'u_update' => 'Usuario Actualización',
+            'eliminado' => 'Eliminado',
+            'dir_ip' => 'Dirección IP',
             'aporte_base_personalizado' => 'Aporte Base Personalizado',
-            'created_at' => 'Creado',
-            'updated_at' => 'Actualizado',
+            'nombre_representante' => 'Representante',
         ];
+    }
+
+    // -------------------------------------------------------------------------
+    // RELACIONES
+    // -------------------------------------------------------------------------
+
+    /**
+     * Relación con el representante de la familia.
+     * @return \yii\db\ActiveQuery
+     */
+    public function getRepresentante()
+    {
+        return $this->hasOne(RegistroRepresentantes::class, ['id' => 'id_representante']);
     }
 
     /**
      * Relación: una familia tiene muchos atletas.
+     * @return \yii\db\ActiveQuery
      */
     public function getAtletas()
     {
-        return $this->hasMany(Atleta::class, ['id_familia' => 'id_familia']);
+        return $this->hasMany(AtletasRegistro::class, ['id_familia' => 'id_familia']);
     }
 
     /**
      * Relación: una familia tiene muchos aportes semanales.
+     * @return \yii\db\ActiveQuery
      */
     public function getAportesSemanales()
     {
         return $this->hasMany(AporteSemanal::class, ['id_familia' => 'id_familia']);
     }
+
+    // -------------------------------------------------------------------------
+    // GETTERS VIRTUALES
+    // -------------------------------------------------------------------------
+
+    /**
+     * Obtiene el nombre completo del representante (para usar en vistas).
+     * Nombre exacto del getter: getNombre_representante() para que la propiedad sea "nombre_representante".
+     * @return string
+     */
+    public function getNombre_representante()
+    {
+        $representante = $this->representante;
+        if (!$representante) {
+            return '';
+        }
+        $parts = [
+            $representante->p_nombre,
+            $representante->s_nombre,
+            $representante->p_apellido,
+            $representante->s_apellido,
+        ];
+        return implode(' ', array_filter($parts));
+    }
+
+    // -------------------------------------------------------------------------
+    // MÉTODOS DE NEGOCIO (conservados íntegramente)
+    // -------------------------------------------------------------------------
 
     /**
      * Obtiene el aporte base que aplica a esta familia.

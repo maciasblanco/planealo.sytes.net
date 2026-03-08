@@ -51,8 +51,9 @@ $puedeGestionarBecas = $esContador || $esSuperusuario;
                     return $model->escuela ? $model->escuela->nombre : 'N/A';
                 }
             ],
-            // CATEGORÍA CORREGIDA: usa el getter categoriaNombre que combina asignada y calculada
+            // CATEGORÍA con atributo para ordenar
             [
+                'attribute' => 'categoria.nombre_venezuela',
                 'label' => 'Categoría',
                 'value' => function($model) {
                     return $model->categoriaNombre;
@@ -62,8 +63,6 @@ $puedeGestionarBecas = $esContador || $esSuperusuario;
                     'id',
                     'nombre'
                 ),
-                // Atributo para filtrado (filtra por id_categoria, solo asignadas)
-                'attribute' => 'id_categoria',
             ],
             // Beca activa (muestra el nombre del tipo de beca si existe)
             [

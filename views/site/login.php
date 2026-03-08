@@ -10,7 +10,7 @@ use yii\bootstrap5\Html;
 $this->title = 'Iniciar Sesión';
 $this->params['breadcrumbs'][] = $this->title;
 
-// CSS personalizado para la vista de login (usando registerCss para no violar el protocolo)
+// CSS personalizado para la vista de login
 $this->registerCss(<<<CSS
     .login-container {
         min-height: 100vh;
@@ -39,7 +39,7 @@ $this->registerCss(<<<CSS
     .login-left img {
         max-width: 80%;
         max-height: 200px;
-        filter: brightness(0) invert(1);
+        /* filter: brightness(0) invert(1);  MOD: eliminado para que la imagen sea visible */
     }
     .login-right {
         padding: 3rem;
@@ -129,8 +129,12 @@ CSS);
                     'placeholder' => 'Ingresa tu usuario'
                 ]) ?>
 
-                <?= $form->field($model, 'password')->passwordInput([
-                    'placeholder' => 'Ingresa tu contraseña'
+                <?= $form->field($model, 'password', [
+                    // MOD: se añade input-group para el icono de visibilidad
+                    'template' => '{label}<div class="input-group">{input}<button class="btn btn-outline-secondary" type="button" id="togglePassword"><i class="bi bi-eye"></i></button></div>{error}',
+                ])->passwordInput([
+                    'placeholder' => 'Ingresa tu contraseña',
+                    'id' => 'loginform-password'  // Aseguramos el ID para el JS
                 ]) ?>
 
                 <?= $form->field($model, 'rememberMe')->checkbox([
@@ -155,3 +159,22 @@ CSS);
         </div>
     </div>
 </div>
+
+<?php
+// MOD: Script para mostrar/ocultar contraseña
+$this->registerJs(<<<JS
+    document.getElementById('togglePassword').addEventListener('click', function (e) {
+        let input = document.getElementById('loginform-password');
+        let icon = this.querySelector('i');
+        if (input.type === 'password') {
+            input.type = 'text';
+            icon.classList.remove('bi-eye');
+            icon.classList.add('bi-eye-slash');
+        } else {
+            input.type = 'password';
+            icon.classList.remove('bi-eye-slash');
+            icon.classList.add('bi-eye');
+        }
+    });
+JS);
+?>

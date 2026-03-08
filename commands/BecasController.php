@@ -4,45 +4,49 @@ namespace app\commands;
 use Yii;
 use yii\console\Controller;
 use yii\helpers\Console;
-use app\services\BecaService;
+use app\models\Beca;
 
 class BecasController extends Controller
 {
     /**
-     * @var bool Modo simulación
+     * Renueva automáticamente las becas renovables cada 1 de julio.
+     * Debe ejecutarse mediante cron el 1 de julio de cada año.
      */
-    public $dryRun = false;
-
-    public function options($actionID)
+    public function actionRenovar()
     {
-        return ['dryRun'];
-    }
+        $this->stdout("Iniciando renovación de becas...\n", Console::FG_YELLOW);
 
-    public function optionAliases()
-    {
-        return ['d' => 'dryRun'];
-    }
+        $becas = Beca::find()
+            ->activa()
+            ->renovables()
+            ->andWhere(['<=', 'fecha_vencimiento', date('Y-m-d')])
+            ->all();
 
-    /**
-     * Renueva todas las becas activas que vencen el 31 de marzo.
-     * Debe ejecutarse en abril (o a finales de marzo) para renovar las becas del nuevo período.
-     *
-     * @param int $dryRun Si 1, solo simula sin guardar.
-     */
-    public function actionRenovar($dryRun = 0)
-    {
-        $this->dryRun = (bool)$dryRun;
-
-        if ($this->dryRun) {
-            $this->stdout("Modo DRY RUN: No se guardarán cambios.\n", Console::FG_YELLOW);
+        $count = 0;
+        foreach ($becas as $beca) {
+            if ($beca->renovar()) {
+                $count++;
+                $this->stdout("Renovada beca ID {$beca->id_beca} para atleta {$beca->atleta->p_nombre}\n", Console::FG_GREEN);
+            } else {
+                $this->stdout("Error al renovar beca ID {$beca->id_beca}\n", Console::FG_RED);
+            }
         }
 
-        $resultado = BecaService::renovarBecas($this->dryRun);
+        // Marcar como vencidas las becas no renovables que hayan expirado
+        $vencidas = Beca::find()
+            ->activa()
+            ->andWhere(['renovable' => false])
+            ->andWhere(['<', 'fecha_vencimiento', date('Y-m-d')])
+            ->all();
 
-        foreach ($resultado as $linea) {
-            $this->stdout($linea . "\n");
+        foreach ($vencidas as $beca) {
+            $beca->estado_ciclo = Beca::ESTADO_CICLO_VENCIDA;
+            if ($beca->save()) {
+                $this->stdout("Marcada como VENCIDA beca ID {$beca->id_beca}\n", Console::FG_YELLOW);
+            }
         }
 
+        $this->stdout("Proceso completado. {$count} becas renovadas.\n", Console::FG_GREEN);
         return Controller::EXIT_CODE_NORMAL;
     }
 }

@@ -25,11 +25,13 @@ class ReporteAtletasSearch extends AtletasRegistro
     {
         $query = AtletasRegistro::find()
             ->where(['eliminado' => false])
-            // IMPORTANTE: joinWith permite ordenar por campos de la tabla relacionada 'categoria'
-            ->joinWith(['categoria'])
+            // Hacemos join explícito con alias 'categoria' para poder ordenar correctamente
+            ->joinWith(['categoria' => function($q) {
+                $q->from(['categoria' => 'catalogos.categoria_atletas']);
+            }])
             ->with(['escuela', 'representante']);
 
-        // Filtros según rol del usuario
+        // Aplicar filtros según el rol del usuario
         if (Yii::$app->user->can('representante')) {
             $representante = \app\models\RegistroRepresentantes::find()
                 ->where(['user_id' => Yii::$app->user->id])
@@ -45,12 +47,9 @@ class ReporteAtletasSearch extends AtletasRegistro
             'query' => $query,
             'sort' => [
                 'defaultOrder' => [
-                    // Ordenar por el nombre de la categoría (campo de la tabla relacionada)
                     'categoria.nombre_venezuela' => SORT_ASC,
-                    // Luego por primer apellido
                     'p_apellido' => SORT_ASC,
                 ],
-                // Definir atributos para que el ordenamiento por estos campos funcione también en clics
                 'attributes' => [
                     'p_nombre',
                     'identificacion',
@@ -62,11 +61,10 @@ class ReporteAtletasSearch extends AtletasRegistro
                         'label' => 'Categoría',
                     ],
                     'p_apellido',
-                    // Podrías agregar otros atributos si los necesitas
                 ],
             ],
             'pagination' => [
-                'pageSize' => 20, // Ajusta según convenga
+                'pageSize' => 20,
             ],
         ]);
 

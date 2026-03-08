@@ -1,0 +1,274 @@
+ESTRUCTURA DEL SISTEMA PLANEALO
+===============================
+Fecha: dom. 08/03/2026 12:04:22,47
+
+1. ESTRUCTURA GENERAL
+.bowerrc
+.container
+.dropdown-menu
+.gitignore
+actualizar_tasa.bat
+arbol_completo.bat
+assets
+codeception.yml
+commands
+components
+composer.json
+composer.lock
+config
+console
+controllers
+css
+docker-compose.yml
+docs
+estructura_completa.bat
+estructura_completa.txt
+helpers
+js
+LICENSE.md
+mail
+messages
+migrations
+models
+modules
+README.md
+requirements.php
+runtime
+scripts
+services
+test-db.php
+tests
+type
+vagrant
+Vagrantfile
+vendor
+views
+web
+widgets
+yii
+yii.bat
+
+2. MODELOS
+Alergias.php
+AportesSemanales.php
+Asistencia.php
+AtletasRegistro.php
+AuditLog.php
+Beca.php
+BecaHistorial.php
+BecaQuery.php
+CambioPasswordForm.php
+CategoriaAtletas.php
+CategoriaProducto.php
+ComprasEscuela.php
+ConfiguracionAporte.php
+ContactForm.php
+Discapacidad.php
+EncargadoEscuela.php
+Enfermedades.php
+Escuela.php
+Estado.php
+Familia.php
+LoginAttempt.php
+LoginForm.php
+Menu.php
+Municipio.php
+Nacionalidad.php
+Orden.php
+OrdenItem.php
+Parroquia.php
+PasswordHistory.php
+Producto.php
+RegistroRepresentantes.php
+Sexo.php
+TasaDolar.php
+Tienda.php
+TipoBeca.php
+User.php
+UserBlockHistory.php
+Vendedor.php
+VerificationSession.php
+
+3. CONTROLADORES
+CoordenadasController.php
+MunicipioController.php
+ParroquiaController.php
+PerfilController.php
+probar_fuentes.php
+RouteController.php
+SiteController.php
+TasaDolarController.php
+
+4. VISTAS PRINCIPALES
+admin
+layouts
+perfil
+site
+tasa-dolar
+
+5. ESTRUCTURA DE MODULOS
+[modules\acces]
+  Controladores:
+DefaultController.php
+UserController.php
+  Vistas:
+    -- default
+index.php
+    -- layouts
+escuelas.php
+main.php
+_navbar.php
+    -- user
+signup.php
+    -- 2>nul
+
+[modules\aportes]
+  Controladores:
+AportesController.php
+  Vistas:
+    -- aportes
+asignar-beca.php
+becas.php
+comprobante.php
+gestion-atleta.php
+gestion-familia.php
+index.php
+lista-atletas-becas.php
+pago-adelantado.php
+pago-multiple.php
+propuestas-pendientes.php
+rechazar-beca.php
+reporte-ejecutivo.php
+reporte.php
+view-beca.php
+    -- layouts
+escuelas.php
+main.php
+_navbar.php
+    -- 2>nul
+
+[modules\atletas]
+  Controladores:
+AsistenciaController.php
+AtletasRegistroController.php
+DefaultController.php
+  Vistas:
+    -- asistencia
+registro-multiple.php
+registro-rapido.php
+    -- atletas-registro
+create.php
+index.php
+update.php
+view.php
+_form.php
+_search.php
+    -- default
+index.php
+    -- layouts
+escuelas.php
+main.php
+_navbar.php
+    -- 2>nul
+
+[modules\escuela_club]
+  Controladores:
+ClubRegistroController.php
+DefaultController.php
+EscuelaPreRegistroController.php
+EscuelaRegistroController.php
+EscuelaValidacionController.php
+  Vistas:
+    -- club-registro
+create.php
+index.php
+update.php
+view.php
+_form.php
+_search.php
+    -- default
+index.php
+    -- escuela-registro
+completar-registro.php
+create.php
+index.php
+pre-registro.php
+update.php
+view.php
+_form.php
+_search.php
+    -- escuela-validacion
+mapa-escuelas.php
+pendientes.php
+rechazar.php
+    -- 2>nul
+
+[modules\ged]
+  Controladores:
+DefaultController.php
+  Vistas:
+    -- default
+escuelaSinUso.php
+index.php
+indexDinamico.php
+select-escuela.php
+    -- layouts
+main.php
+_navbar.php
+    -- 2>nul
+
+[modules\reportes]
+  Controladores:
+DefaultController.php
+ReportesController.php
+  Vistas:
+    -- default
+dashboard.php
+index.php
+    -- layouts
+main.php
+_navbar.php
+    -- reportes
+asistencias.php
+deudas-pendientes.php
+recibo-cobro.php
+recibo-pago.php
+reporte-atletas.php
+reportes-representantes.php
+reportes.php
+_grid_atletas.php
+    -- 2>nul
+
+[modules\tienda]
+  Controladores:
+DefaultController.php
+MarketplaceController.php
+ProductoController.php
+TiendaController.php
+  Vistas:
+    -- default
+index.php
+registro-vendedor.php
+    -- layouts
+escuelas.php
+main.php
+_navbar.php
+    -- marketplace
+index.php
+    -- producto
+create.php
+dashboard.php
+index.php
+manage-stock.php
+update.php
+view.php
+_form.php
+    -- tienda
+create.php
+dashboard.php
+index.php
+update.php
+view.php
+_form.php
+    -- 2>nul
+

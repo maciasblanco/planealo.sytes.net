@@ -6,23 +6,26 @@ use yii\db\ActiveQuery;
 
 class BecaQuery extends ActiveQuery
 {
-    /**
-     * Filtra las becas activas (estado = ACTIVA y fecha de vencimiento no pasada o nula)
-     */
     public function activa()
     {
-        return $this->andWhere(['estado' => Beca::ESTADO_ACTIVA])
-            ->andWhere(['or', 
-                ['fecha_vencimiento' => null], 
-                ['>=', 'fecha_vencimiento', date('Y-m-d')]
-            ]);
+        return $this->andWhere(['estado_aprobacion' => Beca::ESTADO_APROB_ACTIVA])
+            ->andWhere(['IS', 'estado_ciclo', null])
+            ->andWhere(['eliminado' => false]);
     }
 
-    /**
-     * Filtra las becas por familia
-     */
+    public function pendiente()
+    {
+        return $this->andWhere(['estado_aprobacion' => Beca::ESTADO_APROB_PENDIENTE])
+            ->andWhere(['eliminado' => false]);
+    }
+
     public function porFamilia($id_familia)
     {
         return $this->andWhere(['id_familia' => $id_familia]);
+    }
+
+    public function renovables()
+    {
+        return $this->andWhere(['renovable' => true]);
     }
 }

@@ -234,11 +234,15 @@ $montoQuincenal = app\models\AportesSemanales::MONTO_QUINCENAL_USD;
                                                     <strong><?= Html::encode($atleta->p_nombre . ' ' . $atleta->p_apellido) ?></strong>
                                                     <br>
                                                     <small class="text-muted">
-                                                        <!-- CORREGIDO: Se usa 'identificacion' en lugar de 'cedula' -->
                                                         <?= Html::encode($atleta->identificacion ?? 'Sin identificación') ?>
                                                         <?php if ($item['error']): ?>
                                                             <span class="label label-danger">Error en procesamiento</span>
                                                         <?php endif; ?>
+                                                    </small>
+                                                    <br>
+                                                    <small class="text-muted">
+                                                        <i class="fa fa-calendar"></i> Ingreso: 
+                                                        <?= !empty($atleta->created_at) ? Yii::$app->formatter->asDate($atleta->created_at) : 'N/A' ?>
                                                     </small>
                                                 </td>
                                                 <!-- Celdas eliminadas (comentadas) -->

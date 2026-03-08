@@ -71,6 +71,10 @@ use yii2tech\ar\softdelete\SoftDeleteQueryBehavior;
  * @property string $categoria
  * @property int $edad
  *
+ * // NUEVAS PROPIEDADES PARA ALMACENAR BECAS (usadas en controlador)
+ * @property Beca|null $becaActiva
+ * @property Beca|null $becaPendiente
+ *
  * // RELACIONES
  * @property AportesSemanales[] $aportes
  * @property Escuela $escuela
@@ -101,6 +105,10 @@ class AtletasRegistro extends ActiveRecord
     public $nombreEscuelaClub;
     public $categoria;
     public $edad;
+
+    // NUEVAS PROPIEDADES PARA BECAS (permiten asignación desde controlador)
+    public $becaActiva;
+    public $becaPendiente;
 
     /**
      * {@inheritdoc}
@@ -333,9 +341,21 @@ class AtletasRegistro extends ActiveRecord
      */
     public function getBecaActiva()
     {
+        // MOD EN ARCHIVO CRÍTICO: corrección de nombres de columna según estructura real de la tabla becas
         return $this->getBecas()
-            ->andWhere(['<=', 'fecha_inicio', date('Y-m-d')])
-            ->andWhere(['or', ['fecha_fin' => null], ['>=', 'fecha_fin', date('Y-m-d')]])
+            ->andWhere(['<=', 'fecha_asignacion', date('Y-m-d')])
+            ->andWhere(['or', ['fecha_vencimiento' => null], ['>=', 'fecha_vencimiento', date('Y-m-d')]])
+            ->one();
+    }
+
+    /**
+     * Obtiene la beca pendiente del atleta (estado_aprobacion = 'PENDIENTE').
+     * @return Beca|null
+     */
+    public function getBecaPendiente()
+    {
+        return $this->getBecas()
+            ->andWhere(['estado_aprobacion' => 'PENDIENTE'])
             ->one();
     }
 
