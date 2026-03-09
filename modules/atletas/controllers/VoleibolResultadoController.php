@@ -20,6 +20,9 @@ use yii\helpers\ArrayHelper;
  */
 class VoleibolResultadoController extends Controller
 {
+    /**
+     * {@inheritdoc}
+     */
     public function behaviors()
     {
         return [
@@ -28,7 +31,7 @@ class VoleibolResultadoController extends Controller
                 'rules' => [
                     [
                         'allow' => true,
-                        'roles' => ['@'],
+                        'roles' => ['@'], // Solo usuarios autenticados
                     ],
                 ],
             ],
@@ -43,7 +46,7 @@ class VoleibolResultadoController extends Controller
     }
 
     /**
-     * Lista los resultados (filtrables por sesión, atleta, etc.)
+     * Lista todos los resultados (filtrables por sesión, atleta, etc.)
      * @return mixed
      */
     public function actionIndex()
@@ -61,6 +64,7 @@ class VoleibolResultadoController extends Controller
      * Muestra un resultado específico.
      * @param integer $id
      * @return mixed
+     * @throws NotFoundHttpException si el modelo no existe
      */
     public function actionView($id)
     {
@@ -93,6 +97,7 @@ class VoleibolResultadoController extends Controller
      * Ingreso masivo de resultados para una sesión.
      * @param integer $sesion_id
      * @return mixed
+     * @throws NotFoundHttpException si la sesión no existe
      */
     public function actionIngresoMasivo($sesion_id)
     {

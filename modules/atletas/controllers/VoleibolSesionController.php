@@ -24,6 +24,9 @@ use yii\helpers\ArrayHelper;
  */
 class VoleibolSesionController extends Controller
 {
+    /**
+     * {@inheritdoc}
+     */
     public function behaviors()
     {
         return [
@@ -197,7 +200,8 @@ class VoleibolSesionController extends Controller
         if ($sesion->categoria_id) {
             $query->andWhere(['id_categoria' => $sesion->categoria_id]);
         }
-        $atletas = $query->orderBy(['apellido' => SORT_ASC, 'nombre' => SORT_ASC])->all();
+        // ✅ CORRECCIÓN: Ordenar por las columnas reales de la tabla
+        $atletas = $query->orderBy(['p_apellido' => SORT_ASC, 'p_nombre' => SORT_ASC])->all();
 
         // Atletas ya asignados
         $asignados = VoleibolSesionAtleta::find()
@@ -370,6 +374,9 @@ class VoleibolSesionController extends Controller
         $nuevoSet->sesion_id = $sesion->id;
         $nuevoSet->numero = $maxSet ? $maxSet + 1 : 1;
         $nuevoSet->estado = 'A';
+        // ✅ CORRECCIÓN: Asignar valores por defecto a puntos_a y puntos_b (no nulos)
+        $nuevoSet->puntos_a = 0;
+        $nuevoSet->puntos_b = 0;
         return $nuevoSet->save() ? $nuevoSet : null;
     }
 

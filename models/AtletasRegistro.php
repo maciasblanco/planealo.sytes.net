@@ -17,8 +17,8 @@ use yii2tech\ar\softdelete\SoftDeleteQueryBehavior;
  * - Se agregó relación getFamilia()
  * - Se agregó método getBecaActiva() para consultar beca vigente
  * - Se agregó getNombreCompleto() para uso en vistas
- * 
- * TODO EL CÓDIGO ORIGINAL SE CONSERVA ÍNTEGRAMENTE.
+ * - ✅ CORRECCIÓN: se añadieron getters virtuales getNombre() y getApellido()
+ *   para compatibilidad con código que espera esas propiedades.
  * --------------------------------------------------------------
  *
  * @property int $id
@@ -431,7 +431,7 @@ class AtletasRegistro extends ActiveRecord
     }
 
     // -------------------------------------------------------------------------
-    // NUEVO MÉTODO UTILITARIO
+    // MÉTODOS NUEVOS O CORREGIDOS
     // -------------------------------------------------------------------------
 
     /**
@@ -447,6 +447,26 @@ class AtletasRegistro extends ActiveRecord
             $this->s_apellido,
         ];
         return implode(' ', array_filter($parts));
+    }
+
+    /**
+     * Getter virtual para 'nombre' (retorna el primer nombre).
+     * Permite usar $model->nombre en vistas y controladores.
+     * @return string
+     */
+    public function getNombre()
+    {
+        return $this->p_nombre;
+    }
+
+    /**
+     * Getter virtual para 'apellido' (retorna el primer apellido).
+     * Permite usar $model->apellido en vistas y controladores.
+     * @return string
+     */
+    public function getApellido()
+    {
+        return $this->p_apellido;
     }
 
     // =========================================================================

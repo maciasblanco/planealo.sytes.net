@@ -1,6 +1,6 @@
 <?php
 
-namespace app\models\search;
+namespace app\modules\atletas\models;
 
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
