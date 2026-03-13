@@ -4,7 +4,7 @@ namespace app\modules\atletas\controllers;
 
 use Yii;
 use app\models\EvaluacionResultado;
-use app\models\search\EvaluacionResultadoSearch;
+use app\modules\atletas\models\EvaluacionResultadoSearch;
 use app\models\VoleibolSesion;
 use app\models\VoleibolSesionAtleta;
 use app\models\EvaluacionEstadistica;

@@ -9,7 +9,7 @@ use app\models\VoleibolSesionAtleta;
 use app\models\VoleibolEvento;
 use app\models\EvaluacionEstadistica;
 use app\models\EvaluacionSesionEstadistica;
-use app\models\search\VoleibolSesionSearch;
+use app\modules\atletas\models\VoleibolSesionSearch;
 use app\models\AtletasRegistro;
 use app\models\Escuela;
 use app\models\EncargadoEscuela;
