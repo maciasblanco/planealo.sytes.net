@@ -6,6 +6,8 @@ use Yii;
 use app\models\VoleibolSesion;
 use app\models\VoleibolSet;
 use app\models\VoleibolSesionAtleta;
+use app\models\VoleibolAlineacion;
+use app\models\VoleibolSustitucion;
 use app\models\VoleibolEvento;
 use app\models\EvaluacionEstadistica;
 use app\models\EvaluacionSesionEstadistica;
@@ -15,6 +17,7 @@ use app\models\Escuela;
 use app\models\EncargadoEscuela;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
+use yii\web\Response;
 use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
 use yii\helpers\ArrayHelper;
@@ -46,6 +49,9 @@ class VoleibolSesionController extends Controller
                     'finalizar' => ['POST'],
                     'agregar-atleta' => ['POST'],
                     'quitar-atleta' => ['POST'],
+                    'sumar-punto' => ['POST'],
+                    'rotar' => ['POST'],
+                    'sustituir' => ['POST'],
                 ],
             ],
         ];
@@ -200,7 +206,6 @@ class VoleibolSesionController extends Controller
         if ($sesion->categoria_id) {
             $query->andWhere(['id_categoria' => $sesion->categoria_id]);
         }
-        // ✅ CORRECCIÓN: Ordenar por las columnas reales de la tabla
         $atletas = $query->orderBy(['p_apellido' => SORT_ASC, 'p_nombre' => SORT_ASC])->all();
 
         // Atletas ya asignados
@@ -300,12 +305,12 @@ class VoleibolSesionController extends Controller
             $puntosA = VoleibolEvento::find()
                 ->joinWith('tipoEvento')
                 ->where(['set_id' => $setActivo->id])
-                ->andWhere(['equipo_afectado' => 'P'])
+                ->andWhere(['equipo_afectado' => 'A']) // Suponiendo que 'A' es el equipo local
                 ->sum('puntos');
             $puntosB = VoleibolEvento::find()
                 ->joinWith('tipoEvento')
                 ->where(['set_id' => $setActivo->id])
-                ->andWhere(['equipo_afectado' => 'C'])
+                ->andWhere(['equipo_afectado' => 'B']) // Suponiendo que 'B' es el equipo visitante
                 ->sum('puntos');
             $setActivo->puntos_a = $puntosA ?: 0;
             $setActivo->puntos_b = $puntosB ?: 0;
@@ -347,6 +352,416 @@ class VoleibolSesionController extends Controller
         ]);
     }
 
+    // ============================================================
+    // NUEVAS ACCIONES PARA MARCADOR EN VIVO
+    // ============================================================
+
+    /**
+     * Configura la alineación inicial de un set.
+     * @param int $id ID de la sesión
+     * @param int|null $set ID del set (si es null, se usa el activo)
+     * @return mixed
+     */
+    public function actionAlineacion($id, $set = null)
+    {
+        $sesion = $this->findModel($id);
+        if ($set === null) {
+            $set = $sesion->setActivo;
+            if (!$set) {
+                Yii::$app->session->setFlash('error', 'No hay un set activo. Inicie un set primero.');
+                return $this->redirect(['view', 'id' => $id]);
+            }
+        } else {
+            $set = VoleibolSet::findOne($set);
+            if (!$set || $set->sesion_id != $id) {
+                throw new NotFoundHttpException('Set no encontrado.');
+            }
+        }
+
+        // Obtener atletas asignados a la sesión con equipo
+        $atletasSesion = VoleibolSesionAtleta::find()
+            ->with('atleta')
+            ->where(['sesion_id' => $id])
+            ->all();
+
+        $atletasPorEquipo = [
+            'A' => [],
+            'B' => [],
+        ];
+        foreach ($atletasSesion as $sa) {
+            $atletasPorEquipo[$sa->equipo][] = $sa->atleta;
+        }
+
+        // Obtener alineaciones ya guardadas para este set
+        $alineaciones = VoleibolAlineacion::find()
+            ->where(['sesion_id' => $id, 'set_id' => $set->id])
+            ->indexBy(function ($row) {
+                return $row['equipo'] . '_' . $row['posicion'];
+            })
+            ->all();
+
+        if (Yii::$app->request->isPost) {
+            $post = Yii::$app->request->post();
+            $equipos = ['A', 'B'];
+            $transaction = Yii::$app->db->beginTransaction();
+            try {
+                // Eliminar alineaciones anteriores del set
+                VoleibolAlineacion::deleteAll(['sesion_id' => $id, 'set_id' => $set->id]);
+
+                foreach ($equipos as $eq) {
+                    $posiciones = $post['alineacion'][$eq] ?? [];
+                    // Debe haber exactamente 6 posiciones
+                    if (count($posiciones) != 6) {
+                        throw new \Exception("El equipo {$eq} debe tener 6 jugadores en cancha.");
+                    }
+                    foreach ($posiciones as $pos => $atletaId) {
+                        if (empty($atletaId)) {
+                            throw new \Exception("La posición {$pos} del equipo {$eq} no puede estar vacía.");
+                        }
+                        $alineacion = new VoleibolAlineacion();
+                        $alineacion->sesion_id = $id;
+                        $alineacion->set_id = $set->id;
+                        $alineacion->equipo = $eq;
+                        $alineacion->atleta_id = $atletaId;
+                        $alineacion->posicion = $pos;
+                        $alineacion->created_by = Yii::$app->user->id;
+                        if (!$alineacion->save()) {
+                            throw new \Exception('Error al guardar alineación: ' . print_r($alineacion->errors, true));
+                        }
+                    }
+                }
+                $transaction->commit();
+                Yii::$app->session->setFlash('success', 'Alineación guardada correctamente.');
+                return $this->redirect(['marcador', 'id' => $id, 'set' => $set->id]);
+            } catch (\Exception $e) {
+                $transaction->rollBack();
+                Yii::$app->session->setFlash('error', $e->getMessage());
+            }
+        }
+
+        return $this->render('alineacion', [
+            'sesion' => $sesion,
+            'set' => $set,
+            'atletasPorEquipo' => $atletasPorEquipo,
+            'alineaciones' => $alineaciones,
+        ]);
+    }
+
+    /**
+     * Muestra el marcador en vivo del set.
+     * @param int $id
+     * @param int|null $set
+     * @return string
+     */
+    public function actionMarcador($id, $set = null)
+    {
+        $sesion = $this->findModel($id);
+        if ($set === null) {
+            $set = $sesion->setActivo;
+            if (!$set) {
+                Yii::$app->session->setFlash('error', 'No hay un set activo.');
+                return $this->redirect(['view', 'id' => $id]);
+            }
+        } else {
+            $set = VoleibolSet::findOne($set);
+            if (!$set || $set->sesion_id != $id) {
+                throw new NotFoundHttpException('Set no encontrado.');
+            }
+        }
+
+        // Obtener alineación actual
+        $alineaciones = VoleibolAlineacion::find()
+            ->with('atleta')
+            ->where(['sesion_id' => $id, 'set_id' => $set->id])
+            ->all();
+
+        // Organizar por equipo y posición
+        $alineacion = ['A' => [], 'B' => []];
+        foreach ($alineaciones as $a) {
+            $alineacion[$a->equipo][$a->posicion] = $a->atleta;
+        }
+
+        // Contar sustituciones usadas por equipo en este set
+        $sustitucionesUsadas = [
+            'A' => VoleibolSustitucion::find()->where(['sesion_id' => $id, 'set_id' => $set->id, 'equipo' => 'A'])->count(),
+            'B' => VoleibolSustitucion::find()->where(['sesion_id' => $id, 'set_id' => $set->id, 'equipo' => 'B'])->count(),
+        ];
+        $maxSustituciones = 6;
+
+        // Atletas en banca (asignados a la sesión pero no en alineación)
+        $atletasEnSesion = VoleibolSesionAtleta::find()
+            ->with('atleta')
+            ->where(['sesion_id' => $id])
+            ->all();
+        $banca = ['A' => [], 'B' => []];
+        $idsEnCancha = [];
+        foreach ($alineaciones as $a) {
+            $idsEnCancha[] = $a->atleta_id;
+        }
+        foreach ($atletasEnSesion as $sa) {
+            if (!in_array($sa->atleta_id, $idsEnCancha)) {
+                $banca[$sa->equipo][] = $sa->atleta;
+            }
+        }
+
+        return $this->render('marcador', [
+            'sesion' => $sesion,
+            'set' => $set,
+            'alineacion' => $alineacion,
+            'sustitucionesUsadas' => $sustitucionesUsadas,
+            'maxSustituciones' => $maxSustituciones,
+            'banca' => $banca,
+        ]);
+    }
+
+    /**
+     * Acción AJAX para sumar un punto a un equipo.
+     * @return array
+     */
+    public function actionSumarPunto()
+    {
+        Yii::$app->response->format = Response::FORMAT_JSON;
+
+        $setId = Yii::$app->request->post('set_id');
+        $equipo = Yii::$app->request->post('equipo');
+
+        $set = VoleibolSet::findOne($setId);
+        if (!$set) {
+            return ['success' => false, 'error' => 'Set no encontrado.'];
+        }
+
+        // Incrementar puntos del equipo
+        if ($equipo == 'A') {
+            $set->puntos_a += 1;
+        } elseif ($equipo == 'B') {
+            $set->puntos_b += 1;
+        } else {
+            return ['success' => false, 'error' => 'Equipo inválido.'];
+        }
+
+        // Registrar evento (opcional)
+        $evento = new VoleibolEvento();
+        $evento->sesion_id = $set->sesion_id;
+        $evento->set_id = $set->id;
+        // Buscar tipo de evento "Punto" (asumimos que existe con codigo 'PUNTO')
+        $tipoEvento = \app\models\VoleibolTipoEvento::findOne(['codigo' => 'PUNTO']);
+        if ($tipoEvento) {
+            $evento->tipo_evento_id = $tipoEvento->id;
+        }
+        $evento->created_by = Yii::$app->user->id;
+        $evento->save();
+
+        // Verificar si el set terminó según reglas FIV
+        $puntosMinimos = 25;
+        if ($set->numero == 5) {
+            $puntosMinimos = 15;
+        }
+        $diferencia = abs($set->puntos_a - $set->puntos_b);
+        $terminado = ($set->puntos_a >= $puntosMinimos || $set->puntos_b >= $puntosMinimos) && $diferencia >= 2;
+
+        if ($terminado) {
+            $set->estado = 'F';
+            $set->ganador = $set->puntos_a > $set->puntos_b ? 'A' : 'B';
+            $set->save();
+
+            // Crear siguiente set si corresponde (máximo 5)
+            $totalSets = VoleibolSet::find()->where(['sesion_id' => $set->sesion_id])->count();
+            if ($totalSets < 5) {
+                $nuevoSet = $this->crearNuevoSet($set->sesion);
+                $nuevoSetId = $nuevoSet ? $nuevoSet->id : null;
+            } else {
+                // Finalizar sesión
+                $sesion = VoleibolSesion::findOne($set->sesion_id);
+                $sesion->estado = 'F';
+                $sesion->save();
+                $nuevoSetId = null;
+            }
+
+            return [
+                'success' => true,
+                'terminado' => true,
+                'ganador' => $set->ganador,
+                'puntos_a' => $set->puntos_a,
+                'puntos_b' => $set->puntos_b,
+                'nuevo_set_id' => $nuevoSetId ?? null,
+                'mensaje' => 'Set finalizado. ' . ($nuevoSetId ? 'Nuevo set creado.' : 'Sesión finalizada.'),
+            ];
+        } else {
+            $set->save();
+            return [
+                'success' => true,
+                'terminado' => false,
+                'puntos_a' => $set->puntos_a,
+                'puntos_b' => $set->puntos_b,
+            ];
+        }
+    }
+
+    /**
+     * Acción AJAX para rotar las posiciones de un equipo.
+     */
+    public function actionRotar()
+    {
+        Yii::$app->response->format = Response::FORMAT_JSON;
+
+        $setId = Yii::$app->request->post('set_id');
+        $equipo = Yii::$app->request->post('equipo');
+
+        $set = VoleibolSet::findOne($setId);
+        if (!$set) {
+            return ['success' => false, 'error' => 'Set no encontrado.'];
+        }
+
+        // Obtener alineación actual ordenada por posición
+        $alineaciones = VoleibolAlineacion::find()
+            ->where(['sesion_id' => $set->sesion_id, 'set_id' => $set->id, 'equipo' => $equipo])
+            ->orderBy(['posicion' => SORT_ASC])
+            ->all();
+
+        if (count($alineaciones) != 6) {
+            return ['success' => false, 'error' => 'Debe haber 6 jugadores en cancha para rotar.'];
+        }
+
+        // Rotación cíclica: posición 1 -> 6, 2 -> 1, 3 -> 2, 4 -> 3, 5 -> 4, 6 -> 5
+        $atletas = [];
+        foreach ($alineaciones as $a) {
+            $atletas[$a->posicion] = $a->atleta_id;
+        }
+        $nuevasPosiciones = [
+            1 => $atletas[2],
+            2 => $atletas[3],
+            3 => $atletas[4],
+            4 => $atletas[5],
+            5 => $atletas[6],
+            6 => $atletas[1],
+        ];
+
+        $transaction = Yii::$app->db->beginTransaction();
+        try {
+            foreach ($nuevasPosiciones as $pos => $atletaId) {
+                $model = VoleibolAlineacion::findOne([
+                    'sesion_id' => $set->sesion_id,
+                    'set_id' => $set->id,
+                    'equipo' => $equipo,
+                    'posicion' => $pos,
+                ]);
+                if (!$model) {
+                    $model = new VoleibolAlineacion();
+                    $model->sesion_id = $set->sesion_id;
+                    $model->set_id = $set->id;
+                    $model->equipo = $equipo;
+                    $model->posicion = $pos;
+                }
+                $model->atleta_id = $atletaId;
+                $model->created_by = Yii::$app->user->id;
+                if (!$model->save()) {
+                    throw new \Exception('Error al guardar rotación.');
+                }
+            }
+            $transaction->commit();
+            return ['success' => true, 'mensaje' => 'Rotación aplicada.'];
+        } catch (\Exception $e) {
+            $transaction->rollBack();
+            return ['success' => false, 'error' => $e->getMessage()];
+        }
+    }
+
+    /**
+     * Acción AJAX para realizar una sustitución.
+     */
+    public function actionSustituir()
+    {
+        Yii::$app->response->format = Response::FORMAT_JSON;
+
+        $setId = Yii::$app->request->post('set_id');
+        $equipo = Yii::$app->request->post('equipo');
+        $atletaSaleId = Yii::$app->request->post('atleta_sale_id');
+        $atletaEntraId = Yii::$app->request->post('atleta_entra_id');
+
+        $set = VoleibolSet::findOne($setId);
+        if (!$set) {
+            return ['success' => false, 'error' => 'Set no encontrado.'];
+        }
+
+        // Verificar límite de sustituciones
+        $sustitucionesUsadas = VoleibolSustitucion::find()
+            ->where(['sesion_id' => $set->sesion_id, 'set_id' => $set->id, 'equipo' => $equipo])
+            ->count();
+        if ($sustitucionesUsadas >= 6) {
+            return ['success' => false, 'error' => 'Límite de 6 sustituciones por set alcanzado.'];
+        }
+
+        // Verificar que el atleta que sale está en cancha y el que entra no
+        $enCancha = VoleibolAlineacion::find()
+            ->where(['sesion_id' => $set->sesion_id, 'set_id' => $set->id, 'equipo' => $equipo])
+            ->andWhere(['atleta_id' => $atletaSaleId])
+            ->one();
+        if (!$enCancha) {
+            return ['success' => false, 'error' => 'El atleta seleccionado para salir no está en cancha.'];
+        }
+
+        $yaEnCancha = VoleibolAlineacion::find()
+            ->where(['sesion_id' => $set->sesion_id, 'set_id' => $set->id, 'equipo' => $equipo])
+            ->andWhere(['atleta_id' => $atletaEntraId])
+            ->exists();
+        if ($yaEnCancha) {
+            return ['success' => false, 'error' => 'El atleta que entra ya está en cancha.'];
+        }
+
+        $transaction = Yii::$app->db->beginTransaction();
+        try {
+            // Registrar sustitución
+            $sust = new VoleibolSustitucion();
+            $sust->sesion_id = $set->sesion_id;
+            $sust->set_id = $set->id;
+            $sust->equipo = $equipo;
+            $sust->atleta_sale_id = $atletaSaleId;
+            $sust->atleta_entra_id = $atletaEntraId;
+            $sust->created_by = Yii::$app->user->id;
+            if (!$sust->save()) {
+                throw new \Exception('Error al guardar sustitución.');
+            }
+
+            // Actualizar alineación: cambiar el atleta en la posición que ocupaba el que sale
+            $enCancha->atleta_id = $atletaEntraId;
+            $enCancha->save();
+
+            $transaction->commit();
+            return ['success' => true, 'mensaje' => 'Sustitución realizada.'];
+        } catch (\Exception $e) {
+            $transaction->rollBack();
+            return ['success' => false, 'error' => $e->getMessage()];
+        }
+    }
+
+    /**
+     * Acción AJAX para obtener la alineación actual de un equipo en un set.
+     */
+    public function actionObtenerAlineacion($sesion_id, $set_id, $equipo)
+    {
+        Yii::$app->response->format = Response::FORMAT_JSON;
+
+        $alineaciones = VoleibolAlineacion::find()
+            ->with('atleta')
+            ->where(['sesion_id' => $sesion_id, 'set_id' => $set_id, 'equipo' => $equipo])
+            ->orderBy(['posicion' => SORT_ASC])
+            ->all();
+
+        $data = [];
+        foreach ($alineaciones as $a) {
+            $data[] = [
+                'posicion' => $a->posicion,
+                'atleta_id' => $a->atleta_id,
+                'nombre' => $a->atleta->p_nombre . ' ' . $a->atleta->p_apellido,
+            ];
+        }
+        return ['success' => true, 'alineacion' => $data];
+    }
+
+    // ============================================================
+    // MÉTODOS PROTEGIDOS
+    // ============================================================
+
     /**
      * Encuentra el modelo VoleibolSesion basado en su clave primaria.
      * Si no lo encuentra, lanza una excepción 404.
@@ -374,7 +789,6 @@ class VoleibolSesionController extends Controller
         $nuevoSet->sesion_id = $sesion->id;
         $nuevoSet->numero = $maxSet ? $maxSet + 1 : 1;
         $nuevoSet->estado = 'A';
-        // ✅ CORRECCIÓN: Asignar valores por defecto a puntos_a y puntos_b (no nulos)
         $nuevoSet->puntos_a = 0;
         $nuevoSet->puntos_b = 0;
         return $nuevoSet->save() ? $nuevoSet : null;

@@ -35,6 +35,8 @@ $this->registerJs($js);
 
     <p>
         <?php if ($model->estado == 'A'): ?>
+            <!-- ✅ NUEVO BOTÓN ALINEACIÓN -->
+            <?= Html::a('Alineación', ['alineacion', 'id' => $model->id], ['class' => 'btn btn-info']) ?>
             <?= Html::a('Gestionar Atletas', ['gestionar-atletas', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
             <?= Html::a('Seleccionar Estadísticas', ['seleccionar-estadisticas', 'id' => $model->id], ['class' => 'btn btn-info']) ?>
             <?= Html::a('Ingresar Resultados', ['/atletas/voleibol-resultado/ingreso-masivo', 'sesion_id' => $model->id], ['class' => 'btn btn-warning']) ?>
