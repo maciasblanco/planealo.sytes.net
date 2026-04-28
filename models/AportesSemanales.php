@@ -241,16 +241,31 @@ class AportesSemanales extends ActiveRecord
     }
 
     /**
-     * Calcula la deuda total de un atleta (solo aportes pendientes).
+     * Calcula el monto total de la deuda de un atleta (solo aportes pendientes).
+     * // FIX: Método agregado para corregir error "Call to undefined method"
      * @param int $atleta_id
      * @return float
+     */
+    public static function calcularMontoDeuda($atleta_id)
+    {
+        return self::find()
+            ->where(['atleta_id' => $atleta_id, 'estado' => self::ESTADO_PENDIENTE])
+            ->andWhere(['>=', 'fecha_quincena', self::FECHA_INICIO_DEUDAS])
+            ->sum('monto') ?? 0.0;
+    }
+
+    /**
+     * Calcula la cantidad de semanas (quincenas) adeudadas por un atleta.
+     * // FIX: Método modificado - ahora retorna número de semanas (antes retornaba monto)
+     * @param int $atleta_id
+     * @return int Número de quincenas pendientes
      */
     public static function calcularDeudaAtleta($atleta_id)
     {
         return self::find()
             ->where(['atleta_id' => $atleta_id, 'estado' => self::ESTADO_PENDIENTE])
             ->andWhere(['>=', 'fecha_quincena', self::FECHA_INICIO_DEUDAS])
-            ->sum('monto') ?? 0.0;
+            ->count();
     }
 
     /**

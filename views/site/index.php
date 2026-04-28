@@ -151,6 +151,14 @@ $hasMarketplace = true; // Asumir que existe, se puede verificar mejor
                     Marketplace Deportivo
                 </a>
                 <?php endif; ?>
+                
+                <!-- ✅ BOTÓN PARA DESCARGAR MARCADOR DE VOLEIBOL -->
+                <a href="<?= Yii::$app->urlManager->createUrl(['site/descargar-marcador']) ?>" 
+                   class="btn btn-secondary btn-lg mx-2 landing-btn"
+                   id="btn-descargar-marcador"
+                   download>
+                    <i class="fas fa-download me-2"></i> Descargar Marcador Voleibol
+                </a>
             </div>
         </div>
     </div>

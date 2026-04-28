@@ -14,7 +14,7 @@ use yii\helpers\Url;
 /* @var $tasaCambio float */
 /* @var $datosPago string */
 
-$this->title = 'Notificación de Cobro - ' . $atleta->p_nombre . ' ' . $atleta->p_apellido;
+$this->title = 'Balance de Pagos - ' . $atleta->p_nombre . ' ' . $atleta->p_apellido;
 $this->params['breadcrumbs'][] = ['label' => 'Reportes', 'url' => ['reportes-representantes']];
 $this->params['breadcrumbs'][] = $this->title;
 
@@ -40,7 +40,7 @@ if ($becaActiva && $porcentajeBeca > 0) {
 }
 
 // Preparar texto resumen para compartir (ahora incluye el total con descuento)
-$resumen = "NOTIFICACIÓN DE COBRO\n";
+$resumen = "BALANCE DE PAGOS\n";
 $resumen .= "Atleta: {$atleta->p_nombre} {$atleta->p_apellido}\n";
 if ($representante) {
     $resumen .= "Representante: {$representante->p_nombre} {$representante->p_apellido} - CI: {$representante->identificacion}\n";
@@ -90,7 +90,7 @@ $numDeudas = count($deudas);
                         </div>
                         <div class="col-xs-8 text-right">
                             <h2 class="box-title" style="font-size: 28px; font-weight: bold; color: #dc3545;">
-                                <i class="fas fa-file-invoice"></i> NOTIFICACIÓN DE COBRO
+                                <i class="fas fa-file-invoice"></i> BALANCE DE PAGOS
                             </h2>
                             <p class="text-muted"><?= date('d/m/Y H:i') ?></p>
                         </div>
@@ -218,7 +218,7 @@ $numDeudas = count($deudas);
                         <div class="col-md-12 text-right">
                             <?php
                             $whatsappLink = whatsappLink($resumen);
-                            $emailLink = emailLink('Notificación de Cobro - ' . $atleta->p_nombre . ' ' . $atleta->p_apellido, $resumen);
+                            $emailLink = emailLink('Balance de Pagos - ' . $atleta->p_nombre . ' ' . $atleta->p_apellido, $resumen);
                             ?>
                             <a href="<?= $whatsappLink ?>" target="_blank" class="btn btn-success" title="Compartir por WhatsApp">
                                 <i class="fab fa-whatsapp"></i> WhatsApp
@@ -233,7 +233,7 @@ $numDeudas = count($deudas);
                     </div>
                 </div>
                 <div class="box-footer">
-                    <p class="text-muted">Este documento es una notificación de cobro generada por el sistema GED.</p>
+                    <p class="text-muted">Este documento es un balance de pagos generado por el sistema GED.</p>
                 </div>
             </div>
         </div>

@@ -822,6 +822,24 @@ class SiteController extends Controller
     }
     
     /**
+     * Descarga el marcador de voleibol offline.
+     *
+     * @return \yii\web\Response
+     */
+    public function actionDescargarMarcador()
+    {
+        $filePath = Yii::getAlias('@app/module/descargas/marcador_Voleibol_Offline.html');
+        if (!file_exists($filePath)) {
+            throw new NotFoundHttpException('El archivo solicitado no existe.');
+        }
+        
+        return Yii::$app->response->sendFile($filePath, 'marcador_Voleibol_Offline.html', [
+            'mimeType' => 'text/html',
+            'inline' => false, // Forzar descarga
+        ]);
+    }
+    
+    /**
      * Verifica posibles bucles de redirección (solo desarrollo).
      */
     public function actionCheckRedirectLoop()
@@ -933,7 +951,7 @@ class SiteController extends Controller
                 
                 echo "<h4>Estructura de la tabla:</h4>";
                 echo "<table>";
-                echo "<tr><th>Columna</th><th>Tipo</th><th>¿Nulo?</th></tr>";
+                echo " hilab<th>Columna</th><th>Tipo</th><th>¿Nulo?</th> </tr>";
                 foreach ($columns as $col) {
                     echo "<tr>";
                     echo "<td>" . htmlspecialchars($col['column_name']) . "</td>";
@@ -964,8 +982,8 @@ class SiteController extends Controller
             if (empty($menus)) {
                 echo "<p class='warning'>⚠️ La tabla está vacía</p>";
             } else {
-                echo "<table>";
-                echo "<tr><th>ID</th><th>Nombre</th><th>Ruta</th><th>Parent</th><th>Orden</th><th>Data (JSON)</th></tr>";
+                echo "雅";
+                echo " <tr><th>ID</th><th>Nombre</th><th>Ruta</th><th>Parent</th><th>Orden</th><th>Data (JSON)</th></tr>";
                 foreach ($menus as $menu) {
                     echo "<tr>";
                     echo "<td>" . htmlspecialchars($menu['id']) . "</td>";
