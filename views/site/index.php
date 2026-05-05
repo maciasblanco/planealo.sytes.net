@@ -20,8 +20,10 @@ if ($currentRoute === 'site/login' && $isUserAuthenticated) {
 $marketplaceUrl = Yii::$app->urlManager->createUrl(['/tienda/marketplace/index']);
 $hasMarketplace = true; // Asumir que existe, se puede verificar mejor
 
-// Ruta al APK (ajusta si es necesario)
+// Ruta al APK (ajusta si tu estructura es diferente)
 $apkUrl = Yii::getAlias('@web') . '/modules/descargas/VoleyScore/VoleyScore.apk';
+// Ruta de la imagen del botón (verifica que la carpeta se llame Bonones o Botones)
+$botonImagen = Yii::getAlias('@web') . '/img/Bonones/boton1.jpg';
 ?>
 
 <div class="site-index landing-page">
@@ -115,8 +117,8 @@ $apkUrl = Yii::getAlias('@web') . '/modules/descargas/VoleyScore/VoleyScore.apk'
             
             <hr class="my-4">
             
-            <!-- ✅ ACCIONES CON PREVENCIÓN DE BUCLE -->
-            <div id="landing-actios" class="mt-4 landing-actions">
+            <!-- ✅ ACCIONES CON PREVENCIÓN DE BUCLE Y BOTÓN DE DESCARGA APK -->
+            <div class="mt-4 landing-actions">
                 <?php if (!$isUserAuthenticated): ?>
                     <!-- Usuario NO autenticado -->
                     <?php if ($currentRoute !== 'site/login'): ?>
@@ -154,6 +156,15 @@ $apkUrl = Yii::getAlias('@web') . '/modules/descargas/VoleyScore/VoleyScore.apk'
                     Marketplace Deportivo
                 </a>
                 <?php endif; ?>
+                
+                <!-- ✅ BOTÓN DE DESCARGA APK - TAMAÑO DUPLICADO (90px de alto) -->
+                <a href="<?= $apkUrl ?>" download class="btn btn-link p-0 mx-2 d-inline-block" style="vertical-align: middle;">
+                    <img src="<?= $botonImagen ?>" 
+                         alt="Descargar Marcador Voleibol APK" 
+                         class="img-fluid"
+                         style="height: 90px; width: auto; vertical-align: middle;"
+                         title="Descargar APK - Marcador de Voleibol">
+                </a>
             </div>
         </div>
     </div>
@@ -315,35 +326,6 @@ $apkUrl = Yii::getAlias('@web') . '/modules/descargas/VoleyScore/VoleyScore.apk'
             </div>
         </div>
     </section>
-    
-    <!-- ========== NUEVA SECCIÓN: DESCARGAR MARCADOR DE VOLEIBOL ========== -->
-    <div class="download-voley-section my-4">
-        <div class="container">
-            <div class="row justify-content-center">
-                <div class="col-auto">
-                    <a href="<?= $apkUrl ?>" download class="text-decoration-none">
-                        <div class="voley-download-image" style="width: 3cm; height: 1cm; background: linear-gradient(135deg, #ff6b6b, #c92a2a); border-radius: 8px; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 5px rgba(0,0,0,0.2); transition: transform 0.2s; cursor: pointer;">
-                            <i class="fas fa-volleyball-ball me-2" style="color: white; font-size: 0.6cm;"></i>
-                            <span style="color: white; font-weight: bold; font-size: 0.4cm;">Descargar APK</span>
-                        </div>
-                    </a>
-                </div>
-            </div>
-        </div>
-    </div>
-    <style>
-        .voley-download-image:hover {
-            transform: scale(1.02);
-        }
-        /* Asegurar que el tamaño en cm se respete en pantalla (1cm = 37.8px aprox, pero se deja en cm para impresión) */
-        @media screen {
-            .voley-download-image {
-                width: 3cm;
-                height: 1cm;
-            }
-        }
-    </style>
-    <!-- ========== FIN NUEVA SECCIÓN ========== -->
     
     <!-- Información adicional -->
     <?php if (!$isUserAuthenticated): ?>
