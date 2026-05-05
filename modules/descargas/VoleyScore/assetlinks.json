@@ -1,0 +1,8 @@
+[{
+      "relation": ["delegate_permission/common.handle_all_urls"],
+      "target": {
+        "namespace": "android_app",
+        "package_name": "io.github.maciasblanco.twa",
+        "sha256_cert_fingerprints": ["22:4C:83:46:E3:5F:F5:C8:3F:54:28:1C:72:25:A0:AF:6A:8D:E8:4A:B1:F1:50:71:D7:4F:77:38:F3:F1:2C:7E"]
+      }
+    }]

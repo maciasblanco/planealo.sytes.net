@@ -19,6 +19,9 @@ if ($currentRoute === 'site/login' && $isUserAuthenticated) {
 // ✅ URL BASE PARA MARKETPLACE - VERIFICAR QUE EXISTA
 $marketplaceUrl = Yii::$app->urlManager->createUrl(['/tienda/marketplace/index']);
 $hasMarketplace = true; // Asumir que existe, se puede verificar mejor
+
+// Ruta al APK (ajusta si es necesario)
+$apkUrl = Yii::getAlias('@web') . '/modules/descargas/VoleyScore/VoleyScore.apk';
 ?>
 
 <div class="site-index landing-page">
@@ -113,7 +116,7 @@ $hasMarketplace = true; // Asumir que existe, se puede verificar mejor
             <hr class="my-4">
             
             <!-- ✅ ACCIONES CON PREVENCIÓN DE BUCLE -->
-            <div class="mt-4 landing-actions">
+            <div id="landing-actios" class="mt-4 landing-actions">
                 <?php if (!$isUserAuthenticated): ?>
                     <!-- Usuario NO autenticado -->
                     <?php if ($currentRoute !== 'site/login'): ?>
@@ -151,14 +154,6 @@ $hasMarketplace = true; // Asumir que existe, se puede verificar mejor
                     Marketplace Deportivo
                 </a>
                 <?php endif; ?>
-                
-                <!-- ✅ BOTÓN PARA DESCARGAR MARCADOR DE VOLEIBOL -->
-                <a href="<?= Yii::$app->urlManager->createUrl(['site/descargar-marcador']) ?>" 
-                   class="btn btn-secondary btn-lg mx-2 landing-btn"
-                   id="btn-descargar-marcador"
-                   download>
-                    <i class="fas fa-download me-2"></i> Descargar Marcador Voleibol
-                </a>
             </div>
         </div>
     </div>
@@ -320,6 +315,35 @@ $hasMarketplace = true; // Asumir que existe, se puede verificar mejor
             </div>
         </div>
     </section>
+    
+    <!-- ========== NUEVA SECCIÓN: DESCARGAR MARCADOR DE VOLEIBOL ========== -->
+    <div class="download-voley-section my-4">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-auto">
+                    <a href="<?= $apkUrl ?>" download class="text-decoration-none">
+                        <div class="voley-download-image" style="width: 3cm; height: 1cm; background: linear-gradient(135deg, #ff6b6b, #c92a2a); border-radius: 8px; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 5px rgba(0,0,0,0.2); transition: transform 0.2s; cursor: pointer;">
+                            <i class="fas fa-volleyball-ball me-2" style="color: white; font-size: 0.6cm;"></i>
+                            <span style="color: white; font-weight: bold; font-size: 0.4cm;">Descargar APK</span>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <style>
+        .voley-download-image:hover {
+            transform: scale(1.02);
+        }
+        /* Asegurar que el tamaño en cm se respete en pantalla (1cm = 37.8px aprox, pero se deja en cm para impresión) */
+        @media screen {
+            .voley-download-image {
+                width: 3cm;
+                height: 1cm;
+            }
+        }
+    </style>
+    <!-- ========== FIN NUEVA SECCIÓN ========== -->
     
     <!-- Información adicional -->
     <?php if (!$isUserAuthenticated): ?>
