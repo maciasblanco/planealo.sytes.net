@@ -5,27 +5,22 @@
 $this->title = 'Sistema GED - Gestión Escuelas Deportivas';
 $this->params['breadcrumbs'] = [];
 
-// ✅ DETECCIÓN MEJORADA - USAR DIRECTAMENTE isGuest
 $isUserAuthenticated = !Yii::$app->user->isGuest;
 $currentRoute = Yii::$app->controller->route;
 
-// ✅ VERIFICAR SI YA ESTAMOS EN LOGIN PARA EVITAR BUCLE
 if ($currentRoute === 'site/login' && $isUserAuthenticated) {
     Yii::$app->response->redirect(['site/index'])->send();
     return;
 }
 
-// ✅ URL BASE PARA MARKETPLACE
 $marketplaceUrl = Yii::$app->urlManager->createUrl(['/tienda/marketplace/index']);
 $hasMarketplace = true;
-
-// ✅ RUTA CORRECTA AL APK (dentro de web/Descargas)
 $apkUrl = Yii::getAlias('@web') . '/Descargas/VoleyScore/VoleyScore.apk';
 $botonImagen = Yii::getAlias('@web') . '/img/Bonones/boton1.jpg';
 ?>
 
 <div class="site-index landing-page">
-    <!-- Carrusel Hero -->
+    <!-- Carrusel Hero (sin cambios) -->
     <section id="hero-carousel" class="carousel-hero">
         <div id="carouselHero" class="carousel slide">
             <div class="carousel-indicators">
@@ -36,7 +31,7 @@ $botonImagen = Yii::getAlias('@web') . '/img/Bonones/boton1.jpg';
             <div class="carousel-inner">
                 <div class="carousel-item active">
                     <div class="carousel-image-overlay"></div>
-                    <img src="<?= Yii::getAlias('@web') ?>/img/Carrusel/slide1.jpg" class="d-block w-100 carousel-image" alt="Gestión Escuelas Deportivas - Sistema GED" title="Sistema de Gestión para Escuelas Deportivas" loading="eager" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1552674605-db6ffd8facb5?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80';">
+                    <img src="<?= Yii::getAlias('@web') ?>/img/Carrusel/slide1.jpg" class="d-block w-100 carousel-image" alt="Gestión Escuelas Deportivas" loading="eager" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1552674605-db6ffd8facb5?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80';">
                     <div class="carousel-caption">
                         <h2 class="display-4">Sistema GED</h2>
                         <p class="lead">Gestión integral de escuelas deportivas</p>
@@ -45,7 +40,7 @@ $botonImagen = Yii::getAlias('@web') . '/img/Bonones/boton1.jpg';
                 </div>
                 <div class="carousel-item">
                     <div class="carousel-image-overlay"></div>
-                    <img src="<?= Yii::getAlias('@web') ?>/img/Carrusel/slide2.png" class="d-block w-100 carousel-image" alt="Marketplace Deportivo - Productos para atletas" title="Marketplace Deportivo con los mejores productos" loading="lazy" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1519861531473-920034658307?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80';">
+                    <img src="<?= Yii::getAlias('@web') ?>/img/Carrusel/slide2.png" class="d-block w-100 carousel-image" alt="Marketplace Deportivo" loading="lazy" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1519861531473-920034658307?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80';">
                     <div class="carousel-caption">
                         <h2 class="display-4">Marketplace Deportivo</h2>
                         <p class="lead">Los mejores productos para atletas</p>
@@ -54,7 +49,7 @@ $botonImagen = Yii::getAlias('@web') . '/img/Bonones/boton1.jpg';
                 </div>
                 <div class="carousel-item">
                     <div class="carousel-image-overlay"></div>
-                    <img src="<?= Yii::getAlias('@web') ?>/img/Carrusel/slide3.png" class="d-block w-100 carousel-image" alt="Productos Destacados - Lo más vendido" title="Productos más vendidos en nuestra comunidad" loading="lazy" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80';">
+                    <img src="<?= Yii::getAlias('@web') ?>/img/Carrusel/slide3.png" class="d-block w-100 carousel-image" alt="Productos Destacados" loading="lazy" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80';">
                     <div class="carousel-caption">
                         <h2 class="display-4">Productos Destacados</h2>
                         <p class="lead">Lo más vendido en nuestra comunidad</p>
@@ -98,20 +93,22 @@ $botonImagen = Yii::getAlias('@web') . '/img/Bonones/boton1.jpg';
                 <a href="<?= $marketplaceUrl ?>" class="btn btn-warning btn-lg mx-2 landing-btn" id="btn-marketplace">Marketplace Deportivo</a>
                 <?php endif; ?>
                 
-                <!-- BOTÓN DE DESCARGA APK - RUTA CORREGIDA -->
-                <a href="<?= $apkUrl ?>" download class="btn btn-link p-0 mx-2 d-inline-block" style="vertical-align: middle;">
-                    <img src="<?= $botonImagen ?>" alt="Descargar Marcador Voleibol APK" class="img-fluid" style="height: 90px; width: auto; vertical-align: middle;" title="Descargar APK - Marcador de Voleibol">
+                <!-- Botón de descarga con imagen mejorada por CSS -->
+                <a href="<?= $apkUrl ?>" download class="btn-apk-image-wrapper mx-2">
+                    <img src="<?= $botonImagen ?>" 
+                         alt="Descargar Marcador Voleibol APK" 
+                         class="img-fluid btn-apk-img"
+                         title="Descargar APK - Marcador de Voleibol">
                 </a>
             </div>
         </div>
     </div>
     
-    <!-- Banner de Tiendas Patrocinadas -->
+    <!-- Resto del contenido sin cambios (banner, características, productos, footer) -->
     <section id="tiendas-patrocinadas" class="tiendas-patrocinadas-section">
         <div class="container"><div class="row"><div class="col-12 text-center"><div id="banner-tiendas-patrocinadas"></div></div></div></div>
     </section>
     
-    <!-- Características del Sistema -->
     <div class="features-section py-5">
         <div class="container">
             <div class="row">
@@ -122,7 +119,6 @@ $botonImagen = Yii::getAlias('@web') . '/img/Bonones/boton1.jpg';
         </div>
     </div>
     
-    <!-- Productos Más Vendidos -->
     <section id="productos-mas-vendidos" class="productos-mas-vendidos py-5">
         <div class="container">
             <div class="text-center mb-5"><h2 class="display-5 fw-bold text-primary mb-3">🏆 Productos Más Vendidos</h2><p class="lead text-muted">Los productos preferidos por nuestra comunidad</p></div>
@@ -136,13 +132,50 @@ $botonImagen = Yii::getAlias('@web') . '/img/Bonones/boton1.jpg';
         </div>
     </section>
     
-    <!-- Información adicional -->
     <?php if (!$isUserAuthenticated): ?>
     <div class="container py-5"><div class="row"><div class="col-lg-8 mx-auto"><div class="card welcome-message"><div class="card-body text-center"><h4 class="card-title">¡Bienvenido al Sistema GED!</h4><p class="card-text">Para acceder al sistema completo, por favor inicia sesión.</p><div class="mt-3"><?php if ($currentRoute !== 'site/login'): ?><a href="<?= Yii::$app->urlManager->createUrl(['/site/login']) ?>" class="btn btn-primary btn-lg"><i class="fas fa-sign-in-alt"></i> Iniciar Sesión</a><?php endif; ?></div></div></div></div></div></div>
     <?php else: ?>
     <div class="container py-5"><div class="row"><div class="col-lg-8 mx-auto"><div class="card welcome-message authenticated"><div class="card-body text-center"><h4 class="card-title">¡Hola de nuevo!</h4><p class="card-text">Estás autenticado en el sistema GED.</p><div class="mt-3"><a href="<?= Yii::$app->urlManager->createUrl(['/ged/default/index']) ?>" class="btn btn-success btn-lg"><i class="fas fa-tachometer-alt"></i> Acceder al Sistema</a><a href="<?= Yii::$app->urlManager->createUrl(['/site/mi-cuenta']) ?>" class="btn btn-info btn-lg ms-2"><i class="fas fa-user-cog"></i> Mi Cuenta</a></div></div></div></div></div></div>
     <?php endif; ?>
     
-    <!-- Footer -->
     <div class="landing-footer py-4"><div class="container text-center"><p class="mb-2"><strong>Sistema GED</strong> &copy; <?= date('Y') ?> - Gestión Escuelas Deportivas</p><p class="text-muted small mb-0">Plataforma tecnológica para la administración deportiva</p></div></div>
 </div>
+
+<!-- Estilos CSS para convertir la imagen en un botón moderno -->
+<style>
+.btn-apk-image-wrapper {
+    display: inline-block;
+    text-decoration: none;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    border-radius: 60px; /* Para que el wrapper también sea redondeado */
+    box-shadow: 0 6px 14px rgba(0, 0, 0, 0.2), 0 2px 4px rgba(0, 0, 0, 0.1);
+    background: rgba(0,0,0,0.05); /* Sutíl fondo solo para la sombra externa */
+}
+.btn-apk-img {
+    display: block;
+    height: 90px;   /* Tamaño aumentado como solicitaste */
+    width: auto;
+    border-radius: 60px;  /* Bordes redondeados tipo botón */
+    transition: all 0.2s ease;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    border: 1px solid rgba(255,255,255,0.3);
+}
+.btn-apk-image-wrapper:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 20px rgba(0, 0, 0, 0.3);
+}
+.btn-apk-image-wrapper:hover .btn-apk-img {
+    filter: brightness(1.02) contrast(1.05);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+}
+.btn-apk-image-wrapper:active {
+    transform: translateY(2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+/* Ajuste responsive */
+@media (max-width: 768px) {
+    .btn-apk-img {
+        height: 70px;
+    }
+}
+</style>

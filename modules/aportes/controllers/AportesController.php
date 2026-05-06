@@ -2373,6 +2373,7 @@ class AportesController extends Controller
         Yii::$app->session->setFlash('success', "Se generaron $count nuevas quincenas.");
         return $this->redirect(['index']);
     }
+
     /**
      * Lista todos los atletas con información de sus becas (activa, pendiente, etc.)
      * @return string
@@ -2399,5 +2400,120 @@ class AportesController extends Controller
         return $this->render('lista-atletas-becas', [
             'atletas' => $atletas,
         ]);
+    }
+
+    // =========================================================================
+    // NUEVAS ACCIONES PARA LA APK MÓVIL (CONSULTA DE DEUDA Y COMENTARIOS)
+    // =========================================================================
+
+    /**
+     * Endpoint para consultar deuda por cédula (CI)
+     * Método: GET
+     * Parámetros: ?ci=12345678
+     * Respuesta JSON: { success, deuda_usd, nombre, quincenas, actualizado_en, error? }
+     */
+    public function actionDeudaPorCi($ci)
+    {
+        Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        
+        // Validar CI
+        if (!preg_match('/^\d{6,12}$/', $ci)) {
+            return ['success' => false, 'error' => 'CI inválida (debe tener 6-12 dígitos)'];
+        }
+        
+        // Buscar atleta por identificación
+        $atleta = AtletasRegistro::find()
+            ->where(['identificacion' => $ci, 'eliminado' => false])
+            ->one();
+        
+        if (!$atleta) {
+            return ['success' => false, 'error' => 'Cédula no registrada en el sistema'];
+        }
+        
+        // Verificar que pertenezca a una escuela activa (opcional pero recomendado)
+        if ($atleta->id_escuela) {
+            $escuela = Escuela::findOne($atleta->id_escuela);
+            if (!$escuela || $escuela->eliminado) {
+                return ['success' => false, 'error' => 'La escuela del atleta no está activa'];
+            }
+        }
+        
+        // Calcular deuda usando el método existente (incluye descuentos por beca)
+        $resumen = $this->calcularResumenAtleta($atleta->id);
+        
+        // Obtener tasa de cambio actual (opcional, para mostrar deuda en bolívares)
+        $tasaDolar = \app\models\TasaDolar::getUltimaTasa() ?: \app\models\AportesSemanales::TASA_CAMBIO_FIJA;
+        
+        return [
+            'success' => true,
+            'ci' => $ci,
+            'nombre' => $atleta->p_nombre . ' ' . $atleta->p_apellido,
+            'deuda_usd' => (float) $resumen['total_pendiente'],
+            'deuda_bs' => (float) $resumen['total_pendiente'] * $tasaDolar,
+            'quincenas_pendientes' => $resumen['quincenas_pendientes'],
+            'moneda' => 'USD',
+            'actualizado_en' => date('Y-m-d H:i:s')
+        ];
+    }
+
+    /**
+     * Endpoint para recibir comentarios/calificaciones desde la APK
+     * Método: POST
+     * Parámetros (form-data): ci, puntuacion (1-5), comentario (texto)
+     */
+    public function actionEnviarComentario()
+    {
+        Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        
+        $ci = Yii::$app->request->post('ci');
+        $puntuacion = (int) Yii::$app->request->post('puntuacion');
+        $comentario = Yii::$app->request->post('comentario', '');
+        
+        // Validaciones
+        if (!$ci || !preg_match('/^\d{6,12}$/', $ci)) {
+            return ['success' => false, 'error' => 'CI inválida'];
+        }
+        if ($puntuacion < 1 || $puntuacion > 5) {
+            return ['success' => false, 'error' => 'Puntuación debe ser entre 1 y 5'];
+        }
+        if (mb_strlen($comentario) > 500) {
+            return ['success' => false, 'error' => 'El comentario no puede exceder 500 caracteres'];
+        }
+        
+        // Verificar que la CI exista (opcional pero recomendado)
+        $atleta = AtletasRegistro::findOne(['identificacion' => $ci]);
+        if (!$atleta) {
+            return ['success' => false, 'error' => 'Cédula no registrada'];
+        }
+        
+        // Guardar en la tabla app.app_comentarios (con esquema explícito)
+        $db = Yii::$app->db;
+        $sql = "INSERT INTO app.app_comentarios (ci, puntuacion, comentario, fecha_creacion, version_app)
+                VALUES (:ci, :puntuacion, :comentario, NOW(), :version)";
+        $db->createCommand($sql, [
+            ':ci' => $ci,
+            ':puntuacion' => $puntuacion,
+            ':comentario' => $comentario,
+            ':version' => '1.0'
+        ])->execute();
+        
+        return ['success' => true, 'message' => 'Gracias por tu comentario'];
+    }
+
+    /**
+     * Verificación de API Key para los endpoints de la APK
+     */
+    public function beforeAction($action)
+    {
+        if (in_array($action->id, ['deuda-por-ci', 'enviar-comentario'])) {
+            $headers = Yii::$app->request->headers;
+            $apiKey = $headers->get('X-API-Key');
+            if ($apiKey !== Yii::$app->params['apiKey']) {
+                Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+                Yii::$app->response->data = ['success' => false, 'error' => 'Acceso no autorizado'];
+                return false;
+            }
+        }
+        return parent::beforeAction($action);
     }
 }

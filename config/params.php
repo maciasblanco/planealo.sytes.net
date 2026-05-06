@@ -17,5 +17,8 @@ return [
     'brand' =>[
         'brandLogo' => 'Club Voleivol Aves Voladoras',
         'acronimoBrandLogo' => 'C.V Aves Voladoras',
-    ]
+    ],
+
+    'apiKey' => '*m4c145',
+    
 ];

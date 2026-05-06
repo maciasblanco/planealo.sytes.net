@@ -68,7 +68,7 @@ return [
             'itemChildTable' => 'seguridad.auth_item_child',
             'assignmentTable' => 'seguridad.auth_assignment',
             'ruleTable' => 'seguridad.auth_rule',
-            'defaultRoles' => ['invitado'], // ← Asigna rol 'invitado' a usuarios no autenticados
+            'defaultRoles' => ['invitado'],
         ],
         'db' => [
             'class' => 'yii\\db\\Connection',
@@ -194,6 +194,8 @@ return [
                 'reportes/asistencias' => 'reportes/reportes/asistencias',
                 'reportes/exportar-pdf/<reporte>' => 'reportes/reportes/exportar-pdf',
                 'reportes/exportar-excel/<reporte>' => 'reportes/reportes/exportar-excel',
+                'GET api/deuda' => 'aportes/aportes/deuda-por-ci',
+                'POST api/comentario' => 'aportes/aportes/enviar-comentario',
             ],
         ],
     ],
@@ -278,11 +280,11 @@ return [
                     return !Yii::$app->user->isGuest && Yii::$app->user->id == 1;
                 },
             ],
-            // 2. Acciones públicas explícitas
+            // 2. Acciones públicas explícitas (incluye los endpoints de la APK)
             [
                 'allow' => true,
                 'matchCallback' => function ($rule, $action) {
-                    $route = $action->getUniqueId(); // ✅ Ruta completa con módulos
+                    $route = $action->getUniqueId();
                     $allowActions = [
                         'site/index', 'site/login', 'site/logout', 'site/error', 'site/about',
                         'site/contact', 'site/captcha', 'site/verify-email-first',
@@ -294,6 +296,8 @@ return [
                         'admin/user/reset-password', 'site/debug-menu', 'site/test-menu-widget',
                         'site/clear-cache', 'site/get-mobile-menu', 'debug/menu',
                         'admin/default/login', 'admin/default/error',
+                        'GET api/deuda',      // ✅ Endpoint para consultar deuda
+                        'POST api/comentario', // ✅ Endpoint para enviar comentarios
                     ];
                     return in_array($route, $allowActions);
                 },
@@ -302,7 +306,7 @@ return [
             [
                 'allow' => true,
                 'matchCallback' => function ($rule, $action) {
-                    $route = $action->getUniqueId(); // ✅ Ruta completa
+                    $route = $action->getUniqueId();
                     return Yii::$app->user->can($route);
                 },
             ],
