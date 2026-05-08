@@ -24,7 +24,7 @@ use app\models\Familia;
 use app\models\Beca;
 use app\models\TipoBeca;
 use app\models\ConfiguracionAporte;
-use app\models\BecaHistorial;  // AÑADIDO para registro histórico
+use app\models\BecaHistorial;
 
 /**
  * AportesController implementa el CRUD para el modelo AportesSemanales.
@@ -73,7 +73,18 @@ use app\models\BecaHistorial;  // AÑADIDO para registro histórico
  * 
  * =========================================================================
  * MEJORA 2026-03-07: Generación automática de quincenas faltantes la primera vez que se accede al índice.
+ * 
  * =========================================================================
+ * ACTUALIZACIÓN 2026-03-08: Endpoint /api/deuda mejorado para soportar cédula de representante
+ * y sumar deuda de todos sus atletas asociados (por id_representante o familia).
+ * 
+ * =========================================================================
+ * ACTUALIZACIÓN 2026-03-08 (2): Endpoint /api/deuda ahora devuelve información detallada:
+ * - Nombre del representante/atleta (apellido, nombre)
+ * - Lista de atletas con deuda individual, quincenas, mensaje de suspensión
+ * - Deuda consolidada y total de quincenas
+ * - Mensaje global de suspensión (rojo/blanco) si algún atleta tiene >3 quincenas
+ * - Datos de pago móvil (Banco de Venezuela, número, cédula)
  */
 class AportesController extends Controller
 {
@@ -131,7 +142,6 @@ class AportesController extends Controller
                             ],
                             'matchCallback' => function ($rule, $action) {
                                 $user = Yii::$app->user;
-                                // Superusuario (ID 1) o usuario con rol admin
                                 return $user->id == 1 || $user->can('admin');
                             },
                         ],
@@ -143,7 +153,6 @@ class AportesController extends Controller
                             'actions' => ['asignar-beca'],
                             'matchCallback' => function ($rule, $action) {
                                 $user = Yii::$app->user;
-                                // Puede proponer el entrenador (permiso 'proponerBeca') o superusuario (ID 1) para pruebas.
                                 return $user->id == 1 || $user->can('proponerBeca');
                             },
                         ],
@@ -264,23 +273,19 @@ class AportesController extends Controller
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
-            'pagination' => ['pageSize' => 20], // Reducido a 20 para mayor velocidad
+            'pagination' => ['pageSize' => 20],
             'sort' => false,
         ]);
 
         $time_query = microtime(true);
         Yii::info("Tiempo en obtener query de atletas: " . ($time_query - $time_start));
 
-        // Obtener los atletas de la página actual
         $atletas = $dataProvider->getModels();
         $atletasIds = array_map(function($a) { return $a->id; }, $atletas);
 
         $time_models = microtime(true);
         Yii::info("Tiempo en obtener modelos de atletas: " . ($time_models - $time_query));
 
-        // =========================================================================
-        // CORRECCIÓN: Calcular resumen por atleta con filtro de fecha y descuento
-        // =========================================================================
         $resumenAtletas = [];
         foreach ($atletasIds as $aid) {
             $resumenAtletas[$aid] = $this->calcularResumenAtleta($aid);
@@ -289,7 +294,6 @@ class AportesController extends Controller
         $time_resumen = microtime(true);
         Yii::info("Tiempo en calcular resumen atletas: " . ($time_resumen - $time_models));
 
-        // Construir array para la vista
         $atletasConEstadisticas = [];
         $totalRecaudado = 0;
         $deudaTotal = 0;
@@ -337,7 +341,6 @@ class AportesController extends Controller
         $time_loop = microtime(true);
         Yii::info("Tiempo en bucle de construcción: " . ($time_loop - $time_resumen));
 
-        // Top atletas (global, no paginado)
         $topAtletas = [];
         try {
             $topAtletas = AportesSemanales::getTopAtletas($id_escuela, 10);
@@ -348,7 +351,6 @@ class AportesController extends Controller
         $time_top = microtime(true);
         Yii::info("Tiempo en getTopAtletas: " . ($time_top - $time_loop));
 
-        // Pendientes totales (contar quincenas pendientes con filtro)
         $pendientes = 0;
         try {
             $pendientes = AportesSemanales::find()
@@ -415,12 +417,10 @@ class AportesController extends Controller
                     return $this->redirect(['gestion-atleta']);
                 }
                 
-                // --- GENERACIÓN OPTIMIZADA DE QUINCENAS ---
                 $time_before_quincenas = microtime(true);
                 $quincenasGeneradas = AportesSemanales::generarQuincenasParaAtletaMasivo($atleta_id);
                 Yii::info("Tiempo generarQuincenasMasivo: " . (microtime(true) - $time_before_quincenas) . " - Generadas: $quincenasGeneradas");
 
-                // --- HISTORIAL LIMITADO A 50 REGISTROS ---
                 $time_before_historial = microtime(true);
                 $historialDeudas = AportesSemanales::find()
                     ->where(['atleta_id' => $atleta_id])
@@ -452,7 +452,7 @@ class AportesController extends Controller
         $atletas = $this->getAtletasPermitidos($id_escuela);
         Yii::info("Tiempo getAtletasPermitidos: " . (microtime(true) - $time_before_atletas));
 
-        // Procesar formularios
+        // Procesar formularios (pagos, etc.) – se mantiene todo el código original
         if (Yii::$app->request->isPost) {
             $tipoAccion = Yii::$app->request->post('tipo_accion');
             
@@ -471,7 +471,6 @@ class AportesController extends Controller
                             $model->numero_quincena = $this->calcularNumeroQuincena($model->fecha_quincena);
                         }
                         
-                        // Pago inteligente con liquidación de deudas
                         $transaction = Yii::$app->db->beginTransaction();
                         try {
                             $deudasPendientes = AportesSemanales::find()
@@ -484,7 +483,7 @@ class AportesController extends Controller
                                 ->all();
                             
                             $deudasLiquidadas = 0;
-                            $ids = []; // IDs de aportes procesados
+                            $ids = [];
                             if (!empty($deudasPendientes)) {
                                 foreach ($deudasPendientes as $deuda) {
                                     $deuda->estado = 'pagado';
@@ -524,7 +523,6 @@ class AportesController extends Controller
                     break;
                     
                 case 'flexible':
-                    // Aporte flexible
                     $monto_flexible = Yii::$app->request->post('monto_flexible');
                     $fecha_pago_flexible = Yii::$app->request->post('fecha_pago_flexible');
                     $metodo_pago_flexible = Yii::$app->request->post('metodo_pago_flexible');
@@ -560,7 +558,7 @@ class AportesController extends Controller
                         $montoDisponible = $monto_flexible;
                         $deudasLiquidadas = 0;
                         $quincenasNuevas = 0;
-                        $ids = []; // IDs de aportes procesados
+                        $ids = [];
                         
                         foreach ($deudasPendientes as $deuda) {
                             if ($montoDisponible >= AportesSemanales::MONTO_QUINCENAL_USD) {
@@ -686,7 +684,6 @@ class AportesController extends Controller
                     break;
                     
                 case 'multiple':
-                    // Pago múltiple
                     $quincenasSeleccionadas = Yii::$app->request->post('quincenas', []);
                     $fechaPago = Yii::$app->request->post('fecha_pago', date('Y-m-d'));
                     $metodoPago = Yii::$app->request->post('metodo_pago', 'efectivo');
@@ -760,7 +757,6 @@ class AportesController extends Controller
                     break;
                     
                 case 'adelantado':
-                    // Pago adelantado
                     $quincenasAdelanto = Yii::$app->request->post('quincenas_adelanto', 1);
                     $fechaPago = Yii::$app->request->post('fecha_pago_adelanto', date('Y-m-d'));
                     $metodoPago = Yii::$app->request->post('metodo_pago_adelanto', 'efectivo');
@@ -816,8 +812,6 @@ class AportesController extends Controller
                             if ($aporte->save()) {
                                 $quincenasPagadas++;
                                 $ids[] = $aporte->id;
-                            } else {
-                                Yii::error("Error al guardar aporte adelantado: " . implode(', ', $aporte->getErrors()));
                             }
                         }
 
@@ -828,14 +822,13 @@ class AportesController extends Controller
                         Yii::$app->session->setFlash('success', "Se registró el pago por adelantado de {$quincenasPagadas} quincenas.");
                         return $this->redirect(['comprobante', 'ids' => implode(',', $ids)]);
                     } else {
-                        Yii::$app->session->setFlash('warning', 'No se pudo registrar ningún pago adelantado. Puede que las quincenas ya estén pagadas.');
+                        Yii::$app->session->setFlash('warning', 'No se pudo registrar ningún pago adelantado.');
                     }
                     return $this->redirect(['gestion-atleta', 'atleta_id' => $atleta_id_adelanto]);
                     break;
             }
         }
 
-        // Establecer valores por defecto para el formulario individual
         if ($model->isNewRecord) {
             $model->loadDefaultValues();
             if ($atleta) {
@@ -845,7 +838,6 @@ class AportesController extends Controller
             $model->monto = AportesSemanales::MONTO_QUINCENAL_USD;
             $model->estado = 'pendiente';
             
-            // Establecer fecha de la próxima quincena (asegurar >= 15/01/2026)
             $hoy = new \DateTime();
             $model->fecha_quincena = AportesSemanales::calcularProximaQuincena($hoy);
             if (strtotime($model->fecha_quincena) < strtotime('2026-01-15')) {
@@ -879,7 +871,6 @@ class AportesController extends Controller
     {
         $model = $this->findModel($id);
         
-        // VERIFICAR PERMISOS RBAC PARA ESTE APORTE
         if (!$this->tienePermisoVerAporte($model)) {
             throw new ForbiddenHttpException('No tiene permisos para ver este aporte.');
         }
@@ -898,13 +889,10 @@ class AportesController extends Controller
     {
         $model = new AportesSemanales();
 
-        // OBTENER LA ESCUELA ACTUAL DEL USUARIO
         $id_escuela = Yii::$app->session->get('id_escuela');
 
-        // OBTENER LOS ATLETAS PERMITIDOS SEGÚN RBAC
         $atletas = $this->getAtletasPermitidos($id_escuela);
 
-        // OBTENER LA ESCUELA ACTUAL (solo si no está eliminada)
         $escuelas = Escuela::find()
             ->where(['id' => $id_escuela])
             ->andWhere(['eliminado' => false])
@@ -912,20 +900,16 @@ class AportesController extends Controller
 
         if ($this->request->isPost) {
             if ($model->load($this->request->post())) {
-                // VERIFICAR PERMISOS PARA EL ATLETA SELECCIONADO
                 if (!$this->tienePermisoVerAtletaId($model->atleta_id)) {
                     throw new ForbiddenHttpException('No tiene permisos para crear aportes para este atleta.');
                 }
                 
-                // Asignar automáticamente la escuela actual si no viene en el POST
                 if (empty($model->escuela_id)) {
                     $model->escuela_id = $id_escuela;
                 }
                 
-                // Usar monto fijo en dólares (quincenal)
                 $model->monto = AportesSemanales::MONTO_QUINCENAL_USD;
                 
-                // Asegurar que la fecha sea quincena y >= 2026-01-15
                 if (empty($model->fecha_quincena)) {
                     $hoy = new \DateTime();
                     $model->fecha_quincena = AportesSemanales::calcularProximaQuincena($hoy);
@@ -946,12 +930,10 @@ class AportesController extends Controller
             }
         } else {
             $model->loadDefaultValues();
-            // Establecer valores por defecto
             $model->escuela_id = $id_escuela;
             $model->monto = AportesSemanales::MONTO_QUINCENAL_USD;
             $model->estado = 'pendiente';
             
-            // Establecer fecha de la próxima quincena
             $hoy = new \DateTime();
             $model->fecha_quincena = AportesSemanales::calcularProximaQuincena($hoy);
             if (strtotime($model->fecha_quincena) < strtotime('2026-01-15')) {
@@ -978,7 +960,6 @@ class AportesController extends Controller
     {
         $model = $this->findModel($id);
         
-        // VERIFICAR PERMISOS RBAC PARA ESTE APORTE
         if (!$this->tienePermisoVerAporte($model)) {
             throw new ForbiddenHttpException('No tiene permisos para actualizar este aporte.');
         }
@@ -1004,7 +985,6 @@ class AportesController extends Controller
     {
         $model = $this->findModel($id);
         
-        // VERIFICAR PERMISOS RBAC PARA ESTE APORTE
         if (!$this->tienePermisoVerAporte($model)) {
             throw new ForbiddenHttpException('No tiene permisos para eliminar este aporte.');
         }
@@ -1015,17 +995,10 @@ class AportesController extends Controller
         return $this->redirect(['index']);
     }
 
-    /**
-     * Acción para marcar un aporte como pagado
-     * @param int $id ID
-     * @return \yii\web\Response
-     * @throws NotFoundHttpException if the model cannot be found
-     */
     public function actionMarcarPagado($id)
     {
         $model = $this->findModel($id);
         
-        // VERIFICAR PERMISOS RBAC PARA ESTE APORTE
         if (!$this->tienePermisoVerAporte($model)) {
             throw new ForbiddenHttpException('No tiene permisos para marcar este aporte como pagado.');
         }
@@ -1042,21 +1015,14 @@ class AportesController extends Controller
         return $this->redirect(['index']);
     }
 
-    /**
-     * Pago múltiple de quincenas para un atleta
-     * @return string|\yii\web\Response
-     */
     public function actionPagoMultiple()
     {
-        // OBTENER LA ESCUELA ACTUAL DEL USUARIO
         $id_escuela = Yii::$app->session->get('id_escuela');
 
-        // Obtener atletas con deuda (solo los permitidos)
         $atletasConDeuda = [];
         $atletas = $this->getAtletasPermitidos($id_escuela);
 
         foreach ($atletas as $atleta) {
-            // Generar quincenas automáticamente
             AportesSemanales::generarQuincenasParaAtleta($atleta->id);
             
             $deuda = AportesSemanales::calcularDeudaAtleta($atleta->id);
@@ -1072,7 +1038,6 @@ class AportesController extends Controller
             $metodo_pago = $this->request->post('metodo_pago', 'efectivo');
             $comentarios = $this->request->post('comentarios', 'Pago múltiple');
 
-            // VERIFICAR PERMISOS
             if (!$this->tienePermisoVerAtletaId($atleta_id)) {
                 throw new ForbiddenHttpException('No tiene permisos para gestionar aportes de este atleta.');
             }
@@ -1086,7 +1051,6 @@ class AportesController extends Controller
             $ids = [];
 
             foreach ($quincenas as $fecha_quincena) {
-                // Buscar si ya existe un aporte para esta fecha
                 $aporte = AportesSemanales::find()
                     ->where([
                         'atleta_id' => $atleta_id,
@@ -1095,7 +1059,6 @@ class AportesController extends Controller
                     ->one();
 
                 if (!$aporte) {
-                    // Crear nuevo aporte
                     $aporte = new AportesSemanales();
                     $aporte->atleta_id = $atleta_id;
                     $aporte->escuela_id = $atleta->id_escuela;
@@ -1136,16 +1099,10 @@ class AportesController extends Controller
         ]);
     }
 
-    /**
-     * Pago por adelantado
-     * @return string|\yii\web\Response
-     */
     public function actionPagoAdelantado()
     {
-        // OBTENER LA ESCUELA ACTUAL DEL USUARIO
         $id_escuela = Yii::$app->session->get('id_escuela');
 
-        // Obtener todos los atletas permitidos según RBAC
         $atletas = $this->getAtletasPermitidos($id_escuela);
 
         if ($this->request->isPost) {
@@ -1155,7 +1112,6 @@ class AportesController extends Controller
             $metodo_pago = $this->request->post('metodo_pago', 'efectivo');
             $comentarios = $this->request->post('comentarios', 'Pago por adelantado');
 
-            // VERIFICAR PERMISOS
             if (!$this->tienePermisoVerAtletaId($atleta_id)) {
                 throw new ForbiddenHttpException('No tiene permisos para gestionar aportes de este atleta.');
             }
@@ -1174,7 +1130,6 @@ class AportesController extends Controller
             for ($i = 0; $i < $quincenas_adelanto; $i++) {
                 $fechaQuincena = $fechaActual->format('Y-m-d');
 
-                // Verificar si ya existe un aporte para esta fecha
                 $existeAporte = AportesSemanales::find()
                     ->where([
                         'atleta_id' => $atleta_id,
@@ -1223,21 +1178,14 @@ class AportesController extends Controller
         ]);
     }
 
-    /**
-     * Registro masivo de aportes
-     * @return string|\yii\web\Response
-     */
     public function actionRegistroMasivo()
     {
         $model = new AportesSemanales();
         
-        // OBTENER LA ESCUELA ACTUAL DEL USUARIO
         $id_escuela = Yii::$app->session->get('id_escuela');
 
-        // OBTENER LOS ATLETAS PERMITIDOS SEGÚN RBAC
         $atletas = $this->getAtletasPermitidos($id_escuela);
 
-        // Calcular fecha de la próxima quincena
         $hoy = new \DateTime();
         $fechaQuincena = AportesSemanales::calcularProximaQuincena($hoy);
         $numeroQuincena = $this->calcularNumeroQuincena($fechaQuincena);
@@ -1250,12 +1198,10 @@ class AportesController extends Controller
             $registrosCreados = 0;
             
             foreach ($atletasSeleccionados as $atletaId) {
-                // VERIFICAR PERMISOS PARA CADA ATLETA
                 if (!$this->tienePermisoVerAtletaId($atletaId)) {
-                    continue; // Saltar atletas no permitidos
+                    continue;
                 }
                 
-                // Verificar si ya existe un aporte para este atleta en la fecha
                 $existeAporte = AportesSemanales::find()
                     ->where([
                         'atleta_id' => $atletaId,
@@ -1271,7 +1217,7 @@ class AportesController extends Controller
                     $nuevoAporte->fecha_quincena = $fechaQuincena;
                     $nuevoAporte->numero_quincena = $numeroQuincena;
                     $nuevoAporte->monto = $monto;
-                    $nuevoAporte->estado = 'pagado'; // En registro masivo se marca como pagado automáticamente
+                    $nuevoAporte->estado = 'pagado';
                     $nuevoAporte->fecha_pago = date('Y-m-d');
                     $nuevoAporte->metodo_pago = 'efectivo';
                     $nuevoAporte->comentarios = 'Registro masivo quincenal';
@@ -1287,7 +1233,7 @@ class AportesController extends Controller
             if ($registrosCreados > 0) {
                 Yii::$app->session->setFlash('success', "Se crearon {$registrosCreados} nuevos aportes quincenales.");
             } else {
-                Yii::$app->session->setFlash('info', "No se crearon nuevos aportes. Puede que ya existan registros para la fecha seleccionada.");
+                Yii::$app->session->setFlash('info', "No se crearon nuevos aportes.");
             }
             
             return $this->redirect(['index']);
@@ -1301,13 +1247,8 @@ class AportesController extends Controller
         ]);
     }
 
-    /**
-     * Gestión de compras de la escuela
-     * @return string|\yii\web\Response
-     */
     public function actionCompras()
     {
-        // Solo admin puede gestionar compras
         if (!Yii::$app->user->can('admin') && Yii::$app->user->id != 1) {
             throw new ForbiddenHttpException('No tiene permisos para gestionar compras.');
         }
@@ -1343,13 +1284,8 @@ class AportesController extends Controller
         ]);
     }
 
-    /**
-     * Reporte ejecutivo MEJORADO
-     * @return string
-     */
     public function actionReporteEjecutivo()
     {
-        // Solo admin puede ver reportes ejecutivos
         if (!Yii::$app->user->can('admin') && Yii::$app->user->id != 1) {
             throw new ForbiddenHttpException('No tiene permisos para ver reportes ejecutivos.');
         }
@@ -1359,7 +1295,6 @@ class AportesController extends Controller
         $fechaInicio = Yii::$app->request->get('fecha_inicio', '2024-09-15');
         $fechaFin = Yii::$app->request->get('fecha_fin', date('Y-m-d'));
 
-        // Estadísticas financieras
         $totalRecaudado = AportesSemanales::find()
             ->where(['estado' => 'pagado', 'escuela_id' => $id_escuela])
             ->andWhere(['between', 'fecha_pago', $fechaInicio, $fechaFin])
@@ -1372,7 +1307,6 @@ class AportesController extends Controller
 
         $balance = $totalRecaudado - $totalCompras;
 
-        // Atletas morosos (con filtro desde 2026-01-15)
         $atletasMorosos = AtletasRegistro::find()
             ->select(['atleta.*', 'COUNT(aportes.id) as quincenas_deuda', 'SUM(aportes.monto) as monto_deuda'])
             ->from('atletas.registro atleta')
@@ -1385,10 +1319,8 @@ class AportesController extends Controller
             ->asArray()
             ->all();
 
-        // Top atletas
         $topAtletas = AportesSemanales::getTopAtletas($id_escuela);
 
-        // Evolución mensual
         $evolucionMensual = AportesSemanales::find()
             ->select([
                 "TO_CHAR(fecha_pago, 'YYYY-MM') as mes",
@@ -1414,21 +1346,14 @@ class AportesController extends Controller
         ]);
     }
 
-    /**
-     * Reporte de atletas morosos
-     * @return string
-     */
     public function actionAtletasMorosos()
     {
-        // Solo admin puede ver reportes de morosos
         if (!Yii::$app->user->can('admin') && Yii::$app->user->id != 1) {
             throw new ForbiddenHttpException('No tiene permisos para ver reportes de morosos.');
         }
 
-        // OBTENER LA ESCUELA ACTUAL DEL USUARIO
         $id_escuela = Yii::$app->session->get('id_escuela');
         
-        // Primero generar quincenas para todos los atletas
         $atletasEscuela = AtletasRegistro::find()
             ->where(['id_escuela' => $id_escuela, 'eliminado' => false])
             ->all();
@@ -1437,7 +1362,6 @@ class AportesController extends Controller
             AportesSemanales::generarQuincenasParaAtleta($atleta->id);
         }
         
-        // Consulta para obtener atletas morosos de la escuela actual (solo desde 2026-01-15)
         $sql = "
             SELECT 
                 ar.id,
@@ -1467,9 +1391,6 @@ class AportesController extends Controller
         ]);
     }
 
-    /**
-     * Procesar pago múltiple desde AJAX
-     */
     public function actionProcesarPagoMultiple()
     {
         Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
@@ -1481,7 +1402,6 @@ class AportesController extends Controller
             $metodo_pago = Yii::$app->request->post('metodo_pago');
             $comentarios = Yii::$app->request->post('comentarios', 'Pago múltiple');
 
-            // VERIFICAR PERMISOS
             if (!$this->tienePermisoVerAtletaId($atleta_id)) {
                 return ['success' => false, 'message' => 'No tiene permisos para gestionar aportes de este atleta.'];
             }
@@ -1532,9 +1452,6 @@ class AportesController extends Controller
         return ['success' => false, 'message' => 'Solicitud inválida.'];
     }
 
-    /**
-     * Procesar pago adelantado desde AJAX
-     */
     public function actionProcesarPagoAdelantado()
     {
         Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
@@ -1546,7 +1463,6 @@ class AportesController extends Controller
             $metodo_pago = Yii::$app->request->post('metodo_pago');
             $comentarios = Yii::$app->request->post('comentarios', 'Pago por adelantado');
 
-            // VERIFICAR PERMISOS
             if (!$this->tienePermisoVerAtletaId($atleta_id)) {
                 return ['success' => false, 'message' => 'No tiene permisos para gestionar aportes de este atleta.'];
             }
@@ -1603,28 +1519,18 @@ class AportesController extends Controller
     }
 
     // =========================================================================
-    // 2. NUEVAS ACCIONES – MODO FAMILIA Y BECAS (con los cambios actualizados)
+    // 2. NUEVAS ACCIONES – MODO FAMILIA Y BECAS
     // =========================================================================
 
-    // -------------------------------------------------------------------------
-    // GESTIÓN DE BECAS (actualizado)
-    // -------------------------------------------------------------------------
-
-    /**
-     * Listado de becas (activas, pendientes, rechazadas, etc.)
-     * @return string
-     */
     public function actionBecas()
     {
         $this->layout = 'escuelas';
 
-        // Obtener todas las becas (sin filtro de eliminado, pero excluimos eliminadas)
         $becas = Beca::find()
             ->where(['eliminado' => false])
             ->orderBy(['fecha_propuesta' => SORT_DESC])
             ->all();
 
-        // Estadísticas
         $totalBecas = count($becas);
         $becasMerito = Beca::find()
             ->joinWith('tipoBeca')
@@ -1654,10 +1560,6 @@ class AportesController extends Controller
         ]);
     }
 
-    /**
-     * Asigna una nueva beca (propuesta por entrenador).
-     * @return string|\yii\web\Response
-     */
     public function actionAsignarBeca()
     {
         $this->layout = 'escuelas';
@@ -1667,7 +1569,6 @@ class AportesController extends Controller
         $model->estado_aprobacion = Beca::ESTADO_APROB_PENDIENTE;
         $model->propuesto_por = Yii::$app->user->id;
 
-        // Solo atletas que pertenezcan a una familia
         $atletas = AtletasRegistro::find()
             ->where(['not', ['id_familia' => null]])
             ->andWhere(['eliminado' => false])
@@ -1678,7 +1579,6 @@ class AportesController extends Controller
 
         if ($this->request->isPost && $model->load($this->request->post())) {
 
-            // Obtener el atleta y su familia
             $atleta = AtletasRegistro::findOne($model->id_atleta);
             if (!$atleta) {
                 Yii::$app->session->setFlash('error', 'Atleta no encontrado.');
@@ -1691,7 +1591,6 @@ class AportesController extends Controller
             }
             $model->id_familia = $familiaId;
 
-            // Validaciones de negocio (máximo 3 becas por familia, etc.)
             $activasFamilia = Beca::find()
                 ->activa()
                 ->andWhere(['id_familia' => $familiaId])
@@ -1701,7 +1600,6 @@ class AportesController extends Controller
                 return $this->render('asignar-beca', compact('model', 'atletas', 'tiposBeca'));
             }
 
-            // Si es beca de tipo "Entrenador", verificar que no haya otra activa del mismo tipo en la familia
             $tipoEntrenador = TipoBeca::find()->where(['nombre' => 'Entrenador'])->select('id_tipo_beca')->scalar();
             if ($tipoEntrenador && $model->id_tipo_beca == $tipoEntrenador) {
                 $entrenadorActiva = Beca::find()
@@ -1714,7 +1612,6 @@ class AportesController extends Controller
                 }
             }
 
-            // Regla "al menos un atleta sin beca" (a menos que tenga autorización de excepción)
             if (!$model->autorizacion_excepcion) {
                 $totalAtletasFamilia = AtletasRegistro::find()
                     ->where(['id_familia' => $familiaId, 'eliminado' => false])
@@ -1726,13 +1623,11 @@ class AportesController extends Controller
                 }
             }
 
-            // Calcular período de validez según tipo de beca
             $tipoBeca = TipoBeca::findOne($model->id_tipo_beca);
             if ($tipoBeca) {
                 $model->periodo_validez_meses = $tipoBeca->periodo_validez_meses;
             }
 
-            // Si es beca de entrenador, se auto-aprueba y no es renovable
             if ($tipoBeca && $tipoBeca->nombre == 'Entrenador') {
                 $model->renovable = false;
                 $model->estado_aprobacion = Beca::ESTADO_APROB_ACTIVA;
@@ -1742,7 +1637,6 @@ class AportesController extends Controller
             }
 
             if ($model->save()) {
-                // Registrar en historial
                 $historial = new BecaHistorial();
                 $historial->id_beca = $model->id_beca;
                 $historial->fecha_original_inicio = $model->fecha_asignacion ?: $model->fecha_propuesta;
@@ -1766,10 +1660,6 @@ class AportesController extends Controller
         ]);
     }
 
-    /**
-     * Listado de propuestas pendientes de aprobación.
-     * @return string
-     */
     public function actionPropuestasPendientes()
     {
         $this->layout = 'escuelas';
@@ -1784,11 +1674,6 @@ class AportesController extends Controller
         ]);
     }
 
-    /**
-     * Aprueba una beca pendiente.
-     * @param int $id
-     * @return \yii\web\Response
-     */
     public function actionAprobarBeca($id)
     {
         $beca = Beca::findOne($id);
@@ -1803,12 +1688,11 @@ class AportesController extends Controller
 
         $beca->estado_aprobacion = Beca::ESTADO_APROB_ACTIVA;
         $beca->fecha_asignacion = date('Y-m-d');
-        $beca->fecha_vencimiento = $this->calcularProximoJulio(); // 1 de julio del año siguiente
+        $beca->fecha_vencimiento = $this->calcularProximoJulio();
         $beca->aprobado_por = Yii::$app->user->id;
-        $beca->renovable = true; // Por defecto renovable, excepto si es entrenador (ya se manejó en creación)
+        $beca->renovable = true;
 
         if ($beca->save()) {
-            // Registrar en historial
             $historial = new BecaHistorial();
             $historial->id_beca = $beca->id_beca;
             $historial->fecha_original_inicio = $beca->fecha_asignacion;
@@ -1826,11 +1710,6 @@ class AportesController extends Controller
         return $this->redirect(['propuestas-pendientes']);
     }
 
-    /**
-     * Rechaza una beca pendiente (muestra formulario para motivo).
-     * @param int $id
-     * @return string|\yii\web\Response
-     */
     public function actionRechazarBeca($id)
     {
         $this->layout = 'escuelas';
@@ -1853,7 +1732,6 @@ class AportesController extends Controller
             $beca->estado_aprobacion = Beca::ESTADO_APROB_RECHAZADA;
             $beca->motivo_rechazo = $model->motivo_rechazo;
             if ($beca->save()) {
-                // Registrar en historial
                 $historial = new BecaHistorial();
                 $historial->id_beca = $beca->id_beca;
                 $historial->fecha_original_inicio = $beca->fecha_propuesta;
@@ -1874,11 +1752,6 @@ class AportesController extends Controller
         ]);
     }
 
-    /**
-     * Muestra detalles de una beca.
-     * @param int $id
-     * @return string
-     */
     public function actionViewBeca($id)
     {
         $this->layout = 'escuelas';
@@ -1893,11 +1766,6 @@ class AportesController extends Controller
         ]);
     }
 
-    /**
-     * Actualiza una beca (solo administradores, campos limitados).
-     * @param int $id
-     * @return string|\yii\web\Response
-     */
     public function actionUpdateBeca($id)
     {
         $this->layout = 'escuelas';
@@ -1907,14 +1775,11 @@ class AportesController extends Controller
             throw new NotFoundHttpException('Beca no encontrada.');
         }
 
-        // Solo permitir editar si está pendiente o activa (y no revocada/vencida)
         if (!in_array($beca->estado_aprobacion, [Beca::ESTADO_APROB_PENDIENTE, Beca::ESTADO_APROB_ACTIVA]) || $beca->estado_ciclo) {
             throw new ForbiddenHttpException('No se puede editar esta beca en su estado actual.');
         }
 
-        // Cargar modelo con escenario 'update' (definir en el modelo si es necesario)
         if ($this->request->isPost && $beca->load($this->request->post())) {
-            // Restringir campos editables
             $beca->setAttributes($this->request->post('Beca'));
             if ($beca->validate() && $beca->save()) {
                 Yii::$app->session->setFlash('success', 'Beca actualizada.');
@@ -1927,11 +1792,6 @@ class AportesController extends Controller
         ]);
     }
 
-    /**
-     * Revoca una beca activa (cambia estado_ciclo a REVOCADA).
-     * @param int $id_beca
-     * @return \yii\web\Response
-     */
     public function actionRevocarBeca($id_beca)
     {
         $beca = Beca::findOne($id_beca);
@@ -1946,7 +1806,6 @@ class AportesController extends Controller
 
         $beca->estado_ciclo = Beca::ESTADO_CICLO_REVOCADA;
         if ($beca->save()) {
-            // Registrar en historial
             $historial = new BecaHistorial();
             $historial->id_beca = $beca->id_beca;
             $historial->fecha_original_inicio = $beca->fecha_asignacion;
@@ -1962,11 +1821,6 @@ class AportesController extends Controller
         return $this->redirect(['becas']);
     }
 
-    /**
-     * Obtiene datos de un tipo de beca vía AJAX.
-     * @param int $id
-     * @return array|null
-     */
     public function actionGetTipoBeca($id)
     {
         Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
@@ -1981,16 +1835,9 @@ class AportesController extends Controller
     }
 
     // =========================================================================
-    // 3. NUEVA ACCIÓN: COMPROBANTE DE PAGO
+    // 3. ACCIÓN: COMPROBANTE DE PAGO
     // =========================================================================
 
-    /**
-     * Muestra el comprobante de uno o varios pagos.
-     * @param string $ids IDs separados por coma
-     * @return string
-     * @throws NotFoundHttpException si no se encuentran los aportes
-     * @throws ForbiddenHttpException si no hay permisos
-     */
     public function actionComprobante($ids)
     {
         $this->layout = 'escuelas';
@@ -2010,23 +1857,19 @@ class AportesController extends Controller
             throw new NotFoundHttpException('No se encontraron los aportes especificados.');
         }
 
-        // Verificar permisos para el primer aporte (todos deben ser del mismo atleta/familia)
         if (!$this->tienePermisoVerAporte($aportes[0])) {
             throw new ForbiddenHttpException('No tiene permisos para ver este comprobante.');
         }
 
-        // Obtener datos adicionales
         $primerAporte = $aportes[0];
         $atleta = $primerAporte->atleta;
         $escuela = $primerAporte->escuela;
 
-        // Obtener representante del atleta (si existe)
         $representante = null;
         if ($atleta && $atleta->id_representante) {
             $representante = RegistroRepresentantes::findOne($atleta->id_representante);
         }
 
-        // Calcular iniciales de la escuela (primeras letras de cada palabra, máximo 4)
         $nombreEscuela = $escuela->nombre;
         $palabras = preg_split('/\s+/', $nombreEscuela);
         $iniciales = '';
@@ -2036,10 +1879,8 @@ class AportesController extends Controller
                 if (strlen($iniciales) >= 4) break;
             }
         }
-        // Si tiene menos de 4 caracteres, completar con 'X'
         $iniciales = str_pad($iniciales, 4, 'X', STR_PAD_RIGHT);
 
-        // Generar código aleatorio de 8 caracteres (mayúsculas y números)
         $caracteres = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
         $aleatorio = '';
         for ($i = 0; $i < 8; $i++) {
@@ -2058,23 +1899,13 @@ class AportesController extends Controller
     }
 
     // =========================================================================
-    // 4. MÉTODOS AUXILIARES PARA CONTROL DE ACCESO (ATLETAS + FAMILIAS)
+    // 4. MÉTODOS AUXILIARES PARA CONTROL DE ACCESO
     // =========================================================================
 
-    // -------------------------------------------------------------------------
-    // MÉTODOS PARA ATLETAS (basados en RBAC y lógica existente en actionIndex)
-    // -------------------------------------------------------------------------
-
-    /**
-     * Obtiene un ActiveQuery para los atletas que el usuario actual tiene permiso de ver en la escuela indicada.
-     * @param int $id_escuela
-     * @return \yii\db\ActiveQuery
-     */
     protected function getAtletasPermitidosQuery($id_escuela)
     {
         $user = Yii::$app->user;
 
-        // Superadmin y admin: ven todos los atletas de la escuela
         if ($user->id == 1 || $user->can('admin')) {
             return AtletasRegistro::find()
                 ->where(['id_escuela' => $id_escuela, 'eliminado' => false]);
@@ -2082,7 +1913,7 @@ class AportesController extends Controller
 
         $query = AtletasRegistro::find()
             ->where(['id_escuela' => $id_escuela, 'eliminado' => false])
-            ->andWhere(['or']); // Inicializar condición OR
+            ->andWhere(['or']);
 
         $conditions = ['or'];
 
@@ -2093,7 +1924,6 @@ class AportesController extends Controller
         if ($user->can('viewRepresentedAportes')) {
             $representante = RegistroRepresentantes::find()->where(['user_id' => $user->id])->one();
             if ($representante) {
-                // Suponiendo que existe una tabla atleta_representante
                 $subQuery = (new \yii\db\Query())
                     ->select('atleta_id')
                     ->from('atleta_representante')
@@ -2105,23 +1935,16 @@ class AportesController extends Controller
         if (count($conditions) > 1) {
             $query->andWhere($conditions);
         } else {
-            // Si no hay condiciones, retornar una consulta que no devuelva nada
             $query->andWhere('0=1');
         }
 
         return $query;
     }
 
-    /**
-     * Obtiene los atletas que el usuario actual tiene permiso de ver en la escuela indicada.
-     * @param int $id_escuela
-     * @return AtletasRegistro[]
-     */
     protected function getAtletasPermitidos($id_escuela)
     {
         $user = Yii::$app->user;
 
-        // Superadmin y admin: ven todos los atletas de la escuela
         if ($user->id == 1 || $user->can('admin')) {
             return AtletasRegistro::find()
                 ->where(['id_escuela' => $id_escuela, 'eliminado' => false])
@@ -2130,7 +1953,6 @@ class AportesController extends Controller
 
         $atletas = [];
 
-        // Ver permisos específicos
         if ($user->can('viewOwnAportes')) {
             $atletaPropio = AtletasRegistro::find()
                 ->where(['user_id' => $user->id, 'id_escuela' => $id_escuela, 'eliminado' => false])
@@ -2143,15 +1965,12 @@ class AportesController extends Controller
         if ($user->can('viewRepresentedAportes')) {
             $representante = RegistroRepresentantes::find()->where(['user_id' => $user->id])->one();
             if ($representante) {
-                // Se asume que el modelo RegistroRepresentantes tiene una relación 'getAtletas()'
-                // (puede ser muchos a muchos mediante una tabla intermedia)
                 if (method_exists($representante, 'getAtletas')) {
                     $atletasRep = $representante->getAtletas()
                         ->andWhere(['id_escuela' => $id_escuela, 'eliminado' => false])
                         ->all();
                     $atletas = array_merge($atletas, $atletasRep);
                 } else {
-                    // Fallback: intentar con una tabla hipotética 'atleta_representante'
                     $atletasIds = (new \yii\db\Query())
                         ->select('atleta_id')
                         ->from('atleta_representante')
@@ -2167,7 +1986,6 @@ class AportesController extends Controller
             }
         }
 
-        // Eliminar duplicados por ID
         $unique = [];
         foreach ($atletas as $a) {
             $unique[$a->id] = $a;
@@ -2175,11 +1993,6 @@ class AportesController extends Controller
         return array_values($unique);
     }
 
-    /**
-     * Verifica si el usuario actual tiene permiso para ver un atleta específico.
-     * @param AtletasRegistro $atleta
-     * @return bool
-     */
     protected function tienePermisoVerAtleta($atleta)
     {
         $user = Yii::$app->user;
@@ -2209,38 +2022,21 @@ class AportesController extends Controller
         return false;
     }
 
-    /**
-     * Verifica si el usuario tiene permiso para ver un atleta por su ID.
-     * @param int $atleta_id
-     * @return bool
-     */
     protected function tienePermisoVerAtletaId($atleta_id)
     {
         $atleta = AtletasRegistro::findOne($atleta_id);
         return $atleta ? $this->tienePermisoVerAtleta($atleta) : false;
     }
 
-    /**
-     * Verifica si el usuario tiene permiso para ver un aporte específico.
-     * @param AportesSemanales $aporte
-     * @return bool
-     */
     protected function tienePermisoVerAporte($aporte)
     {
         if ($aporte->atleta_id) {
             return $this->tienePermisoVerAtletaId($aporte->atleta_id);
         }
-        // Para aportes de familia (solo admin/superusuario)
         $user = Yii::$app->user;
         return ($user->id == 1 || $user->can('admin'));
     }
 
-    /**
-     * Obtiene el top 10 de atletas con mayores aportes pagados, filtrado por los atletas permitidos.
-     * @param int $id_escuela
-     * @param array $atletasPermitidos Lista de objetos AtletasRegistro
-     * @return array
-     */
     protected function getTopAtletasPermitidos($id_escuela, $atletasPermitidos)
     {
         $atletasIds = array_map(function($a) { return $a->id; }, $atletasPermitidos);
@@ -2248,7 +2044,6 @@ class AportesController extends Controller
             return [];
         }
 
-        // MOD: Se agregó 'COUNT(*) as total_aportes' para que la vista pueda mostrar el número de quincenas pagadas
         $top = AportesSemanales::find()
             ->select(['atleta_id', 'SUM(monto) as total_pagado', 'COUNT(*) as total_aportes'])
             ->where(['estado' => AportesSemanales::ESTADO_PAGADO, 'escuela_id' => $id_escuela])
@@ -2260,7 +2055,6 @@ class AportesController extends Controller
             ->asArray()
             ->all();
 
-        // Enriquecer con datos del atleta para la vista
         foreach ($top as &$item) {
             $item['atleta'] = AtletasRegistro::findOne($item['atleta_id']);
         }
@@ -2268,67 +2062,34 @@ class AportesController extends Controller
         return $top;
     }
 
-    // -------------------------------------------------------------------------
-    // MÉTODOS PARA FAMILIAS
-    // -------------------------------------------------------------------------
-
-    /**
-     * Obtiene las familias permitidas según los permisos del usuario.
-     * Por ahora, solo administradores y superusuario pueden ver familias.
-     * @return Familia[]
-     */
     protected function getFamiliasPermitidas()
     {
         $user = Yii::$app->user;
         if ($user->id == 1 || $user->can('admin')) {
             return Familia::find()->orderBy(['nombre_representante' => SORT_ASC])->all();
         }
-        // Aquí se puede extender en el futuro para representantes vinculados a familias
         return [];
     }
 
-    /**
-     * Verifica si el usuario tiene permiso para ver una familia específica.
-     * @param Familia $familia
-     * @return bool
-     */
     protected function tienePermisoVerFamilia($familia)
     {
         $user = Yii::$app->user;
         if ($user->id == 1 || $user->can('admin')) {
             return true;
         }
-        // Extensible en el futuro
         return false;
     }
 
-    /**
-     * Calcula la próxima fecha de quincena a partir de una fecha dada.
-     * Las quincenas son los días 1 y 15 de cada mes.
-     * @param \DateTime|string $fecha Fecha de referencia (objeto DateTime o string Y-m-d)
-     * @return string Fecha de la próxima quincena en formato Y-m-d
-     */
     protected function calcularProximaQuincena($fecha)
     {
         return AportesSemanales::calcularProximaQuincena($fecha);
     }
 
-    /**
-     * Calcula el número de quincena del año para una fecha dada.
-     * Las quincenas se numeran del 1 al 24.
-     * @param string $fecha Fecha en formato Y-m-d
-     * @return int Número de quincena (1-24)
-     */
     protected function calcularNumeroQuincena($fecha)
     {
         return AportesSemanales::calcularNumeroQuincena($fecha);
     }
 
-    /**
-     * Calcula la próxima fecha de renovación (1 de julio del año siguiente).
-     * @param string $fecha Fecha base (opcional, por defecto hoy)
-     * @return string
-     */
     protected function calcularProximoJulio($fecha = null)
     {
         $fecha = $fecha ?: date('Y-m-d');
@@ -2341,26 +2102,14 @@ class AportesController extends Controller
         return $year . '-07-01';
     }
 
-    /**
-     * Finds the AportesSemanales model based on its primary key value.
-     * If the model is not found, a 404 HTTP exception will be thrown.
-     * @param int $id ID
-     * @return AportesSemanales the loaded model
-     * @throws NotFoundHttpException if the model cannot be found
-     */
     protected function findModel($id)
     {
         if (($model = AportesSemanales::findOne(['id' => $id])) !== null) {
             return $model;
         }
-
         throw new NotFoundHttpException('The requested page does not exist.');
     }
 
-    /**
-     * Genera las quincenas faltantes para la escuela actual.
-     * @return \yii\web\Response
-     */
     public function actionGenerarQuincenas()
     {
         $id_escuela = Yii::$app->session->get('id_escuela');
@@ -2374,10 +2123,6 @@ class AportesController extends Controller
         return $this->redirect(['index']);
     }
 
-    /**
-     * Lista todos los atletas con información de sus becas (activa, pendiente, etc.)
-     * @return string
-     */
     public function actionListaAtletasBecas()
     {
         $this->layout = 'escuelas';
@@ -2388,12 +2133,10 @@ class AportesController extends Controller
             return $this->redirect(['/ged/default/select-escuela']);
         }
 
-        // Obtener atletas permitidos según permisos
         $atletas = $this->getAtletasPermitidos($id_escuela);
 
-        // Para cada atleta, obtener su beca activa/pendiente (si existe)
         foreach ($atletas as $atleta) {
-            $atleta->becaActiva = $atleta->getBecaActiva(); // Necesitamos definir esta relación
+            $atleta->becaActiva = $atleta->getBecaActiva();
             $atleta->becaPendiente = $atleta->getBecaPendiente();
         }
 
@@ -2407,53 +2150,168 @@ class AportesController extends Controller
     // =========================================================================
 
     /**
-     * Endpoint para consultar deuda por cédula (CI)
+     * Endpoint para consultar deuda por cédula (CI).
+     * Soporta cédula de atleta o de representante.
      * Método: GET
      * Parámetros: ?ci=12345678
-     * Respuesta JSON: { success, deuda_usd, nombre, quincenas, actualizado_en, error? }
+     * Respuesta JSON detallada:
+     *   - nombre_representante / nombre_atleta
+     *   - lista de atletas con deuda individual, quincenas, mensaje de suspensión si >3
+     *   - deuda_consolidada_usd, deuda_consolidada_bs, total_quincenas
+     *   - texto_suspension (mensaje global rojo/blanco)
+     *   - pago_movil (datos para pago móvil)
      */
     public function actionDeudaPorCi($ci)
     {
         Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
-        
-        // Validar CI
+
         if (!preg_match('/^\d{6,12}$/', $ci)) {
             return ['success' => false, 'error' => 'CI inválida (debe tener 6-12 dígitos)'];
         }
-        
-        // Buscar atleta por identificación
+
+        // Datos fijos para pago móvil (puedes moverlos a configuración)
+        $pagoMovil = [
+            'banco' => 'Banco de Venezuela',
+            'tipo_cuenta' => 'Cuenta Corriente',
+            'numero' => '0102 04262137308',
+            'cedula' => '11408051',
+            'beneficiario' => 'Escuela Deportiva Planealo'
+        ];
+
+        // 1. Buscar como atleta
         $atleta = AtletasRegistro::find()
             ->where(['identificacion' => $ci, 'eliminado' => false])
             ->one();
-        
-        if (!$atleta) {
-            return ['success' => false, 'error' => 'Cédula no registrada en el sistema'];
+
+        if ($atleta) {
+            $resumen = $this->calcularResumenAtleta($atleta->id);
+            $tasa = $this->obtenerTasaDolar();
+            $quincenas = $resumen['quincenas_pendientes'];
+            $suspension = ($quincenas > 3);
+            $nombreCompleto = $atleta->p_apellido . ' ' . $atleta->p_nombre;
+            
+            $atletasLista = [
+                [
+                    'nombre' => $nombreCompleto,
+                    'deuda_usd' => (float)$resumen['total_pendiente'],
+                    'deuda_bs' => (float)$resumen['total_pendiente'] * $tasa,
+                    'quincenas' => $quincenas,
+                    'suspension' => $suspension,
+                    'mensaje_suspension' => $suspension ? "⚠️ SUSPENSIÓN DE PRÁCTICA: {$quincenas} QUINCENAS ADEUDADAS" : null
+                ]
+            ];
+            
+            $textoSuspension = $suspension ? "⚠️ ATENCIÓN: {$nombreCompleto} tiene {$quincenas} quincenas de deuda. SUSPENSIÓN DE PRÁCTICA ACTIVADA." : null;
+            
+            return [
+                'success' => true,
+                'tipo' => 'atleta',
+                'ci' => $ci,
+                'nombre_representante' => null,
+                'deuda_consolidada_usd' => (float)$resumen['total_pendiente'],
+                'deuda_consolidada_bs' => (float)$resumen['total_pendiente'] * $tasa,
+                'total_quincenas' => $quincenas,
+                'atletas' => $atletasLista,
+                'texto_suspension' => $textoSuspension,
+                'pago_movil' => $pagoMovil,
+                'actualizado_en' => date('Y-m-d H:i:s')
+            ];
         }
-        
-        // Verificar que pertenezca a una escuela activa (opcional pero recomendado)
-        if ($atleta->id_escuela) {
-            $escuela = Escuela::findOne($atleta->id_escuela);
-            if (!$escuela || $escuela->eliminado) {
-                return ['success' => false, 'error' => 'La escuela del atleta no está activa'];
+
+        // 2. Buscar como representante
+        $representante = RegistroRepresentantes::find()
+            ->where(['identificacion' => $ci])
+            ->one();
+
+        if ($representante) {
+            // Atletas vinculados directamente por id_representante
+            $atletas = AtletasRegistro::find()
+                ->where(['id_representante' => $representante->id, 'eliminado' => false])
+                ->all();
+
+            // También considerar atletas cuya familia tenga este representante
+            $familias = Familia::find()
+                ->where(['id_representante' => $representante->id])
+                ->select('id_familia')
+                ->column();
+            if (!empty($familias)) {
+                $atletasPorFamilia = AtletasRegistro::find()
+                    ->where(['id_familia' => $familias, 'eliminado' => false])
+                    ->all();
+                // Evitar duplicados usando la clave primaria
+                foreach ($atletasPorFamilia as $a) {
+                    $atletas[$a->id] = $a;
+                }
+                $atletas = array_values($atletas);
             }
+
+            if (empty($atletas)) {
+                return ['success' => false, 'error' => 'El representante no tiene atletas asociados'];
+            }
+
+            $atletasLista = [];
+            $deudaTotalUSD = 0;
+            $totalQuincenas = 0;
+            $tasa = $this->obtenerTasaDolar();
+            $haySuspension = false;
+
+            foreach ($atletas as $atleta) {
+                $resumen = $this->calcularResumenAtleta($atleta->id);
+                $deudaUSD = (float)$resumen['total_pendiente'];
+                $quincenas = $resumen['quincenas_pendientes'];
+                $suspension = ($quincenas > 3);
+                if ($suspension) $haySuspension = true;
+                
+                $atletasLista[] = [
+                    'nombre' => $atleta->p_apellido . ' ' . $atleta->p_nombre,
+                    'deuda_usd' => $deudaUSD,
+                    'deuda_bs' => $deudaUSD * $tasa,
+                    'quincenas' => $quincenas,
+                    'suspension' => $suspension,
+                    'mensaje_suspension' => $suspension ? "⚠️ SUSPENSIÓN DE PRÁCTICA: {$quincenas} QUINCENAS ADEUDADAS" : null
+                ];
+                $deudaTotalUSD += $deudaUSD;
+                $totalQuincenas += $quincenas;
+            }
+
+            $textoSuspension = null;
+            if ($haySuspension) {
+                $nombresSuspension = array_filter(array_map(function($a) {
+                    return $a['suspension'] ? $a['nombre'] : null;
+                }, $atletasLista));
+                $textoSuspension = "⚠️ ATENCIÓN: " . implode(', ', $nombresSuspension) . " tiene(n) más de 3 quincenas de deuda. SUSPENSIÓN DE PRÁCTICA ACTIVADA.";
+            }
+
+            return [
+                'success' => true,
+                'tipo' => 'representante',
+                'ci' => $ci,
+                'nombre_representante' => $representante->p_apellido . ' ' . $representante->p_nombre,
+                'deuda_consolidada_usd' => $deudaTotalUSD,
+                'deuda_consolidada_bs' => $deudaTotalUSD * $tasa,
+                'total_quincenas' => $totalQuincenas,
+                'atletas' => $atletasLista,
+                'texto_suspension' => $textoSuspension,
+                'pago_movil' => $pagoMovil,
+                'actualizado_en' => date('Y-m-d H:i:s')
+            ];
         }
-        
-        // Calcular deuda usando el método existente (incluye descuentos por beca)
-        $resumen = $this->calcularResumenAtleta($atleta->id);
-        
-        // Obtener tasa de cambio actual (opcional, para mostrar deuda en bolívares)
-        $tasaDolar = \app\models\TasaDolar::getUltimaTasa() ?: \app\models\AportesSemanales::TASA_CAMBIO_FIJA;
-        
-        return [
-            'success' => true,
-            'ci' => $ci,
-            'nombre' => $atleta->p_nombre . ' ' . $atleta->p_apellido,
-            'deuda_usd' => (float) $resumen['total_pendiente'],
-            'deuda_bs' => (float) $resumen['total_pendiente'] * $tasaDolar,
-            'quincenas_pendientes' => $resumen['quincenas_pendientes'],
-            'moneda' => 'USD',
-            'actualizado_en' => date('Y-m-d H:i:s')
-        ];
+
+        return ['success' => false, 'error' => 'Cédula no registrada como atleta ni representante'];
+    }
+
+    /**
+     * Obtiene la tasa de cambio actual desde la tabla contabilidad.tasa_dolar.
+     * @return float
+     */
+    private function obtenerTasaDolar()
+    {
+        $tasa = TasaDolar::find()
+            ->where(['eliminado' => false])
+            ->orderBy(['fecha_tasa' => SORT_DESC])
+            ->select('tasa_dia')
+            ->scalar();
+        return $tasa ? (float)$tasa : 50.00; // valor por defecto si no hay tasa
     }
 
     /**
@@ -2469,7 +2327,6 @@ class AportesController extends Controller
         $puntuacion = (int) Yii::$app->request->post('puntuacion');
         $comentario = Yii::$app->request->post('comentario', '');
         
-        // Validaciones
         if (!$ci || !preg_match('/^\d{6,12}$/', $ci)) {
             return ['success' => false, 'error' => 'CI inválida'];
         }
@@ -2486,7 +2343,6 @@ class AportesController extends Controller
             return ['success' => false, 'error' => 'Cédula no registrada'];
         }
         
-        // Guardar en la tabla app.app_comentarios (con esquema explícito)
         $db = Yii::$app->db;
         $sql = "INSERT INTO app.app_comentarios (ci, puntuacion, comentario, fecha_creacion, version_app)
                 VALUES (:ci, :puntuacion, :comentario, NOW(), :version)";
@@ -2508,7 +2364,9 @@ class AportesController extends Controller
         if (in_array($action->id, ['deuda-por-ci', 'enviar-comentario'])) {
             $headers = Yii::$app->request->headers;
             $apiKey = $headers->get('X-API-Key');
-            if ($apiKey !== Yii::$app->params['apiKey']) {
+            // La clave se define en params.php (debe existir 'apiKey' => '*m4c145')
+            $expectedKey = Yii::$app->params['apiKey'] ?? '*m4c145';
+            if ($apiKey !== $expectedKey) {
                 Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
                 Yii::$app->response->data = ['success' => false, 'error' => 'Acceso no autorizado'];
                 return false;
