@@ -2,7 +2,7 @@
       "relation": ["delegate_permission/common.handle_all_urls"],
       "target": {
         "namespace": "android_app",
-        "package_name": "io.github.maciasblanco.twa",
-        "sha256_cert_fingerprints": ["22:4C:83:46:E3:5F:F5:C8:3F:54:28:1C:72:25:A0:AF:6A:8D:E8:4A:B1:F1:50:71:D7:4F:77:38:F3:F1:2C:7E"]
+        "package_name": "VoleyScore.app",
+        "sha256_cert_fingerprints": ["6C:DB:DE:1D:D8:CD:1E:68:61:DE:4B:A5:4B:0E:31:91:46:A0:A5:38:7F:96:26:EE:41:98:51:9A:70:69:D9:93"]
       }
     }]
